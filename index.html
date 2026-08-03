@@ -358,6 +358,11 @@ a{color:inherit;text-decoration:none}
 .pop__pack s{opacity:.75;font-weight:600;font-size:.82rem;margin-left:.3rem}
 .pop__pack span:first-child{font-size:1rem;font-weight:800}
 .pop__packb{font-size:.76rem;font-weight:800;opacity:.95}
+.pop__sw{margin-top:.5rem;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.pop__swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid var(--line);display:inline-block;transition:transform .2s,border-color .2s}
+.pop__swatch:hover{transform:scale(1.12)}
+.pop__swatch.active{border-color:var(--teal);box-shadow:0 0 0 2px rgba(8,145,178,.18)}
+.pop__it img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--paper);margin-bottom:0}
 .pop__skip{margin-top:.7rem;background:none;border:none;color:var(--ink-2);font-weight:700;font-size:.8rem;cursor:pointer;text-decoration:underline}
 @media(max-width:420px){.pop__t{font-size:1.3rem}}
 </style>
@@ -370,11 +375,21 @@ a{color:inherit;text-decoration:none}
   <div class="pop__card">
     <button class="pop__x" onclick="closePop()" aria-label="Cerrar">&times;</button>
     <span class="pop__badge">OFERTA DE VERANO</span>
-    <h3 class="pop__t">Refréscate este verano</h3>
-    <p class="pop__s">Elige tu WhatTheFan… o llévate los dos y ahorra.</p>
+    <h3 class="pop__t">Llévate el pack y ahorra un 15%</h3>
+    <p class="pop__s">Neck + Flex · elige el color de cada uno.</p>
     <div class="pop__grid">
-      <a class="pop__it" href="producto.html?p=flex"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S82e453781d5f498d9ac7f4bb07a017a3W.webp" alt="Flex"><b>Flex · 3 en 1</b><span class="pop__pr">16,95€ <s>19,95€</s></span><span class="pop__btn">Ver oferta →</span></a>
-      <a class="pop__it" href="producto.html?p=neck"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/Sfd35f4ff5d8b46aea59071775c510ee6d.webp" alt="Neck"><b>De cuello · sin aspas</b><span class="pop__pr">21,95€ <s>24,95€</s></span><span class="pop__btn">Ver oferta →</span></a>
+      <div class="pop__it">
+        <img id="popImgNeck" alt="Neck">
+        <b>Neck · sin aspas</b>
+        <span class="pop__pr">21,95€</span>
+        <div class="pop__sw" id="popSwNeck"></div>
+      </div>
+      <div class="pop__it">
+        <img id="popImgFlex" alt="Flex">
+        <b>Flex · 3 en 1</b>
+        <span class="pop__pr">16,95€</span>
+        <div class="pop__sw" id="popSwFlex"></div>
+      </div>
     </div>
     <button class="pop__pack" onclick="buyPack()"><span>Llévate los 2 · <b>33,07€</b> <s>38,90€</s></span><span class="pop__packb">-15% automático · Comprar del tirón →</span></button>
     <button class="pop__skip" onclick="closePop()">No, gracias · seguir mirando</button>
@@ -383,7 +398,16 @@ a{color:inherit;text-decoration:none}
 <script>
 function closePop(){var p=document.getElementById('offerPop');if(p)p.classList.remove('show')}
 function goCheckoutItems(items){var f=document.createElement('form');f.method='post';f.action='https://beyondandbeauty.myshopify.com/cart/add';f.style.display='none';items.forEach(function(it,idx){function inp(n,val){var i=document.createElement('input');i.name=n;i.value=val;f.appendChild(i)}inp('items['+idx+'][id]',it.v);inp('items['+idx+'][quantity]',it.q||1)});var chk=document.createElement('input');chk.name='checkout';chk.value='1';f.appendChild(chk);document.body.appendChild(f);f.submit()}
-function buyPack(){goCheckoutItems([{v:'54398157422931',q:1},{v:'54210050654547',q:1}])}
+var POP_CDN='https://cdn.shopify.com/s/files/1/1071/1659/3491/files/';
+var POP_NECK=[['Blanco','#e9e9ee','54398157422931','S5aac7c8d48da44bc819a29a2b16140dfK'],['Rosa','#f4bcd0','54398157390163','Sca3e5bed229a471aaca4cb7a5821b47fg'],['Azul','#4fc3f7','54398157357395','S36e99be786554fc5beb2303504487525A'],['Verde','#81c784','54398157324627','S973d2190662843ddb1b7312fe4676db6e']];
+var POP_FLEX=[['Rosa','#f4bcd0','54210050654547','S82e453781d5f498d9ac7f4bb07a017a3W'],['Morado','#b39ddb','54210050687315','S2d498950b9c840e0b478738f7e3415d8B'],['Blanco','#e6e6e6','54210050720083','S5e567c518188403bb81efb022c8d328eZ'],['Azul','#4fc3f7','54210050752851','S4e4035792735468999bdddd70e7e8d81n'],['Verde','#81c784','54210050785619','Sc1929fc7837c4d38ba0cd57fffcde0630']];
+var popNeckI=0,popFlexI=0;
+function popBuild(containerId,colors,pickFn){var el=document.getElementById(containerId);if(!el)return;el.innerHTML=colors.map(function(c,i){return '<span class="pop__swatch'+(i===0?' active':'')+'" style="background:'+c[1]+'" title="'+c[0]+'" onclick="'+pickFn+'('+i+')"></span>'}).join('')}
+function popUpdate(){var ni=document.getElementById('popImgNeck'),fi=document.getElementById('popImgFlex');if(ni)ni.src=POP_CDN+POP_NECK[popNeckI][3]+'.webp';if(fi)fi.src=POP_CDN+POP_FLEX[popFlexI][3]+'.webp';document.querySelectorAll('#popSwNeck .pop__swatch').forEach(function(s,i){s.classList.toggle('active',i===popNeckI)});document.querySelectorAll('#popSwFlex .pop__swatch').forEach(function(s,i){s.classList.toggle('active',i===popFlexI)})}
+function pickPopNeck(i){popNeckI=i;popUpdate()}
+function pickPopFlex(i){popFlexI=i;popUpdate()}
+function buyPack(){goCheckoutItems([{v:POP_NECK[popNeckI][2],q:1},{v:POP_FLEX[popFlexI][2],q:1}])}
+popBuild('popSwNeck',POP_NECK,'pickPopNeck');popBuild('popSwFlex',POP_FLEX,'pickPopFlex');popUpdate();
 (function(){var p=document.getElementById('offerPop');if(!p)return;if(sessionStorage.getItem('wtf_pop'))return;setTimeout(function(){p.classList.add('show');sessionStorage.setItem('wtf_pop','1')},900);document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop()})})();
 </script>
 
