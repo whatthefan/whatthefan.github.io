@@ -335,16 +335,56 @@ a{color:inherit;text-decoration:none}
 .intro__fan .blades{animation:fanspin 3.5s linear infinite}
 @keyframes fanspin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}.reveal{opacity:1;transform:none}}
+
+.pop{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+.pop.show{display:flex}
+.pop__bg{position:absolute;inset:0;background:rgba(10,22,34,.6);backdrop-filter:blur(4px)}
+.pop__card{position:relative;z-index:2;background:#fff;border-radius:22px;max-width:440px;width:100%;padding:26px 22px 18px;box-shadow:0 30px 80px rgba(0,0,0,.45);animation:popIn .45s cubic-bezier(.34,1.3,.5,1);text-align:center}
+@keyframes popIn{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:none}}
+.pop__x{position:absolute;top:10px;right:12px;width:34px;height:34px;border:none;background:rgba(10,22,34,.08);color:var(--ink);border-radius:50%;font-size:1.5rem;line-height:1;cursor:pointer;transition:background .2s}
+.pop__x:hover{background:rgba(10,22,34,.18)}
+.pop__badge{display:inline-block;background:var(--lime);color:var(--ink);font-family:'Rubik';font-weight:800;font-size:.62rem;letter-spacing:.14em;padding:.3rem .75rem;border-radius:999px}
+.pop__t{font-family:'Rubik';font-size:1.5rem;font-weight:900;margin:.6rem 0 .25rem}
+.pop__s{color:var(--ink-2);font-size:.9rem;font-weight:600;margin:0 0 1rem}
+.pop__grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.pop__it{display:flex;flex-direction:column;align-items:center;border:1.5px solid var(--line);border-radius:16px;padding:12px 10px;text-decoration:none;color:var(--ink);transition:border-color .2s,transform .2s}
+.pop__it:hover{border-color:var(--teal);transform:translateY(-3px)}
+.pop__it img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--paper)}
+.pop__it b{font-size:.84rem;margin:.4rem 0 .15rem}
+.pop__pr{font-family:'Rubik';font-weight:800;font-size:.94rem}.pop__pr s{color:var(--ink-2);opacity:.6;font-weight:600;font-size:.78rem;margin-left:.25rem}
+.pop__btn{margin-top:.35rem;font-family:'Rubik';font-weight:800;font-size:.78rem;color:var(--teal-d)}
+.pop__pack{width:100%;display:flex;flex-direction:column;gap:.15rem;align-items:center;background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;border:none;border-radius:16px;padding:.85rem;cursor:pointer;font-family:'Rubik';box-shadow:0 12px 28px rgba(240,66,31,.35);transition:transform .2s}
+.pop__pack:hover{transform:translateY(-2px)}
+.pop__pack s{opacity:.75;font-weight:600;font-size:.82rem;margin-left:.3rem}
+.pop__pack span:first-child{font-size:1rem;font-weight:800}
+.pop__packb{font-size:.76rem;font-weight:800;opacity:.95}
+.pop__skip{margin-top:.7rem;background:none;border:none;color:var(--ink-2);font-weight:700;font-size:.8rem;cursor:pointer;text-decoration:underline}
+@media(max-width:420px){.pop__t{font-size:1.3rem}}
 </style>
 </head>
 <body id="top">
 <div class="progress" id="progress"></div>
-<div class="intro" id="intro">
-  <span class="intro__w" style="top:30%;animation-delay:.1s"></span><span class="intro__w" style="top:50%;width:55%;animation-delay:.5s"></span><span class="intro__w" style="top:70%;width:32%;animation-delay:.9s"></span>
-  <svg class="fanlogo intro__fan" viewBox="0 0 48 48"><defs><linearGradient id="wtfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#0e6f86"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#wtfg)"/><g class="blades" fill="#fff"><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(120 24 24)"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(240 24 24)"/></g><circle cx="24" cy="24" r="4.4" fill="#0a1622"/><circle cx="24" cy="24" r="2.1" fill="#c6f24e"/></svg>
-  <div class="intro__name"><span class="wm">WhatThe<b>Fan</b></span></div>
+<!-- POPUP OFERTA -->
+<div class="pop" id="offerPop" aria-hidden="true">
+  <div class="pop__bg" onclick="closePop()"></div>
+  <div class="pop__card">
+    <button class="pop__x" onclick="closePop()" aria-label="Cerrar">&times;</button>
+    <span class="pop__badge">OFERTA DE VERANO</span>
+    <h3 class="pop__t">Refréscate este verano</h3>
+    <p class="pop__s">Elige tu WhatTheFan… o llévate los dos y ahorra.</p>
+    <div class="pop__grid">
+      <a class="pop__it" href="producto.html?p=mini"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S8a5f4a2bb4de447ea32af7f43e63f9394.webp" alt="Mini"><b>Mini de mano</b><span class="pop__pr">12,95€ <s>22,95€</s></span><span class="pop__btn">Ver oferta →</span></a>
+      <a class="pop__it" href="producto.html?p=neck"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/Sfd35f4ff5d8b46aea59071775c510ee6d.webp" alt="Neck"><b>De cuello · sin aspas</b><span class="pop__pr">27,95€ <s>49,95€</s></span><span class="pop__btn">Ver oferta →</span></a>
+    </div>
+    <button class="pop__pack" onclick="buyPack()"><span>Llévate los 2 · <b>40,90€</b> <s>72,90€</s></span><span class="pop__packb">Comprar del tirón →</span></button>
+    <button class="pop__skip" onclick="closePop()">No, gracias · seguir mirando</button>
+  </div>
 </div>
-<script>(function(){var i=document.getElementById('intro');if(!i)return;if(sessionStorage.getItem('wtf_intro')){i.parentNode.removeChild(i);return}sessionStorage.setItem('wtf_intro','1');document.body.style.overflow='hidden';setTimeout(function(){i.classList.add('hide');document.body.style.overflow=''},2500);setTimeout(function(){if(i.parentNode)i.parentNode.removeChild(i)},3300)})();</script>
+<script>
+function closePop(){var p=document.getElementById('offerPop');if(p)p.classList.remove('show')}
+function buyPack(){location.href='https://beyondandbeauty.myshopify.com/cart/54398157422931:1,54245765546323:1'}
+(function(){var p=document.getElementById('offerPop');if(!p)return;if(sessionStorage.getItem('wtf_pop'))return;setTimeout(function(){p.classList.add('show');sessionStorage.setItem('wtf_pop','1')},900);document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop()})})();
+</script>
 
 
 <!-- ANNOUNCE -->
