@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%230891b2'/%3E%3Cg fill='%23fff'%3E%3Cpath d='M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z'/%3E%3Cpath d='M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z' transform='rotate(120 24 24)'/%3E%3Cpath d='M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z' transform='rotate(240 24 24)'/%3E%3C/g%3E%3Ccircle cx='24' cy='24' r='4' fill='%230a1622'/%3E%3C/svg%3E">
+<meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%23e8552b'/%3E%3Cg fill='%23fff'%3E%3Cpath d='M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z'/%3E%3Cpath d='M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z' transform='rotate(120 24 24)'/%3E%3Cpath d='M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z' transform='rotate(240 24 24)'/%3E%3C/g%3E%3Ccircle cx='24' cy='24' r='4' fill='%232b0f16'/%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WhatTheFan — El mini ventilador que te hará decir WTF</title>
 <meta name="description" content="WhatTheFan: el mini ventilador de mano recargable que suelta aire de verdad. Potente, plegable 3-en-1, batería para horas. Envío 7-15 días · Garantía 30 días.">
@@ -10,8 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Rubik:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --cyan:#22d3ee;--teal:#0891b2;--teal-d:#0e6f86;--ink:#0a1622;--ink-2:#33505c;
-  --coral:#ff5a3c;--coral-d:#f0421f;--lime:#c6f24e;--paper:#f4fbfd;--line:#e2eef2;
+  --cyan:#ffb703;--teal:#ff7a45;--teal-d:#e8552b;--ink:#2b0f16;--ink-2:#6b3d38;
+  --coral:#ff5a7a;--coral-d:#e6355c;--lime:#ffd166;--paper:#fff6f0;--line:#ffe1cf;
   --shadow:0 20px 55px rgba(10,22,34,.10);--r:20px;
 }
 *{box-sizing:border-box}
@@ -52,7 +52,7 @@ a{color:inherit;text-decoration:none}
 .nav{position:fixed;top:31px;left:0;right:0;z-index:60;transition:background .3s,box-shadow .3s,border-color .3s,top .3s}
 .nav__in{display:flex;align-items:center;justify-content:space-between;height:64px}
 .logo{display:flex;align-items:center;gap:.55rem;font-family:'Rubik';font-weight:800;font-size:1.3rem;color:#fff;transition:color .3s}
-.logo .mono{display:inline-flex;align-items:center;justify-content:center;width:37px;height:37px;border-radius:12px;background:linear-gradient(135deg,#0a1622,#0e6f86);color:var(--lime);font-weight:900;font-size:.8rem;letter-spacing:-.04em;box-shadow:0 6px 18px rgba(8,145,178,.45),inset 0 0 0 1px rgba(255,255,255,.08);transform:rotate(-5deg);transition:transform .3s,background .3s,color .3s}
+.logo .mono{display:inline-flex;align-items:center;justify-content:center;width:37px;height:37px;border-radius:12px;background:linear-gradient(135deg,#2b0f16,#e8552b);color:var(--lime);font-weight:900;font-size:.8rem;letter-spacing:-.04em;box-shadow:0 6px 18px rgba(232,85,43,.45),inset 0 0 0 1px rgba(255,255,255,.08);transform:rotate(-5deg);transition:transform .3s,background .3s,color .3s}
 .logo:hover .mono{transform:rotate(0) scale(1.06)}
 .logo .wm{white-space:nowrap}
 .ofwink{position:absolute;z-index:7;bottom:-8px;left:-16px;background:#00AFF0;color:#fff;font-family:'Rubik';font-weight:800;padding:.5rem 1rem;border-radius:13px;transform:rotate(-8deg);box-shadow:0 12px 26px rgba(0,175,240,.5);font-size:.92rem;line-height:1.05;text-align:center;animation:float 6s ease-in-out infinite}
@@ -71,7 +71,7 @@ a{color:inherit;text-decoration:none}
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;color:#fff}
 .hero__vid{position:absolute;inset:0;z-index:0}
 .hero__vid video{width:100%;height:100%;object-fit:cover}
-.hero__vid::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(6,14,22,.82) 0%,rgba(6,14,22,.5) 45%,rgba(10,60,80,.35) 100%),linear-gradient(0deg,rgba(6,14,22,.6),transparent 55%)}
+.hero__vid::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(24,10,10,.82) 0%,rgba(24,10,10,.5) 45%,rgba(120,45,20,.35) 100%),linear-gradient(0deg,rgba(24,10,10,.6),transparent 55%)}
 .hero__grid{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;width:100%;padding:120px 0 70px}
 .hero__rate{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;font-size:.9rem;margin-bottom:1.1rem;opacity:.95}
 .hero h1{font-size:clamp(2.8rem,6.2vw,4.9rem);font-weight:900;text-shadow:0 4px 30px rgba(0,0,0,.3)}
@@ -100,7 +100,7 @@ a{color:inherit;text-decoration:none}
 .scroll-cue::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:cue 1.7s ease-in-out infinite}
 @keyframes cue{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}100%{opacity:0;transform:translate(-50%,12px)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
-.drop{position:relative;overflow:hidden;background:linear-gradient(135deg,#0a1622,#0d3a49 55%,#0891b2);color:#fff}
+.drop{position:relative;overflow:hidden;background:linear-gradient(135deg,#2b0f16,#7a2340 55%,#ff7a45);color:#fff}
 .drop__in{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:center;padding:66px 0}
 .drop__badge{display:inline-block;background:var(--lime);color:var(--ink);font-family:'Rubik';font-weight:900;font-size:.7rem;letter-spacing:.14em;padding:.4rem .85rem;border-radius:999px;animation:badgePop 2.4s ease-in-out infinite}
 .drop h2{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:900;margin:1rem 0 .6rem}
@@ -113,7 +113,7 @@ a{color:inherit;text-decoration:none}
 .drop__dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.55);box-shadow:0 4px 10px rgba(0,0,0,.3);transition:transform .2s}
 .drop__dot:hover{transform:scale(1.15)}
 .drop__media{position:relative;display:flex;justify-content:center;align-items:center}
-.drop__glow{position:absolute;width:72%;height:72%;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.6),transparent 70%);filter:blur(26px);z-index:0;animation:pulse2 3s ease-in-out infinite}
+.drop__glow{position:absolute;width:72%;height:72%;border-radius:50%;background:radial-gradient(circle,rgba(255,183,3,.6),transparent 70%);filter:blur(26px);z-index:0;animation:pulse2 3s ease-in-out infinite}
 .drop__media img{position:relative;z-index:2;width:100%;max-width:430px;border-radius:24px;box-shadow:0 40px 80px rgba(0,0,0,.45);animation:float 6s ease-in-out infinite}
 .drop__off{position:absolute;z-index:3;top:6%;right:6%;background:radial-gradient(circle at 34% 28%,#ff9a6e,var(--coral) 58%,var(--coral-d));color:#fff;font-family:'Rubik';font-weight:900;border-radius:50%;width:80px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(240,66,31,.5);animation:badgePop 2.4s ease-in-out infinite}
 .drop__off span:first-child{font-size:1.3rem;line-height:1}.drop__off span:last-child{font-size:.5rem;letter-spacing:.1em}
@@ -205,7 +205,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:820px){.reviews{grid-template-columns:1fr}}
 
 /* OFFER */
-.offer{background:radial-gradient(120% 120% at 20% 0%,#0e6f86,#0a1622 70%);color:#fff}
+.offer{background:radial-gradient(120% 120% at 20% 0%,#e8552b,#2b0f16 70%);color:#fff}
 .offer__card{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1.05fr;gap:44px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);border-radius:28px;padding:clamp(26px,4vw,46px)}
 .offer__img{border-radius:20px;overflow:hidden;background:#fff}.offer__img img{width:100%;aspect-ratio:1;object-fit:cover}
 .offer h2{font-size:clamp(1.8rem,3.6vw,2.6rem);font-weight:800;margin:.5rem 0}
@@ -237,11 +237,11 @@ a{color:inherit;text-decoration:none}
 /* GUAR + FOOTER */
 .guar{background:var(--paper);display:flex;align-items:center;justify-content:center;gap:1.2rem;flex-wrap:wrap;padding:44px 22px}
 .guar svg{width:50px;height:50px;color:var(--teal)}.guar b{font-family:'Rubik';font-size:1.25rem;display:block}.guar p{margin:.15rem 0 0;color:var(--ink-2);font-weight:600}
-.footer{background:var(--ink);color:#9fc4d1;padding:54px 0 92px}
+.footer{background:var(--ink);color:#e8c9be;padding:54px 0 92px}
 .footer__grid{display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-bottom:2rem}
 .footer .logo{color:#fff;margin-bottom:.6rem}.footer .logo .mono{background:#fff;color:var(--ink)}.footer .logo b{color:var(--cyan)}
 .footer p{max-width:32ch;font-weight:500}.footer h4{color:#fff;font-family:'Rubik';margin:0 0 .7rem;font-size:.95rem}
-.footer a{display:block;color:#9fc4d1;margin-bottom:.45rem;font-weight:600;transition:color .2s}.footer a:hover{color:#fff}
+.footer a{display:block;color:#e8c9be;margin-bottom:.45rem;font-weight:600;transition:color .2s}.footer a:hover{color:#fff}
 .footer__bot{border-top:1px solid rgba(255,255,255,.1);padding-top:18px;font-size:.82rem;opacity:.8;font-weight:600}
 
 /* STICKY BUY */
@@ -326,19 +326,19 @@ a{color:inherit;text-decoration:none}
 .combo .cp{margin:.5rem 0 .9rem}.combo .cp b{font-family:'Rubik';font-size:1.5rem}.combo .cp s{color:var(--ink-2);opacity:.6;margin-left:.4rem;font-weight:600;font-size:1rem}
 @media(max-width:900px){.combos{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
 .tilt{will-change:transform;transition:transform .25s ease}
-.intro{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 120% at 50% 28%,#12718a,#0a1622 68%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;overflow:hidden}
+.intro{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 120% at 50% 28%,#e8552b,#2b0f16 68%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;overflow:hidden}
 .intro.hide{animation:introOut .8s cubic-bezier(.7,0,.3,1) forwards}
 @keyframes introOut{to{opacity:0;transform:scale(1.1);visibility:hidden}}
-.intro__mono{width:112px;height:112px;border-radius:28px;background:#0a1622;color:var(--lime);display:flex;align-items:center;justify-content:center;font-family:'Rubik';font-weight:900;font-size:2.4rem;letter-spacing:-.04em;box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.08);opacity:0;transform:scale(.5) rotate(-14deg);animation:mIn .85s cubic-bezier(.34,1.56,.64,1) .15s forwards}
+.intro__mono{width:112px;height:112px;border-radius:28px;background:#2b0f16;color:var(--lime);display:flex;align-items:center;justify-content:center;font-family:'Rubik';font-weight:900;font-size:2.4rem;letter-spacing:-.04em;box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.08);opacity:0;transform:scale(.5) rotate(-14deg);animation:mIn .85s cubic-bezier(.34,1.56,.64,1) .15s forwards}
 @keyframes mIn{to{opacity:1;transform:scale(1) rotate(0)}}
 .intro__name{font-family:'Rubik';font-weight:800;font-size:clamp(1.9rem,5.5vw,3rem);color:#fff;opacity:0;transform:translateY(16px);animation:iUp .7s ease .65s forwards}
-.intro__name b{background:linear-gradient(90deg,var(--cyan),#7ef0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.intro__tag{color:#9fd8e6;font-weight:700;letter-spacing:.34em;text-transform:uppercase;font-size:.7rem;opacity:0;animation:iUp .7s ease .95s forwards}
+.intro__name b{background:linear-gradient(90deg,var(--cyan),#fff0d1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.intro__tag{color:#ffd7b0;font-weight:700;letter-spacing:.34em;text-transform:uppercase;font-size:.7rem;opacity:0;animation:iUp .7s ease .95s forwards}
 @keyframes iUp{to{opacity:1;transform:none}}
 .intro__w{position:absolute;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);left:-40%;width:40%;opacity:0;animation:wSweep 1.9s ease-in-out infinite}
 @keyframes wSweep{0%{transform:translateX(0);opacity:0}25%{opacity:.55}100%{transform:translateX(360%);opacity:0}}
 .logo b{background:linear-gradient(90deg,var(--teal),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.fanlogo{width:37px;height:37px;border-radius:12px;box-shadow:0 6px 18px rgba(8,145,178,.4);flex-shrink:0}
+.fanlogo{width:37px;height:37px;border-radius:12px;box-shadow:0 6px 18px rgba(232,85,43,.4);flex-shrink:0}
 .fanlogo .blades{transform-origin:24px 24px;transition:transform .6s ease}
 .logo:hover .fanlogo .blades{transform:rotate(90deg)}
 .intro__fan{width:100px;height:100px;border-radius:26px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
@@ -371,7 +371,7 @@ a{color:inherit;text-decoration:none}
 .pop__sw{margin-top:.5rem;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
 .pop__swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid var(--line);display:inline-block;transition:transform .2s,border-color .2s}
 .pop__swatch:hover{transform:scale(1.12)}
-.pop__swatch.active{border-color:var(--teal);box-shadow:0 0 0 2px rgba(8,145,178,.18)}
+.pop__swatch.active{border-color:var(--teal);box-shadow:0 0 0 2px rgba(232,85,43,.18)}
 .pop__it img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--paper);margin-bottom:0}
 .pop__addon{display:flex;align-items:center;gap:.6rem;background:var(--paper);border:1px dashed var(--cyan);border-radius:14px;padding:.6rem .8rem;margin-bottom:12px;cursor:pointer;text-align:left}
 .pop__addon input{width:18px;height:18px;flex-shrink:0;accent-color:var(--teal)}
@@ -442,7 +442,7 @@ popBuild('popSwNeck',POP_NECK,'pickPopNeck');popBuild('popSwFlex',POP_FLEX,'pick
 
 <!-- NAV -->
 <nav class="nav" id="nav"><div class="wrap nav__in">
-  <a class="logo" href="#top"><svg class="fanlogo" viewBox="0 0 48 48"><defs><linearGradient id="wtfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#0e6f86"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#wtfg)"/><g class="blades" fill="#fff"><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(120 24 24)"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(240 24 24)"/></g><circle cx="24" cy="24" r="4.4" fill="#0a1622"/><circle cx="24" cy="24" r="2.1" fill="#c6f24e"/></svg><span class="wm">WhatThe<b>Fan</b></span></a>
+  <a class="logo" href="#top"><svg class="fanlogo" viewBox="0 0 48 48"><defs><linearGradient id="wtfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb703"/><stop offset="1" stop-color="#e8552b"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#wtfg)"/><g class="blades" fill="#fff"><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(120 24 24)"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(240 24 24)"/></g><circle cx="24" cy="24" r="4.4" fill="#2b0f16"/><circle cx="24" cy="24" r="2.1" fill="#ffd166"/></svg><span class="wm">WhatThe<b>Fan</b></span></a>
   <div class="nav__links"><a href="#ventajas">Ventajas</a><a href="#modelos">Modelos</a><a href="#comparativa">Comparativa</a><a href="#opiniones">Garantías</a><a href="#faq">FAQ</a></div>
   <div class="navr"><button class="cartbtn" onclick="openCart()" aria-label="Ver carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.2 10.5a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M8.5 7a3.5 3.5 0 0 1 7 0"/></svg><span class="cnt" id="cartCount">0</span></button><a href="#oferta" class="btn btn-cta">Comprar<span class="np"> 16,95€</span></a></div>
 </div></nav>
@@ -515,7 +515,7 @@ popBuild('popSwNeck',POP_NECK,'pickPopNeck');popBuild('popSwFlex',POP_FLEX,'pick
 <section class="sec" style="background:var(--paper)"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow">Packs con descuento</span><h2>Llévate 2 y ahorra</h2><p>Uno para ti y otro de regalo. O uno en casa y otro en el bolso.</p></div>
   <div class="combos">
-    <div class="combo reveal"><span class="tag" style="background:#00AFF0;color:#fff">Pack Doble</span><div class="combo__imgs"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S82e453781d5f498d9ac7f4bb07a017a3W.webp" alt="Flex"><span>+</span><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S8a5f4a2bb4de447ea32af7f43e63f9394.webp" alt="Mini"></div><h3>Flex + Mini</h3><p class="jk">-15% automático en el carrito</p><p class="cp"><b>22,87€</b> <s>26,90€</s></p><button class="add" style="background:linear-gradient(135deg,var(--coral),var(--coral-d))" onclick="goCheckoutItems([{v:'54210050654547',q:1},{v:'54245765546323',q:1}])">Comprar pack →</button></div>
+    <div class="combo reveal"><span class="tag" style="background:var(--teal);color:#fff">Pack Doble</span><div class="combo__imgs"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S82e453781d5f498d9ac7f4bb07a017a3W.webp" alt="Flex"><span>+</span><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S8a5f4a2bb4de447ea32af7f43e63f9394.webp" alt="Mini"></div><h3>Flex + Mini</h3><p class="jk">-15% automático en el carrito</p><p class="cp"><b>22,87€</b> <s>26,90€</s></p><button class="add" style="background:linear-gradient(135deg,var(--coral),var(--coral-d))" onclick="goCheckoutItems([{v:'54210050654547',q:1},{v:'54245765546323',q:1}])">Comprar pack →</button></div>
     <div class="combo reveal d1"><span class="tag">Pack Bestia</span><div class="combo__imgs"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/Sa01b2ad0f36b46b4a56d3c73f52e7683g.webp" alt="Ice"><span>+</span><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S722a745d84484f45bead9b07db00346dn.webp" alt="Blast"></div><h3>Ice + Blast</h3><p class="jk">-15% automático en el carrito</p><p class="cp"><b>34,77€</b> <s>40,90€</s></p><button class="add" style="background:linear-gradient(135deg,var(--coral),var(--coral-d))" onclick="goCheckoutItems([{v:'54245765415251',q:1},{v:'54245767512403',q:1}])">Comprar pack →</button></div>
     <div class="combo reveal d2"><span class="tag">Pack Casa</span><div class="combo__imgs"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/See0395c90275491b958c1873c083a571C.webp" alt="Clip"><span>+</span><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S0a49d1d8a6dc452789f9da5c938435d30.webp" alt="Power"></div><h3>Clip + Power</h3><p class="jk">-15% automático en el carrito</p><p class="cp"><b>28,82€</b> <s>33,90€</s></p><button class="add" style="background:linear-gradient(135deg,var(--coral),var(--coral-d))" onclick="goCheckoutItems([{v:'54245763154259',q:1},{v:'54245765218643',q:1}])">Comprar pack →</button></div>
     <div class="combo reveal d3"><span class="tag" style="background:var(--coral);color:#fff">Pack Manos Libres</span><div class="combo__imgs"><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/Sfd35f4ff5d8b46aea59071775c510ee6d.webp" alt="Neck"><span>+</span><img src="https://cdn.shopify.com/s/files/1/1071/1659/3491/files/S8a5f4a2bb4de447ea32af7f43e63f9394.webp" alt="Mini"></div><h3>Neck + Mini</h3><p class="jk">-15% automático en el carrito</p><p class="cp"><b>27,12€</b> <s>31,90€</s></p><button class="add" style="background:linear-gradient(135deg,var(--coral),var(--coral-d))" onclick="goCheckoutItems([{v:'54398157422931',q:1},{v:'54245765546323',q:1}])">Comprar pack →</button></div>
@@ -614,7 +614,7 @@ popBuild('popSwNeck',POP_NECK,'pickPopNeck');popBuild('popSwFlex',POP_FLEX,'pick
 <!-- FOOTER -->
 <footer class="footer"><div class="wrap">
   <div class="footer__grid">
-    <div><div class="logo"><svg class="fanlogo" viewBox="0 0 48 48"><defs><linearGradient id="wtfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#0e6f86"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#wtfg)"/><g class="blades" fill="#fff"><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(120 24 24)"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(240 24 24)"/></g><circle cx="24" cy="24" r="4.4" fill="#0a1622"/><circle cx="24" cy="24" r="2.1" fill="#c6f24e"/></svg> <span class="wm">WhatThe<b>Fan</b></span></div><p>El mini ventilador que te hará decir WTF. Hecho para el verano.</p></div>
+    <div><div class="logo"><svg class="fanlogo" viewBox="0 0 48 48"><defs><linearGradient id="wtfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb703"/><stop offset="1" stop-color="#e8552b"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#wtfg)"/><g class="blades" fill="#fff"><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(120 24 24)"/><path d="M24 24C15 19 15 9 24 7C27 13 27 19 24 24Z" transform="rotate(240 24 24)"/></g><circle cx="24" cy="24" r="4.4" fill="#2b0f16"/><circle cx="24" cy="24" r="2.1" fill="#ffd166"/></svg> <span class="wm">WhatThe<b>Fan</b></span></div><p>El mini ventilador que te hará decir WTF. Hecho para el verano.</p></div>
     <div><h4>Tienda</h4><a href="#oferta">Comprar</a><a href="#modelos">Modelos</a><a href="#opiniones">Garantías</a></div>
     <div><h4>Ayuda</h4><a href="contacto.html">Contacto</a><a href="envios.html">Envíos y entregas</a><a href="devoluciones.html">Devoluciones</a></div>
     <div><h4>Legal</h4><a href="privacidad.html">Privacidad</a><a href="terminos.html">Términos</a><a href="devoluciones.html">Reembolsos</a></div>
