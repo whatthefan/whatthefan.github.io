@@ -28,6 +28,11 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop
 .price .off{background:var(--coral);color:#fff;font-family:'Rubik';font-weight:800;padding:.2rem .6rem;border-radius:7px;font-size:.85rem}
 .pdesc{color:var(--ink-2);font-weight:500;margin-bottom:1.2rem}
 .cl{font-weight:800;font-size:.85rem;margin-bottom:.5rem}.clname{color:var(--teal)}
+.addon{display:flex;align-items:center;gap:.6rem;background:var(--paper);border:1px dashed var(--cyan);border-radius:14px;padding:.7rem .9rem;margin:.9rem 0;cursor:pointer;text-align:left}
+.addon input{width:18px;height:18px;flex-shrink:0;accent-color:var(--teal)}
+.addon img{width:40px;height:40px;object-fit:cover;border-radius:8px;background:#fff;flex-shrink:0}
+.addon span{font-size:.82rem;font-weight:700;color:var(--ink-2);line-height:1.35}
+.addon span b{color:var(--ink)}
 .buys{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.4rem}
 .mini{display:flex;gap:1.3rem;margin-top:1.2rem;font-size:.82rem;font-weight:700;color:var(--ink-2);flex-wrap:wrap}
 .mini span{display:inline-flex;gap:.35rem;align-items:center}.mini svg{width:16px;height:16px;color:var(--teal)}
@@ -69,19 +74,23 @@ document.title=d.name+' · WhatTheFan';
 var ci=0,sel=d.colors[0][2];
 var off=Math.round((1-d.price/d.was)*100);
 function money(n){return n.toFixed(2).replace('.',',')+'€'}
-function goCheckout(v,q){var f=document.createElement('form');f.method='post';f.action='https://beyondandbeauty.myshopify.com/cart/add';f.style.display='none';function inp(n,val){var i=document.createElement('input');i.name=n;i.value=val;f.appendChild(i)}inp('id',v);inp('quantity',q||1);inp('checkout','1');document.body.appendChild(f);f.submit()}
-function checkoutVariant(v){goCheckout(v,1)}
-function buy2(){goCheckout(sel,2)}
+var MINI_V='54245765546323';
+function goCheckout(v,q){goCheckoutMulti([{v:v,q:q}])}
+function goCheckoutMulti(items){var f=document.createElement('form');f.method='post';f.action='https://beyondandbeauty.myshopify.com/cart/add';f.style.display='none';items.forEach(function(it,idx){function inp(n,val){var i=document.createElement('input');i.name=n;i.value=val;f.appendChild(i)}inp('items['+idx+'][id]',it.v);inp('items['+idx+'][quantity]',it.q||1)});var rt=document.createElement('input');rt.name='return_to';rt.value='/checkout';f.appendChild(rt);document.body.appendChild(f);f.submit()}
+function withAddon(items){var up=document.getElementById('upsell');if(up&&up.checked)items.push({v:MINI_V,q:1});return items}
+function checkoutVariant(v){goCheckoutMulti(withAddon([{v:v,q:1}]))}
+function buy2(){goCheckoutMulti(withAddon([{v:sel,q:2}]))}
 function addLocal(){try{var c=JSON.parse(localStorage.getItem('wtf_cart')||'[]');var e=c.find(function(x){return x.v===sel});if(e)e.q++;else c.push({v:sel,n:d.name+' · '+d.colors[ci][0],p:d.price,i:B+d.colors[ci][3]+'.webp',q:1});localStorage.setItem('wtf_cart',JSON.stringify(c))}catch(e){}var t=document.getElementById('toast');t.classList.add('show');setTimeout(function(){t.classList.remove('show')},4000)}
 document.getElementById('toastGo').onclick=function(e){e.preventDefault();var c=JSON.parse(localStorage.getItem('wtf_cart')||'[]');if(c.length)location.href='https://beyondandbeauty.myshopify.com/cart/'+c.map(function(x){return x.v+':'+x.q}).join(',')};
 var app=document.getElementById('app');
 app.innerHTML=
 '<div class="top">'+
 '<div><div class="gal__main"><img id="mimg" src="'+B+d.colors[0][3]+'.webp" alt="'+d.name+'"></div><div class="gal__t">'+d.colors.map(function(c,i){return '<img class="'+(i===0?'active':'')+'" src="'+B+c[3]+'.webp" onclick="pick('+i+')" title="'+c[0]+'" alt="'+c[0]+'">'}).join('')+'</div></div>'+
-'<div><span class="tag">'+d.tag+'</span><h1 class="pname">'+d.name+'</h1><div class="rate"><span class="stars">★★★★★</span> 4,8 · +1.900 reseñas</div>'+
+'<div><span class="tag">'+d.tag+'</span><h1 class="pname">'+d.name+'</h1>'+
 '<div class="price"><span class="now">'+money(d.price)+'</span><span class="was">'+money(d.was)+'</span><span class="off">-'+off+'%</span></div>'+
 '<p class="pdesc">'+d.desc+'</p>'+
 '<div class="cl">Color: <span class="clname" id="clname">'+d.colors[0][0]+'</span></div><div class="gal__t" style="margin-top:0">'+d.colors.map(function(c,i){return '<img class="'+(i===0?'active':'')+'" src="'+B+c[3]+'.webp" onclick="pick('+i+')" title="'+c[0]+'" alt="'+c[0]+'">'}).join('')+'</div>'+
+(slug!=='mini'?'<label class="addon" for="upsell"><input type="checkbox" id="upsell"><img src="'+B+'S8a5f4a2bb4de447ea32af7f43e63f9394.webp" alt="Mini"><span>Añade el <b>WTF Mini</b> por solo <b>9,95€</b> más · el regalo perfecto</span></label>':'')+
 '<div class="buys"><button class="btn btn-cta" style="flex:1;min-width:180px" onclick="checkoutVariant(sel)">Comprar ahora →</button><button class="btn btn-dark" onclick="addLocal()">Añadir al carrito</button><button class="btn btn-dark" onclick="buy2()">Llévate 2 (-15%)</button></div>'+
 '<div class="mini"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Envío 7-15 días</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Garantía 30 días</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Pago seguro</span></div>'+
 '</div></div>'+
