@@ -23,9 +23,10 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop
 .tag{display:inline-block;background:var(--paper);border:1px solid var(--line);color:var(--teal);font-family:'Rubik';font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .8rem;border-radius:999px}
 .pname{font-size:clamp(1.8rem,3.6vw,2.6rem);font-weight:800;margin:.8rem 0 .4rem}
 .rate{color:var(--ink-2);font-weight:700;font-size:.9rem;margin-bottom:1rem}
-.price{display:flex;align-items:baseline;gap:.7rem;margin:.4rem 0 1.2rem}
-.price .now{font-family:'Rubik';font-size:2.2rem;font-weight:900}.price .was{opacity:.55;text-decoration:line-through;font-weight:700}
-.price .off{background:var(--coral);color:#fff;font-family:'Rubik';font-weight:800;padding:.2rem .6rem;border-radius:7px;font-size:.85rem}
+.price{display:flex;align-items:baseline;gap:.7rem;margin:.4rem 0 .4rem;flex-wrap:wrap}
+.price .now{font-family:'Rubik';font-size:2.6rem;font-weight:900;color:var(--teal-d)}.price .was{opacity:.55;text-decoration:line-through;font-weight:700;font-size:1.1rem}
+.price .off{background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;font-family:'Rubik';font-weight:900;padding:.3rem .7rem;border-radius:8px;font-size:.9rem;box-shadow:0 8px 18px rgba(230,53,92,.4)}
+.price__save{display:inline-block;font-size:.78rem;font-weight:800;color:#16a34a;background:#dcfce7;padding:.2rem .55rem;border-radius:6px;margin-bottom:1rem}
 .pdesc{color:var(--ink-2);font-weight:500;margin-bottom:1.2rem}
 .cl{font-weight:800;font-size:.85rem;margin-bottom:.5rem}.clname{color:var(--teal)}
 .addon{display:flex;align-items:center;gap:.6rem;background:var(--paper);border:1px dashed var(--cyan);border-radius:14px;padding:.7rem .9rem;margin:.9rem 0;cursor:pointer;text-align:left}
@@ -88,6 +89,7 @@ app.innerHTML=
 '<div><div class="gal__main"><img id="mimg" src="'+B+d.colors[0][3]+'.webp" alt="'+d.name+'"></div><div class="gal__t">'+d.colors.map(function(c,i){return '<img class="'+(i===0?'active':'')+'" src="'+B+c[3]+'.webp" onclick="pick('+i+')" title="'+c[0]+'" alt="'+c[0]+'">'}).join('')+'</div></div>'+
 '<div><span class="tag">'+d.tag+'</span><h1 class="pname">'+d.name+'</h1>'+
 '<div class="price"><span class="now">'+money(d.price)+'</span><span class="was">'+money(d.was)+'</span><span class="off">-'+off+'%</span></div>'+
+'<span class="price__save">Ahorras '+money(d.was-d.price)+'</span>'+
 '<p class="pdesc">'+d.desc+'</p>'+
 '<div class="cl">Color: <span class="clname" id="clname">'+d.colors[0][0]+'</span></div><div class="gal__t" style="margin-top:0">'+d.colors.map(function(c,i){return '<img class="'+(i===0?'active':'')+'" src="'+B+c[3]+'.webp" onclick="pick('+i+')" title="'+c[0]+'" alt="'+c[0]+'">'}).join('')+'</div>'+
 (slug!=='mini'?'<label class="addon" for="upsell"><input type="checkbox" id="upsell"><img src="'+B+'S8a5f4a2bb4de447ea32af7f43e63f9394.webp" alt="Mini"><span>Añade el <b>WTF Mini</b> por solo <b>9,95€</b> más · el regalo perfecto</span></label>':'')+
