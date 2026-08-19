@@ -1,0 +1,159 @@
+PLEA5E - página web
+====================
+
+COMO PUBLICARLA (5 minutos, gratis, sin instalar nada)
+------------------------------------------------------
+1. Descomprime este ZIP. Te queda una carpeta con:
+      index.html   <- la web entera
+      og.jpg       <- la foto que sale al compartir el enlace
+      r/           <- las paginas de salto de cada local (ver abajo)
+      robots.txt
+      LEEME.txt    <- esto
+
+2. Entra en   https://app.netlify.com/drop
+   (si te pide cuenta, entra con Google, es gratis)
+
+3. ARRASTRA LA CARPETA ENTERA a la zona que pone "Drag and drop your site".
+   Ojo: la carpeta, no los archivos sueltos.
+
+4. En 10 segundos te da una dirección tipo
+      https://algo-random-123.netlify.app
+   Esa ya es tu web, funcionando, en internet.
+
+5. PONLE EL NOMBRE  plea5e  (esto NO es opcional)
+   Site configuration > Change site name  ->  escribe: plea5e
+   Tiene que quedar   https://plea5e.netlify.app
+
+   Los QR de las placas llevan esa direccion impresa dentro. Si el
+   sitio se llama de otra forma, los QR no llevan a ningun lado.
+
+6. Si algun dia compras un dominio (plea5e.es, ~12 EUR/año):
+   Domain management > Add a domain -> lo escribes y Netlify te dice
+   los 2 datos que hay que copiar donde compraste el dominio.
+   El certificado HTTPS te lo pone Netlify solo y gratis.
+
+PARA ACTUALIZARLA MAS ADELANTE
+------------------------------
+Vuelves a la misma pagina del sitio en Netlify, pestaña "Deploys",
+y arrastras otra vez la carpeta. Se sobreescribe, la direccion no cambia.
+
+EL WHATSAPP
+-----------
+Todos los botones de pedir llevan a  +34 661 403 219  con el mensaje
+ya escrito: producto, cantidad, precio total, precio por unidad,
+nombre del negocio, ciudad, telefono y lo que hayan escrito en
+"como lo quieres". Tu solo tienes que contestar.
+
+Si algun dia cambias de numero: abre index.html con el Bloc de notas,
+Buscar y reemplazar   661403219   por el nuevo (sale varias veces),
+guarda y vuelve a arrastrar la carpeta a Netlify.
+
+
+LO QUE FALTA POR RELLENAR
+-------------------------
+Abre index.html con el Bloc de notas y busca:
+
+    RELLENA ESTO CUANDO LO TENGAS
+
+Justo debajo hay dos bloques. Pones el dato entre las comillas,
+guardas, y vuelves a arrastrar la carpeta a Netlify.
+
+1) DATOS  -> para el aviso legal.
+   En España, si vendes por internet, el aviso legal tiene que llevar
+   tu nombre o razon social, tu NIF y tu domicilio. Ahora mismo esas
+   lineas no salen porque estan vacias, y el aviso legal esta incompleto.
+   Lo que dejes en blanco simplemente no aparece, no rompe nada.
+
+       titular:   'Tu nombre o razon social'
+       nif:       '12345678A'
+       domicilio: 'Calle Ejemplo 1, 41001 Sevilla'
+       email:     'hola@plea5e.es'
+
+2) LOCALES -> los enlaces de Piccola y BARVI.
+   Ya estan puestos: son los mismos codigos de Google que llevan
+   impresos en el QR de sus placas, asi que la placa de cada uno ya
+   es pulsable y lleva a dejarles resena, y sale "Ver donde esta".
+
+       piccola: ChIJZca-8BbQDQ0RIByaopjYtHY
+       barvi:   ChIJjYNmjvrRDQ0RVVaESvW5Yhs
+
+   Si algun dia quieres quitar un local de la web, borra su codigo
+   entre las comillas y los botones dejan de salir.
+
+   Para anadir otro local: copias una linea, pones su nombre y su
+   codigo de Google (perfil de Google Business -> Pedir resenas ->
+   Compartir formulario; el codigo es lo que va detras de placeid=).
+
+   Ojo: pide permiso a Piccola y a BARVI para seguir usando sus logos
+   como ejemplo y para enlazar sus resenas.
+
+
+LAS PAGINAS DE SALTO (carpeta r/)  -> para contar cuanta gente toca
+--------------------------------------------------------------------
+Dentro de r/ hay una pagina por local. Cuando publiques la web quedan en:
+
+      https://plea5e.netlify.app/r/piccola
+      https://plea5e.netlify.app/r/barvi
+      https://plea5e.netlify.app/r/fenomena
+
+Lo que hacen: se abren, esperan 350 ms, y saltan solas a la resena de
+Google de ese local. El cliente ve medio segundo de "Abriendo Google..."
+y ya esta escribiendo. Pesan 1,8 KB, cargan al instante.
+
+Para que sirven: si el QR y el chip apuntan ahi en vez de a Google
+directo, tu analitica cuenta cada visita. Asi sabes cuanta gente usa
+las placas de cada local y por dias. Hoy no lo sabes.
+
+EL CONTADOR YA ESTA PUESTO
+-------------------------
+Las tres paginas de salto (piccola, barvi y fenomena) ya llevan dentro
+Cloudflare Web Analytics, que es gratis y sin cookies (por eso la web no
+necesita banner de consentimiento de verdad). Cada visita queda contada
+antes de saltar a Google.
+
+Para ver los numeros: entras en Cloudflare > Web Analytics y ahi tienes
+las visitas por dia y por pagina, o sea, por local.
+
+Si algun dia cambias de contador, el trozo que hay que sustituir esta al
+principio de r/piccola/index.html (y en las otras dos), entre los
+comentarios que ponen "Cloudflare Web Analytics".
+
+OJO CON LAS PLACAS YA IMPRESAS
+------------------------------
+Las de Piccola y BARVI llevan el QR impreso apuntando directo a Google.
+Un QR impreso no se puede cambiar: para que pasen por la pagina de salto
+habria que reimprimirlas.
+
+El chip NFC SI se puede reprogramar con el movil sin reimprimir nada.
+Asi que en las que ya estan puestas puedes cambiar solo el TAP, y dejar
+el QR como esta. Contaras los toques por NFC, que suelen ser la mayoria.
+
+De aqui en adelante, en las placas nuevas pon las dos cosas apuntando a
+    https://plea5e.netlify.app/r/nombre-del-local
+
+Para dar de alta un local nuevo: copia la carpeta r/piccola, renombrala,
+y dentro cambia el codigo de Google (el que va detras de placeid=).
+
+Y una cosa importante: el enlace directo a Google convierte mas, porque
+es un paso menos. Si un local no quiere estadisticas, dejale el directo.
+
+
+EL LOGOTIPO (agosto 2026)
+-------------------------
+El logotipo es ahora un dibujo vectorial unico: la estrella con el 5
+dentro, las alas y los dos destellos, tal cual el original de la tarjeta.
+Ese mismo dibujo lo usan la cabecera, el pie, las placas, los modelos 3D
+y el icono de la pestana, asi que la marca sale identica en todo y a
+cualquier tamano. No depende de que cargue la tipografia.
+
+Si algun dia hay que retocarlo, esta en index.html en dos sitios:
+  - window.MARCA5  (arriba del todo del bloque de guion): el dibujo en si.
+  - la etiqueta <svg class="mk">: la copia de la cabecera y la del pie.
+Los dos llevan las mismas medidas; si tocas uno, toca el otro.
+
+OJO CON LA DIRECCION
+--------------------
+Las etiquetas para compartir (og:image, og:url) llevan escrita la
+direccion  https://plea5e.netlify.app  para que WhatsApp y Facebook
+saquen la foto al pegar el enlace. Si algun dia le pones dominio propio,
+busca "plea5e.netlify.app" en index.html y cambialo por el nuevo.

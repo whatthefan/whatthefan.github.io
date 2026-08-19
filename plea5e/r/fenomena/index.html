@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Un momento…</title>
+
+<!-- vamos abriendo conexion con Google mientras se cuenta la visita:
+     asi cuando saltamos, el saludo con el servidor ya esta hecho -->
+<link rel="preconnect" href="https://search.google.com" crossorigin>
+<link rel="dns-prefetch" href="https://search.google.com">
+<link rel="dns-prefetch" href="https://static.cloudflareinsights.com">
+
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "2bf6eaf7c08548f4b6b28b96e46c4654"}'></script><!-- End Cloudflare Web Analytics -->
+
+<script>
+/* Saltamos a Google en cuanto la visita queda registrada.
+   No vale con esperar a que cargue el contador: hay que esperar a que
+   ADEMÁS haya mandado el aviso a Cloudflare. Ese envío se ve en el
+   registro de red del navegador, así que lo vigilamos y en cuanto sale,
+   saltamos. Si lo bloquean o tarda, saltamos igual: nadie espera más
+   del tope.                                                            */
+var TOPE = 900;       // nunca dejamos al cliente esperando más que esto
+var COLA = 0;         // cuando el aviso sale en el registro es que ya llego
+
+var DESTINO = 'https://search.google.com/local/writereview?placeid=ChIJRYamQADRDQ0RzOEdkkSag0Y';
+var ido = false;
+function saltar(){ if (ido) return; ido = true; clearInterval(vigila); location.replace(DESTINO); }
+
+setTimeout(saltar, TOPE);
+
+/* ¿ha salido ya el aviso? es cualquier peticion a cloudflareinsights
+   que no sea el propio archivo del contador */
+function avisoEnviado(){
+  try {
+    var r = performance.getEntriesByType('resource');
+    for (var i = 0; i < r.length; i++) {
+      if (r[i].name.indexOf('cloudflareinsights') >= 0 &&
+          r[i].name.indexOf('beacon.min.js') < 0) return true;
+    }
+  } catch (e) {}
+  return false;
+}
+var vigila = setInterval(function(){
+  if (avisoEnviado()) { clearInterval(vigila); COLA ? setTimeout(saltar, COLA) : saltar(); }
+}, 20);
+
+/* si el contador no carga (bloqueador, sin cobertura), no le hacemos esperar */
+var cf = document.querySelector('script[src*="cloudflareinsights"]');
+if (cf) cf.addEventListener('error', saltar);
+else    saltar();
+</script>
+<meta http-equiv="refresh" content="3;url=https://search.google.com/local/writereview?placeid=ChIJRYamQADRDQ0RzOEdkkSag0Y">
+<style>
+  html,body{height:100%;margin:0}
+  body{background:#06080E;color:#E8EAF0;display:grid;place-items:center;text-align:center;
+       font:400 15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:24px}
+  .p{width:34px;height:34px;margin:0 auto 18px;border-radius:50%;
+     border:3px solid rgba(233,188,70,.25);border-top-color:#E9BC46;
+     animation:g .8s linear infinite}
+  @keyframes g{to{transform:rotate(360deg)}}
+  b{display:block;font-weight:600}
+  small{display:block;margin-top:6px;color:#8A93A6}
+  a{display:inline-block;margin-top:22px;color:#E9BC46;font-size:14px}
+</style>
+</head>
+<body>
+  <div>
+    <div class="p"></div>
+    <b>Abriendo Google…</b>
+    <small>Deja tu reseña a La Fenómena</small>
+    <a href="https://search.google.com/local/writereview?placeid=ChIJRYamQADRDQ0RzOEdkkSag0Y">Si no se abre solo, toca aquí</a>
+  </div>
+</body>
+</html>
