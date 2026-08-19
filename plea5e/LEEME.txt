@@ -142,6 +142,9 @@ EL LOGOTIPO (agosto 2026)
 -------------------------
 El logotipo es ahora un dibujo vectorial unico: la estrella con el 5
 dentro, las alas y los dos destellos, tal cual el original de la tarjeta.
+Los saltos de aire cuentan: entre el ala y el destello, y entre el destello
+y la raya que cruza la pantalla, queda un hueco a proposito. La raya la
+pinta el guion y muere en el canto del dibujo, para que ese hueco se vea.
 Ese mismo dibujo lo usan la cabecera, el pie, las placas, los modelos 3D
 y el icono de la pestana, asi que la marca sale identica en todo y a
 cualquier tamano. No depende de que cargue la tipografia.
