@@ -1,0 +1,5 @@
+PLEA5E
+subido: 2026-08-16 17:21 UTC
+contador de Cloudflare: SI
+revision: 2026-08-20 - logotipo completo (estrella, brazos y chispas),
+modelos 3D en las tres fichas y QR a plea5e.es
