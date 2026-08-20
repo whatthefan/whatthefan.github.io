@@ -88,53 +88,13 @@ p{margin:0}
 .etq::before{content:"";position:absolute;left:-100vw;right:calc(100% - 22px);
   top:50%;height:2px;margin-top:-1px;background:var(--oro);opacity:.55}
 
-/* logotipo */
+/* logotipo: el mismo dibujo de la tarjeta, en vector y con las letras ya
+   trazadas (no hace falta tener Anton instalada). Una sola pieza estatica,
+   nada que la pantalla tenga que recalcular. */
 .marca{display:inline-flex;align-items:center;line-height:1;text-decoration:none}
-.wm{position:relative;display:flex;align-items:baseline;font-family:"Anton",sans-serif;
-    font-weight:400;font-size:var(--wm,1.44rem);letter-spacing:.012em;line-height:1;color:#fff}
-.lt{position:relative;z-index:2}
-.five{position:relative;display:inline-block;margin:0 -.04em}
-.five{margin:0 .02em}
-/* Logotipo: la estrella abraza el 5 y la banda le sale por los dos lados,
-   continua y con el mismo vuelo (1.35em) a izquierda y a derecha. Banda y
-   estrella comparten centro (43%), asi no se ven escalones dentro de la
-   estrella. Medidas sobre la linea base de .five (92%). */
-.five .st{position:absolute;left:50%;top:45%;width:1.75em;height:1.75em;
-          transform:translate(-50%,-50%);fill:#E9BC46;z-index:1}
-/* el 5 recortado sobre la estrella, como el modelo D */
-.five .n{position:relative;z-index:2;color:#0A0E16}
-/* la banda vuela 1.35em por fuera de la caja del texto por cada lado:
-   hay que reservarle ese hueco o se come lo que tenga al lado */
-/* a la derecha hay que reservar tambien lo que ocupa la chispa (2,284 em de
-   centro + medio destello), o se le monta encima a lo que venga detras */
-.wm{margin-left:1.35em;margin-right:2.6em}
-.ala{position:absolute;top:calc(45% - .5em);height:1em;z-index:0}
-/* El brazo NO es una raya pegada a la estrella: es el propio brazo de la
-   estrella, estirado. El recorte sigue las dos aristas que salen de sus
-   vertices interiores, asi que brazo y linea son el mismo trazo. */
-.ai{right:50%;width:14em;clip-path:polygon(98.448% 20.054%,75.971% 20.036%,75.971% 30.215%,97.487% 61.431%);background:#E9BC46}
-.ad{left:50%;width:14em;clip-path:polygon(1.552% 20.054%,14.35% 20.036%,14.35% 30.215%,2.513% 61.431%);background:#E9BC46}
-/* Las dos chispas: rematan cada brazo justo donde se queda fino y arranca la
-   banda, como en la tarjeta y como se pintan en las placas. .ai/.ad estan
-   centrados en el propio .five (el 5, no la palabra entera) via right:50%/
-   left:50%, con clip-path que solo deja ver la cuna de 75.971% a 98.448% de
-   su caja de 14em: eso son de 3.364em a 0.217em del centro del 5, en los dos
-   lados por igual. Ahi es donde la cuna del brazo se convierte en banda
-   larga, y es donde va pegada la chispa, sin hueco, tal como en la tarjeta. */
-.chispa{position:absolute;top:45%;width:.6em;height:.6em;
-        transform:translate(-50%,-50%);fill:#E9BC46;z-index:1;pointer-events:none}
-.ci{left:calc(50% - 3.364em)}
-.cd{left:calc(50% + 3.364em)}
-/* La banda no se corta en la punta: sigue finita de lado a lado de la pantalla,
-   igual que en las placas. overflow-x:clip la recorta sin crear scroll lateral
-   (a diferencia de overflow:hidden, deja salir el menú desplegable). */
-.nav,.pie{overflow-x:clip}
-/* la tira que cruza la pantalla: el fondo se lo pinta el guion, que mide
-   que hay delante y deja el hueco justo antes y justo despues */
-.con-tira{position:relative}
-/* el guion le pone alto, sitio y fondo; el oro es el mismo del logotipo,
-   sin rebajar: si no, se ven dos amarillos distintos */
-.tira{position:absolute;z-index:-1;pointer-events:none}
+.logotipo{height:2.15rem;width:auto;display:block}
+.marca-pie .logotipo{height:1.9rem}
+@media (max-width:560px){.logotipo{height:1.7rem}}
 
 /* botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;
@@ -1002,9 +962,9 @@ body::after{
 </style>
 
 <header class="nav">
-  <div class="env con-tira"><i class="tira" aria-hidden="true"></i>
+  <div class="env">
     <a class="marca" href="#arriba" aria-label="PLEA5E — inicio">
-      <span class="wm"><span class="lt">PLEA</span><span class="five"><i class="ala ai"></i><i class="ala ad"></i><svg class="chispa ci" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.121 7.879L20 10l-7.879 2.121L10 20l-2.121-7.879L0 10l7.879-2.121z"/></svg><svg class="chispa cd" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.121 7.879L20 10l-7.879 2.121L10 20l-2.121-7.879L0 10l7.879-2.121z"/></svg><svg class="st" viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><span class="n">5</span></span><span class="lt">E</span></span>
+      <svg class="logotipo" viewBox="-4200 -1290 8400 1680" role="img" aria-label="PLEA5E"><g fill="#E9BC46">  <rect x="-4200.0" y="-760.0" width="998.2" height="100.5"/><rect x="3201.8" y="-760.0" width="998.2" height="100.5"/>  <path d="M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z"/>  <path d="M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z"/>  <path d="M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z"/></g><g fill="#FFFFFF">  <path d="M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9"/>  <path d="M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5"/></g><path fill="#0A0E16" d="M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2"/></svg>
     </a>
     <span class="est5" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg></span>
     <span class="raya-v" aria-hidden="true"></span>
@@ -1316,9 +1276,9 @@ body::after{
 <footer class="pie">
   <div class="env">
     <div class="pie-rej">
-      <div class="pie-marca con-tira"><i class="tira" aria-hidden="true"></i>
-        <a class="marca" href="#arriba" style="--wm:1.34rem" aria-label="PLEA5E — inicio">
-          <span class="wm"><span class="lt">PLEA</span><span class="five"><i class="ala ai"></i><i class="ala ad"></i><svg class="chispa ci" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.121 7.879L20 10l-7.879 2.121L10 20l-2.121-7.879L0 10l7.879-2.121z"/></svg><svg class="chispa cd" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.121 7.879L20 10l-7.879 2.121L10 20l-2.121-7.879L0 10l7.879-2.121z"/></svg><svg class="st" viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><span class="n">5</span></span><span class="lt">E</span></span>
+      <div class="pie-marca">
+        <a class="marca marca-pie" href="#arriba" aria-label="PLEA5E — inicio">
+          <svg class="logotipo" viewBox="-4200 -1290 8400 1680" role="img" aria-label="PLEA5E"><g fill="#E9BC46">  <rect x="-4200.0" y="-760.0" width="998.2" height="100.5"/><rect x="3201.8" y="-760.0" width="998.2" height="100.5"/>  <path d="M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z"/>  <path d="M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z"/>  <path d="M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z"/></g><g fill="#FFFFFF">  <path d="M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9"/>  <path d="M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5"/></g><path fill="#0A0E16" d="M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2"/></svg>
         </a>
         <span class="est5" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg></span>
         <p>Placas, expositores de pie y tarjetas con chip NFC y código QR para que tus clientes te dejen la reseña en Google sin buscarte. Diseñadas de cero con tu marca, fabricadas y enviadas desde España.</p>
@@ -5990,94 +5950,6 @@ three/build/three.module.js:
 
   document.getElementById('anyo').textContent = new Date().getFullYear();
 
-  /* ---- la banda del logotipo, de lado a lado de la pantalla ----
-     Va a la altura del ala del logotipo y se corta al llegar a cualquier
-     cosa que tenga delante (estrellas, botones, enlaces...), y sigue al
-     pasarla. Los huecos se calculan midiendo de verdad, no a ojo, asi que
-     valen para cualquier ancho de pantalla y en cualquier idioma.        */
-  function tenderBanda(fila) {
-    var tira = fila.querySelector('.tira'), ala = fila.querySelector('.ala');
-    if (!tira || !ala) return;
-    var cajaFila = fila.getBoundingClientRect();
-    var r = ala.getBoundingClientRect(), y = r.top + r.height / 2;
-    /* La banda se clava en pixeles enteros y DESPUES se recorta la punta del
-       brazo para que caiga en esos mismos pixeles. Al reves no funciona:
-       pidiendo decimales, el navegador pinta la tira un poco mas fina y un poco
-       mas baja que el brazo, y en la union un borde casa y el otro salta.
-       El resto del recorte son los vertices de la estrella, que no se tocan.  */
-    var gordo = Math.max(2, Math.round(r.height * 0.10179));
-    var yTop = Math.round(r.top + r.height * 0.20036);
-    tira.style.height = gordo + 'px';
-    tira.style.top = (yTop - cajaFila.top) + 'px';
-
-    var pa = ((yTop - r.top) / r.height * 100).toFixed(3);
-    var pb = ((yTop + gordo - r.top) / r.height * 100).toFixed(3);
-    var alas = fila.querySelectorAll('.marca .ala');
-    for (var k = 0; k < alas.length; k++) {
-      alas[k].style.clipPath = alas[k].classList.contains('ai')
-        ? 'polygon(98.448% 20.054%,75.971% ' + pa + '%,75.971% ' + pb + '%,97.487% 61.431%)'
-        : 'polygon(1.552% 20.054%,14.35% ' + pa + '%,14.35% ' + pb + '%,2.513% 61.431%)';
-    }
-    // de borde a borde de la ventana: la fila no tiene por que estar centrada
-    tira.style.left = -cajaFila.left + 'px';
-    tira.style.width = innerWidth + 'px';
-
-    /* Se baja hasta la pieza mas pequena que toca la linea. Si se quedara en
-       el padre, una columna entera contaria como estorbo y la linea moriria
-       ahi; asi solo estorba el titulillo que de verdad esta a esa altura.  */
-    var MARGEN = 9;
-    var huecos = (function mirar(nodo) {
-      var res = [];
-      for (var i = 0; i < nodo.children.length; i++) {
-        var h = nodo.children[i];
-        if (h.classList.contains('tira') || h.closest('.marca')) continue;
-        var c = h.getBoundingClientRect();
-        if (!c.width || !c.height) continue;
-        if (c.bottom + MARGEN <= y || c.top - MARGEN >= y) continue;
-        // solo se baja a los hijos si el elemento es un cajon sin texto propio:
-        // si no, un boton con su iconito dejaria pasar la raya por las letras
-        var puroCajon = !Array.prototype.some.call(h.childNodes, function (n) {
-          return n.nodeType === 3 && n.textContent.trim();
-        });
-        var dentro = puroCajon ? mirar(h) : [];
-        if (dentro.length) res = res.concat(dentro);
-        else res.push([c.left - MARGEN, c.right + MARGEN]);
-      }
-      return res;
-    })(fila);
-
-    /* El logotipo NO se pone como estorbo: la tira pasa por debajo, entera y
-       de una pieza, y el ala se le monta encima. Como son el mismo oro y la
-       tira mide justo lo que la punta del ala, el ala la tapa del todo y no
-       hay ninguna union que se pueda ver. Cortarla y empalmarla, aunque sea
-       al pixel, siempre deja un escaloncito en uno de los dos bordes.     */
-
-    huecos.sort(function (a, b) { return a[0] - b[0]; });
-    var tramos = [], cur = null;
-    huecos.forEach(function (h) {
-      if (cur && h[0] <= cur[1]) cur[1] = Math.max(cur[1], h[1]);
-      else { cur = [h[0], h[1]]; tramos.push(cur); }
-    });
-
-    var ORO = '#E9BC46', partes = [], x = 0;
-    tramos.forEach(function (t) {
-      var a = Math.max(0, t[0]), b = Math.min(innerWidth, t[1]);
-      if (b <= x) return;
-      partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
-      x = b;
-    });
-    partes.push(ORO + ' ' + x + 'px 100%');
-    tira.style.background = 'linear-gradient(to right,' + partes.join(',') + ')';
-  }
-
-  function tenderTodas() {
-    var filas = document.querySelectorAll('.con-tira');
-    for (var i = 0; i < filas.length; i++) tenderBanda(filas[i]);
-  }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(tenderTodas);
-  tenderTodas();
-  addEventListener('resize', tenderTodas);
-  addEventListener('load', tenderTodas);
 })();
 </script>
 
