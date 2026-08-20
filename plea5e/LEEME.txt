@@ -74,13 +74,24 @@ qr/     el codigo QR que lleva a  https://plea5e.es
           qr-plea5e-es-plano.svg / .png  a pelo, sin margen ni fondo, para
                                          meterlo dentro de otro diseno
 
-        Es el que sale en la tarjeta del pie de la web y el que llevan
-        impreso las placas de ejemplo que se ven en 3D. Esta comprobado que
-        se lee: apunta a plea5e.es y a nada mas.
+        Es el que llevan impreso las placas de ejemplo que se ven en 3D en
+        la web. Esta comprobado que se lee: apunta a plea5e.es y a nada mas.
 
         OJO: para que ese QR sirva de algo, plea5e.es tiene que estar
         apuntando a esta web (Netlify > Domain management > Add a domain).
         Mientras no lo este, el QR se lee pero no abre nada.
+
+tarjeta/  la tarjetita tuya (la misma foto que mandaste) lista para
+          imprimir, con el QR cambiado para que lleve a plea5e.es y el
+          texto de abajo actualizado a ese mismo dominio.
+
+          tarjeta-plea5e.png   1376x924 px. Para repartir cuando te
+                                pregunten por tus datos y a que te dedicas.
+
+          Es la misma imagen de siempre, solo se le ha tocado el QR y esa
+          linea de texto: el logotipo, los colores y el resto no se han
+          movido. Si quieres una resolucion mayor para imprenta grande,
+          dimelo.
 
 
 LOS MODELOS 3D DE LAS PLACAS
