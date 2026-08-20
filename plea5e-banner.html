@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLEA5E — banner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#000}
+  .plea5e-banner{display:block;width:100%;height:auto}
+  .plea5e-banner .p5-word{
+    font-family:'Anton','Montserrat','Oswald','Impact','Haettenschweiler',
+                'Arial Narrow',Arial,sans-serif;
+    font-weight:900;font-size:124px;fill:#FFFFFF;
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== BANNER PLEA5E (SVG inline, escalable) ====== -->
+<svg class="plea5e-banner" viewBox="0 0 1200 320" role="img"
+     aria-label="PLEA5E" preserveAspectRatio="xMidYMid meet"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <!-- 1 · Fondo negro -->
+  <rect width="1200" height="320" fill="#000000"/>
+
+  <!-- 2 · Línea base dorada, de lado a lado -->
+  <rect x="0" y="156" width="1200" height="8" fill="#F5BD1F"/>
+
+  <!-- 4 · Estrella de 5 puntas (detrás del texto) -->
+  <path fill="#F5BD1F"
+        d="M600 62 L628.8 129.4 L701.7 135.6 L646.4 183.5 L663 254.8
+           L600 217 L537 254.8 L553.6 183.5 L498.3 135.6 L571.2 129.4 Z"/>
+
+  <!-- 3 · Brazos en rampa: dos cuñas simétricas que se afilan hacia los lados -->
+  <path fill="#F5BD1F"
+        d="M180 156 L600 102 L1020 156 L1020 164 L600 218 L180 164 Z"/>
+
+  <!-- 6 · Destellos de 4 puntas sobre la línea -->
+  <g fill="#F5BD1F">
+    <path d="M140 118 C146 152 152 158 186 160 C152 162 146 168 140 202
+             C134 168 128 162 94 160 C128 158 134 152 140 118 Z"/>
+    <path d="M1060 118 C1066 152 1072 158 1106 160 C1072 162 1066 168 1060 202
+             C1054 168 1048 162 1014 160 C1048 158 1054 152 1060 118 Z"/>
+  </g>
+
+  <!-- 5 · Logotipo -->
+  <text class="p5-word" x="600" y="202" text-anchor="middle"
+        textLength="336" lengthAdjust="spacingAndGlyphs">PLEA5E</text>
+</svg>
+<!-- ====== /BANNER ====== -->
+
+</body>
+</html>
