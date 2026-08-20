@@ -95,6 +95,12 @@ p{margin:0}
 .logotipo{height:2.15rem;width:auto;display:block}
 .marca-pie .logotipo{height:1.9rem}
 @media (max-width:560px){.logotipo{height:1.7rem}}
+/* la banda sigue mas alla del logotipo, cruzando por detras de lo que
+   venga despues (las estrellas, el menu...) y dejando hueco justo donde
+   hay algo delante. overflow-x:clip la recorta sin crear scroll lateral. */
+.nav{overflow-x:clip}
+.con-tira{position:relative}
+.tira{position:absolute;z-index:-1;pointer-events:none;background:#E9BC46}
 
 /* botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;
@@ -373,32 +379,7 @@ details p{padding:0 0 22px;color:var(--claro-txt-2);max-width:72ch}
 /* el sello de la marca: la estrella con el 5, para los sitios pequenos */
 .marca-sello{width:38px;height:38px;flex:none;border-radius:10px}
 .legal-cab{display:flex;align-items:center;gap:13px}
-.galleta-cab{display:flex;align-items:flex-start;gap:12px}
-.galleta-cab .marca-sello{width:30px;height:30px;border-radius:8px;margin-top:1px}
-.legal-caja h4{font-size:.95rem;color:var(--txt);margin-top:20px}
-.legal-caja p,.legal-caja li{font-size:.87rem;line-height:1.65;margin-top:9px}
-.legal-caja ul{list-style:none;margin-top:4px}
-.legal-caja li{padding-left:0}
-.legal-caja b{color:var(--txt)}
-.legal-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
-  display:grid;place-items:center;cursor:pointer;
-  background:rgba(255,255,255,.06);border:1px solid var(--borde);color:var(--txt-2)}
-.legal-x:hover{color:var(--txt);border-color:var(--txt-3)}
-.legal-x svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
 
-/* aviso de cookies */
-.galleta{position:fixed;left:18px;bottom:18px;z-index:80;max-width:min(400px,calc(100vw - 36px));
-  background:var(--noche-2);border:1px solid var(--borde-claro);border-radius:16px;
-  padding:16px 18px;box-shadow:0 22px 50px -18px rgba(0,0,0,.85);
-  opacity:0;transform:translateY(16px);transition:opacity .3s,transform .3s}
-.galleta.ver{opacity:1;transform:none}
-.galleta p{font-size:.79rem;line-height:1.55;color:var(--txt-2)}
-.galleta b{color:var(--txt)}
-.galleta-btn{display:flex;align-items:center;gap:14px;margin-top:12px}
-.galleta .enl{background:none;border:0;padding:0;font-family:inherit;cursor:pointer;
-  font-size:.78rem;color:var(--txt-3);text-decoration:underline}
-.galleta .enl:hover{color:var(--oro)}
-@media (max-width:560px){.galleta{left:12px;right:12px;bottom:12px;max-width:none}}
 
 /* placas de clientes en 3D */
 .cli3d{position:relative;width:100%;max-width:360px;margin:0 auto;aspect-ratio:1}
@@ -878,36 +859,6 @@ body::after{
 @media (max-width:1080px){.raya-v,.lema{display:none}}
 @media (max-width:900px){.nav .est5{margin-left:10px}}
 
-/* ============ cabecera en dos filas para móvil ============ */
-.fila2{display:none}
-@media (max-width:1080px){
-  .nav .env:first-child{min-height:62px}
-  .nav > .env:first-child > .est5,
-  .nav .raya-v,.nav .lema,.nav .enlinea{display:none}
-  .fila2{
-    display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;
-    padding:0 0 12px;margin-top:-4px;
-  }
-  .fila2 .est5{display:inline-flex;font-size:17px;margin:0;flex:none}
-  .lema2{font-size:.75rem;font-weight:500;color:var(--txt-3);letter-spacing:.02em}
-  .lema2 b{color:var(--txt-2);font-weight:700}
-  .enlinea2{display:inline-flex;align-items:center;gap:7px;margin-left:auto;flex:none;
-    font-size:.7rem;font-weight:600;color:var(--txt-2);
-    border:1px solid var(--borde);background:rgba(255,255,255,.03);
-    border-radius:999px;padding:5px 11px;white-space:nowrap}
-  .enlinea2 i{width:6px;height:6px;border-radius:50%;background:#25D366;flex:none;
-    box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:latido2 2.2s infinite}
-  .nav .marca{--wm:1.66rem}
-  .cinta{top:104px}
-  .abrir{padding:10px 14px;font-size:.9rem}
-}
-@media (max-width:430px){
-  .fila2{gap:8px 10px}
-  .lema2{width:100%;order:3;margin-top:-4px}
-  .enlinea2{margin-left:auto}
-  .cinta{top:132px}
-}
-
 /* ============ cabecera: una sola fila, con más presencia ============ */
 .fila2{display:none!important}
 .nav::before{
@@ -962,7 +913,7 @@ body::after{
 </style>
 
 <header class="nav">
-  <div class="env">
+  <div class="env con-tira"><i class="tira" aria-hidden="true"></i>
     <a class="marca" href="#arriba" aria-label="PLEA5E — inicio">
       <svg class="logotipo" viewBox="-4200 -1290 8400 1680" role="img" aria-label="PLEA5E"><g fill="#E9BC46">  <rect x="-4200.0" y="-760.0" width="998.2" height="100.5"/><rect x="3201.8" y="-760.0" width="998.2" height="100.5"/>  <path d="M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z"/>  <path d="M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z"/>  <path d="M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z"/></g><g fill="#FFFFFF">  <path d="M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9"/>  <path d="M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5"/></g><path fill="#0A0E16" d="M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2"/></svg>
     </a>
@@ -1324,12 +1275,6 @@ body::after{
   </div>
 </dialog>
 
-<div class="galleta" id="galleta" role="region" aria-label="Aviso de cookies" hidden>
-  <div class="galleta-cab"><svg class="marca-sello" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="224" fill="#06080E"/><path fill="#E9BC46" d="M512.0 41.0L633.8 323.8L962.6 352.3L962.6 352.3L709.1 555.6L776.8 856.0L512.0 698.8L247.2 856.0L314.9 555.6L61.4 352.3L61.4 352.3L390.2 323.8Z"/><path fill="#0A0E16" transform="translate(370.4 754.5) scale(0.5668)" d="M247.1 12.2Q147.9 12.2 85.2-36.9Q22.5-85.9 22.5-187.5L22.5-315.4L201.2-315.4L201.2-241.7Q201.2-218.7 203.9-197.3Q206.5-175.8 216.3-162.1Q226.1-148.4 247.1-148.4Q274.9-148.4 283.7-167.2Q292.5-186 292.5-215.3L292.5-384.3Q292.5-405.3 289.8-425.8Q287.1-446.3 277.8-460Q268.6-473.6 248-473.6Q199.2-473.6 199.2-402.8L41.5-402.8L41.5-859.9L451.2-859.9L451.2-698.7L204.6-698.7L204.6-577.6Q217.3-593.3 239-605.2Q260.7-617.2 290-617.2Q348.6-617.2 385.5-594.7Q422.4-572.3 442.1-532.2Q461.9-492.2 469.5-439.5Q477.1-386.7 477.1-326.2Q477.1-248.5 469-186.3Q460.9-124 437.3-79.6Q413.6-35.2 367.9-11.5Q322.3 12.2 247.1 12.2"/></svg><p><b>Cookies:</b> esta web no usa cookies de análisis ni de publicidad. Lo único que guarda tu navegador es que ya has visto este aviso.</p></div>
-  <div class="galleta-btn">
-    <button type="button" class="enl" data-legal="cookies">Leer más</button>
-    <button type="button" class="btn btn-oro btn-sm" id="galletaOk">Vale</button>
-  </div>
 </div>
 
 <canvas id="lienzo" aria-label="Placa PLEA5E en 3D. Arrástrala para girarla."></canvas>
@@ -5915,7 +5860,7 @@ three/build/three.module.js:
       '<h4>Esta web no usa cookies</h4>' +
       '<p>No hay Google Analytics, ni píxel de Facebook, ni publicidad, ni nada que siga tus pasos. No compartimos tu navegación con nadie porque no la medimos.</p>' +
       '<h4>Lo único que se guarda</h4>' +
-      '<p>Una marca en el almacenamiento local de tu navegador para no volver a enseñarte el aviso de cookies cada vez que entras. No identifica a nadie y desaparece si borras los datos de navegación.</p>' +
+      '<p>Nada. Esta web no guarda absolutamente nada en tu navegador.</p>' +
       '<h4>Al salir de aquí</h4>' +
       '<p>Los botones de WhatsApp y los enlaces a Google te llevan fuera de esta web. Ahí ya mandan sus propias políticas de cookies y privacidad.</p>']
   };
@@ -5933,22 +5878,78 @@ three/build/three.module.js:
   });
   dlg.addEventListener('click', function(e){ if (e.target === dlg && dlg.close) dlg.close(); });
 
-  /* ---- aviso de cookies ---- */
-  var recuerda = function(k, v){
-    try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }
-    catch (x) { return null; }
-  };
-  var galleta = document.getElementById('galleta');
-  if (recuerda('plea5e-galleta') !== '1') {
-    setTimeout(function(){ galleta.hidden = false; galleta.classList.add('ver'); }, 1200);
-  }
-  document.getElementById('galletaOk').addEventListener('click', function(){
-    galleta.classList.remove('ver');
-    setTimeout(function(){ galleta.hidden = true; }, 300);
-    recuerda('plea5e-galleta', '1');
-  });
-
   document.getElementById('anyo').textContent = new Date().getFullYear();
+
+  /* ---- la banda del logotipo, de lado a lado de la pantalla ----
+     Sigue mas alla del propio dibujo del logotipo (que ya trae su propio
+     trocito de banda pegado a la estrella) y cruza por detras de lo que
+     venga despues en la misma fila -las estrellas, el menu-, dejando un
+     hueco justo donde hay algo delante y cerrandolo otra vez al pasarlo.
+     La altura y el grosor salen de la propia caja del SVG: el dibujo
+     tiene la banda al 34,542% de su alto, con un grosor del 5,986%, asi
+     que cae en el mismo sitio sea cual sea el tamano en que se pinte.  */
+  function tenderBanda(fila) {
+    var tira = fila.querySelector('.tira'), logo = fila.querySelector('.logotipo');
+    if (!tira || !logo) return;
+    var cajaFila = fila.getBoundingClientRect();
+    var r = logo.getBoundingClientRect();
+    var y = r.top + r.height * 0.34542;
+    var gordo = Math.max(2, Math.round(r.height * 0.05986));
+    tira.style.height = gordo + 'px';
+    tira.style.top = (y - gordo / 2 - cajaFila.top) + 'px';
+    tira.style.left = -cajaFila.left + 'px';
+    tira.style.width = innerWidth + 'px';
+
+    /* Se baja hasta la pieza mas pequena que toca la linea. Si se quedara en
+       el padre, una columna entera contaria como estorbo y la linea moriria
+       ahi; asi solo estorba el titulillo que de verdad esta a esa altura.
+       El propio logotipo (closest('.marca')) nunca cuenta como estorbo: ya
+       trae su banda pintada del mismo oro, asi que la tira pasa por debajo
+       sin que haga falta cortarle un hueco. */
+    var MARGEN = 9;
+    var huecos = (function mirar(nodo) {
+      var res = [];
+      for (var i = 0; i < nodo.children.length; i++) {
+        var h = nodo.children[i];
+        if (h.classList.contains('tira') || h.closest('.marca')) continue;
+        var c = h.getBoundingClientRect();
+        if (!c.width || !c.height) continue;
+        if (c.bottom + MARGEN <= y || c.top - MARGEN >= y) continue;
+        var puroCajon = !Array.prototype.some.call(h.childNodes, function (n) {
+          return n.nodeType === 3 && n.textContent.trim();
+        });
+        var dentro = puroCajon ? mirar(h) : [];
+        if (dentro.length) res = res.concat(dentro);
+        else res.push([c.left - MARGEN, c.right + MARGEN]);
+      }
+      return res;
+    })(fila);
+
+    huecos.sort(function (a, b) { return a[0] - b[0]; });
+    var tramos = [], cur = null;
+    huecos.forEach(function (h) {
+      if (cur && h[0] <= cur[1]) cur[1] = Math.max(cur[1], h[1]);
+      else { cur = [h[0], h[1]]; tramos.push(cur); }
+    });
+
+    var ORO = '#E9BC46', partes = [], x = 0;
+    tramos.forEach(function (t) {
+      var a = Math.max(0, t[0]), b = Math.min(innerWidth, t[1]);
+      if (b <= x) return;
+      partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
+      x = b;
+    });
+    partes.push(ORO + ' ' + x + 'px 100%');
+    tira.style.background = 'linear-gradient(to right,' + partes.join(',') + ')';
+  }
+
+  function tenderTodas() {
+    var filas = document.querySelectorAll('.con-tira');
+    for (var i = 0; i < filas.length; i++) tenderBanda(filas[i]);
+  }
+  tenderTodas();
+  addEventListener('resize', tenderTodas);
+  addEventListener('load', tenderTodas);
 
 })();
 </script>
