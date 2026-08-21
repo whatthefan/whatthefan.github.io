@@ -1074,7 +1074,7 @@ body::after{
           <a class="btn btn-oro" href="#pedido">Pedirlo ahora</a>
           <a class="btn btn-fan" href="#productos">Ver productos y precios</a>
         </div>
-        <p class="bajo">Desde <b class="oro">16 €</b> · te enseñamos el diseño antes de cobrarte nada.</p>
+        <p class="bajo">Desde <b class="oro">25 €</b> · te enseñamos el diseño antes de cobrarte nada.</p>
       </div>
     </div>
   </div>
@@ -1128,7 +1128,7 @@ body::after{
           <p class="paraquien">Para <b>peluquería, taller, tienda</b> o a domicilio</p>
           <p class="medida">85 × 54 mm · PVC laminado</p>
           <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo.</p>
-          <p class="pvp"><span class="n">16 €</span><span class="antes">21 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
+          <p class="pvp"><span class="n">13 €</span><span class="antes">17 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad · packs de 20 a 100</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="tarjeta">Pedir esta</a>
         </div>
       </article>
@@ -5697,8 +5697,8 @@ three/build/three.module.js:
                ancho:46, solapa:-22,
                suelta:25, precio:function(n){ return n>=20?16.5:n>=12?19:n>=5?21:n>=3?23:25; } },
     tarjeta: { nombre:'Tarjeta de mano', uno:'tarjeta de mano', varias:'tarjetas de mano', cada:'cada una',
-               ancho:62, solapa:-34,
-               suelta:16, precio:function(n){ return n>=20?9.5:n>=12?11:n>=5?13:n>=3?14:16; } }
+               ancho:62, solapa:-34, packs:[20,30,50,100],
+               suelta:13, precio:function(n){ return n>=100?8.5:n>=50?10:n>=30?11.5:13; } }
   };
   /* la minifoto se toma del botón: así no va dos veces en el archivo */
   Object.keys(CAT).forEach(function(k){
@@ -5716,8 +5716,8 @@ three/build/three.module.js:
   /* la pila: tantas piezas como unidades, para que se vea de un vistazo */
   var pila = document.getElementById('pila'), pilaTxt = document.getElementById('pilaTxt');
   var pilaAhora = '';
-  function pintarPila(c, n){
-    var visibles = Math.min(n, 12), clave = sel.prod + ':' + visibles + ':' + (n >= 20);
+  function pintarPila(c, n, abierto){
+    var visibles = Math.min(n, 12), clave = sel.prod + ':' + visibles + ':' + abierto;
     if (clave === pilaAhora) return;
     pilaAhora = clave;
     pila.style.setProperty('--pw', c.ancho + 'px');
@@ -5730,23 +5730,37 @@ three/build/three.module.js:
       for (var j = 0; j < porFila && i < visibles; j++, i++) h += '<img src="' + c.mini + '" alt="">';
       h += '</span>';
     }
-    if (n >= 20) h += '<span class="mas">y las que hagan falta</span>';
+    if (abierto) h += '<span class="mas">y las que hagan falta</span>';
     pila.innerHTML = h;
+  }
+
+  /* las placas y los expositores se piden sueltos (1, 5, 12...) y "20 o
+     más" es una cesta abierta que se cotiza a mano. Las tarjetas solo se
+     venden en packs cerrados (20/30/50/100): cada cantidad tiene precio
+     fijo, nunca es "a convenir". */
+  var CANT_SUELTA = [1, 5, 12, 20];
+  function pintarOpCant(c){
+    var lista = c.packs || CANT_SUELTA;
+    opCant.innerHTML = lista.map(function(n){
+      var txt = !c.packs && n === 20 ? '20 o más' : String(n);
+      return '<button class="op" type="button" data-v="' + n + '" aria-pressed="false">' + txt + '</button>';
+    }).join('');
   }
 
   function refrescar(){
     var c = CAT[sel.prod], n = sel.cant, ud = c.precio(n), total = ud * n;
+    var abierto = !c.packs && n >= 20;
     var ahorro = c.suelta * n - total;
-    pintarPila(c, n);
-    pilaTxt.textContent = n >= 20
+    pintarPila(c, n, abierto);
+    pilaTxt.textContent = abierto
       ? '20 o más ' + c.varias
       : n + ' ' + (n === 1 ? c.uno : c.varias);
-    var rTotal = document.getElementById('rTotal'), nuevoTotal = n >= 20 ? 'Presupuesto' : eur(total);
+    var rTotal = document.getElementById('rTotal'), nuevoTotal = abierto ? 'Presupuesto' : eur(total);
     if (rTotal.textContent !== nuevoTotal) {
       rTotal.textContent = nuevoTotal;
       rTotal.classList.remove('pulso'); void rTotal.offsetWidth; rTotal.classList.add('pulso');
     }
-    document.getElementById('rDetalle').textContent = n >= 20
+    document.getElementById('rDetalle').textContent = abierto
       ? 'Te pasamos precio de cadena en el día'
       : n === 1
         ? 'Diseño y envío incluidos'
@@ -5756,8 +5770,8 @@ three/build/three.module.js:
       'Hola PLEA5E, quiero hacer un pedido 👇',
       '',
       '🛒 PRODUCTO: ' + c.nombre,
-      '🔢 CANTIDAD: ' + (n >= 20 ? '20 o más (presupuesto)' : n),
-      n >= 20 ? '💶 PRECIO: a convenir'
+      '🔢 CANTIDAD: ' + (abierto ? '20 o más (presupuesto)' : n),
+      abierto ? '💶 PRECIO: a convenir'
               : '💶 PRECIO: ' + eur(total) + (n === 1 ? '' : '  (' + eur(ud) + ' ' + c.cada + ')'),
       '',
       '🏪 NEGOCIO: ' + (v('negocio') || '—'),
@@ -5771,7 +5785,13 @@ three/build/three.module.js:
   var opProd = document.getElementById('opProd'), opCant = document.getElementById('opCant');
   opProd.addEventListener('click', function(e){
     var b = e.target.closest('.op'); if (!b) return;
-    sel.prod = b.dataset.v; elegir(opProd, sel.prod); refrescar();
+    if (b.dataset.v !== sel.prod) {
+      sel.prod = b.dataset.v;
+      var c = CAT[sel.prod];
+      pintarOpCant(c);
+      sel.cant = c.packs ? c.packs[0] : 5;
+    }
+    elegir(opProd, sel.prod); elegir(opCant, sel.cant); refrescar();
   });
   opCant.addEventListener('click', function(e){
     var b = e.target.closest('.op'); if (!b) return;
