@@ -127,7 +127,12 @@ p{margin:0}
 .nav{position:sticky;top:0;z-index:60;background:rgba(6,8,14,.86);
      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--borde)}
 .nav .env{display:flex;align-items:center;gap:18px;min-height:66px}
-.menu{display:flex;gap:4px;margin-left:auto;align-items:center}
+/* el menu de movil es un <details> nativo: el navegador se encarga de
+   abrirlo y cerrarlo el solo, sin ningun click a medias que pueda fallar */
+.menu-det > summary{list-style:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.menu-det > summary::-webkit-details-marker{display:none}
+.menu-det > summary::marker{content:""}
+.menu{display:flex;gap:4px;align-items:center}
 .menu a{display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:500;color:var(--txt-2);
         text-decoration:none;padding:8px 12px;border-radius:var(--r);transition:color .18s,background .18s}
 .menu a svg{display:none;width:17px;height:17px;flex:none;fill:none;stroke:currentColor;
@@ -137,28 +142,24 @@ p{margin:0}
 .menu a[aria-current="page"] svg{opacity:1}
 .menu-sep{display:none}
 .menu .btn{margin-left:8px}
-.abrir{display:none;margin-left:auto;background:none;border:1px solid var(--borde-claro);
+.abrir{display:none;background:none;border:1px solid var(--borde-claro);
        color:var(--txt);border-radius:var(--r);padding:9px 12px;cursor:pointer;
        align-items:center;gap:8px;touch-action:manipulation}
 .abrir svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .ico-abrir line{transition:transform .25s ease,opacity .2s ease;transform-origin:12px 12px}
-.abrir[aria-expanded="true"] .b1{transform:translateY(6px) rotate(45deg)}
-.abrir[aria-expanded="true"] .b2{opacity:0}
-.abrir[aria-expanded="true"] .b3{transform:translateY(-6px) rotate(-45deg)}
+.menu-det[open] .b1{transform:translateY(6px) rotate(45deg)}
+.menu-det[open] .b2{opacity:0}
+.menu-det[open] .b3{transform:translateY(-6px) rotate(-45deg)}
 @media (max-width:900px){
   .abrir{display:inline-flex}
   .menu{position:absolute;top:calc(100% + 10px);left:14px;right:14px;flex-direction:column;
         align-items:stretch;gap:3px;background:var(--noche-2);border:1px solid var(--borde);
-        border-radius:var(--r);padding:12px;box-shadow:0 24px 56px -20px rgba(0,0,0,.6);
-        visibility:hidden;opacity:0;transform:translateY(-10px);pointer-events:none;
-        transition:opacity .22s ease,transform .22s ease,visibility 0s linear .22s}
-  .menu.ver{visibility:visible;opacity:1;transform:none;pointer-events:auto;transition-delay:0s}
+        border-radius:var(--r);padding:12px;box-shadow:0 24px 56px -20px rgba(0,0,0,.6)}
   .menu a{padding:13px 12px}
   .menu a svg{display:block}
   .menu a[aria-current="page"]{color:var(--oro)}
   .menu-sep{height:1px;background:var(--borde);margin:8px 2px}
   .menu .btn{margin:6px 0 0;justify-content:center}
-  @media (prefers-reduced-motion:reduce){.menu{transition:none}}
 }
 
 /* páginas */
@@ -366,14 +367,14 @@ td .destaca{color:var(--oro);font-weight:700}
 
 /* faq */
 .faq{margin-top:clamp(30px,3.4vw,44px);border-top:1px solid var(--claro-borde)}
-details{border-bottom:1px solid var(--claro-borde)}
-summary{cursor:pointer;padding:20px 46px 20px 0;position:relative;list-style:none;font-weight:600;font-size:1rem}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"";position:absolute;right:10px;top:50%;width:10px;height:10px;
+.faq details{border-bottom:1px solid var(--claro-borde)}
+.faq summary{cursor:pointer;padding:20px 46px 20px 0;position:relative;list-style:none;font-weight:600;font-size:1rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";position:absolute;right:10px;top:50%;width:10px;height:10px;
   border-right:2px solid var(--oro-os);border-bottom:2px solid var(--oro-os);
   transform:translateY(-70%) rotate(45deg);transition:transform .22s}
-details[open] summary::after{transform:translateY(-28%) rotate(225deg)}
-details p{padding:0 0 22px;color:var(--claro-txt-2);max-width:72ch}
+.faq details[open] summary::after{transform:translateY(-28%) rotate(225deg)}
+.faq details p{padding:0 0 22px;color:var(--claro-txt-2);max-width:72ch}
 
 /* pedido */
 .form-rej{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(32px,3.6vw,44px)}
@@ -514,13 +515,13 @@ details p{padding:0 0 22px;color:var(--claro-txt-2);max-width:72ch}
 .duelo > div{color:var(--claro-txt)}
 /* preguntas: por defecto oscuro, claro solo si la sección es clara */
 .faq{border-top-color:var(--borde)}
-details{border-bottom-color:var(--borde)}
-details p{color:var(--txt-2)}
-summary::after{border-right-color:var(--oro);border-bottom-color:var(--oro)}
+.faq details{border-bottom-color:var(--borde)}
+.faq details p{color:var(--txt-2)}
+.faq summary::after{border-right-color:var(--oro);border-bottom-color:var(--oro)}
 .sec-claro .faq{border-top-color:var(--claro-borde)}
-.sec-claro details{border-bottom-color:var(--claro-borde)}
-.sec-claro details p{color:var(--claro-txt-2)}
-.sec-claro summary::after{border-right-color:var(--oro-os);border-bottom-color:var(--oro-os)}
+.sec-claro .faq details{border-bottom-color:var(--claro-borde)}
+.sec-claro .faq details p{color:var(--claro-txt-2)}
+.sec-claro .faq summary::after{border-right-color:var(--oro-os);border-bottom-color:var(--oro-os)}
 
 /* ---- estrellas de marca ---- */
 .est5{display:inline-flex;align-items:center;gap:.28em;flex:none}
@@ -940,8 +941,8 @@ body::after{
 .enlinea i{width:7px;height:7px;border-radius:50%;background:#25D366;flex:none;
   box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:latido2 2.2s infinite}
 @keyframes latido2{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 8px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
-.menu{margin-left:0}
-@media (max-width:1180px){.enlinea{display:none}.menu{margin-left:auto}}
+.menu-det{margin-left:0}
+@media (max-width:1180px){.enlinea{display:none}.menu-det{margin-left:auto}}
 @media (max-width:1080px){.raya-v,.lema{display:none}}
 @media (max-width:900px){.nav .est5{margin-left:10px}}
 
@@ -1012,22 +1013,24 @@ body::after{
     <span class="raya-v" aria-hidden="true"></span>
     <span class="lema"><b>Placas de reseñas</b><span>Diseñadas a tu medida</span></span>
     <span class="enlinea"><i></i>Respondemos en minutos</span>
-    <button class="abrir" id="abrir" type="button" aria-expanded="false" aria-controls="menu">
-      <svg class="ico-abrir" viewBox="0 0 24 24" aria-hidden="true">
-        <line class="b1" x1="4" y1="6" x2="20" y2="6"/>
-        <line class="b2" x1="4" y1="12" x2="20" y2="12"/>
-        <line class="b3" x1="4" y1="18" x2="20" y2="18"/>
-      </svg>Menú
-    </button>
-    <nav class="menu" id="menu">
-      <a href="#productos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7.5 12 3 3 7.5l9 4.5 9-4.5Z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><path d="M12 12v9"/></svg>Productos</a>
-      <a href="#como"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></svg>Cómo funciona</a>
-      <a href="#clientes"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.1"/><path d="M2.7 19c.8-3.3 3.3-5.3 6.3-5.3s5.5 2 6.3 5.3"/><circle cx="17.3" cy="8.6" r="2.4"/><path d="M15.5 13.9c2.2.4 4 2.1 4.6 4.9"/></svg>Clientes</a>
-      <a href="#pedido"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1.3"/><circle cx="18" cy="21" r="1.3"/><path d="M2.4 3h2.6l2.3 12.3a2 2 0 0 0 2 1.6h8.1a2 2 0 0 0 2-1.6L21 7H6.2"/></svg>Pedido</a>
-      <a href="#ayuda"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M9.1 9.3a2.9 2.9 0 1 1 4 2.7c-1 .4-1.4 1-1.4 2v.2"/><path d="M12 17.3h.01"/></svg>Preguntas</a>
-      <i class="menu-sep" aria-hidden="true"></i>
-      <a class="btn btn-oro btn-sm" href="#pedido">Pedir diseño</a>
-    </nav>
+    <details class="menu-det" id="menuDet">
+      <summary class="abrir" id="abrir" aria-controls="menu">
+        <svg class="ico-abrir" viewBox="0 0 24 24" aria-hidden="true">
+          <line class="b1" x1="4" y1="6" x2="20" y2="6"/>
+          <line class="b2" x1="4" y1="12" x2="20" y2="12"/>
+          <line class="b3" x1="4" y1="18" x2="20" y2="18"/>
+        </svg>Menú
+      </summary>
+      <nav class="menu" id="menu">
+        <a href="#productos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7.5 12 3 3 7.5l9 4.5 9-4.5Z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><path d="M12 12v9"/></svg>Productos</a>
+        <a href="#como"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-12h-7l0-8Z"/></svg>Cómo funciona</a>
+        <a href="#clientes"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.1"/><path d="M2.7 19c.8-3.3 3.3-5.3 6.3-5.3s5.5 2 6.3 5.3"/><circle cx="17.3" cy="8.6" r="2.4"/><path d="M15.5 13.9c2.2.4 4 2.1 4.6 4.9"/></svg>Clientes</a>
+        <a href="#pedido"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1.3"/><circle cx="18" cy="21" r="1.3"/><path d="M2.4 3h2.6l2.3 12.3a2 2 0 0 0 2 1.6h8.1a2 2 0 0 0 2-1.6L21 7H6.2"/></svg>Pedido</a>
+        <a href="#ayuda"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M9.1 9.3a2.9 2.9 0 1 1 4 2.7c-1 .4-1.4 1-1.4 2v.2"/><path d="M12 17.3h.01"/></svg>Preguntas</a>
+        <i class="menu-sep" aria-hidden="true"></i>
+        <a class="btn btn-oro btn-sm" href="#pedido">Pedir diseño</a>
+      </nav>
+    </details>
   </div>
 
 </header>
@@ -5816,22 +5819,23 @@ three/build/three.module.js:
     ciclo();
   })();
 
-  /* menú móvil. tocarTiempo evita que un mismo toque cuente dos veces (el
-     "ghost click" que sueltan algunos navegadores de móvil justo despues
-     de un touchend) y que abriera y cerrara de golpe en el mismo gesto. */
-  var menu = document.getElementById('menu'), abrir = document.getElementById('abrir');
-  var tocarTiempo = 0;
-  function conmutar(e){
-    var ahora = Date.now();
-    if (ahora - tocarTiempo < 350) return;
-    tocarTiempo = ahora;
-    if (e) e.preventDefault();
-    var v = menu.classList.toggle('ver');
-    abrir.setAttribute('aria-expanded', v ? 'true' : 'false');
-  }
-  abrir.addEventListener('click', conmutar);
+  /* menú móvil: <details> nativo, el navegador abre y cierra solo con el
+     summary. Lo único que hace falta es cerrarlo cuando se toca un enlace
+     de dentro, porque eso no lo hace solo. */
+  var menuDet = document.getElementById('menuDet'), menu = document.getElementById('menu');
   menu.addEventListener('click', function(e){
-    if (e.target.closest('a')) { menu.classList.remove('ver'); abrir.setAttribute('aria-expanded','false'); }
+    if (e.target.closest('a')) menuDet.open = false;
+  });
+  /* en escritorio el menu no es un desplegable: va siempre abierto, sin
+     resumen que tocar (el summary se esconde por CSS). Solo se toca el
+     estado al cruzar el punto de corte, nunca en cada resize suelto (el
+     movil dispara resize solo con que se esconda la barra de direcciones
+     al hacer scroll, y eso no tiene que cerrar el menu). */
+  var esEscritorio = innerWidth > 900;
+  if (esEscritorio) menuDet.open = true;
+  addEventListener('resize', function(){
+    var ahora = innerWidth > 900;
+    if (ahora !== esEscritorio) { esEscritorio = ahora; menuDet.open = esEscritorio; }
   });
 
   /* aparición al hacer scroll */
