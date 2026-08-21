@@ -5893,41 +5893,25 @@ three/build/three.module.js:
     tira.style.left = -cajaFila.left + 'px';
     tira.style.width = innerWidth + 'px';
 
-    /* Se baja hasta la pieza mas pequena que toca la linea, para no cortar
-       un hueco mas grande de lo necesario. Tres excepciones que SIEMPRE
-       cuentan como una sola pieza entera, sin bajar dentro: el propio
-       logotipo (.marca), un grupo de iconos como las 5 estrellas de
-       reseña (.est5) y el menu (.menu). El logotipo no puede excluirse sin
-       mas del corte: trae su propia chispa en punta (no un rectangulo), y
-       una banda plana solapada encima de esa punta se ve como una barra
-       atravesandola. Con un hueco normal para toda su caja, la banda plana
-       no llega a solaparse con el dibujo: empieza limpia justo despues.
-       Al menu hay que tratarlo igual: si se baja a cortar un hueco por
-       cada enlace por separado, en cuanto dos enlaces quedan pegados (que
-       es casi siempre) sus huecos se juntan con los del vecino y arrastran
-       hasta el tramo de linea que hay ANTES o DESPUES del menu entero,
-       dejando la banda casi entera sin pintar aunque solo tocara saltar el
-       menu. Con .menu como pieza unica, el hueco es justo su caja: ni un
-       pixel mas. */
+    /* La linea cubre TODA la fila de arriba de un lado a otro. Los unicos
+       huecos que corta son los justos y necesarios: el logotipo (trae su
+       propia chispa en punta, y una banda plana solapada encima de esa
+       punta se ve como una barra atravesandola), las 5 estrellas de
+       reseña, el eslogan en negrita ("Placas de reseñas") -sin hueco se
+       la ve como una linea tachandolo, no como un adorno- y el menu (o el
+       boton de abrirlo en movil). El resto de la fila -"Respondemos en
+       minutos", que ya lleva su propio fondo opaco por delante- se queda
+       encima de la linea sin cortarle hueco aparte. */
     var MARGEN = 9;
-    var huecos = (function mirar(nodo) {
-      var res = [];
-      for (var i = 0; i < nodo.children.length; i++) {
-        var h = nodo.children[i];
-        if (h.classList.contains('tira')) continue;
-        var c = h.getBoundingClientRect();
-        if (!c.width || !c.height) continue;
-        if (c.bottom + MARGEN <= y || c.top - MARGEN >= y) continue;
-        var puroCajon = !Array.prototype.some.call(h.childNodes, function (n) {
-          return n.nodeType === 3 && n.textContent.trim();
-        });
-        var esBloque = h.classList.contains('est5') || h.classList.contains('marca') || h.classList.contains('menu');
-        var dentro = (puroCajon && !esBloque) ? mirar(h) : [];
-        if (dentro.length) res = res.concat(dentro);
-        else res.push([c.left - MARGEN, c.right + MARGEN]);
-      }
-      return res;
-    })(fila);
+    var huecos = [];
+    ['.marca', '.est5', '.menu', '.abrir', '.lema'].forEach(function (sel) {
+      var h = fila.querySelector(sel);
+      if (!h) return;
+      var c = h.getBoundingClientRect();
+      if (!c.width || !c.height) return;
+      if (c.bottom + MARGEN <= y || c.top - MARGEN >= y) return;
+      huecos.push([c.left - MARGEN, c.right + MARGEN]);
+    });
 
     huecos.sort(function (a, b) { return a[0] - b[0]; });
     var tramos = [], cur = null;
