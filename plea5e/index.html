@@ -132,7 +132,7 @@ p{margin:0}
 .menu-det > summary{list-style:none;cursor:pointer;-webkit-appearance:none;appearance:none}
 .menu-det > summary::-webkit-details-marker{display:none}
 .menu-det > summary::marker{content:""}
-.menu{display:flex;gap:4px;align-items:center}
+.menu{content-visibility:visible;display:flex;gap:4px;align-items:center}
 .menu a{display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:500;color:var(--txt-2);
         text-decoration:none;padding:8px 12px;border-radius:var(--r);transition:color .18s,background .18s}
 .menu a svg{display:none;width:17px;height:17px;flex:none;fill:none;stroke:currentColor;
@@ -150,17 +150,20 @@ p{margin:0}
 .menu-det[open] .b1{transform:translateY(6px) rotate(45deg)}
 .menu-det[open] .b2{opacity:0}
 .menu-det[open] .b3{transform:translateY(-6px) rotate(-45deg)}
+/* en movil la visibilidad del desplegable la decide nuestro propio
+   display:none/flex segun el atributo [open], sin depender de nada
+   mas: asi no hay ningun otro motivo por el que pueda cerrarse solo */
 @media (max-width:900px){
   .abrir{display:inline-flex}
-  .menu{position:absolute;top:calc(100% + 10px);left:14px;right:14px;flex-direction:column;
+  .menu{display:none;position:absolute;top:calc(100% + 10px);left:14px;right:14px;flex-direction:column;
         align-items:stretch;gap:3px;background:var(--noche-2);border:1px solid var(--borde);
         border-radius:var(--r);padding:12px;box-shadow:0 24px 56px -20px rgba(0,0,0,.6)}
+  .menu-det[open] .menu{display:flex;animation:menuAparece .32s cubic-bezier(.2,.8,.3,1) both}
   .menu a{padding:13px 12px}
   .menu a svg{display:block}
   .menu a[aria-current="page"]{color:var(--oro)}
   .menu-sep{height:1px;background:var(--borde);margin:8px 2px}
   .menu .btn{margin:6px 0 0;justify-content:center}
-  .menu-det[open] .menu{animation:menuAparece .32s cubic-bezier(.2,.8,.3,1) both}
 }
 @keyframes menuAparece{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 @media (prefers-reduced-motion:reduce){.menu-det[open] .menu{animation:none}}
@@ -5822,33 +5825,25 @@ three/build/three.module.js:
     ciclo();
   })();
 
-  /* menú móvil: <details> nativo, el navegador abre y cierra solo con el
-     summary. Lo único que hace falta es cerrarlo cuando se toca un enlace
-     de dentro, porque eso no lo hace solo. */
-  var menuDet = document.getElementById('menuDet'), menu = document.getElementById('menu'), abrir = document.getElementById('abrir');
+  /* menú móvil: tocas el botón y se abre, tocas fuera y se cierra, tocas
+     un enlace de dentro y se cierra. Nada más.
+     En escritorio el <details> tiene que estar [open] para que Chrome
+     pinte su contenido (si no, el navegador lo colapsa a 0×0 aunque el
+     CSS diga display:flex), así que aquí se abre por JS al cargar. Pero
+     ese JS solo ABRE, nunca cierra: así un resize no puede ser la causa
+     de que el menú se cierre solo en el móvil. */
+  var menuDet = document.getElementById('menuDet'), menu = document.getElementById('menu');
   menu.addEventListener('click', function(e){
+    if (innerWidth > 900) return; /* en escritorio el menú va siempre abierto */
     if (e.target.closest('a')) menuDet.open = false;
   });
-  /* si el dedo toca dos veces seguidas (el segundo toque casi siempre
-     sin querer, porque el primero no se notó al instante), el segundo
-     toque no lo vuelve a cerrar: se ignora si llega antes de medio
-     segundo desde que se abrió. */
-  var seAbrioEn = 0;
-  abrir.addEventListener('click', function(e){
-    if (menuDet.open && Date.now() - seAbrioEn < 500) e.preventDefault();
-    else if (!menuDet.open) seAbrioEn = Date.now();
+  document.addEventListener('click', function(e){
+    if (innerWidth > 900) return; /* en escritorio el menú va siempre abierto */
+    if (menuDet.open && !menuDet.contains(e.target)) menuDet.open = false;
   });
-  /* en escritorio el menu no es un desplegable: va siempre abierto, sin
-     resumen que tocar (el summary se esconde por CSS). Solo se toca el
-     estado al cruzar el punto de corte, nunca en cada resize suelto (el
-     movil dispara resize solo con que se esconda la barra de direcciones
-     al hacer scroll, y eso no tiene que cerrar el menu). */
-  var esEscritorio = innerWidth > 900;
-  if (esEscritorio) menuDet.open = true;
-  addEventListener('resize', function(){
-    var ahora = innerWidth > 900;
-    if (ahora !== esEscritorio) { esEscritorio = ahora; menuDet.open = esEscritorio; }
-  });
+  function abrirEnEscritorio(){ if (innerWidth > 900 && !menuDet.open) menuDet.open = true; }
+  abrirEnEscritorio();
+  addEventListener('resize', abrirEnEscritorio);
 
   /* aparición al hacer scroll */
   var io = new IntersectionObserver(function(es){
