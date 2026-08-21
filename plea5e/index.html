@@ -5929,14 +5929,21 @@ three/build/three.module.js:
       else { cur = [h[0], h[1]]; tramos.push(cur); }
     });
 
+    /* Un trozo de linea mas corto que esto no se dibuja: se une al hueco
+       de al lado. Sin este minimo, cuando varios obstaculos casi se tocan
+       queda un trocito suelto de un puñado de pixeles, aislado tras un
+       hueco largo, que parece un resto suelto en vez de la propia linea. */
+    var MIN_TRAMO = 20;
     var ORO = '#E9BC46', partes = [], x = 0;
     tramos.forEach(function (t) {
       var a = Math.max(0, t[0]), b = Math.min(innerWidth, t[1]);
       if (b <= x) return;
-      partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
+      if (a - x >= MIN_TRAMO) partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
+      else partes.push('transparent ' + x + 'px ' + b + 'px');
       x = b;
     });
-    partes.push(ORO + ' ' + x + 'px 100%');
+    if (innerWidth - x >= MIN_TRAMO) partes.push(ORO + ' ' + x + 'px 100%');
+    else partes.push('transparent ' + x + 'px 100%');
     tira.style.background = 'linear-gradient(to right,' + partes.join(',') + ')';
   }
 
