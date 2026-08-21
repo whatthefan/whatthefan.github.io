@@ -5894,14 +5894,21 @@ three/build/three.module.js:
     tira.style.width = innerWidth + 'px';
 
     /* Se baja hasta la pieza mas pequena que toca la linea, para no cortar
-       un hueco mas grande de lo necesario. Dos excepciones que SIEMPRE
+       un hueco mas grande de lo necesario. Tres excepciones que SIEMPRE
        cuentan como una sola pieza entera, sin bajar dentro: el propio
-       logotipo (.marca) y un grupo de iconos como las 5 estrellas de
-       reseña (.est5). El logotipo no puede excluirse sin mas del corte:
-       trae su propia chispa en punta (no un rectangulo), y una banda plana
-       solapada encima de esa punta se ve como una barra atravesandola. Con
-       un hueco normal para toda su caja, la banda plana no llega a
-       solaparse con el dibujo: empieza limpia justo despues. */
+       logotipo (.marca), un grupo de iconos como las 5 estrellas de
+       reseña (.est5) y el menu (.menu). El logotipo no puede excluirse sin
+       mas del corte: trae su propia chispa en punta (no un rectangulo), y
+       una banda plana solapada encima de esa punta se ve como una barra
+       atravesandola. Con un hueco normal para toda su caja, la banda plana
+       no llega a solaparse con el dibujo: empieza limpia justo despues.
+       Al menu hay que tratarlo igual: si se baja a cortar un hueco por
+       cada enlace por separado, en cuanto dos enlaces quedan pegados (que
+       es casi siempre) sus huecos se juntan con los del vecino y arrastran
+       hasta el tramo de linea que hay ANTES o DESPUES del menu entero,
+       dejando la banda casi entera sin pintar aunque solo tocara saltar el
+       menu. Con .menu como pieza unica, el hueco es justo su caja: ni un
+       pixel mas. */
     var MARGEN = 9;
     var huecos = (function mirar(nodo) {
       var res = [];
@@ -5914,7 +5921,7 @@ three/build/three.module.js:
         var puroCajon = !Array.prototype.some.call(h.childNodes, function (n) {
           return n.nodeType === 3 && n.textContent.trim();
         });
-        var esBloque = h.classList.contains('est5') || h.classList.contains('marca');
+        var esBloque = h.classList.contains('est5') || h.classList.contains('marca') || h.classList.contains('menu');
         var dentro = (puroCajon && !esBloque) ? mirar(h) : [];
         if (dentro.length) res = res.concat(dentro);
         else res.push([c.left - MARGEN, c.right + MARGEN]);
@@ -5929,20 +5936,18 @@ three/build/three.module.js:
       else { cur = [h[0], h[1]]; tramos.push(cur); }
     });
 
-    /* Un trozo de linea mas corto que esto no se dibuja: se une al hueco
-       de al lado. Sin este minimo, cuando varios obstaculos casi se tocan
-       queda un trocito suelto de un puñado de pixeles, aislado tras un
-       hueco largo, que parece un resto suelto en vez de la propia linea. */
-    var MIN_TRAMO = 20;
     var ORO = '#E9BC46', partes = [], x = 0;
     tramos.forEach(function (t) {
       var a = Math.max(0, t[0]), b = Math.min(innerWidth, t[1]);
       if (b <= x) return;
-      if (a - x >= MIN_TRAMO) partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
-      else partes.push('transparent ' + x + 'px ' + b + 'px');
+      partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
       x = b;
     });
-    if (innerWidth - x >= MIN_TRAMO) partes.push(ORO + ' ' + x + 'px 100%');
+    /* Al final, si solo queda un resto de un puñado de pixeles hasta el
+       borde, no se dibuja: separado del resto por el ultimo hueco, se veia
+       como un trocito de linea suelto en vez de la propia linea. Con mas
+       sitio detras del ultimo obstaculo, se pinta como siempre. */
+    if (innerWidth - x >= 20) partes.push(ORO + ' ' + x + 'px 100%');
     else partes.push('transparent ' + x + 'px 100%');
     tira.style.background = 'linear-gradient(to right,' + partes.join(',') + ')';
   }
