@@ -5928,12 +5928,7 @@ three/build/three.module.js:
       partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
       x = b;
     });
-    /* Al final, si solo queda un resto de un puñado de pixeles hasta el
-       borde, no se dibuja: separado del resto por el ultimo hueco, se veia
-       como un trocito de linea suelto en vez de la propia linea. Con mas
-       sitio detras del ultimo obstaculo, se pinta como siempre. */
-    if (innerWidth - x >= 20) partes.push(ORO + ' ' + x + 'px 100%');
-    else partes.push('transparent ' + x + 'px 100%');
+    partes.push(ORO + ' ' + x + 'px 100%');
     tira.style.background = 'linear-gradient(to right,' + partes.join(',') + ')';
   }
 
