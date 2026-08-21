@@ -139,7 +139,7 @@ p{margin:0}
 .menu .btn{margin-left:8px}
 .abrir{display:none;margin-left:auto;background:none;border:1px solid var(--borde-claro);
        color:var(--txt);border-radius:var(--r);padding:9px 12px;cursor:pointer;
-       align-items:center;gap:8px}
+       align-items:center;gap:8px;touch-action:manipulation}
 .abrir svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .ico-abrir line{transition:transform .25s ease,opacity .2s ease;transform-origin:12px 12px}
 .abrir[aria-expanded="true"] .b1{transform:translateY(6px) rotate(45deg)}
@@ -958,7 +958,8 @@ body::after{
   .nav > .env > .est5{font-size:16px;margin-left:12px}
   .nav .raya-v,.nav .lema,.nav .enlinea{display:none}
   .cinta{top:70px}
-  .abrir{padding:10px 15px;font-size:.9rem;font-weight:600}
+  .abrir{padding:12px 18px;font-size:.92rem;font-weight:600;
+         background:rgba(255,255,255,.06);border-color:var(--borde-claro)}
 }
 @media (max-width:400px){
   .nav > .env > .est5{font-size:14px;margin-left:9px}
@@ -1011,7 +1012,7 @@ body::after{
     <span class="raya-v" aria-hidden="true"></span>
     <span class="lema"><b>Placas de reseñas</b><span>Diseñadas a tu medida</span></span>
     <span class="enlinea"><i></i>Respondemos en minutos</span>
-    <button class="abrir" id="abrir" aria-expanded="false" aria-controls="menu">
+    <button class="abrir" id="abrir" type="button" aria-expanded="false" aria-controls="menu">
       <svg class="ico-abrir" viewBox="0 0 24 24" aria-hidden="true">
         <line class="b1" x1="4" y1="6" x2="20" y2="6"/>
         <line class="b2" x1="4" y1="12" x2="20" y2="12"/>
@@ -5815,14 +5816,22 @@ three/build/three.module.js:
     ciclo();
   })();
 
-  /* menú móvil */
+  /* menú móvil. tocarTiempo evita que un mismo toque cuente dos veces (el
+     "ghost click" que sueltan algunos navegadores de móvil justo despues
+     de un touchend) y que abriera y cerrara de golpe en el mismo gesto. */
   var menu = document.getElementById('menu'), abrir = document.getElementById('abrir');
-  abrir.addEventListener('click', function(){
+  var tocarTiempo = 0;
+  function conmutar(e){
+    var ahora = Date.now();
+    if (ahora - tocarTiempo < 350) return;
+    tocarTiempo = ahora;
+    if (e) e.preventDefault();
     var v = menu.classList.toggle('ver');
     abrir.setAttribute('aria-expanded', v ? 'true' : 'false');
-  });
+  }
+  abrir.addEventListener('click', conmutar);
   menu.addEventListener('click', function(e){
-    if (e.target.tagName === 'A') { menu.classList.remove('ver'); abrir.setAttribute('aria-expanded','false'); }
+    if (e.target.closest('a')) { menu.classList.remove('ver'); abrir.setAttribute('aria-expanded','false'); }
   });
 
   /* aparición al hacer scroll */
