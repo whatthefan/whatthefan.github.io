@@ -94,7 +94,7 @@ p{margin:0}
 .marca{display:inline-flex;align-items:center;line-height:1;text-decoration:none}
 .logotipo{height:2.15rem;width:auto;display:block}
 .marca-pie .logotipo{height:1.9rem}
-@media (max-width:560px){.logotipo{height:1.7rem}}
+@media (max-width:560px){.logotipo{height:2.1rem}}
 /* la banda sigue mas alla del logotipo, cruzando por detras de lo que
    venga despues (las estrellas, el menu...) y dejando hueco justo donde
    hay algo delante. overflow-x:clip la recorta sin crear scroll lateral. */
@@ -911,13 +911,11 @@ body::after{
 @media (max-width:1080px){
   .nav .env{min-height:70px;gap:12px}
   .nav > .env > .est5{display:inline-flex!important;font-size:16px;margin-left:12px}
-  .nav .marca{--wm:1.6rem}
   .nav .raya-v,.nav .lema,.nav .enlinea{display:none}
   .cinta{top:70px}
   .abrir{padding:10px 15px;font-size:.9rem;font-weight:600}
 }
 @media (max-width:400px){
-  .nav .marca{--wm:1.44rem}
   .nav > .env > .est5{font-size:14px;margin-left:9px}
 }
 
@@ -5898,13 +5896,16 @@ three/build/three.module.js:
        propia chispa en punta, y una banda plana solapada encima de esa
        punta se ve como una barra atravesandola), las 5 estrellas de
        reseña, el eslogan en negrita ("Placas de reseñas") -sin hueco se
-       la ve como una linea tachandolo, no como un adorno- y el menu (o el
-       boton de abrirlo en movil). El resto de la fila -"Respondemos en
-       minutos", que ya lleva su propio fondo opaco por delante- se queda
-       encima de la linea sin cortarle hueco aparte. */
+       la ve como una linea tachandolo, no como un adorno- y el menu en
+       escritorio (los enlaces sueltos). El boton de abrir el menu en
+       movil no corta hueco: lleva borde pero no fondo solido, y con la
+       linea corriendo detras llega igual hasta el borde derecho. El
+       resto de la fila -"Respondemos en minutos", que ya lleva su
+       propio fondo opaco por delante- tambien se queda encima de la
+       linea sin cortarle hueco aparte. */
     var MARGEN = 9;
     var huecos = [];
-    ['.marca', '.est5', '.menu', '.abrir', '.lema'].forEach(function (sel) {
+    ['.marca', '.est5', '.menu', '.lema'].forEach(function (sel) {
       var h = fila.querySelector(sel);
       if (!h) return;
       var c = h.getBoundingClientRect();
