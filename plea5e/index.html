@@ -526,7 +526,6 @@ summary::after{border-right-color:var(--oro);border-bottom-color:var(--oro)}
 .est5{display:inline-flex;align-items:center;gap:.28em;flex:none}
 .est5 svg{width:1em;height:1em;fill:var(--oro);filter:drop-shadow(0 1px 4px rgba(233,188,70,.35))}
 .nav .est5{font-size:15px;margin-left:14px}
-@media (max-width:420px){.nav .est5{display:none}}
 .hero-est{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
 .hero-est .est5{font-size:clamp(22px,3.4vw,30px)}
 .hero-est span{font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-3)}
@@ -653,10 +652,9 @@ summary::after{border-right-color:var(--oro);border-bottom-color:var(--oro)}
   .portada .rej2{grid-template-areas:"a" "b" "c";grid-template-columns:1fr;row-gap:6px}
   .hero-a,.hero-c{align-self:auto}
   .hero-c .sub{margin-top:14px}
-  .nav .est5{display:inline-flex;font-size:13px;margin-left:10px}
+  .nav .est5{font-size:13px;margin-left:10px}
   .desliza{margin-top:16px}
 }
-@media (max-width:360px){.nav .est5{display:none}}
 
 /* ================== v7 ================== */
 /* composición de la portada */
@@ -957,13 +955,19 @@ body::after{
 .nav .env{position:relative;z-index:1}
 @media (max-width:1080px){
   .nav .env{min-height:70px;gap:12px}
-  .nav > .env > .est5{display:inline-flex!important;font-size:16px;margin-left:12px}
+  .nav > .env > .est5{font-size:16px;margin-left:12px}
   .nav .raya-v,.nav .lema,.nav .enlinea{display:none}
   .cinta{top:70px}
   .abrir{padding:10px 15px;font-size:.9rem;font-weight:600}
 }
 @media (max-width:400px){
   .nav > .env > .est5{font-size:14px;margin-left:9px}
+}
+/* con el logotipo grande y el boton de "Menu", en un telefono normal ya
+   no cabe tambien la fila de estrellas: se ocultan y asi el boton se
+   queda siempre entero y pulsable en vez de salirse de la pantalla */
+@media (max-width:460px){
+  .nav > .env > .est5{display:none}
 }
 
 /* ============ v15 ============ */
