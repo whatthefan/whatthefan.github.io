@@ -5896,16 +5896,16 @@ three/build/three.module.js:
        propia chispa en punta, y una banda plana solapada encima de esa
        punta se ve como una barra atravesandola), las 5 estrellas de
        reseña, el eslogan en negrita ("Placas de reseñas") -sin hueco se
-       la ve como una linea tachandolo, no como un adorno- y el menu en
-       escritorio (los enlaces sueltos). El boton de abrir el menu en
-       movil no corta hueco: lleva borde pero no fondo solido, y con la
-       linea corriendo detras llega igual hasta el borde derecho. El
-       resto de la fila -"Respondemos en minutos", que ya lleva su
-       propio fondo opaco por delante- tambien se queda encima de la
-       linea sin cortarle hueco aparte. */
+       la ve como una linea tachandolo, no como un adorno- y el menu, sea
+       en escritorio (los enlaces) o el boton de abrirlo en movil: aunque
+       ese boton no lleva fondo solido, su borde deja la linea cruzando
+       por dentro de la caja y se ve como si la partiera. El resto de la
+       fila -"Respondemos en minutos", que ya lleva su propio fondo
+       opaco por delante- se queda encima de la linea sin cortarle hueco
+       aparte. */
     var MARGEN = 9;
     var huecos = [];
-    ['.marca', '.est5', '.menu', '.lema'].forEach(function (sel) {
+    ['.marca', '.est5', '.menu', '.abrir', '.lema'].forEach(function (sel) {
       var h = fila.querySelector(sel);
       if (!h) return;
       var c = h.getBoundingClientRect();
