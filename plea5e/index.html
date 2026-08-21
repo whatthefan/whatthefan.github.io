@@ -1111,7 +1111,7 @@ body::after{
           <p class="paraquien">Para <b>barra, mostrador o terraza</b></p>
           <p class="medida">76 × 118 mm · chapa doblada en L</p>
           <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro.</p>
-          <p class="pvp"><span class="n">32 €</span><span class="antes">42 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
+          <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="stand">Pedir este</a>
         </div>
       </article>
@@ -5692,7 +5692,7 @@ three/build/three.module.js:
                suelta:25, precio:function(n){ return n>=20?15.5:n>=12?17.5:n>=5?20:n>=3?22:25; } },
     stand:   { nombre:'Expositor de pie', uno:'expositor de pie', varias:'expositores de pie', cada:'cada uno',
                ancho:46, solapa:-22,
-               suelta:32, precio:function(n){ return n>=20?21:n>=12?24:n>=5?27:n>=3?29:32; } },
+               suelta:25, precio:function(n){ return n>=20?16.5:n>=12?19:n>=5?21:n>=3?23:25; } },
     tarjeta: { nombre:'Tarjeta de mano', uno:'tarjeta de mano', varias:'tarjetas de mano', cada:'cada una',
                ancho:62, solapa:-34,
                suelta:16, precio:function(n){ return n>=20?9.5:n>=12?11:n>=5?13:n>=3?14:16; } }
@@ -5825,9 +5825,18 @@ three/build/three.module.js:
   /* menú móvil: <details> nativo, el navegador abre y cierra solo con el
      summary. Lo único que hace falta es cerrarlo cuando se toca un enlace
      de dentro, porque eso no lo hace solo. */
-  var menuDet = document.getElementById('menuDet'), menu = document.getElementById('menu');
+  var menuDet = document.getElementById('menuDet'), menu = document.getElementById('menu'), abrir = document.getElementById('abrir');
   menu.addEventListener('click', function(e){
     if (e.target.closest('a')) menuDet.open = false;
+  });
+  /* si el dedo toca dos veces seguidas (el segundo toque casi siempre
+     sin querer, porque el primero no se notó al instante), el segundo
+     toque no lo vuelve a cerrar: se ignora si llega antes de medio
+     segundo desde que se abrió. */
+  var seAbrioEn = 0;
+  abrir.addEventListener('click', function(e){
+    if (menuDet.open && Date.now() - seAbrioEn < 500) e.preventDefault();
+    else if (!menuDet.open) seAbrioEn = Date.now();
   });
   /* en escritorio el menu no es un desplegable: va siempre abierto, sin
      resumen que tocar (el summary se esconde por CSS). Solo se toca el
