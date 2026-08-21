@@ -707,10 +707,30 @@ summary::after{border-right-color:var(--oro);border-bottom-color:var(--oro)}
 .prod .medida{font-size:.79rem;color:var(--claro-txt-2);font-variant-numeric:tabular-nums;margin-top:-6px}
 .prod .desc{font-size:.9rem;color:var(--claro-txt-2)}
 .prod .pvp{display:flex;align-items:baseline;flex-wrap:wrap;gap:9px;margin-top:auto}
-.prod .pvp .n{font-family:"Anton",sans-serif;font-size:2.1rem;line-height:.95}
+.prod .pvp .n{font-family:"Anton",sans-serif;font-size:2.1rem;line-height:.95;font-variant-numeric:tabular-nums}
 .prod .pvp .antes{font-size:.9rem;color:var(--claro-txt-2);text-decoration:line-through}
 .prod .pvp .ahorro{font-size:.72rem;font-weight:700;color:#fff;background:#B23A3A;
-  border-radius:999px;padding:3px 9px;letter-spacing:.01em}
+  border-radius:999px;padding:3px 9px;letter-spacing:.01em;position:relative;overflow:hidden;
+  opacity:0;transform:scale(.5) rotate(-10deg)}
+/* el precio cuenta desde 0 por JS al entrar en pantalla; la etiqueta de
+   descuento aparece con un pequeño rebote justo detrás y luego repite un
+   brillo cada pocos segundos, para que el numero y el ahorro sean lo
+   primero que se note de la ficha */
+.prod.sube.ver .pvp .ahorro{animation:ahorroPop .5s cubic-bezier(.34,1.56,.64,1) .2s forwards}
+@keyframes ahorroPop{
+  0%{opacity:0;transform:scale(.5) rotate(-10deg)}
+  60%{opacity:1;transform:scale(1.18) rotate(4deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+.prod .pvp .ahorro::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.6) 48%,transparent 66%);
+  background-size:220% 100%;background-position:150% 0;pointer-events:none}
+.prod.sube.ver .pvp .ahorro::after{animation:ahorroBrillo 2.8s ease-in-out .9s infinite}
+@keyframes ahorroBrillo{0%,55%{background-position:150% 0}100%{background-position:-60% 0}}
+@media (prefers-reduced-motion:reduce){
+  .prod .pvp .ahorro{opacity:1;transform:none}
+  .prod.sube.ver .pvp .ahorro,.prod.sube.ver .pvp .ahorro::after{animation:none}
+}
 .prod .pvp small{font-size:.74rem;color:var(--claro-txt-2);width:100%;margin-top:-2px}
 .prod .btn{width:100%}
 
@@ -5788,6 +5808,29 @@ three/build/three.module.js:
     es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('ver'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px 80px 0px' });
   document.querySelectorAll('.sube').forEach(function(e){ io.observe(e); });
+
+  /* el precio de cada producto cuenta desde 0 al entrar en pantalla, para
+     que el numero se note y no pase desapercibido entre el resto */
+  (function(){
+    if (!window.IntersectionObserver || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    function contar(el){
+      var texto = el.textContent, m = texto.match(/\d+/);
+      if (!m) return;
+      var destino = parseInt(m[0], 10), pre = texto.slice(0, m.index), post = texto.slice(m.index + m[0].length);
+      var t0 = null, dur = 900;
+      function paso(ts){
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / dur), ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = pre + Math.round(destino * ease) + post;
+        if (p < 1) requestAnimationFrame(paso); else el.textContent = texto;
+      }
+      requestAnimationFrame(paso);
+    }
+    var ioPrecio = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { contar(e.target); ioPrecio.unobserve(e.target); } });
+    }, { threshold: .6 });
+    document.querySelectorAll('.prod .pvp .n').forEach(function(e){ ioPrecio.observe(e); });
+  })();
 
   /* sección activa */
   var secciones = ['productos','como','clientes','pedido','ayuda'];
