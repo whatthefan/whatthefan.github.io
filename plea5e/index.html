@@ -6081,6 +6081,7 @@ three/build/three.module.js:
          escrito, se lo ponemos delante para que no se lo inventen */
       var con = document.getElementById('senalCon');
       if (con) con.textContent = v('negocio') || 'El nombre de tu negocio';
+      if (SENAL_PONER_ENLACE) SENAL_PONER_ENLACE();
 
       var cola = BIZUM.descuenta ? ' (a descontar del pedido)' : '';
       if (SENAL_REF) {
@@ -6386,6 +6387,7 @@ three/build/three.module.js:
      ningún cobro con esa referencia y lo verás al instante. */
   var SENAL_REF = '';
   var SENAL_MANUAL = false;   /* lo dice el cliente, sin referencia de Stripe */
+  var SENAL_PONER_ENLACE = null;  /* mantiene el href del botón de pagar al día */
 
   (function(){
     var paso = document.getElementById('senalPaso');
@@ -6466,16 +6468,23 @@ three/build/three.module.js:
       return true;
     }
 
-    botonP.addEventListener('click', function(e){
-      e.preventDefault();
-      guardar();
-      /* el nombre del negocio viaja con el pago: así, en el panel de
-         Stripe, cada cobro ya viene con el nombre de quien lo hizo */
-      var u = enlace + (enlace.indexOf('?') > -1 ? '&' : '?')
-            + 'client_reference_id=' + encodeURIComponent(
-                (val('negocio') || 'sin-nombre').replace(/[^0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g,'').slice(0,60) || 'sin-nombre');
-      location.href = u;
-    });
+    /* El botón es un enlace de verdad, con su href puesto. Antes navegaba
+       por JavaScript (location.href) y eso se lo come cualquier sitio que
+       corra la página dentro de un marco. Así funciona hasta sin JS, y
+       además se puede pulsar largo para abrirlo en otra pestaña.
+       El nombre del negocio viaja con el pago: en el panel de Stripe cada
+       cobro llega ya con el nombre de quien lo hizo. */
+    function ponerEnlace(){
+      var quien = (val('negocio') || 'sin-nombre')
+                    .replace(/[^0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g, '').trim().slice(0, 60) || 'sin-nombre';
+      botonP.href = enlace + (enlace.indexOf('?') > -1 ? '&' : '?')
+                  + 'client_reference_id=' + encodeURIComponent(quien);
+    }
+    SENAL_PONER_ENLACE = ponerEnlace;
+    ponerEnlace();
+
+    /* al pulsar solo guardamos el pedido; de navegar se encarga el enlace */
+    botonP.addEventListener('click', function(){ guardar(); });
 
     refrescar();          /* deja el WhatsApp bloqueado hasta que se pague */
 
