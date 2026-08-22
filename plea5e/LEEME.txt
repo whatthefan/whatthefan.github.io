@@ -133,14 +133,23 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
         APPLE PAY (y Google Pay si quieres).
      3. Productos > Enlaces de pago > Nuevo enlace.
         Precio unico de 25 EUR, concepto "Senal del diseno PLEA5E".
-     4. En "Despues del pago" marca "Redirigir a tu web" y escribe:
+     4. En "Despues del pago" marca "Redirigir a tu web" y pega ESTO,
+        tal cual, sin cambiar nada:
 
             https://plea5e.es/?pagado={CHECKOUT_SESSION_ID}
 
-        Si aun no tienes dominio propio, pon tu direccion de
-        netlify.app. Las llaves van TAL CUAL, Stripe las rellena sola.
+        Las llaves van TAL CUAL, Stripe las rellena sola.
+
         ESTE PASO NO ES OPCIONAL: si no lo pones, el cliente paga pero
         no vuelve a la web y el WhatsApp no se desbloquea.
+
+        Y OJO CON UNA COSA: tiene que ser LA MISMA direccion en la que
+        el cliente monto el pedido. Si el monta el pedido en
+        plea5e.netlify.app y Stripe lo devuelve a plea5e.es, para el
+        navegador son dos sitios distintos y el pedido se pierde por el
+        camino: la senal cuenta como pagada igual, pero le sale un aviso
+        de "repasa el pedido" porque ha vuelto en blanco. Asi que antes
+        de encender el cobro, ten plea5e.es funcionando y usa esa.
      5. Copia el enlace que te da (empieza por https://buy.stripe.com/)
         y pegalo en index.html, en:
 

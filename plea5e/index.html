@@ -834,6 +834,8 @@ td .destaca{color:var(--oro);font-weight:700}
 .senal-ok-ref{margin:0;font-size:.73rem;color:var(--txt-2)}
 .senal-ok-ref code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;
   color:var(--txt);word-break:break-all}
+.senal-repasa{margin:8px 0 0;padding:9px 11px;border-radius:12px;font-size:.78rem;line-height:1.5;
+  color:var(--txt);background:rgba(233,188,70,.13);border:1px solid rgba(233,188,70,.4)}
 /* mientras no marcan la casilla, el boton se ve apagado y no lleva a
    ningun sitio: el href se le quita desde el JS, no solo el color */
 .btn.grande.espera{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
@@ -1437,6 +1439,7 @@ body::after{
           <div class="senal-ok" id="senalOk" hidden>
             <p class="senal-ok-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Señal pagada</p>
             <p class="senal-ok-ref">Referencia <code id="senalRef">—</code></p>
+            <p class="senal-repasa" id="senalRepasa" hidden>Repasa el pedido antes de enviarlo: al volver del pago no hemos podido recuperar lo que habías marcado.</p>
           </div>
         </div>
 
@@ -6430,9 +6433,9 @@ three/build/three.module.js:
 
     function recuperar(){
       var d;
-      try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return; }
+      try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return false; }
       /* a las 6 horas ya no es el mismo pedido, es otro día */
-      if (!d || !d.cuando || Date.now() - d.cuando > 6 * 3600 * 1000) return;
+      if (!d || !d.cuando || Date.now() - d.cuando > 6 * 3600 * 1000) return false;
       if (d.prod && CAT[d.prod]) {
         sel.prod = d.prod;
         pintarOpCant(CAT[d.prod]);
@@ -6443,6 +6446,7 @@ three/build/three.module.js:
         var e = document.getElementById(id);
         if (e && d[id]) e.value = d[id];
       });
+      return true;
     }
 
     botonP.addEventListener('click', function(e){
@@ -6467,12 +6471,21 @@ three/build/three.module.js:
     if (!ref || ref.charAt(0) === '{') return;   /* la plantilla sin rellenar */
 
     SENAL_REF = ref;
-    recuperar();
+    /* Si el navegador no nos devuelve el pedido -modo incógnito, otro
+       navegador, o porque lo montó en una dirección y Stripe lo trae a
+       otra- la señal está pagada igual, pero el pedido volvería a los
+       valores de fábrica y te llegaría un WhatsApp que no es el suyo.
+       Así que se lo decimos y que lo repase antes de enviarlo. */
+    var recuperado = recuperar();
 
     botonP.hidden = true;
     medios.hidden = true;
     ok.hidden = false;
     document.getElementById('senalRef').textContent = ref;
+    if (!recuperado) {
+      var aviso = document.getElementById('senalRepasa');
+      if (aviso) aviso.hidden = false;
+    }
     hecho.checked = true;                        /* para el resto del código, ya está pagado */
 
     try { localStorage.removeItem(CLAVE); } catch (e) {}
