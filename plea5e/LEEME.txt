@@ -175,14 +175,21 @@ Abre index.html con el Bloc de notas y busca:
 Justo debajo hay tres bloques. Pones el dato entre las comillas,
 guardas, y vuelves a arrastrar la carpeta a Netlify.
 
-0) EL COBRO DE LA SEnAL. Hay dos maneras, y la web escoge sola.
+0) EL COBRO DE LA FIANZA. Hay dos maneras, y la web escoge sola.
+
+   ANTES DE NADA: la web ya NO dice "senal" en ningun sitio. Ahora se
+   llama FIANZA y en todos lados se explica lo mismo: los 25 EUR no
+   son un cobro aparte, son los primeros 25 EUR del pedido. En el
+   ticket se lee "Hoy pagas 25,00 EUR de fianza y el resto, 75,00
+   EUR, cuando el diseno te guste". Si el pedido son 25 EUR o menos,
+   la web dice que queda pagado entero.
 
    ---- MANERA A: COBRO AUTOMATICO (es la que esta puesta) ------------
    YA ESTA MONTADO. El enlace de pago de tu Stripe esta metido:
 
        https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00
 
-   El cliente monta el pedido, le da a "Pagar la senal", paga con Bizum,
+   El cliente monta el pedido, le da a "Pagar la fianza", paga con Bizum,
    Apple Pay, Google Pay o tarjeta, vuelve solo y se le desbloquea el
    WhatsApp con la referencia del cobro dentro del mensaje.
 
@@ -199,14 +206,14 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 
    SI SE TE OLVIDA, LA WEB LO APANA
    Si el cliente vuelve por su cuenta sin que Stripe nos diga nada, se le
-   recupera el pedido y le sale un "?ya has pagado la senal?" con una
+   recupera el pedido y le sale un "?ya has pagado la fianza?" con una
    casilla. Fijate en el circulo del mensaje que te llega:
 
-       VERDE     Senal pagada - 25 EUR, a descontar del pedido
+       VERDE     Fianza pagada - 25 EUR (ya dentro del total)
                  Referencia: cs_live_...
                  -> Stripe lo confirmo. Cuadra con tu panel.
 
-       AMARILLO  Senal pagada - 25 EUR, a descontar del pedido
+       AMARILLO  Fianza pagada - 25 EUR (ya dentro del total)
                  Sin referencia automatica
                  -> Lo dice el cliente y no tenemos confirmacion.
                     Miralo en Stripe antes de ponerte a disenar.
@@ -245,7 +252,7 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 
    En el propio enlace de pago puedes cambiar el texto del boton: dejalo
    en "Pagar". "Comprar" suena a que se lleva la placa ya, y esto es la
-   senal del diseno.
+   fianza del diseno.
 
    ---- MANERA B: BIZUM A MANO (la de mientras tanto) ------------------
    Es lo que hay si dejas 'enlace' vacio. Sale tu numero de Bizum y una
@@ -253,15 +260,66 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    la palabra del cliente, asi que mira el movil antes de ponerte.
 
        numero:    '661403219'   <- OJO, ahora esta el mismo del WhatsApp
-       senal:     25            <- euros
-       descuenta: true          <- true = se descuenta del pedido final
+       fianza:    25            <- euros
+       descuenta: true          <- true = va DENTRO del precio final
+
+   Si pones 'descuenta' en false, la web cambia sola el discurso: pasa a
+   decir que la fianza cubre el trabajo de diseno y que no se descuenta.
+   Las condiciones de venta tambien lo dicen de la otra manera. No hay
+   que tocar ningun texto a mano.
 
    CAMBIA ESE NUMERO si tu Bizum esta en otro movil.
 
    Si vacias las dos cosas (enlace y numero), el paso desaparece y el
    boton de WhatsApp funciona directo, como antes. Ojo: las condiciones
-   de venta hablan de la senal, asi que si la quitas, avisa para
+   de venta hablan de la fianza, asi que si la quitas, avisa para
    repasar ese texto.
+
+
+   ---- LA OFERTA DE LANZAMIENTO Y SU CUENTA ATRAS --------------------
+   Justo debajo del bloque de la fianza hay este:
+
+       var OFERTA = {
+         fin: '2026-09-30T23:59:59'
+       };
+
+   Esa fecha es LO UNICO que hay que tocar. De ahi salen solas tres
+   cosas, y por eso no pueden contradecirse entre ellas:
+
+       - el contador de la portada y el del ticket del pedido
+         (dias : horas : min : seg, corriendo de verdad)
+       - la cinta dorada de arriba, donde pone "Acaba el 30 de
+         septiembre"
+       - la linea de las condiciones de venta: "Los precios de
+         lanzamiento que ves ahora estan en vigor hasta el ..."
+
+   El formato es AAAA-MM-DDTHH:MM:SS. La T va pegada, sin espacios.
+   Ejemplo para el 15 de noviembre de 2026 a medianoche:
+
+       fin: '2026-11-15T23:59:59'
+
+   QUE PASA CUANDO LLEGA LA FECHA
+   Se apaga solo. Desaparecen la cinta dorada y los dos contadores, y
+   las condiciones dejan de prometer la oferta. Nadie ve un contador en
+   negativo ni una promesa caducada.
+
+   LO QUE NO SE APAGA SOLO: los precios tachados de las fichas (25 EUR
+   con 33 EUR tachado, -24%). Esos estan escritos a mano en el HTML.
+   Asi que cuando llegue el dia tienes dos opciones:
+
+       a) Alargar la oferta -> pon una fecha nueva en 'fin' y ya esta.
+       b) Terminarla de verdad -> cambia esos precios a mano en las tres
+          fichas de producto y quita los <span class="antes"> y
+          <span class="ahorro">.
+
+   En las ultimas 48 horas el contador se pone naranja solo, para meter
+   un poco de prisa sin gritar.
+
+   OJO CON ALARGARLA SIEMPRE: si la fecha se mueve cada mes, deja de ser
+   una oferta y pasa a ser el precio de siempre con un reloj al lado.
+   Eso, ademas de quemar la credibilidad, en España lo puede mirar
+   Consumo. Si vas a tener ese precio todo el ano, es mas honesto quitar
+   el tachado y dejar 25 EUR a secas.
 
 1) DATOS  -> para el aviso legal.
    En España, si vendes por internet, el aviso legal tiene que llevar
