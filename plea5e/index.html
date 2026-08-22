@@ -128,11 +128,12 @@ p{margin:0}
      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--borde)}
 .nav .env{display:flex;align-items:center;gap:18px;min-height:66px}
 /* el menu de movil es un boton normal + un div: quien decide si esta
-   abierto es la clase .abierto que le pone nuestro JS, y nada mas. Antes
-   era un <details> nativo y se cerraba solo en algunos navegadores (el de
-   dentro de WhatsApp/Instagram, Safari), porque el propio navegador
-   tambien lo abria y cerraba por su cuenta ademas de nuestro codigo:
-   dos cambios en el mismo toque = se abria y se volvia a cerrar. */
+   abierto es la clase .menu-abierto que nuestro JS pone en el <html>,
+   y nada mas. Antes era un <details> nativo y se cerraba solo en algunos
+   navegadores (el de dentro de WhatsApp/Instagram, Safari), porque el
+   propio navegador tambien lo abria y lo cerraba por su cuenta ademas de
+   nuestro codigo: dos cambios en el mismo toque = se abria y se volvia a
+   cerrar. */
 .menu{content-visibility:visible;display:flex;gap:4px;align-items:center}
 .menu a{display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:500;color:var(--txt-2);
         text-decoration:none;padding:8px 12px;border-radius:var(--r);transition:color .18s,background .18s}
@@ -157,27 +158,44 @@ p{margin:0}
 /* el icono y todo lo que lleve dentro no reciben el toque: asi el click
    siempre sale del boton y nunca de un hijo suyo */
 .abrir > *{pointer-events:none}
-.ico-abrir line{transition:transform .25s ease,opacity .2s ease;transform-origin:12px 12px}
-.menu-det.abierto .b1{transform:translateY(6px) rotate(45deg)}
-.menu-det.abierto .b2{opacity:0}
-.menu-det.abierto .b3{transform:translateY(-6px) rotate(-45deg)}
-/* en movil la visibilidad del desplegable la decide nuestro propio
-   display:none/flex segun la clase .abierto, sin depender de nada
-   mas: asi no hay ningun otro motivo por el que pueda cerrarse solo */
+/* el icono se queda siempre en tres rayas. No se convierte en X ni se
+   mueve: el menu abierto ya se ve, no hace falta que el boton lo cuente,
+   y una animacion menos es una cosa menos que pueda salir mal. */
+
+/* En movil el desplegable NO cuelga de la cabecera: el JS lo saca y lo
+   cuelga directamente del <body>, y aqui va en position:fixed.
+   Por que: la cabecera es position:sticky, lleva backdrop-filter y
+   overflow-x:clip. Cualquiera de esas tres cosas, y las tres juntas
+   mucho mas, hace que Safari y los navegadores de dentro de WhatsApp e
+   Instagram no pinten lo que se sale de la caja de la cabecera. El menu
+   se abria de verdad -el codigo decia "abierto"- pero no se veia, y
+   desde fuera eso es exactamente "lo toco y se cierra solo".
+   Colgando del <body> no hay ninguna caja de la que salirse.
+   La clase va en el <html> porque el menu ya no esta dentro del
+   contenedor del boton y no puede heredarla de el. */
 @media (max-width:900px){
   .abrir{display:inline-flex}
-  .menu{display:none;position:absolute;top:calc(100% + 10px);left:14px;right:14px;flex-direction:column;
-        align-items:stretch;gap:3px;background:var(--noche-2);border:1px solid var(--borde);
-        border-radius:var(--r);padding:12px;box-shadow:0 24px 56px -20px rgba(0,0,0,.6);z-index:80}
-  .menu-det.abierto .menu{display:flex;animation:menuAparece .32s cubic-bezier(.2,.8,.3,1) both}
+  .menu{display:none}
+  html.menu-abierto .menu{
+    display:flex;position:fixed;left:14px;right:14px;
+    flex-direction:column;align-items:stretch;gap:3px;
+    background:var(--noche-2);border:1px solid var(--borde);
+    border-radius:var(--r);padding:12px;
+    box-shadow:0 24px 56px -20px rgba(0,0,0,.6);
+    z-index:2000;
+    /* sin animacion de entrada y con todo lo que lo puede volver
+       invisible puesto a mano: aparece entero o no aparece */
+    animation:none;opacity:1;visibility:visible;transform:none;
+    max-height:calc(100vh - 96px);overflow-y:auto;-webkit-overflow-scrolling:touch}
   .menu a{padding:13px 12px}
   .menu a svg{display:block}
   .menu a[aria-current="page"]{color:var(--oro)}
   .menu-sep{height:1px;background:var(--borde);margin:8px 2px}
   .menu .btn{margin:6px 0 0;justify-content:center}
+  /* mientras el menu esta abierto la cabecera no filtra nada: asi no
+     puede quedarse por delante del desplegable en ningun navegador */
+  html.menu-abierto .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--noche)}
 }
-@keyframes menuAparece{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-@media (prefers-reduced-motion:reduce){.menu-det.abierto .menu{animation:none}}
 
 /* páginas */
 section[id]{scroll-margin-top:74px}
@@ -1060,27 +1078,54 @@ body::after{
 
    Cómo funciona: el estado (abierto / cerrado) lo guarda esta variable y
    nadie más. Ni el navegador, ni un resize, ni el scroll lo tocan. La
-   clase .abierto del contenedor es solo el reflejo de esa variable.
+   clase .menu-abierto del <html> es solo el reflejo de esa variable.
 
-   Por qué antes se cerraba solo: el menú era un <details>, así que el
-   navegador lo abría y lo cerraba por su cuenta ADEMÁS de nuestro código.
-   En un mismo toque llegaban a pasar dos cambios seguidos -abrir y
-   cerrar- y el menú parpadeaba y se quedaba cerrado. Ahora el toque solo
-   lo cambia una vez, y encima hay un candado de 350 ms que ignora
-   cualquier segundo aviso del mismo dedo. */
+   Por qué se cerraba solo, las dos causas:
+
+   1) El menú era un <details>, así que el navegador lo abría y lo cerraba
+      por su cuenta ADEMÁS de nuestro código. En un mismo toque pasaban
+      dos cambios seguidos y se quedaba cerrado. Ya no: es un <div> y el
+      único que decide es la variable "abierto" de aquí abajo.
+
+   2) El desplegable colgaba de la cabecera, y la cabecera es sticky,
+      lleva backdrop-filter y overflow-x:clip. Safari y los navegadores
+      de dentro de WhatsApp e Instagram no pintan lo que se sale de una
+      caja así. El menú se abría de verdad, pero no se veía: desde fuera
+      eso es igualito a "lo toco y se cierra solo". Ahora, en móvil, lo
+      sacamos de la cabecera y lo colgamos del <body>, donde no hay
+      ninguna caja de la que salirse. */
 (function(){
   var caja  = document.getElementById('menuDet');
   var menu  = document.getElementById('menu');
   var boton = document.getElementById('abrir');
   if (!caja || !menu || !boton) return;
 
+  var raiz    = document.documentElement;
   var abierto = false;   /* la única verdad sobre si el menú está abierto */
   var sello   = 0;       /* cuándo fue el último cambio, para el candado  */
 
   function esEscritorio(){ return window.innerWidth > 900; }
 
+  /* en móvil el menú vive colgado del <body>; en escritorio vuelve a su
+     sitio de siempre, dentro de la barra, al lado del botón */
+  function colocar(){
+    var destino = esEscritorio() ? caja : document.body;
+    if (menu.parentNode !== destino) destino.appendChild(menu);
+  }
+
+  /* lo pone justo debajo de la cabecera, sea cual sea su alto. Si por lo
+     que sea la medida sale rara (0, negativa, o tan abajo que el menú se
+     iría fuera de la pantalla), se usa un valor fijo razonable: más vale
+     un menú dos píxeles descuadrado que un menú que no se ve. */
+  function situar(){
+    if (esEscritorio()) { menu.style.top = ''; return; }
+    var t = boton.getBoundingClientRect().bottom + 10;
+    if (!(t > 10) || t > window.innerHeight - 80) t = 78;
+    menu.style.top = Math.round(t) + 'px';
+  }
+
   function pintar(){
-    caja.classList.toggle('abierto', abierto);
+    raiz.classList.toggle('menu-abierto', abierto);
     boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
     boton.setAttribute('aria-label', abierto ? 'Cerrar el menú' : 'Abrir el menú');
   }
@@ -1089,8 +1134,16 @@ body::after{
      ratón que algunos navegadores mandan detrás) no cuentan como dos */
   function bloqueado(){ return Date.now() - sello < 350; }
 
-  function abrirMenu(){ if (abierto) return; abierto = true;  sello = Date.now(); pintar(); }
-  function cerrarMenu(){ if (!abierto) return; abierto = false; sello = Date.now(); pintar(); }
+  function abrirMenu(){
+    if (abierto) return;
+    abierto = true; sello = Date.now();
+    colocar(); situar(); pintar();
+  }
+  function cerrarMenu(){
+    if (!abierto) return;
+    abierto = false; sello = Date.now();
+    pintar();
+  }
 
   boton.addEventListener('click', function(e){
     e.preventDefault();
@@ -1105,10 +1158,12 @@ body::after{
     if (e.target.closest('a')) { abierto = false; sello = Date.now(); pintar(); }
   });
 
-  /* tocar fuera: se cierra. Nunca en el mismo toque que lo abrió. */
+  /* tocar fuera: se cierra. Nunca en el mismo toque que lo abrió.
+     Ojo: hay que mirar las DOS cajas, porque el menú ya no está dentro
+     de la del botón. */
   document.addEventListener('click', function(e){
     if (!abierto || bloqueado()) return;
-    if (caja.contains(e.target)) return;
+    if (caja.contains(e.target) || menu.contains(e.target)) return;
     cerrarMenu();
   });
 
@@ -1125,11 +1180,15 @@ body::after{
   var eraEscritorio = esEscritorio();
   window.addEventListener('resize', function(){
     var ahora = esEscritorio();
-    if (ahora === eraEscritorio) return;
-    eraEscritorio = ahora;
-    if (ahora) cerrarMenu();
+    if (ahora !== eraEscritorio) {
+      eraEscritorio = ahora;
+      colocar();
+      if (ahora) cerrarMenu();
+    }
+    if (abierto) situar();
   });
 
+  colocar();
   pintar();
 })();
 </script>
