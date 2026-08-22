@@ -117,58 +117,51 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 
 0) EL COBRO DE LA SEnAL. Hay dos maneras, y la web escoge sola.
 
-   ---- MANERA A: COBRO AUTOMATICO (la buena) -------------------------
-   El cliente le da a "Pagar la senal", paga con Bizum, Apple Pay,
-   Google Pay o tarjeta, vuelve solo a la web y el boton de WhatsApp se
-   desbloquea con la referencia del pago dentro del mensaje. Tu no
-   tocas nada: el dinero entra en tu cuenta y el pedido te llega.
+   ---- MANERA A: COBRO AUTOMATICO (es la que esta puesta) ------------
+   YA ESTA MONTADO. El enlace de pago de tu Stripe esta metido:
 
-   Para montarlo (10 minutos, sin tocar codigo):
+       https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00
 
-     1. Abre cuenta en stripe.com. Es gratis, no hay cuota mensual.
-        Te pediran tu NIF y una cuenta bancaria. Cobran comision por
-        operacion (con Bizum ronda el 1,5 % mas unos centimos; miralo
-        tu en su web, que cambia).
-     2. Dentro de Stripe: Ajustes > Metodos de pago > activa BIZUM y
-        APPLE PAY (y Google Pay si quieres).
-     3. Productos > Enlaces de pago > Nuevo enlace.
-        Precio unico de 25 EUR, concepto "Senal del diseno PLEA5E".
-     4. En "Despues del pago" marca "Redirigir a tu web" y pega ESTO,
-        tal cual, sin cambiar nada:
+   El cliente monta el pedido, le da a "Pagar la senal", paga con Bizum,
+   Apple Pay, Google Pay o tarjeta, vuelve solo y se le desbloquea el
+   WhatsApp con la referencia del cobro dentro del mensaje.
 
-            https://plea5e.es/?pagado={CHECKOUT_SESSION_ID}
+   LO PRIMERO QUE TIENES QUE COMPROBAR
+   Que en ese enlace de pago, en Stripe, esta puesta la REDIRECCION.
+   Panel de Stripe > Enlaces de pago > tu enlace > Despues del pago.
+   Tiene que decir "Redirigir a tu web" y llevar EXACTAMENTE esto:
 
-        Las llaves van TAL CUAL, Stripe las rellena sola.
+       https://plea5e.es/?pagado={CHECKOUT_SESSION_ID}
 
-        ESTE PASO NO ES OPCIONAL: si no lo pones, el cliente paga pero
-        no vuelve a la web y el WhatsApp no se desbloquea.
+   Las llaves van tal cual. Si en vez de eso pone "Mostrar pagina de
+   confirmacion", el cliente paga y se queda en la pagina de Stripe:
+   el dinero te entra, pero el pedido no te llega. Cambialo.
 
-        Y OJO CON UNA COSA: tiene que ser LA MISMA direccion en la que
-        el cliente monto el pedido. Si el monta el pedido en
-        plea5e.netlify.app y Stripe lo devuelve a plea5e.es, para el
-        navegador son dos sitios distintos y el pedido se pierde por el
-        camino: la senal cuenta como pagada igual, pero le sale un aviso
-        de "repasa el pedido" porque ha vuelto en blanco. Asi que antes
-        de encender el cobro, ten plea5e.es funcionando y usa esa.
-     5. Copia el enlace que te da (empieza por https://buy.stripe.com/)
-        y pegalo en index.html, en:
+   SI SE TE OLVIDA, LA WEB LO APANA
+   Si el cliente vuelve por su cuenta sin que Stripe nos diga nada, se le
+   recupera el pedido y le sale un "?ya has pagado la senal?" con una
+   casilla. Si la marca, el WhatsApp que te llega dice:
 
-            var PAGO = {
-              enlace: 'AQUI'
-            };
+       SENAL: dice que ha pagado los 25 EUR
+       SIN referencia de Stripe - compruebalo en tu panel antes de disenar
 
-   En cuanto lo pegues, el paso 5 del pedido cambia solo: desaparece la
-   casilla de confianza y sale el boton de pagar.
+   O sea: no se cuela como pago comprobado. Sabras de un vistazo cual
+   viene verificado y cual te toca mirar a mano.
 
-   LO QUE ESTO SI HACE: el dinero entra de verdad, te llega el aviso de
-   Stripe, y el WhatsApp del cliente te llega con la referencia del
-   cobro para que lo cuadres de un vistazo.
+   COMO COMPROBAR QUE COBRAS DE VERDAD
+   Abre tu propio enlace en el movil. Si arriba sale un cartel naranja de
+   "MODO DE PRUEBA", ese enlace no cobra dinero real: te falta terminar
+   la verificacion de la cuenta (NIF, actividad, cuenta bancaria).
 
-   LO QUE NO HACE: preguntarle a Stripe si el pago es cierto. Para eso
-   hace falta un trocito de servidor, y esto es un archivo suelto. Si
-   alguien se inventara la direccion de vuelta, no habria ningun cobro
-   con esa referencia en tu panel y lo verias al momento. Regla simple:
-   antes de ponerte a disenar, mira que el cobro este en Stripe.
+   DEJAR LA PANTALLA DE PAGO CON TU MARCA
+   Stripe > Configuracion > Marca (Branding):
+       Color de marca      #E9BC46   (el oro de PLEA5E)
+       Color de los botones #06080E  (el negro, para que el texto se lea)
+       Logotipo            marca/marca-plea5e.png
+       Icono               marca/sello-plea5e.png
+   Y en el propio enlace de pago puedes cambiar el texto del boton:
+   dejalo en "Pagar", que es lo que se entiende. "Comprar" suena a que
+   se lleva la placa ya, y esto es la senal del diseno.
 
    ---- MANERA B: BIZUM A MANO (la de mientras tanto) ------------------
    Es lo que hay si dejas 'enlace' vacio. Sale tu numero de Bizum y una

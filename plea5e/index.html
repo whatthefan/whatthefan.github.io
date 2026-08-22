@@ -834,6 +834,10 @@ td .destaca{color:var(--oro);font-weight:700}
 .senal-ok-ref{margin:0;font-size:.73rem;color:var(--txt-2)}
 .senal-ok-ref code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;
   color:var(--txt);word-break:break-all}
+.senal-vuelta{display:flex;flex-direction:column;gap:11px;padding:13px 14px;border-radius:12px;
+  background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.34)}
+.senal-vuelta p{margin:0;font-size:.83rem;line-height:1.55;color:var(--txt-2)}
+.senal-vuelta b{color:var(--txt)}
 .senal-repasa{margin:8px 0 0;padding:9px 11px;border-radius:12px;font-size:.78rem;line-height:1.5;
   color:var(--txt);background:rgba(233,188,70,.13);border:1px solid rgba(233,188,70,.4)}
 /* mientras no marcan la casilla, el boton se ve apagado y no lleva a
@@ -1434,6 +1438,12 @@ body::after{
             <span id="senalPagarTxt">Pagar la señal · 25 €</span>
           </a>
           <p class="senal-medios" id="senalMedios" hidden>Bizum, Apple&nbsp;Pay, Google&nbsp;Pay o tarjeta · pago seguro con Stripe</p>
+
+          <!-- rescate: se fue a pagar y ha vuelto sin que Stripe nos diga nada -->
+          <div class="senal-vuelta" id="senalVuelta" hidden>
+            <p><b>¿Ya has pagado la señal?</b> Deberíamos haberlo sabido solos. Si has pagado y has tenido que volver tú, márcalo aquí y sigue con el pedido: lo comprobamos por nuestra parte.</p>
+            <label class="senal-check"><input type="checkbox" id="senalManual"><span>Sí, ya la he pagado</span></label>
+          </div>
 
           <!-- lo que se ve al volver del pago -->
           <div class="senal-ok" id="senalOk" hidden>
@@ -5857,7 +5867,7 @@ three/build/three.module.js:
 
      Mientras esté vacío, todo sigue funcionando con el Bizum a mano. */
   var PAGO = {
-    enlace: ''   // https://buy.stripe.com/xxxxxxxxxxxx
+    enlace: 'https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00'
   };
 
   /* Enlaces de cada local: son los mismos códigos de Google que llevan
@@ -6074,14 +6084,20 @@ three/build/three.module.js:
 
       var cola = BIZUM.descuenta ? ' (a descontar del pedido)' : '';
       if (SENAL_REF) {
+        /* volvió de Stripe con su referencia: esto se puede cuadrar */
         lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € PAGADOS' + cola,
                         '🧾 REFERENCIA: ' + SENAL_REF);
+      } else if (SENAL_MANUAL) {
+        /* lo dice él, y no tenemos referencia. Que quede claro en el mensaje,
+           que si no parece un pago comprobado y no lo es. */
+        lineas.push('', '⚠️ SEÑAL: dice que ha pagado los ' + BIZUM.senal + ' €' + cola,
+                        '   SIN referencia de Stripe · compruébalo en tu panel antes de diseñar');
       } else {
         lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € enviados por Bizum' + cola);
       }
       lineas.push('', '¿Me mandáis la propuesta de diseño?');
 
-      var listo = !!SENAL_REF || (hecho && hecho.checked);
+      var listo = !!SENAL_REF || SENAL_MANUAL || (hecho && hecho.checked);
       boton.classList.toggle('espera', !listo);
       boton.setAttribute('aria-disabled', listo ? 'false' : 'true');
       document.getElementById('rWhatsTxt').textContent = listo
@@ -6369,6 +6385,7 @@ three/build/three.module.js:
      vistazo. Si alguien se inventa la dirección de vuelta, no habrá
      ningún cobro con esa referencia y lo verás al instante. */
   var SENAL_REF = '';
+  var SENAL_MANUAL = false;   /* lo dice el cliente, sin referencia de Stripe */
 
   (function(){
     var paso = document.getElementById('senalPaso');
@@ -6465,10 +6482,31 @@ three/build/three.module.js:
     /* ---------- la vuelta del pago ---------- */
     /* Stripe nos devuelve a  ...?pagado=cs_live_xxxx . Si eso viene, el
        pago está hecho: recuperamos el pedido y abrimos el WhatsApp. */
+    /* Si volvió del pago, Stripe nos deja la referencia en la dirección.
+       Si NO la hay pero sí hay un pedido guardado de hace un rato, es que se
+       fue a pagar y ha vuelto por su cuenta: puede que la redirección de
+       Stripe no esté puesta. Le recuperamos el pedido y le preguntamos. */
+    function rescate(){
+      var d;
+      try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return; }
+      if (!d || !d.cuando || Date.now() - d.cuando > 2 * 3600 * 1000) return;
+      recuperar();
+      var caja = document.getElementById('senalVuelta');
+      var manual = document.getElementById('senalManual');
+      if (!caja || !manual) return;
+      caja.hidden = false;
+      manual.addEventListener('change', function(){
+        SENAL_MANUAL = manual.checked;
+        if (manual.checked) { try { localStorage.removeItem(CLAVE); } catch (e) {} }
+        refrescar();
+      });
+      refrescar();
+    }
+
     var ref = (location.search.match(/[?&]pagado=([^&]+)/) || [])[1];
-    if (!ref) return;
+    if (!ref) { rescate(); return; }
     ref = decodeURIComponent(ref);
-    if (!ref || ref.charAt(0) === '{') return;   /* la plantilla sin rellenar */
+    if (!ref || ref.charAt(0) === '{') { rescate(); return; }   /* plantilla sin rellenar */
 
     SENAL_REF = ref;
     /* Si el navegador no nos devuelve el pedido -modo incógnito, otro
