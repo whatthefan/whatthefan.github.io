@@ -117,6 +117,43 @@ tarjeta/  la tarjetita tuya (la misma foto que mandaste) lista para
           dimelo.
 
 
+EL POSICIONAMIENTO EN GOOGLE (SEO)
+----------------------------------
+La pagina lleva puesto lo que se puede poner desde el propio archivo:
+
+  - Titulo y descripcion escritos para lo que la gente teclea de verdad:
+    "placas NFC", "resenas de Google", el precio y a quien va dirigido.
+  - Direccion canonica a https://plea5e.es/ para que no se dividan los
+    puntos entre plea5e.es, www.plea5e.es y la de netlify.app.
+  - Datos estructurados: quien eres, los tres productos con su precio, y
+    las siete preguntas del final. Es lo que hace que Google entienda que
+    vendes un producto de 25 EUR y no que escribes un blog.
+  - Texto alternativo en las fotos, que ademas las mete en Google Imagenes.
+  - sitemap.xml y robots.txt apuntandose el uno al otro.
+
+OJO: TODO ESTO DA POR HECHO QUE EL DOMINIO ES plea5e.es
+Si te quedas en la direccion de netlify.app, busca y reemplaza
+   https://plea5e.es
+por tu direccion en index.html, sitemap.xml y robots.txt. Si no, le estas
+diciendo a Google que la pagina buena es otra que no existe.
+
+LO QUE HAY QUE HACER FUERA DEL ARCHIVO (esto es lo que de verdad mueve)
+  1. Da de alta la web en Google Search Console y mandale el sitemap.
+     search.google.com/search-console
+  2. Abre tu ficha de Google Business Profile de PLEA5E y enlaza la web.
+     Para un negocio local esto pesa mas que cualquier etiqueta.
+  3. Que Piccola, BARVI y los que vengan te mencionen y enlacen. Un
+     enlace de un negocio real vale mas que cien palabras clave.
+  4. Paciencia: un dominio nuevo tarda semanas o meses en aparecer.
+
+UNA COSA QUE FRENA: LA PAGINA PESA 1,3 MB
+Va todo dentro de index.html, fotos incluidas. Se ve rapido porque no
+pide nada a ningun servidor, pero en movil con mala cobertura tarda, y
+la velocidad cuenta para Google. Si algun dia quieres, se pueden sacar
+las fotos a archivos aparte y cargarlas segun bajas. Es un rato de
+trabajo y no cambia como se ve.
+
+
 LOS MODELOS 3D DE LAS PLACAS
 ----------------------------
 Las tres fichas de producto (placa de mesa, expositor de pie y tarjeta de

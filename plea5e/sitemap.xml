@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://plea5e.es/</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://plea5e.es/og.jpg</image:loc>
+      <image:title>Placa de mesa NFC de PLEA5E para reseñas de Google</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://plea5e.es/producto/placa-cuadrada.png</image:loc>
+      <image:title>Placa de reseñas de Google con chip NFC, recortada</image:title>
+    </image:image>
+  </url>
+</urlset>
