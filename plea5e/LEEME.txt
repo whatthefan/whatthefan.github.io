@@ -62,6 +62,9 @@ marca/  el logotipo de PLEA5E sacado de la tarjeta y pasado a vector: la
           marca-plea5e.svg / .png        letras blancas (para fondo oscuro)
           marca-plea5e-claro.svg / .png  letras negras  (para fondo claro)
           sello-plea5e.svg / .png        solo la estrella con el 5 (icono)
+          icono-stripe.png               el sello con mas aire alrededor,
+                                         para Stripe y para cualquier sitio
+                                         que recorte el icono en circulo
 
         Los SVG no necesitan tener instalada la tipografia: las letras van
         dibujadas. Los PNG llevan el fondo transparente. Sirven igual para
@@ -179,15 +182,33 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    "MODO DE PRUEBA", ese enlace no cobra dinero real: te falta terminar
    la verificacion de la cuenta (NIF, actividad, cuenta bancaria).
 
-   DEJAR LA PANTALLA DE PAGO CON TU MARCA
-   Stripe > Configuracion > Marca (Branding):
-       Color de marca      #E9BC46   (el oro de PLEA5E)
-       Color de los botones #06080E  (el negro, para que el texto se lea)
-       Logotipo            marca/marca-plea5e.png
-       Icono               marca/sello-plea5e.png
-   Y en el propio enlace de pago puedes cambiar el texto del boton:
-   dejalo en "Pagar", que es lo que se entiende. "Comprar" suena a que
-   se lleva la placa ya, y esto es la senal del diseno.
+   PONER TU LOGO EN LA PANTALLA DE PAGO
+   Ese cuadradito gris de tienda que sale arriba, al lado de "plea5e", es
+   el hueco que deja Stripe cuando no le has subido nada. Se arregla en:
+
+       dashboard.stripe.com/settings/branding
+       (o el engranaje de arriba > Configuracion > Empresa > Marca)
+
+   Y subes esto:
+
+       Icono                marca/icono-stripe.png
+                            Es el que sale arriba en la pantalla de pago.
+                            Stripe lo recorta en circulo; este ya viene
+                            con el aire justo para que no corte la
+                            estrella. Cuadrado, 1024x1024.
+
+       Logotipo             marca/marca-plea5e-claro.png
+                            El de letras NEGRAS, no el blanco: Stripe lo
+                            pone sobre fondo claro en facturas y correos,
+                            y el blanco no se veria.
+
+       Color de marca       #E9BC46   (tu oro)
+       Color de los botones #06080E   (tu negro, para que el texto se lea
+                                       encima del oro)
+
+   En el propio enlace de pago puedes cambiar el texto del boton: dejalo
+   en "Pagar". "Comprar" suena a que se lleva la placa ya, y esto es la
+   senal del diseno.
 
    ---- MANERA B: BIZUM A MANO (la de mientras tanto) ------------------
    Es lo que hay si dejas 'enlace' vacio. Sale tu numero de Bizum y una
