@@ -786,6 +786,24 @@ td .destaca{color:var(--oro);font-weight:700}
 .prod .pvp small{font-size:.74rem;color:var(--claro-txt-2);width:100%;margin-top:-2px}
 .prod .btn{width:100%}
 
+/* el chip destacado dentro de la linea de medidas de cada ficha */
+.prod .medida b{color:var(--claro-txt);font-weight:700}
+
+/* por que cuesta lo que cuesta. Va justo debajo del catalogo, pegado a
+   los precios, que es donde salta la duda. Tres motivos y punto: si se
+   alarga mas parece que hay que justificarse. */
+.porque{margin-top:clamp(20px,2.4vw,30px);border:1px solid var(--borde);
+  background:var(--noche-2);border-radius:var(--r);padding:clamp(16px,2vw,22px)}
+.porque > p{font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--oro);margin:0 0 14px}
+.porque ul{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 26px;
+  list-style:none;margin:0;padding:0}
+.porque li{font-size:.88rem;line-height:1.5;color:var(--txt-2);position:relative;padding-left:17px}
+.porque li::before{content:"";position:absolute;left:0;top:.56em;
+  width:6px;height:6px;border-radius:50%;background:var(--oro)}
+.porque li b{color:var(--txt);font-weight:700}
+@media (max-width:760px){.porque ul{grid-template-columns:1fr;gap:11px}}
+
 /* nota de personalización */
 .medida-libre{margin-top:clamp(24px,3vw,36px);border:1px dashed rgba(150,110,20,.45);
   background:rgba(233,188,70,.1);border-radius:var(--r);padding:20px 24px;
@@ -1250,7 +1268,7 @@ body::after{
         <div class="cuerpo">
           <h3>Placa de mesa</h3>
           <p class="paraquien">Para bar, restaurante o cafetería <b>con mesas</b></p>
-          <p class="medida">90 × 90 mm · metacrilato 3 mm</p>
+          <p class="medida">90 × 90 mm · metacrilato 3 mm · <b>chip NFC</b></p>
           <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje 3M. Está delante del cliente todo el rato, por eso es la que más reseñas trae.</p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="placa">Pedir esta</a>
@@ -1264,7 +1282,7 @@ body::after{
         <div class="cuerpo">
           <h3>Expositor de pie</h3>
           <p class="paraquien">Para <b>barra, mostrador o terraza</b></p>
-          <p class="medida">76 × 118 mm · chapa doblada en L</p>
+          <p class="medida">76 × 118 mm · chapa doblada en L · <b>chip NFC</b></p>
           <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro.</p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="stand">Pedir este</a>
@@ -1278,12 +1296,21 @@ body::after{
         <div class="cuerpo">
           <h3>Tarjeta de mano</h3>
           <p class="paraquien">Para <b>peluquería, taller, tienda</b> o a domicilio</p>
-          <p class="medida">85 × 54 mm · PVC laminado</p>
+          <p class="medida">85 × 54 mm · PVC laminado · <b>chip NFC</b></p>
           <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo.</p>
           <p class="pvp"><span class="n">15 €</span><span class="antes">20 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad · packs de 20 a 100</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="tarjeta">Pedir esta</a>
         </div>
       </article>
+    </div>
+
+    <div class="porque sube">
+      <p>Por qué no cuesta 5 €</p>
+      <ul>
+        <li><b>Lleva un chip NFC dentro</b>, programado con tu ficha de Google. No es una pegatina impresa.</li>
+        <li><b>El diseño se hace de cero</b> con tu marca. No sale de una plantilla.</li>
+        <li><b>Se paga una vez.</b> Sin cuotas, sin app y sin nada que renovar.</li>
+      </ul>
     </div>
 
     <div class="medida-libre sube" style="background:rgba(233,188,70,.07);border-color:rgba(233,188,70,.32)">
@@ -1465,6 +1492,8 @@ body::after{
         <p>Directamente a la ventana de escribir, con las estrellas ya delante. Cuantos menos pasos hay, más reseñas se terminan.</p></details>
       <details class="sube"><summary>¿Hay que pagar algo cada mes?</summary>
         <p>No. Pagas una vez y es tuyo. El enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p></details>
+      <details class="sube"><summary>¿Por qué cuesta 25 € y no 5 €?</summary>
+        <p>Porque no es una pegatina impresa. Dentro lleva un chip NFC programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada.</p></details>
       <details class="sube"><summary>¿De verdad lo hacéis todo a medida?</summary>
         <p>Sí. Colores, tipografía, logo, formato y hasta el texto. Si quieres el expositor en negro con tu logo dorado, se hace. Si lo quieres cuadrado en vez de rectangular, se hace. Y si necesitas un formato que no está en la web, nos lo dices y te decimos si podemos.</p></details>
       <details class="sube"><summary>¿Se despega? ¿Estropea la mesa?</summary>
