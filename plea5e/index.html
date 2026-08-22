@@ -52,6 +52,10 @@
   --r:5px;
 }
 *{box-sizing:border-box}
+/* el atributo hidden no gana a un display puesto a mano (.senal-datos es
+   grid, .btn es inline-flex...), asi que lo dejamos claro de una vez:
+   si algo lleva hidden, no se ve, y punto */
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--noche);color:var(--txt);
@@ -816,6 +820,20 @@ td .destaca{color:var(--oro);font-weight:700}
 .senal-check{display:flex;align-items:center;gap:10px;cursor:pointer;
   font-size:.88rem;font-weight:600;color:var(--txt);user-select:none;-webkit-user-select:none}
 .senal-check input{width:20px;height:20px;flex:none;accent-color:var(--oro);cursor:pointer;margin:0}
+/* el boton de pagar de verdad, cuando hay cobro automatico montado */
+.btn.pagar{width:100%;justify-content:center;gap:11px;padding:15px 20px;font-size:.98rem}
+.btn.pagar svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;
+  stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.senal-medios{margin:9px 0 0;font-size:.73rem;line-height:1.45;color:var(--txt-2);text-align:center}
+/* y lo que se ve al volver de pagar */
+.senal-ok{display:flex;flex-direction:column;gap:5px}
+.senal-ok-tit{display:flex;align-items:center;gap:9px;margin:0;
+  font-weight:800;font-size:.98rem;color:var(--oro)}
+.senal-ok-tit svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;
+  stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.senal-ok-ref{margin:0;font-size:.73rem;color:var(--txt-2)}
+.senal-ok-ref code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;
+  color:var(--txt);word-break:break-all}
 /* mientras no marcan la casilla, el boton se ve apagado y no lleva a
    ningun sitio: el href se le quita desde el JS, no solo el color */
 .btn.grande.espera{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
@@ -1405,7 +1423,21 @@ body::after{
             <dt>Bizum al</dt><dd class="senal-num" id="senalNum">—</dd>
             <dt>Concepto</dt><dd id="senalCon">El nombre de tu negocio</dd>
           </dl>
-          <label class="senal-check"><input type="checkbox" id="senalHecho"><span>Ya he enviado la señal</span></label>
+          <label class="senal-check" id="senalCheck"><input type="checkbox" id="senalHecho"><span>Ya he enviado la señal</span></label>
+
+          <!-- cobro automático: sustituye a la casilla de confianza en
+               cuanto hay enlace de pago configurado -->
+          <a class="btn btn-oro pagar" id="senalPagar" hidden rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.6" y="5" width="18.8" height="14" rx="2.6"/><path d="M2.6 9.6h18.8"/><path d="M6.4 14.6h3.4"/></svg>
+            <span id="senalPagarTxt">Pagar la señal · 25 €</span>
+          </a>
+          <p class="senal-medios" id="senalMedios" hidden>Bizum, Apple&nbsp;Pay, Google&nbsp;Pay o tarjeta · pago seguro con Stripe</p>
+
+          <!-- lo que se ve al volver del pago -->
+          <div class="senal-ok" id="senalOk" hidden>
+            <p class="senal-ok-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Señal pagada</p>
+            <p class="senal-ok-ref">Referencia <code id="senalRef">—</code></p>
+          </div>
         </div>
 
         <a class="btn btn-oro grande" id="rWhats" href="https://wa.me/34661403219" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .5-.1.7.5l1 2.4c.1.2.1.4 0 .6l-.4.5-.3.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.5.4 0 .1 0 .6-.2 1.3z"/></svg> <span id="rWhatsTxt">Enviar por WhatsApp</span></a>
@@ -5790,13 +5822,39 @@ three/build/three.module.js:
      Es a propósito: más vale que no salga a que salga sin número y la
      gente no sepa a dónde pagar. Pon el número y aparece solo. */
   var BIZUM = {
+    // El Bizum "a mano": el cliente te lo manda al móvil y marca una
+    // casilla diciendo que lo ha hecho. Es el modo de respaldo, el que
+    // se usa mientras no tengas montado el cobro automático de abajo.
+    //
     // ¡¡CAMBIA ESTE NÚMERO SI EL BIZUM VA A OTRO SITIO!!
-    // De momento está puesto el mismo del WhatsApp, que es el que ya
-    // sale por toda la web, para que el paso se vea funcionando. Si tu
-    // Bizum está en otro móvil, cámbialo aquí y listo.
+    // De momento está puesto el mismo del WhatsApp para que el paso se
+    // vea funcionando. Si tu Bizum está en otro móvil, cámbialo aquí.
     numero:  '661403219',
     senal:   25,     // euros
     descuenta: true  // true = la señal se descuenta del pedido final
+  };
+
+  /* ---- COBRO AUTOMÁTICO (Bizum, Apple Pay, Google Pay y tarjeta) ----
+     En cuanto pegues aquí tu enlace de pago, el paso 5 del pedido deja
+     de ser una casilla de confianza y pasa a ser un botón de pagar de
+     verdad: el cliente paga, vuelve solo a la web y el botón de
+     WhatsApp se desbloquea con la referencia del pago dentro.
+
+     Cómo se saca el enlace (10 minutos, sin tocar código):
+       1. Abre una cuenta en stripe.com (gratis, te pedirán tu NIF y una
+          cuenta bancaria; cobran comisión por operación, no cuota).
+       2. Activa Bizum y Apple Pay en Ajustes > Métodos de pago.
+       3. Productos > Enlaces de pago > Nuevo. Precio único de 25 €,
+          concepto "Señal del diseño PLEA5E".
+       4. En "Después del pago" marca "Redirigir a tu web" y escribe:
+              https://plea5e.es/?pagado={CHECKOUT_SESSION_ID}
+          (si aún no tienes dominio, pon tu dirección de netlify.app;
+          las llaves van tal cual, Stripe las rellena solo)
+       5. Copia el enlace que te da y pégalo aquí abajo.
+
+     Mientras esté vacío, todo sigue funcionando con el Bizum a mano. */
+  var PAGO = {
+    enlace: ''   // https://buy.stripe.com/xxxxxxxxxxxx
   };
 
   /* Enlaces de cada local: son los mismos códigos de Google que llevan
@@ -5909,6 +5967,7 @@ three/build/three.module.js:
   /* la enciende el bloque de la señal si hay Bizum configurado. Mientras
      esté apagada, el pedido se envía directo como se ha hecho siempre. */
   var SENAL_ACTIVA = false;
+  var SENAL_MODO   = '';    /* 'auto' = se paga aquí; 'mano' = Bizum y casilla */
 
   var CAT = {
     placa:   { nombre:'Placa de mesa', uno:'placa de mesa', varias:'placas de mesa', cada:'cada una',
@@ -6010,16 +6069,21 @@ three/build/three.module.js:
       var con = document.getElementById('senalCon');
       if (con) con.textContent = v('negocio') || 'El nombre de tu negocio';
 
-      lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € enviados por Bizum'
-        + (BIZUM.descuenta ? ' (a descontar del pedido)' : ''));
+      var cola = BIZUM.descuenta ? ' (a descontar del pedido)' : '';
+      if (SENAL_REF) {
+        lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € PAGADOS' + cola,
+                        '🧾 REFERENCIA: ' + SENAL_REF);
+      } else {
+        lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € enviados por Bizum' + cola);
+      }
       lineas.push('', '¿Me mandáis la propuesta de diseño?');
 
-      var listo = hecho && hecho.checked;
+      var listo = !!SENAL_REF || (hecho && hecho.checked);
       boton.classList.toggle('espera', !listo);
       boton.setAttribute('aria-disabled', listo ? 'false' : 'true');
       document.getElementById('rWhatsTxt').textContent = listo
         ? 'Enviar el pedido por WhatsApp'
-        : 'Primero haz el Bizum';
+        : (SENAL_MODO === 'auto' ? 'Paga la señal para enviarlo' : 'Primero haz el Bizum');
       if (listo) {
         ponerWhats(boton, lineas.join('\n'));
       } else {
@@ -6199,13 +6263,13 @@ three/build/three.module.js:
       '<h4>4. Cómo se hace el pedido</h4>' +
       '<p>No hay compra automática en esta web. El pedido se cierra por WhatsApp, en este orden:</p>' +
       '<ol><li>Nos dices qué quieres y nos pasas tu marca.</li>' +
-      '<li>Envías la señal de ' + SENAL_TXT + ' por Bizum.</li>' +
+      '<li>Pagas la señal de ' + SENAL_TXT + ', por Bizum, Apple Pay, Google Pay o tarjeta.</li>' +
       '<li>Te enseñamos la propuesta de diseño y la cambias hasta que te guste.</li>' +
       '<li>Das el visto bueno por escrito, pagas el resto y se imprime.</li></ol>' +
       '<p>El contrato queda cerrado cuando apruebas el diseño. A partir de ahí ya no se puede cambiar el pedido.</p>' +
 
       '<h4>5. La señal</h4>' +
-      '<p>Son ' + SENAL_TXT + ' que se pagan por Bizum antes de que nos pongamos a diseñar, y que pagan ese trabajo de diseño.</p>' +
+      '<p>Son ' + SENAL_TXT + ' que se pagan antes de que nos pongamos a diseñar, y que pagan ese trabajo de diseño. Se puede pagar por Bizum, Apple Pay, Google Pay o tarjeta.</p>' +
       '<p>' + (BIZUM.descuenta
         ? 'Si sigues adelante con el pedido, la señal <b>se descuenta</b> del importe final.'
         : 'La señal cubre el diseño y <b>no se descuenta</b> del importe final.') +
@@ -6239,7 +6303,7 @@ three/build/three.module.js:
         dato('Nombre', DATOS.titular) + dato('NIF', DATOS.nif) +
         dato('Domicilio', DATOS.domicilio) + dato('Correo', DATOS.email) +
         '<li><b>Teléfono y WhatsApp:</b> 661 40 32 19</li></ul>' +
-      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el IVA, el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga una señal de ' + SENAL_TXT + ', y hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
+      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el IVA, el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga una señal de ' + SENAL_TXT + ' desde la propia web, y hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
       '<h4>Propiedad intelectual</h4><p>Los textos, fotografías, modelos 3D y diseños de esta web son de PLEA5E. Los logotipos y marcas de los locales que aparecen como ejemplo pertenecen a sus dueños y se muestran con su permiso. Google y el logotipo de Google son marcas de Google LLC; PLEA5E no está asociada ni patrocinada por Google.</p>' +
       '<h4>Responsabilidad</h4><p>Ponemos cuidado en que todo lo que se publica aquí sea correcto, pero no respondemos de las interrupciones del servicio de hospedaje ni del contenido de las páginas ajenas a las que enlazamos (Google, WhatsApp).</p>' +
       '<h4>Legislación</h4><p>Se aplica la legislación española.</p>'],
@@ -6278,30 +6342,149 @@ three/build/three.module.js:
 
   document.getElementById('anyo').textContent = new Date().getFullYear();
 
-  /* ---- la señal por Bizum, dentro del pedido ----
-     Si no hay número configurado el paso no sale y el botón de WhatsApp
-     funciona como toda la vida. Si lo hay, el pedido no se puede enviar
-     hasta que marcan que han hecho el Bizum, y el mensaje que llega
-     lleva esa confirmación escrita. */
+  /* ---- la señal, dentro del pedido ----
+
+     Hay tres modos, y la web escoge sola el que esté configurado:
+
+     A) COBRO AUTOMÁTICO (si PAGO.enlace tiene algo). El cliente le da a
+        "Pagar la señal", paga con Bizum, Apple Pay, Google Pay o tarjeta
+        en la página de Stripe, y vuelve solo aquí. Al volver, la web
+        recupera el pedido que había montado, lo deja tal cual estaba y
+        desbloquea el WhatsApp con la referencia del pago dentro.
+
+     B) BIZUM A MANO (si solo hay BIZUM.numero). Le sale tu número y una
+        casilla de "ya lo he enviado" que desbloquea el botón.
+
+     C) NADA (si no hay ni una cosa ni la otra). El botón de WhatsApp va
+        directo, como toda la vida.
+
+     Qué NO hace el modo A: comprobar el pago por su cuenta. Para eso
+     haría falta un trocito de servidor que le pregunte a Stripe, y esta
+     web es un archivo suelto sin servidor detrás. Lo que sí tienes es
+     que el dinero entra de verdad en tu cuenta de Stripe, te llega su
+     aviso, y el WhatsApp te trae la referencia para cuadrarlo de un
+     vistazo. Si alguien se inventa la dirección de vuelta, no habrá
+     ningún cobro con esa referencia y lo verás al instante. */
+  var SENAL_REF = '';
+
   (function(){
     var paso = document.getElementById('senalPaso');
     if (!paso) return;
-    var num = String(BIZUM.numero || '').replace(/\D/g, '');
-    if (!num) return;                       /* sigue oculto, y ya está */
 
-    /* 661403219 -> 661 40 32 19, que es como se lee en voz alta */
-    document.getElementById('senalNum').textContent = num.length === 9
-      ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
-      : num;
+    var num     = String(BIZUM.numero || '').replace(/\D/g, '');
+    var enlace  = String(PAGO.enlace || '').trim();
+    var CLAVE   = 'plea5e_pedido';
+
+    if (!enlace && !num) return;            /* modo C: nada que enseñar */
+
+    paso.hidden = false;
+    SENAL_ACTIVA = true;
+
     document.getElementById('senalCifra').textContent = BIZUM.senal + ' €';
     document.getElementById('senalDesc').textContent = BIZUM.descuenta
       ? 'Se descuenta del pedido, así que si sigues adelante el diseño te sale gratis.'
       : 'Cubre el diseño y no se descuenta del pedido.';
-    paso.hidden = false;
-    SENAL_ACTIVA = true;
 
-    document.getElementById('senalHecho').addEventListener('change', refrescar);
+    var check  = document.getElementById('senalCheck');
+    var hecho  = document.getElementById('senalHecho');
+    var botonP = document.getElementById('senalPagar');
+    var medios = document.getElementById('senalMedios');
+    var datos  = paso.querySelector('.senal-datos');
+    var ok     = document.getElementById('senalOk');
+
+    /* ---------- modo B: el número a la vista y la casilla ---------- */
+    if (!enlace) {
+      SENAL_MODO = 'mano';
+      document.getElementById('senalNum').textContent = num.length === 9
+        ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
+        : num;
+      hecho.addEventListener('change', refrescar);
+      refrescar();
+      return;
+    }
+
+    /* ---------- modo A: cobro automático ---------- */
+    SENAL_MODO = 'auto';
+    /* el número y la casilla sobran: aquí se paga, no se promete */
+    if (datos) datos.hidden = true;
+    check.hidden = true;
+    botonP.hidden = false;
+    medios.hidden = false;
+    document.getElementById('senalPagarTxt').textContent = 'Pagar la señal · ' + BIZUM.senal + ' €';
+
+    /* Guardamos el pedido antes de salir a pagar, porque al volver la
+       página se carga de cero y si no se pierde todo lo que había
+       marcado. Si el navegador no deja guardar (modo privado, ajustes),
+       no pasa nada: se vuelve igual, solo hay que remontar el pedido. */
+    function guardar(){
+      try {
+        localStorage.setItem(CLAVE, JSON.stringify({
+          prod: sel.prod, cant: sel.cant,
+          negocio: val('negocio'), ciudad: val('ciudad'),
+          tel: val('tel'), notas: val('notas'),
+          cuando: Date.now()
+        }));
+      } catch (e) {}
+    }
+    function val(id){ var e = document.getElementById(id); return e ? e.value : ''; }
+
+    function recuperar(){
+      var d;
+      try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return; }
+      /* a las 6 horas ya no es el mismo pedido, es otro día */
+      if (!d || !d.cuando || Date.now() - d.cuando > 6 * 3600 * 1000) return;
+      if (d.prod && CAT[d.prod]) {
+        sel.prod = d.prod;
+        pintarOpCant(CAT[d.prod]);
+        elegir(opProd, sel.prod);
+      }
+      if (d.cant) { sel.cant = d.cant; elegir(opCant, sel.cant); }
+      ['negocio','ciudad','tel','notas'].forEach(function(id){
+        var e = document.getElementById(id);
+        if (e && d[id]) e.value = d[id];
+      });
+    }
+
+    botonP.addEventListener('click', function(e){
+      e.preventDefault();
+      guardar();
+      /* el nombre del negocio viaja con el pago: así, en el panel de
+         Stripe, cada cobro ya viene con el nombre de quien lo hizo */
+      var u = enlace + (enlace.indexOf('?') > -1 ? '&' : '?')
+            + 'client_reference_id=' + encodeURIComponent(
+                (val('negocio') || 'sin-nombre').replace(/[^0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g,'').slice(0,60) || 'sin-nombre');
+      location.href = u;
+    });
+
+    refrescar();          /* deja el WhatsApp bloqueado hasta que se pague */
+
+    /* ---------- la vuelta del pago ---------- */
+    /* Stripe nos devuelve a  ...?pagado=cs_live_xxxx . Si eso viene, el
+       pago está hecho: recuperamos el pedido y abrimos el WhatsApp. */
+    var ref = (location.search.match(/[?&]pagado=([^&]+)/) || [])[1];
+    if (!ref) return;
+    ref = decodeURIComponent(ref);
+    if (!ref || ref.charAt(0) === '{') return;   /* la plantilla sin rellenar */
+
+    SENAL_REF = ref;
+    recuperar();
+
+    botonP.hidden = true;
+    medios.hidden = true;
+    ok.hidden = false;
+    document.getElementById('senalRef').textContent = ref;
+    hecho.checked = true;                        /* para el resto del código, ya está pagado */
+
+    try { localStorage.removeItem(CLAVE); } catch (e) {}
+    /* limpiamos la dirección: que un F5 no parezca otro pago */
+    if (history.replaceState) history.replaceState(null, '', location.pathname + location.hash);
+
     refrescar();
+    /* y lo dejamos delante de los ojos, que viene de otra página */
+    setTimeout(function(){
+      var p = document.getElementById('pedido');
+      if (p) p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 250);
   })();
 
   /* ---- la banda del logotipo, de lado a lado de la pantalla ----

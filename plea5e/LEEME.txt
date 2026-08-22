@@ -115,33 +115,67 @@ Abre index.html con el Bloc de notas y busca:
 Justo debajo hay tres bloques. Pones el dato entre las comillas,
 guardas, y vuelves a arrastrar la carpeta a Netlify.
 
-0) BIZUM -> COMPRUEBA EL NUMERO. Es lo primero que tienes que mirar.
+0) EL COBRO DE LA SEnAL. Hay dos maneras, y la web escoge sola.
 
-   Ahora mismo esta puesto el MISMO numero del WhatsApp (661403219),
-   para que el paso se vea funcionando. SI TU BIZUM ESTA EN OTRO MOVIL,
-   CAMBIALO, porque si no el dinero va a ese numero.
+   ---- MANERA A: COBRO AUTOMATICO (la buena) -------------------------
+   El cliente le da a "Pagar la senal", paga con Bizum, Apple Pay,
+   Google Pay o tarjeta, vuelve solo a la web y el boton de WhatsApp se
+   desbloquea con la referencia del pago dentro del mensaje. Tu no
+   tocas nada: el dinero entra en tu cuenta y el pedido te llega.
 
-       numero:    '661403219'   <- el movil que recibe el Bizum
+   Para montarlo (10 minutos, sin tocar codigo):
+
+     1. Abre cuenta en stripe.com. Es gratis, no hay cuota mensual.
+        Te pediran tu NIF y una cuenta bancaria. Cobran comision por
+        operacion (con Bizum ronda el 1,5 % mas unos centimos; miralo
+        tu en su web, que cambia).
+     2. Dentro de Stripe: Ajustes > Metodos de pago > activa BIZUM y
+        APPLE PAY (y Google Pay si quieres).
+     3. Productos > Enlaces de pago > Nuevo enlace.
+        Precio unico de 25 EUR, concepto "Senal del diseno PLEA5E".
+     4. En "Despues del pago" marca "Redirigir a tu web" y escribe:
+
+            https://plea5e.es/?pagado={CHECKOUT_SESSION_ID}
+
+        Si aun no tienes dominio propio, pon tu direccion de
+        netlify.app. Las llaves van TAL CUAL, Stripe las rellena sola.
+        ESTE PASO NO ES OPCIONAL: si no lo pones, el cliente paga pero
+        no vuelve a la web y el WhatsApp no se desbloquea.
+     5. Copia el enlace que te da (empieza por https://buy.stripe.com/)
+        y pegalo en index.html, en:
+
+            var PAGO = {
+              enlace: 'AQUI'
+            };
+
+   En cuanto lo pegues, el paso 5 del pedido cambia solo: desaparece la
+   casilla de confianza y sale el boton de pagar.
+
+   LO QUE ESTO SI HACE: el dinero entra de verdad, te llega el aviso de
+   Stripe, y el WhatsApp del cliente te llega con la referencia del
+   cobro para que lo cuadres de un vistazo.
+
+   LO QUE NO HACE: preguntarle a Stripe si el pago es cierto. Para eso
+   hace falta un trocito de servidor, y esto es un archivo suelto. Si
+   alguien se inventara la direccion de vuelta, no habria ningun cobro
+   con esa referencia en tu panel y lo verias al momento. Regla simple:
+   antes de ponerte a disenar, mira que el cobro este en Stripe.
+
+   ---- MANERA B: BIZUM A MANO (la de mientras tanto) ------------------
+   Es lo que hay si dejas 'enlace' vacio. Sale tu numero de Bizum y una
+   casilla de "ya lo he enviado" que desbloquea el WhatsApp. Se fia de
+   la palabra del cliente, asi que mira el movil antes de ponerte.
+
+       numero:    '661403219'   <- OJO, ahora esta el mismo del WhatsApp
        senal:     25            <- euros
        descuenta: true          <- true = se descuenta del pedido final
 
-   COMO FUNCIONA EL PEDIDO AHORA
-   Dentro del apartado "Tu pedido", debajo del resumen, sale el paso 5:
-   el numero de Bizum, el importe y el concepto (que se rellena solo con
-   el nombre del negocio que hayan escrito). El boton de WhatsApp esta
-   apagado y no lleva a ningun sitio hasta que marcan "Ya he enviado la
-   senal". Cuando lo marcan, el boton se enciende y el mensaje que te
-   llega lleva una linea mas:
+   CAMBIA ESE NUMERO si tu Bizum esta en otro movil.
 
-       SEnAL: 25 EUR enviados por Bizum (a descontar del pedido)
-
-   Asi sabes de un vistazo quien ha pagado y quien no. Ojo: la casilla es
-   una declaracion del cliente, la web no comprueba el Bizum. Mira tu
-   movil antes de ponerte a disenar.
-
-   Si vacias 'numero', el paso desaparece y el boton de WhatsApp vuelve a
-   funcionar directo, como antes. Ojo: las condiciones de venta hablan de
-   la senal, asi que si la quitas, avisa para repasar ese texto.
+   Si vacias las dos cosas (enlace y numero), el paso desaparece y el
+   boton de WhatsApp funciona directo, como antes. Ojo: las condiciones
+   de venta hablan de la senal, asi que si la quitas, avisa para
+   repasar ese texto.
 
 1) DATOS  -> para el aviso legal.
    En España, si vendes por internet, el aviso legal tiene que llevar
