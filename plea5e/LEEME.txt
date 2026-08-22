@@ -115,11 +115,30 @@ Abre index.html con el Bloc de notas y busca:
 Justo debajo hay dos bloques. Pones el dato entre las comillas,
 guardas, y vuelves a arrastrar la carpeta a Netlify.
 
+0) BIZUM -> EL APARTADO DE LA SEÑAL NO SALE HASTA QUE PONGAS EL NUMERO.
+   Es a proposito: pedir dinero sin decir a donde mandarlo es peor que
+   no pedirlo. En cuanto escribas el numero entre las comillas, el
+   apartado "La señal, por Bizum" aparece solo en la web y ademas se
+   añade su enlace en el pie.
+
+       numero:    '600112233'   <- el movil que recibe el Bizum
+       senal:     25            <- euros
+       descuenta: true          <- true = se descuenta del pedido final
+
+   Si algun dia quieres quitar la señal, vacia el numero y el apartado
+   desaparece. Ojo: las condiciones de venta hablan de la señal, asi que
+   si la quitas, avisa para repasar ese texto.
+
 1) DATOS  -> para el aviso legal.
    En España, si vendes por internet, el aviso legal tiene que llevar
    tu nombre o razon social, tu NIF y tu domicilio. Ahora mismo esas
    lineas no salen porque estan vacias, y el aviso legal esta incompleto.
    Lo que dejes en blanco simplemente no aparece, no rompe nada.
+
+   ESTO MISMO VALE PARA LAS CONDICIONES DE VENTA (el boton nuevo del
+   pie). Su apartado 1, "Quien vende", sale de estos mismos datos. Unas
+   condiciones sin nombre, NIF y domicilio no sirven de mucho si algun
+   dia hay una discusion, asi que rellenalos antes de empezar a cobrar.
 
        titular:   'Tu nombre o razon social'
        nif:       '12345678A'

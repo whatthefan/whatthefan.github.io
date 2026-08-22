@@ -79,6 +79,12 @@ h1,h2,h3{font-family:"Anton",system-ui,sans-serif;font-weight:400;letter-spacing
          line-height:1.03;text-transform:uppercase;text-wrap:balance;margin:0}
 h1{font-size:clamp(2.6rem,5.6vw,4.5rem);padding-top:.06em}
 h2{font-size:clamp(1.95rem,4vw,3.1rem)}
+/* Anton dibuja las tildes y la eñe por encima de la caja de la linea, y
+   el navegador las recorta en cuanto el titular va dentro de algo con
+   transform, que son todos (llevan .sube). Con este hueco arriba caben
+   enteras. Sin el, "Móntalo aquí" se lee "MONTALO AQUI" y "La señal"
+   se lee "LA SENAL". El h1 ya tenia su propio hueco de antes. */
+h2,h3{padding-top:.14em}
 /* el titular sube como un telón al cargar la página, detrás de las
    estrellas que ya se van encendiendo una a una */
 .hero-a h1{clip-path:inset(0 0 100% 0);animation:heroTelon .9s cubic-bezier(.16,1,.3,1) .35s forwards}
@@ -789,20 +795,49 @@ td .destaca{color:var(--oro);font-weight:700}
 /* el chip destacado dentro de la linea de medidas de cada ficha */
 .prod .medida b{color:var(--claro-txt);font-weight:700}
 
-/* por que cuesta lo que cuesta. Va justo debajo del catalogo, pegado a
-   los precios, que es donde salta la duda. Tres motivos y punto: si se
-   alarga mas parece que hay que justificarse. */
-.porque{margin-top:clamp(20px,2.4vw,30px);border:1px solid var(--borde);
-  background:var(--noche-2);border-radius:var(--r);padding:clamp(16px,2vw,22px)}
-.porque > p{font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--oro);margin:0 0 14px}
-.porque ul{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 26px;
-  list-style:none;margin:0;padding:0}
-.porque li{font-size:.88rem;line-height:1.5;color:var(--txt-2);position:relative;padding-left:17px}
-.porque li::before{content:"";position:absolute;left:0;top:.56em;
-  width:6px;height:6px;border-radius:50%;background:var(--oro)}
-.porque li b{color:var(--txt);font-weight:700}
-@media (max-width:760px){.porque ul{grid-template-columns:1fr;gap:11px}}
+/* por que cuesta lo que cuesta: en letra pequeña, al final de la
+   descripcion de cada ficha y justo encima del precio, que es donde
+   salta la duda. Una linea y punto: si se alarga parece que hay que
+   justificarse. */
+.prod .porque-mini{display:block;font-size:.76rem;line-height:1.5;
+  color:var(--claro-txt-2);margin-top:-4px;
+  padding-top:11px;border-top:1px solid var(--claro-borde)}
+.prod .porque-mini b{color:var(--claro-txt);font-weight:700}
+
+/* ============ la señal por Bizum ============
+   Va sobre fondo claro (.sec-claro), asi que todo el color sale de la
+   paleta --claro-*. La caja del numero es lo unico oscuro: es el dato
+   que hay que copiar al movil, y asi se encuentra de un vistazo. */
+.senal{display:grid;grid-template-columns:minmax(240px,320px) 1fr;
+  gap:clamp(18px,2.6vw,34px);align-items:start;margin-top:clamp(24px,3vw,38px)}
+.senal-caja{background:var(--noche-2);border:1px solid var(--borde);
+  border-radius:var(--r);padding:clamp(18px,2.2vw,26px);color:var(--txt)}
+.senal-et{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--txt-3,#8B95AB);margin:0 0 5px}
+.senal-num{font-family:'Rubik',system-ui,sans-serif;font-size:clamp(1.5rem,4vw,1.9rem);
+  font-weight:700;color:var(--oro);letter-spacing:.01em;font-variant-numeric:tabular-nums;
+  margin:0 0 16px;word-break:break-word}
+.senal-con{font-size:.95rem;color:var(--txt);margin:0 0 18px}
+.senal-imp{display:flex;align-items:baseline;gap:9px;margin:0;
+  padding-top:15px;border-top:1px solid var(--borde)}
+.senal-imp span{font-family:'Rubik',system-ui,sans-serif;font-size:1.55rem;font-weight:800;color:var(--txt)}
+.senal-imp small{font-size:.76rem;color:var(--txt-2)}
+
+.senal-pasos{list-style:none;counter-reset:s;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:14px}
+.senal-pasos li{counter-increment:s;position:relative;padding-left:44px;
+  font-size:.95rem;line-height:1.55;color:var(--claro-txt-2)}
+.senal-pasos li b{color:var(--claro-txt)}
+.senal-pasos li::before{content:counter(s);position:absolute;left:0;top:-1px;
+  width:29px;height:29px;border-radius:50%;background:var(--oro);color:#100B00;
+  font-family:'Rubik',system-ui,sans-serif;font-weight:800;font-size:.88rem;
+  display:flex;align-items:center;justify-content:center}
+
+.senal-letra{margin-top:clamp(18px,2.2vw,26px);font-size:.8rem;line-height:1.6;
+  color:var(--claro-txt-2);border-top:1px solid var(--claro-borde);padding-top:14px}
+.senal-letra b{color:var(--claro-txt)}
+.sec-claro .senal-letra .enl{color:var(--oro-os);font-size:.8rem}
+@media (max-width:760px){.senal{grid-template-columns:1fr}}
 
 /* nota de personalización */
 .medida-libre{margin-top:clamp(24px,3vw,36px);border:1px dashed rgba(150,110,20,.45);
@@ -1269,7 +1304,8 @@ body::after{
           <h3>Placa de mesa</h3>
           <p class="paraquien">Para bar, restaurante o cafetería <b>con mesas</b></p>
           <p class="medida">90 × 90 mm · metacrilato 3 mm · <b>chip NFC</b></p>
-          <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje 3M. Está delante del cliente todo el rato, por eso es la que más reseñas trae.</p>
+          <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje 3M. Está delante del cliente todo el rato, por eso es la que más reseñas trae.
+            <small class="porque-mini"><b>Por qué no cuesta 5 €:</b> lleva un chip NFC dentro, programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca. No es una pegatina impresa. Se paga una vez, sin cuotas.</small></p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="placa">Pedir esta</a>
         </div>
@@ -1283,7 +1319,8 @@ body::after{
           <h3>Expositor de pie</h3>
           <p class="paraquien">Para <b>barra, mostrador o terraza</b></p>
           <p class="medida">76 × 118 mm · chapa doblada en L · <b>chip NFC</b></p>
-          <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro.</p>
+          <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro.
+            <small class="porque-mini"><b>Por qué no cuesta 5 €:</b> lleva un chip NFC dentro, programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca. No es una pegatina impresa. Se paga una vez, sin cuotas.</small></p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="stand">Pedir este</a>
         </div>
@@ -1297,20 +1334,12 @@ body::after{
           <h3>Tarjeta de mano</h3>
           <p class="paraquien">Para <b>peluquería, taller, tienda</b> o a domicilio</p>
           <p class="medida">85 × 54 mm · PVC laminado · <b>chip NFC</b></p>
-          <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo.</p>
+          <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo.
+            <small class="porque-mini"><b>Por qué no cuesta 5 €:</b> lleva un chip NFC dentro, programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca. No es una pegatina impresa. Se paga una vez, sin cuotas.</small></p>
           <p class="pvp"><span class="n">15 €</span><span class="antes">20 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad · packs de 20 a 100</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="tarjeta">Pedir esta</a>
         </div>
       </article>
-    </div>
-
-    <div class="porque sube">
-      <p>Por qué no cuesta 5 €</p>
-      <ul>
-        <li><b>Lleva un chip NFC dentro</b>, programado con tu ficha de Google. No es una pegatina impresa.</li>
-        <li><b>El diseño se hace de cero</b> con tu marca. No sale de una plantilla.</li>
-        <li><b>Se paga una vez.</b> Sin cuotas, sin app y sin nada que renovar.</li>
-      </ul>
     </div>
 
     <div class="medida-libre sube" style="background:rgba(233,188,70,.07);border-color:rgba(233,188,70,.32)">
@@ -1391,6 +1420,38 @@ body::after{
         <small class="pie-wa">Se abre tu WhatsApp con el mensaje escrito · o llámanos al <a href="tel:+34661403219">661 40 32 19</a></small>
       </aside>
     </div>
+  </div>
+</section>
+
+<!-- ============ la señal, por Bizum ============
+     Sale oculta y el JS la enseña solo si hay número de Bizum puesto en
+     la configuración de arriba del todo. Así no puede quedarse publicada
+     pidiendo dinero sin decir a dónde. -->
+<section class="sec-corta sec-claro" id="senal" hidden>
+  <div class="env">
+    <div class="enc sube">
+      <span class="etq">Antes de empezar</span>
+      <h2>La señal, por Bizum</h2>
+      <p>Dibujar tu placa lleva su rato: hay que sacar tus colores, tu tipografía y tu logo, y montarlo. Por eso pedimos una señal antes de ponernos, y así los dos sabemos que la cosa va en serio.</p>
+    </div>
+
+    <div class="senal sube">
+      <div class="senal-caja">
+        <p class="senal-et">Bizum al</p>
+        <p class="senal-num" id="senalNum">—</p>
+        <p class="senal-et">Concepto</p>
+        <p class="senal-con">El nombre de tu local</p>
+        <p class="senal-imp"><span id="senalCifra">25 €</span><small>señal</small></p>
+      </div>
+
+      <ol class="senal-pasos">
+        <li><b>Envías la señal</b> y nos avisas por WhatsApp con el nombre de tu local.</li>
+        <li><b>Te preparamos la propuesta</b> con tu logo, tus colores y tu texto. La cambias las veces que haga falta hasta que te guste.</li>
+        <li><b>Das el visto bueno y se imprime.</b> <span id="senalDesc">La señal se descuenta del pedido, así que el diseño te sale gratis.</span></li>
+      </ol>
+    </div>
+
+    <p class="senal-letra">La señal paga el trabajo de diseño, así que <b>no se devuelve</b> si luego decides no seguir adelante. Y una vez aprobado el diseño e impreso el pedido <b>ya no se puede devolver ni cambiar</b>: cada pieza se fabrica solo para ti, con tu marca. <button type="button" class="enl" data-legal="condiciones">Leer las condiciones</button></p>
   </div>
 </section>
 
@@ -1523,6 +1584,7 @@ body::after{
         <h4>La web</h4>
         <a href="#productos">Productos</a>
         <a href="#pedido">Pedido y precios</a>
+        <a href="#senal" id="pieSenal" hidden>Señal por Bizum</a>
         <a href="#demo">Cómo se usa</a>
         <a href="#clientes">Clientes</a>
         <a href="#ayuda">Preguntas</a>
@@ -1538,6 +1600,7 @@ body::after{
 
       <div class="pie-col">
         <h4>Legal</h4>
+        <button type="button" class="enl" data-legal="condiciones">Condiciones de venta</button>
         <button type="button" class="enl" data-legal="aviso">Aviso legal</button>
         <button type="button" class="enl" data-legal="privacidad">Privacidad</button>
         <button type="button" class="enl" data-legal="cookies">Cookies</button>
@@ -5763,6 +5826,16 @@ three/build/three.module.js:
     email:     'juanfersem@gmail.com'
   };
 
+  /* La señal que se paga por Bizum para que te pongas a diseñar.
+     MIENTRAS 'numero' ESTÉ VACÍO, EL APARTADO DE BIZUM NO SALE EN LA WEB.
+     Es a propósito: más vale que no salga a que salga sin número y la
+     gente no sepa a dónde pagar. Pon el número y aparece solo. */
+  var BIZUM = {
+    numero:  '',     // FALTA. El número de móvil que recibe el Bizum
+    senal:   25,     // euros
+    descuenta: true  // true = la señal se descuenta del pedido final
+  };
+
   /* Enlaces de cada local: son los mismos códigos de Google que llevan
      impresos en el QR de su placa. Si vacías 'resena' o 'mapa', el botón
      correspondiente deja de salir. */
@@ -6104,14 +6177,71 @@ three/build/three.module.js:
   /* ---- textos legales ---- */
   var esc = function(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
   var dato = function(etq, v){ return v ? '<li><b>' + etq + ':</b> ' + esc(v) + '</li>' : ''; };
+  /* la señal, escrita tal y como está configurada arriba, para que el
+     texto legal y lo que se ve en la web no puedan decir cosas distintas */
+  var SENAL_TXT = BIZUM.senal + ' €';
+
   var LEGAL = {
+    condiciones: ['Condiciones de venta',
+      '<p>Estas condiciones rigen la venta de las placas, expositores y tarjetas de <b>PLEA5E</b>. Al hacer el pedido las aceptas. Están escritas en castellano llano a propósito: si algo no se entiende, pregúntanos antes de pagar.</p>' +
+
+      '<h4>1. Quién vende</h4><ul>' +
+        dato('Nombre', DATOS.titular) + dato('NIF', DATOS.nif) +
+        dato('Domicilio', DATOS.domicilio) + dato('Correo', DATOS.email) +
+        '<li><b>Teléfono y WhatsApp:</b> 661 40 32 19</li></ul>' +
+
+      '<h4>2. Qué se vende</h4>' +
+      '<p>Placas de mesa, expositores de pie y tarjetas de mano, cada una con un chip NFC programado y un código QR impreso que llevan a tu ficha de Google. Todas se diseñan y se fabrican para tu negocio, con tu marca. No hay catálogo cerrado: cada pieza es distinta.</p>' +
+      '<p>Vendemos el soporte físico y su programación. <b>No vendemos reseñas ni garantizamos ningún número de ellas</b>: eso depende de tus clientes. Tampoco tenemos relación con Google ni influimos en cómo funciona su plataforma.</p>' +
+
+      '<h4>3. Precios</h4>' +
+      '<p>Los precios de la web son por unidad, con el IVA incluido, e incluyen el diseño y el envío a península. Bajan por cantidad, según la tabla del apartado de pedido. Valen salvo error tipográfico; si se cuela uno, te avisamos antes de cobrar nada y tú decides.</p>' +
+      '<p>Baleares, Canarias, Ceuta y Melilla: escríbenos y te pasamos el envío aparte antes de cerrar el pedido.</p>' +
+
+      '<h4>4. Cómo se hace el pedido</h4>' +
+      '<p>No hay compra automática en esta web. El pedido se cierra por WhatsApp, en este orden:</p>' +
+      '<ol><li>Nos dices qué quieres y nos pasas tu marca.</li>' +
+      '<li>Envías la señal de ' + SENAL_TXT + ' por Bizum.</li>' +
+      '<li>Te enseñamos la propuesta de diseño y la cambias hasta que te guste.</li>' +
+      '<li>Das el visto bueno por escrito, pagas el resto y se imprime.</li></ol>' +
+      '<p>El contrato queda cerrado cuando apruebas el diseño. A partir de ahí ya no se puede cambiar el pedido.</p>' +
+
+      '<h4>5. La señal</h4>' +
+      '<p>Son ' + SENAL_TXT + ' que se pagan por Bizum antes de que nos pongamos a diseñar, y que pagan ese trabajo de diseño.</p>' +
+      '<p>' + (BIZUM.descuenta
+        ? 'Si sigues adelante con el pedido, la señal <b>se descuenta</b> del importe final.'
+        : 'La señal cubre el diseño y <b>no se descuenta</b> del importe final.') +
+      ' Si decides no seguir adelante, <b>la señal no se devuelve</b>, porque el diseño ya está hecho. Lo que sí es tuyo es el tiempo que le hayamos dedicado: te pasamos la propuesta en imagen para que la veas.</p>' +
+
+      '<h4>6. Devoluciones</h4>' +
+      '<p><b>Una vez aprobado el diseño e impreso el pedido, no se admiten devoluciones ni cambios.</b> Cada pieza se fabrica solo para ti, con tu logo, tus colores y el enlace de tu ficha de Google: no se puede revender ni reutilizar.</p>' +
+      '<p>Por eso la ley de consumo deja fuera del derecho de desistimiento los productos hechos a medida o claramente personalizados (artículo 103.c del texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios). Este es exactamente ese caso, y por eso te enseñamos el diseño y esperamos a tu visto bueno antes de imprimir: ese es el momento de decir que no.</p>' +
+      '<p>Si además compras como empresa o autónomo para tu negocio, no eres consumidor a efectos de esa ley y el derecho de desistimiento no te aplica en ningún caso.</p>' +
+
+      '<h4>7. Si algo llega mal</h4>' +
+      '<p>Otra cosa distinta es que el pedido llegue roto, mal impreso, con el chip que no lee o con algo que no es lo que aprobaste. Eso <b>se repone sin coste</b>, incluido el envío. Avísanos por WhatsApp en cuanto lo recibas, con una foto, y lo resolvemos.</p>' +
+      '<p>Si compras como consumidor, tienes además la garantía legal de conformidad de tres años que reconoce la ley española.</p>' +
+
+      '<h4>8. Tu marca</h4>' +
+      '<p>Al mandarnos tu logotipo y tus colores nos autorizas a usarlos para diseñar y fabricar tu pedido, y nos confirmas que tienes derecho a usarlos. Si son de otro, el problema es tuyo, no nuestro.</p>' +
+      '<p>Salvo que nos digas lo contrario, podemos enseñar el resultado como ejemplo en esta web y en redes. Si prefieres que no, dínoslo y no se publica.</p>' +
+      '<p>El diseño que te hacemos es para tus placas. Los textos, fotografías, modelos 3D y el diseño de esta web son de PLEA5E y no se pueden copiar.</p>' +
+
+      '<h4>9. Plazos</h4>' +
+      '<p>El plazo depende de la cantidad y de cuánto tardemos entre los dos en cerrar el diseño. Te damos una fecha por WhatsApp al confirmar el pedido y te avisamos si se mueve.</p>' +
+
+      '<h4>10. Ley y reclamaciones</h4>' +
+      '<p>Se aplica la legislación española. Si algo no sale bien, lo primero es escribirnos: casi todo se arregla hablando. Si eres consumidor y no llegamos a un acuerdo, puedes acudir a la Junta Arbitral de Consumo de tu comunidad o a los juzgados que te correspondan por tu domicilio.</p>' +
+
+      '<p style="opacity:.7;font-size:.85em">Última actualización: ' + new Date().getFullYear() + '.</p>'],
+
     aviso: ['Aviso legal',
       '<p>Esta página es la web comercial de <b>PLEA5E</b>, que fabrica y vende placas, expositores de pie y tarjetas con chip NFC y código QR para recoger reseñas de Google.</p>' +
       '<h4>Titular</h4><ul>' +
         dato('Nombre', DATOS.titular) + dato('NIF', DATOS.nif) +
         dato('Domicilio', DATOS.domicilio) + dato('Correo', DATOS.email) +
         '<li><b>Teléfono y WhatsApp:</b> 661 40 32 19</li></ul>' +
-      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp, y antes te enseñamos la propuesta de diseño. Hasta que no la apruebas no se imprime ni se cobra nada.</p>' +
+      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el IVA, el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga una señal de ' + SENAL_TXT + ', y hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
       '<h4>Propiedad intelectual</h4><p>Los textos, fotografías, modelos 3D y diseños de esta web son de PLEA5E. Los logotipos y marcas de los locales que aparecen como ejemplo pertenecen a sus dueños y se muestran con su permiso. Google y el logotipo de Google son marcas de Google LLC; PLEA5E no está asociada ni patrocinada por Google.</p>' +
       '<h4>Responsabilidad</h4><p>Ponemos cuidado en que todo lo que se publica aquí sea correcto, pero no respondemos de las interrupciones del servicio de hospedaje ni del contenido de las páginas ajenas a las que enlazamos (Google, WhatsApp).</p>' +
       '<h4>Legislación</h4><p>Se aplica la legislación española.</p>'],
@@ -6149,6 +6279,32 @@ three/build/three.module.js:
   dlg.addEventListener('click', function(e){ if (e.target === dlg && dlg.close) dlg.close(); });
 
   document.getElementById('anyo').textContent = new Date().getFullYear();
+
+  /* ---- la señal por Bizum ----
+     El apartado viene oculto del HTML y solo se enseña si hay número
+     puesto en BIZUM. Sin número no se enseña: pedir dinero sin decir a
+     dónde mandarlo es peor que no pedirlo. */
+  (function(){
+    var sec = document.getElementById('senal');
+    if (!sec) return;
+    var num = String(BIZUM.numero || '').replace(/\D/g, '');
+    if (!num) return;                       /* sigue oculto, y ya está */
+
+    /* 661403219 -> 661 40 32 19, que es como se lee en voz alta */
+    var bonito = num.length === 9
+      ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
+      : num;
+
+    document.getElementById('senalNum').textContent = bonito;
+    document.getElementById('senalCifra').textContent = BIZUM.senal + ' €';
+    document.getElementById('senalDesc').textContent = BIZUM.descuenta
+      ? 'La señal se descuenta del pedido, así que el diseño te sale gratis.'
+      : 'La señal cubre el diseño y no se descuenta del pedido.';
+
+    var enlacePie = document.getElementById('pieSenal');
+    if (enlacePie) enlacePie.hidden = false;
+    sec.hidden = false;
+  })();
 
   /* ---- la banda del logotipo, de lado a lado de la pantalla ----
      Sigue mas alla del propio dibujo del logotipo (que ya trae su propio
