@@ -1,0 +1,201 @@
+PLEA5E - página web
+====================
+
+COMO PUBLICARLA (5 minutos, gratis, sin instalar nada)
+------------------------------------------------------
+1. Descomprime este ZIP. Te queda una carpeta con:
+      index.html   <- la web entera
+      og.jpg       <- la foto que sale al compartir el enlace
+      r/           <- las paginas de salto de cada local (ver abajo)
+      robots.txt
+      LEEME.txt    <- esto
+
+2. Entra en   https://app.netlify.com/drop
+   (si te pide cuenta, entra con Google, es gratis)
+
+3. ARRASTRA LA CARPETA ENTERA a la zona que pone "Drag and drop your site".
+   Ojo: la carpeta, no los archivos sueltos.
+
+4. En 10 segundos te da una dirección tipo
+      https://algo-random-123.netlify.app
+   Esa ya es tu web, funcionando, en internet.
+
+5. PONLE EL NOMBRE  plea5e  (esto NO es opcional)
+   Site configuration > Change site name  ->  escribe: plea5e
+   Tiene que quedar   https://plea5e.netlify.app
+
+   Los QR de las placas llevan esa direccion impresa dentro. Si el
+   sitio se llama de otra forma, los QR no llevan a ningun lado.
+
+6. Si algun dia compras un dominio (plea5e.es, ~12 EUR/año):
+   Domain management > Add a domain -> lo escribes y Netlify te dice
+   los 2 datos que hay que copiar donde compraste el dominio.
+   El certificado HTTPS te lo pone Netlify solo y gratis.
+
+PARA ACTUALIZARLA MAS ADELANTE
+------------------------------
+Vuelves a la misma pagina del sitio en Netlify, pestaña "Deploys",
+y arrastras otra vez la carpeta. Se sobreescribe, la direccion no cambia.
+
+EL WHATSAPP
+-----------
+Todos los botones de pedir llevan a  +34 661 403 219  con el mensaje
+ya escrito: producto, cantidad, precio total, precio por unidad,
+nombre del negocio, ciudad, telefono y lo que hayan escrito en
+"como lo quieres". Tu solo tienes que contestar.
+
+Si algun dia cambias de numero: abre index.html con el Bloc de notas,
+Buscar y reemplazar   661403219   por el nuevo (sale varias veces),
+guarda y vuelve a arrastrar la carpeta a Netlify.
+
+
+EL LOGOTIPO Y EL QR (carpetas marca/ y qr/)
+-------------------------------------------
+marca/  el logotipo de PLEA5E sacado de la tarjeta y pasado a vector: la
+        estrella abrazando el 5, los dos brazos anchos que se van afinando
+        hasta quedarse en banda, y las dos chispas que rematan cada brazo.
+
+          marca-plea5e.svg / .png        letras blancas (para fondo oscuro)
+          marca-plea5e-claro.svg / .png  letras negras  (para fondo claro)
+          sello-plea5e.svg / .png        solo la estrella con el 5 (icono)
+
+        Los SVG no necesitan tener instalada la tipografia: las letras van
+        dibujadas. Los PNG llevan el fondo transparente. Sirven igual para
+        la web, para el sello de WhatsApp, para una factura o para imprenta.
+
+        En la web ese mismo logotipo sale en la barra de arriba, en el pie,
+        en el icono de la pestana, en la ventana de textos legales, en el
+        aviso de cookies y dentro de las propias placas en 3D.
+
+qr/     el codigo QR que lleva a  https://plea5e.es
+
+          qr-plea5e-es.svg / .png        el de la tarjeta: fondo blanco con
+                                         las esquinas redondeadas
+          qr-plea5e-es-plano.svg / .png  a pelo, sin margen ni fondo, para
+                                         meterlo dentro de otro diseno
+
+        Es el que llevan impreso las placas de ejemplo que se ven en 3D en
+        la web. Esta comprobado que se lee: apunta a plea5e.es y a nada mas.
+
+        OJO: para que ese QR sirva de algo, plea5e.es tiene que estar
+        apuntando a esta web (Netlify > Domain management > Add a domain).
+        Mientras no lo este, el QR se lee pero no abre nada.
+
+tarjeta/  la tarjetita tuya (la misma foto que mandaste) lista para
+          imprimir, con el QR cambiado para que lleve a plea5e.es y el
+          texto de abajo actualizado a ese mismo dominio.
+
+          tarjeta-plea5e.png   1376x924 px. Para repartir cuando te
+                                pregunten por tus datos y a que te dedicas.
+
+          Es la misma imagen de siempre, solo se le ha tocado el QR y esa
+          linea de texto: el logotipo, los colores y el resto no se han
+          movido. Si quieres una resolucion mayor para imprenta grande,
+          dimelo.
+
+
+LOS MODELOS 3D DE LAS PLACAS
+----------------------------
+Las tres fichas de producto (placa de mesa, expositor de pie y tarjeta de
+mano) ya no ensenan una foto: ensenan la pieza en 3D, con su grosor, su
+canto redondeado y, en el expositor, el pie doblado en L. Se pueden girar
+arrastrando con el dedo o con el raton.
+
+Se montan solos cuando la ficha entra en pantalla, no antes, para no cargar
+tres escenas 3D nada mas abrir la pagina. Si el movil o el navegador no
+puede con el 3D, se queda la foto de siempre y no se rompe nada.
+
+
+LO QUE FALTA POR RELLENAR
+-------------------------
+Abre index.html con el Bloc de notas y busca:
+
+    RELLENA ESTO CUANDO LO TENGAS
+
+Justo debajo hay dos bloques. Pones el dato entre las comillas,
+guardas, y vuelves a arrastrar la carpeta a Netlify.
+
+1) DATOS  -> para el aviso legal.
+   En España, si vendes por internet, el aviso legal tiene que llevar
+   tu nombre o razon social, tu NIF y tu domicilio. Ahora mismo esas
+   lineas no salen porque estan vacias, y el aviso legal esta incompleto.
+   Lo que dejes en blanco simplemente no aparece, no rompe nada.
+
+       titular:   'Tu nombre o razon social'
+       nif:       '12345678A'
+       domicilio: 'Calle Ejemplo 1, 41001 Sevilla'
+       email:     'hola@plea5e.es'
+
+2) LOCALES -> los enlaces de Piccola y BARVI.
+   Ya estan puestos: son los mismos codigos de Google que llevan
+   impresos en el QR de sus placas, asi que la placa de cada uno ya
+   es pulsable y lleva a dejarles resena, y sale "Ver donde esta".
+
+       piccola: ChIJZca-8BbQDQ0RIByaopjYtHY
+       barvi:   ChIJjYNmjvrRDQ0RVVaESvW5Yhs
+
+   Si algun dia quieres quitar un local de la web, borra su codigo
+   entre las comillas y los botones dejan de salir.
+
+   Para anadir otro local: copias una linea, pones su nombre y su
+   codigo de Google (perfil de Google Business -> Pedir resenas ->
+   Compartir formulario; el codigo es lo que va detras de placeid=).
+
+   Ojo: pide permiso a Piccola y a BARVI para seguir usando sus logos
+   como ejemplo y para enlazar sus resenas.
+
+
+LAS PAGINAS DE SALTO (carpeta r/)  -> para contar cuanta gente toca
+--------------------------------------------------------------------
+Dentro de r/ hay una pagina por local. Cuando publiques la web quedan en:
+
+      https://plea5e.netlify.app/r/piccola
+      https://plea5e.netlify.app/r/barvi
+      https://plea5e.netlify.app/r/fenomena
+
+Lo que hacen: se abren, esperan 350 ms, y saltan solas a la resena de
+Google de ese local. El cliente ve medio segundo de "Abriendo Google..."
+y ya esta escribiendo. Pesan 1,8 KB, cargan al instante.
+
+Para que sirven: si el QR y el chip apuntan ahi en vez de a Google
+directo, tu analitica cuenta cada visita. Asi sabes cuanta gente usa
+las placas de cada local y por dias. Hoy no lo sabes.
+
+QUE FALTA PARA QUE CUENTE
+-------------------------
+La pagina esta hecha pero no cuenta nada todavia: hay que ponerle una
+analitica. Abre r/piccola/index.html con el Bloc de notas y busca
+
+    AQUI VA EL CODIGO DE TU ANALITICA
+
+y pega ahi el trocito que te den. Lo mismo en r/barvi/index.html.
+
+Cual escoger:
+  - Cloudflare Web Analytics -> GRATIS y sin cookies. Es por donde
+    yo empezaria. Al no usar cookies no necesitas banner de consentimiento.
+  - Plausible / Umami -> unos 9 EUR/mes, sin cookies, mas facil de leer.
+  - Netlify Analytics -> 9 EUR/mes por sitio, se mide en el servidor, asi
+    que NO lo bloquea ningun bloqueador de anuncios y es el mas fiable.
+    Si usas este, pon  var ESPERA = 0;  y el salto es instantaneo.
+  - Google Analytics -> gratis, pero usa cookies: en Espana te obliga a
+    banner de consentimiento de verdad, y en una pagina que dura medio
+    segundo eso es un lio. No lo recomiendo aqui.
+
+OJO CON LAS PLACAS YA IMPRESAS
+------------------------------
+Las de Piccola y BARVI llevan el QR impreso apuntando directo a Google.
+Un QR impreso no se puede cambiar: para que pasen por la pagina de salto
+habria que reimprimirlas.
+
+El chip NFC SI se puede reprogramar con el movil sin reimprimir nada.
+Asi que en las que ya estan puestas puedes cambiar solo el TAP, y dejar
+el QR como esta. Contaras los toques por NFC, que suelen ser la mayoria.
+
+De aqui en adelante, en las placas nuevas pon las dos cosas apuntando a
+    https://plea5e.netlify.app/r/nombre-del-local
+
+Para dar de alta un local nuevo: copia la carpeta r/piccola, renombrala,
+y dentro cambia el codigo de Google (el que va detras de placeid=).
+
+Y una cosa importante: el enlace directo a Google convierte mas, porque
+es un paso menos. Si un local no quiere estadisticas, dejale el directo.
