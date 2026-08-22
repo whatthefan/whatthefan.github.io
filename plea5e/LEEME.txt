@@ -112,22 +112,36 @@ Abre index.html con el Bloc de notas y busca:
 
     RELLENA ESTO CUANDO LO TENGAS
 
-Justo debajo hay dos bloques. Pones el dato entre las comillas,
+Justo debajo hay tres bloques. Pones el dato entre las comillas,
 guardas, y vuelves a arrastrar la carpeta a Netlify.
 
-0) BIZUM -> EL APARTADO DE LA SEÑAL NO SALE HASTA QUE PONGAS EL NUMERO.
-   Es a proposito: pedir dinero sin decir a donde mandarlo es peor que
-   no pedirlo. En cuanto escribas el numero entre las comillas, el
-   apartado "La señal, por Bizum" aparece solo en la web y ademas se
-   añade su enlace en el pie.
+0) BIZUM -> COMPRUEBA EL NUMERO. Es lo primero que tienes que mirar.
 
-       numero:    '600112233'   <- el movil que recibe el Bizum
+   Ahora mismo esta puesto el MISMO numero del WhatsApp (661403219),
+   para que el paso se vea funcionando. SI TU BIZUM ESTA EN OTRO MOVIL,
+   CAMBIALO, porque si no el dinero va a ese numero.
+
+       numero:    '661403219'   <- el movil que recibe el Bizum
        senal:     25            <- euros
        descuenta: true          <- true = se descuenta del pedido final
 
-   Si algun dia quieres quitar la señal, vacia el numero y el apartado
-   desaparece. Ojo: las condiciones de venta hablan de la señal, asi que
-   si la quitas, avisa para repasar ese texto.
+   COMO FUNCIONA EL PEDIDO AHORA
+   Dentro del apartado "Tu pedido", debajo del resumen, sale el paso 5:
+   el numero de Bizum, el importe y el concepto (que se rellena solo con
+   el nombre del negocio que hayan escrito). El boton de WhatsApp esta
+   apagado y no lleva a ningun sitio hasta que marcan "Ya he enviado la
+   senal". Cuando lo marcan, el boton se enciende y el mensaje que te
+   llega lleva una linea mas:
+
+       SEnAL: 25 EUR enviados por Bizum (a descontar del pedido)
+
+   Asi sabes de un vistazo quien ha pagado y quien no. Ojo: la casilla es
+   una declaracion del cliente, la web no comprueba el Bizum. Mira tu
+   movil antes de ponerte a disenar.
+
+   Si vacias 'numero', el paso desaparece y el boton de WhatsApp vuelve a
+   funcionar directo, como antes. Ojo: las condiciones de venta hablan de
+   la senal, asi que si la quitas, avisa para repasar ese texto.
 
 1) DATOS  -> para el aviso legal.
    En España, si vendes por internet, el aviso legal tiene que llevar

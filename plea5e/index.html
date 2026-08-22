@@ -795,49 +795,30 @@ td .destaca{color:var(--oro);font-weight:700}
 /* el chip destacado dentro de la linea de medidas de cada ficha */
 .prod .medida b{color:var(--claro-txt);font-weight:700}
 
-/* por que cuesta lo que cuesta: en letra pequeña, al final de la
-   descripcion de cada ficha y justo encima del precio, que es donde
-   salta la duda. Una linea y punto: si se alarga parece que hay que
-   justificarse. */
-.prod .porque-mini{display:block;font-size:.76rem;line-height:1.5;
-  color:var(--claro-txt-2);margin-top:-4px;
-  padding-top:11px;border-top:1px solid var(--claro-borde)}
-.prod .porque-mini b{color:var(--claro-txt);font-weight:700}
-
-/* ============ la señal por Bizum ============
-   Va sobre fondo claro (.sec-claro), asi que todo el color sale de la
-   paleta --claro-*. La caja del numero es lo unico oscuro: es el dato
-   que hay que copiar al movil, y asi se encuentra de un vistazo. */
-.senal{display:grid;grid-template-columns:minmax(240px,320px) 1fr;
-  gap:clamp(18px,2.6vw,34px);align-items:start;margin-top:clamp(24px,3vw,38px)}
-.senal-caja{background:var(--noche-2);border:1px solid var(--borde);
-  border-radius:var(--r);padding:clamp(18px,2.2vw,26px);color:var(--txt)}
-.senal-et{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--txt-3,#8B95AB);margin:0 0 5px}
-.senal-num{font-family:'Rubik',system-ui,sans-serif;font-size:clamp(1.5rem,4vw,1.9rem);
-  font-weight:700;color:var(--oro);letter-spacing:.01em;font-variant-numeric:tabular-nums;
-  margin:0 0 16px;word-break:break-word}
-.senal-con{font-size:.95rem;color:var(--txt);margin:0 0 18px}
-.senal-imp{display:flex;align-items:baseline;gap:9px;margin:0;
-  padding-top:15px;border-top:1px solid var(--borde)}
-.senal-imp span{font-family:'Rubik',system-ui,sans-serif;font-size:1.55rem;font-weight:800;color:var(--txt)}
-.senal-imp small{font-size:.76rem;color:var(--txt-2)}
-
-.senal-pasos{list-style:none;counter-reset:s;margin:0;padding:0;
-  display:flex;flex-direction:column;gap:14px}
-.senal-pasos li{counter-increment:s;position:relative;padding-left:44px;
-  font-size:.95rem;line-height:1.55;color:var(--claro-txt-2)}
-.senal-pasos li b{color:var(--claro-txt)}
-.senal-pasos li::before{content:counter(s);position:absolute;left:0;top:-1px;
-  width:29px;height:29px;border-radius:50%;background:var(--oro);color:#100B00;
-  font-family:'Rubik',system-ui,sans-serif;font-weight:800;font-size:.88rem;
+/* ============ la señal por Bizum, dentro del ticket del pedido ============
+   Va entre el resumen y el boton de WhatsApp a proposito: es un paso
+   mas del pedido, no un aviso al margen. El boton no se activa hasta
+   que marcan la casilla. */
+.senal-paso{margin-top:18px;padding:16px;border-radius:var(--r);
+  background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.34);text-align:left}
+.senal-paso-tit{display:flex;align-items:center;gap:9px;margin:0 0 8px;
+  font-weight:800;font-size:.95rem;color:var(--txt)}
+.senal-paso-tit .np{width:23px;height:23px;flex:none;border-radius:50%;
+  background:var(--oro);color:#100B00;font-size:.78rem;font-weight:800;
   display:flex;align-items:center;justify-content:center}
-
-.senal-letra{margin-top:clamp(18px,2.2vw,26px);font-size:.8rem;line-height:1.6;
-  color:var(--claro-txt-2);border-top:1px solid var(--claro-borde);padding-top:14px}
-.senal-letra b{color:var(--claro-txt)}
-.sec-claro .senal-letra .enl{color:var(--oro-os);font-size:.8rem}
-@media (max-width:760px){.senal{grid-template-columns:1fr}}
+.senal-paso-txt{margin:0 0 12px;font-size:.85rem;line-height:1.55;color:var(--txt-2)}
+.senal-paso-txt b{color:var(--txt)}
+.senal-datos{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 13px;align-items:baseline}
+.senal-datos dt{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-2)}
+.senal-datos dd{margin:0;font-size:.92rem;color:var(--txt)}
+.senal-datos .senal-num{font-family:'Rubik',system-ui,sans-serif;font-size:1.22rem;font-weight:700;
+  color:var(--oro);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.senal-check{display:flex;align-items:center;gap:10px;cursor:pointer;
+  font-size:.88rem;font-weight:600;color:var(--txt);user-select:none;-webkit-user-select:none}
+.senal-check input{width:20px;height:20px;flex:none;accent-color:var(--oro);cursor:pointer;margin:0}
+/* mientras no marcan la casilla, el boton se ve apagado y no lleva a
+   ningun sitio: el href se le quita desde el JS, no solo el color */
+.btn.grande.espera{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 
 /* nota de personalización */
 .medida-libre{margin-top:clamp(24px,3vw,36px);border:1px dashed rgba(150,110,20,.45);
@@ -1279,7 +1260,7 @@ body::after{
           <a class="btn btn-oro" href="#pedido">Pedirlo ahora</a>
           <a class="btn btn-fan" href="#productos">Ver productos y precios</a>
         </div>
-        <p class="bajo">Desde <b class="oro">25 €</b> · te enseñamos el diseño antes de cobrarte nada.</p>
+        <p class="bajo">Desde <b class="oro">25 €</b> · no se imprime nada hasta que apruebas el diseño.</p>
       </div>
     </div>
   </div>
@@ -1304,8 +1285,7 @@ body::after{
           <h3>Placa de mesa</h3>
           <p class="paraquien">Para bar, restaurante o cafetería <b>con mesas</b></p>
           <p class="medida">90 × 90 mm · metacrilato 3 mm · <b>chip NFC</b></p>
-          <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje 3M. Está delante del cliente todo el rato, por eso es la que más reseñas trae.
-            <small class="porque-mini"><b>Por qué no cuesta 5 €:</b> lleva un chip NFC dentro, programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca. No es una pegatina impresa. Se paga una vez, sin cuotas.</small></p>
+          <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje 3M. Está delante del cliente todo el rato, por eso es la que más reseñas trae. Dentro lleva un <b>chip programable</b> grabado con tu ficha de Google: el cliente acerca el móvil y se le abre la reseña.</p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="placa">Pedir esta</a>
         </div>
@@ -1319,8 +1299,7 @@ body::after{
           <h3>Expositor de pie</h3>
           <p class="paraquien">Para <b>barra, mostrador o terraza</b></p>
           <p class="medida">76 × 118 mm · chapa doblada en L · <b>chip NFC</b></p>
-          <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro.
-            <small class="porque-mini"><b>Por qué no cuesta 5 €:</b> lleva un chip NFC dentro, programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca. No es una pegatina impresa. Se paga una vez, sin cuotas.</small></p>
+          <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro. Dentro lleva un <b>chip programable</b> grabado con tu ficha de Google: el cliente acerca el móvil y se le abre la reseña.</p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="stand">Pedir este</a>
         </div>
@@ -1334,8 +1313,7 @@ body::after{
           <h3>Tarjeta de mano</h3>
           <p class="paraquien">Para <b>peluquería, taller, tienda</b> o a domicilio</p>
           <p class="medida">85 × 54 mm · PVC laminado · <b>chip NFC</b></p>
-          <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo.
-            <small class="porque-mini"><b>Por qué no cuesta 5 €:</b> lleva un chip NFC dentro, programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca. No es una pegatina impresa. Se paga una vez, sin cuotas.</small></p>
+          <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo. Dentro lleva un <b>chip programable</b> grabado con tu ficha de Google: el cliente acerca el móvil y se le abre la reseña.</p>
           <p class="pvp"><span class="n">15 €</span><span class="antes">20 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad · packs de 20 a 100</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="tarjeta">Pedir esta</a>
         </div>
@@ -1416,42 +1394,24 @@ body::after{
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Chip NFC + QR programados</li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Envío gratis a península</li>
         </ul>
-        <a class="btn btn-oro grande" id="rWhats" href="https://wa.me/34661403219" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .5-.1.7.5l1 2.4c.1.2.1.4 0 .6l-.4.5-.3.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.5.4 0 .1 0 .6-.2 1.3z"/></svg> Enviar por WhatsApp</a>
+        <!-- La señal va ANTES del WhatsApp: primero el Bizum, y solo
+             entonces se abre el chat con el pedido escrito. El bloque
+             entero se oculta si no hay número de Bizum en la
+             configuración, y entonces el botón funciona como siempre. -->
+        <div class="senal-paso" id="senalPaso" hidden>
+          <p class="senal-paso-tit"><span class="np">5</span>Antes de darle: la señal</p>
+          <p class="senal-paso-txt">Para ponernos a diseñar te pedimos un Bizum de <b id="senalCifra">25 €</b>. <span id="senalDesc">Se descuenta del pedido, así que si sigues adelante el diseño te sale gratis.</span></p>
+          <dl class="senal-datos">
+            <dt>Bizum al</dt><dd class="senal-num" id="senalNum">—</dd>
+            <dt>Concepto</dt><dd id="senalCon">El nombre de tu negocio</dd>
+          </dl>
+          <label class="senal-check"><input type="checkbox" id="senalHecho"><span>Ya he enviado la señal</span></label>
+        </div>
+
+        <a class="btn btn-oro grande" id="rWhats" href="https://wa.me/34661403219" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .5-.1.7.5l1 2.4c.1.2.1.4 0 .6l-.4.5-.3.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.5.4 0 .1 0 .6-.2 1.3z"/></svg> <span id="rWhatsTxt">Enviar por WhatsApp</span></a>
         <small class="pie-wa">Se abre tu WhatsApp con el mensaje escrito · o llámanos al <a href="tel:+34661403219">661 40 32 19</a></small>
       </aside>
     </div>
-  </div>
-</section>
-
-<!-- ============ la señal, por Bizum ============
-     Sale oculta y el JS la enseña solo si hay número de Bizum puesto en
-     la configuración de arriba del todo. Así no puede quedarse publicada
-     pidiendo dinero sin decir a dónde. -->
-<section class="sec-corta sec-claro" id="senal" hidden>
-  <div class="env">
-    <div class="enc sube">
-      <span class="etq">Antes de empezar</span>
-      <h2>La señal, por Bizum</h2>
-      <p>Dibujar tu placa lleva su rato: hay que sacar tus colores, tu tipografía y tu logo, y montarlo. Por eso pedimos una señal antes de ponernos, y así los dos sabemos que la cosa va en serio.</p>
-    </div>
-
-    <div class="senal sube">
-      <div class="senal-caja">
-        <p class="senal-et">Bizum al</p>
-        <p class="senal-num" id="senalNum">—</p>
-        <p class="senal-et">Concepto</p>
-        <p class="senal-con">El nombre de tu local</p>
-        <p class="senal-imp"><span id="senalCifra">25 €</span><small>señal</small></p>
-      </div>
-
-      <ol class="senal-pasos">
-        <li><b>Envías la señal</b> y nos avisas por WhatsApp con el nombre de tu local.</li>
-        <li><b>Te preparamos la propuesta</b> con tu logo, tus colores y tu texto. La cambias las veces que haga falta hasta que te guste.</li>
-        <li><b>Das el visto bueno y se imprime.</b> <span id="senalDesc">La señal se descuenta del pedido, así que el diseño te sale gratis.</span></li>
-      </ol>
-    </div>
-
-    <p class="senal-letra">La señal paga el trabajo de diseño, así que <b>no se devuelve</b> si luego decides no seguir adelante. Y una vez aprobado el diseño e impreso el pedido <b>ya no se puede devolver ni cambiar</b>: cada pieza se fabrica solo para ti, con tu marca. <button type="button" class="enl" data-legal="condiciones">Leer las condiciones</button></p>
   </div>
 </section>
 
@@ -1553,8 +1513,8 @@ body::after{
         <p>Directamente a la ventana de escribir, con las estrellas ya delante. Cuantos menos pasos hay, más reseñas se terminan.</p></details>
       <details class="sube"><summary>¿Hay que pagar algo cada mes?</summary>
         <p>No. Pagas una vez y es tuyo. El enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p></details>
-      <details class="sube"><summary>¿Por qué cuesta 25 € y no 5 €?</summary>
-        <p>Porque no es una pegatina impresa. Dentro lleva un chip NFC programado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada.</p></details>
+      <details class="sube"><summary>¿Por qué cuesta 25 €?</summary>
+        <p>Porque no es una pegatina impresa. Dentro lleva un chip programable, grabado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada.</p></details>
       <details class="sube"><summary>¿De verdad lo hacéis todo a medida?</summary>
         <p>Sí. Colores, tipografía, logo, formato y hasta el texto. Si quieres el expositor en negro con tu logo dorado, se hace. Si lo quieres cuadrado en vez de rectangular, se hace. Y si necesitas un formato que no está en la web, nos lo dices y te decimos si podemos.</p></details>
       <details class="sube"><summary>¿Se despega? ¿Estropea la mesa?</summary>
@@ -1584,7 +1544,6 @@ body::after{
         <h4>La web</h4>
         <a href="#productos">Productos</a>
         <a href="#pedido">Pedido y precios</a>
-        <a href="#senal" id="pieSenal" hidden>Señal por Bizum</a>
         <a href="#demo">Cómo se usa</a>
         <a href="#clientes">Clientes</a>
         <a href="#ayuda">Preguntas</a>
@@ -5831,7 +5790,11 @@ three/build/three.module.js:
      Es a propósito: más vale que no salga a que salga sin número y la
      gente no sepa a dónde pagar. Pon el número y aparece solo. */
   var BIZUM = {
-    numero:  '',     // FALTA. El número de móvil que recibe el Bizum
+    // ¡¡CAMBIA ESTE NÚMERO SI EL BIZUM VA A OTRO SITIO!!
+    // De momento está puesto el mismo del WhatsApp, que es el que ya
+    // sale por toda la web, para que el paso se vea funcionando. Si tu
+    // Bizum está en otro móvil, cámbialo aquí y listo.
+    numero:  '661403219',
     senal:   25,     // euros
     descuenta: true  // true = la señal se descuenta del pedido final
   };
@@ -5943,6 +5906,10 @@ three/build/three.module.js:
   });
 
   /* ---- pedido en tres toques ---- */
+  /* la enciende el bloque de la señal si hay Bizum configurado. Mientras
+     esté apagada, el pedido se envía directo como se ha hecho siempre. */
+  var SENAL_ACTIVA = false;
+
   var CAT = {
     placa:   { nombre:'Placa de mesa', uno:'placa de mesa', varias:'placas de mesa', cada:'cada una',
                ancho:54, solapa:-27,
@@ -6033,8 +6000,39 @@ three/build/three.module.js:
       '📞 TELÉFONO: ' + (v('tel') || '—')
     ];
     if (v('notas')) { lineas.push('', '📝 CÓMO LO QUIERE:', v('notas')); }
+
+    var boton = document.getElementById('rWhats');
+    var hecho = document.getElementById('senalHecho');
+
+    if (SENAL_ACTIVA) {
+      /* el concepto del Bizum es el nombre del negocio: si ya lo han
+         escrito, se lo ponemos delante para que no se lo inventen */
+      var con = document.getElementById('senalCon');
+      if (con) con.textContent = v('negocio') || 'El nombre de tu negocio';
+
+      lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € enviados por Bizum'
+        + (BIZUM.descuenta ? ' (a descontar del pedido)' : ''));
+      lineas.push('', '¿Me mandáis la propuesta de diseño?');
+
+      var listo = hecho && hecho.checked;
+      boton.classList.toggle('espera', !listo);
+      boton.setAttribute('aria-disabled', listo ? 'false' : 'true');
+      document.getElementById('rWhatsTxt').textContent = listo
+        ? 'Enviar el pedido por WhatsApp'
+        : 'Primero haz el Bizum';
+      if (listo) {
+        ponerWhats(boton, lineas.join('\n'));
+      } else {
+        /* sin href no hay forma de colarse: ni tocando, ni con el
+           teclado, ni abriendo en pestaña nueva */
+        boton.removeAttribute('href');
+        boton.removeAttribute('target');
+      }
+      return;
+    }
+
     lineas.push('', '¿Me mandáis la propuesta de diseño?');
-    ponerWhats(document.getElementById('rWhats'), lineas.join('\n'));
+    ponerWhats(boton, lineas.join('\n'));
   }
   var opProd = document.getElementById('opProd'), opCant = document.getElementById('opCant');
   opProd.addEventListener('click', function(e){
@@ -6280,30 +6278,30 @@ three/build/three.module.js:
 
   document.getElementById('anyo').textContent = new Date().getFullYear();
 
-  /* ---- la señal por Bizum ----
-     El apartado viene oculto del HTML y solo se enseña si hay número
-     puesto en BIZUM. Sin número no se enseña: pedir dinero sin decir a
-     dónde mandarlo es peor que no pedirlo. */
+  /* ---- la señal por Bizum, dentro del pedido ----
+     Si no hay número configurado el paso no sale y el botón de WhatsApp
+     funciona como toda la vida. Si lo hay, el pedido no se puede enviar
+     hasta que marcan que han hecho el Bizum, y el mensaje que llega
+     lleva esa confirmación escrita. */
   (function(){
-    var sec = document.getElementById('senal');
-    if (!sec) return;
+    var paso = document.getElementById('senalPaso');
+    if (!paso) return;
     var num = String(BIZUM.numero || '').replace(/\D/g, '');
     if (!num) return;                       /* sigue oculto, y ya está */
 
     /* 661403219 -> 661 40 32 19, que es como se lee en voz alta */
-    var bonito = num.length === 9
+    document.getElementById('senalNum').textContent = num.length === 9
       ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
       : num;
-
-    document.getElementById('senalNum').textContent = bonito;
     document.getElementById('senalCifra').textContent = BIZUM.senal + ' €';
     document.getElementById('senalDesc').textContent = BIZUM.descuenta
-      ? 'La señal se descuenta del pedido, así que el diseño te sale gratis.'
-      : 'La señal cubre el diseño y no se descuenta del pedido.';
+      ? 'Se descuenta del pedido, así que si sigues adelante el diseño te sale gratis.'
+      : 'Cubre el diseño y no se descuenta del pedido.';
+    paso.hidden = false;
+    SENAL_ACTIVA = true;
 
-    var enlacePie = document.getElementById('pieSenal');
-    if (enlacePie) enlacePie.hidden = false;
-    sec.hidden = false;
+    document.getElementById('senalHecho').addEventListener('change', refrescar);
+    refrescar();
   })();
 
   /* ---- la banda del logotipo, de lado a lado de la pantalla ----
