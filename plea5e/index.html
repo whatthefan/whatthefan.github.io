@@ -6059,19 +6059,22 @@ three/build/three.module.js:
         ? 'Diseño y envío incluidos'
         : eur(ud) + ' ' + c.cada + (ahorro > 0.01 ? ' · ahorras ' + eur(ahorro) : '');
     var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
+    /* El mensaje lo escribe el CLIENTE y lo lee él antes de enviarlo, así
+       que va redactado en su voz y sin nada que suene a ficha interna.
+       Los *asteriscos* los pinta WhatsApp en negrita, que se lee mucho
+       mejor que las mayúsculas. */
     var lineas = [
       'Hola PLEA5E, quiero hacer un pedido 👇',
       '',
-      '🛒 PRODUCTO: ' + c.nombre,
-      '🔢 CANTIDAD: ' + (abierto ? '20 o más (presupuesto)' : n),
-      abierto ? '💶 PRECIO: a convenir'
-              : '💶 PRECIO: ' + eur(total) + (n === 1 ? '' : '  (' + eur(ud) + ' ' + c.cada + ')'),
+      '*' + c.nombre + '* × ' + (abierto ? '20 o más' : n),
+      abierto ? 'Precio a convenir'
+              : eur(total) + (n === 1 ? '' : '  ·  ' + eur(ud) + ' ' + c.cada),
       '',
-      '🏪 NEGOCIO: ' + (v('negocio') || '—'),
-      '📍 CIUDAD: ' + (v('ciudad') || '—'),
-      '📞 TELÉFONO: ' + (v('tel') || '—')
+      '*Negocio:* ' + (v('negocio') || '—'),
+      '*Ciudad:* ' + (v('ciudad') || '—'),
+      '*Teléfono:* ' + (v('tel') || '—')
     ];
-    if (v('notas')) { lineas.push('', '📝 CÓMO LO QUIERE:', v('notas')); }
+    if (v('notas')) { lineas.push('', '*Cómo lo quiero:*', v('notas')); }
 
     var boton = document.getElementById('rWhats');
     var hecho = document.getElementById('senalHecho');
@@ -6083,18 +6086,20 @@ three/build/three.module.js:
       if (con) con.textContent = v('negocio') || 'El nombre de tu negocio';
       if (SENAL_PONER_ENLACE) SENAL_PONER_ENLACE();
 
-      var cola = BIZUM.descuenta ? ' (a descontar del pedido)' : '';
+      var cola = BIZUM.descuenta ? ', a descontar del pedido' : ', cubre el diseño';
       if (SENAL_REF) {
-        /* volvió de Stripe con su referencia: esto se puede cuadrar */
-        lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € PAGADOS' + cola,
-                        '🧾 REFERENCIA: ' + SENAL_REF);
+        /* volvió de Stripe con su referencia: este pago se puede cuadrar */
+        lineas.push('', '✅ *Señal pagada* · ' + BIZUM.senal + ' €' + cola,
+                        'Referencia: ' + SENAL_REF);
       } else if (SENAL_MANUAL) {
-        /* lo dice él, y no tenemos referencia. Que quede claro en el mensaje,
-           que si no parece un pago comprobado y no lo es. */
-        lineas.push('', '⚠️ SEÑAL: dice que ha pagado los ' + BIZUM.senal + ' €' + cola,
-                        '   SIN referencia de Stripe · compruébalo en tu panel antes de diseñar');
+        /* pagó, pero Stripe no lo trajo de vuelta y no tenemos referencia.
+           El círculo amarillo es la señal para el vendedor de que a este
+           le toca mirarlo en el panel. Al cliente no se le dice nada raro:
+           bastante hace con haber pagado. */
+        lineas.push('', '🟡 *Señal pagada* · ' + BIZUM.senal + ' €' + cola,
+                        'Sin referencia automática');
       } else {
-        lineas.push('', '✅ SEÑAL: ' + BIZUM.senal + ' € enviados por Bizum' + cola);
+        lineas.push('', '✅ *Señal enviada por Bizum* · ' + BIZUM.senal + ' €' + cola);
       }
       lineas.push('', '¿Me mandáis la propuesta de diseño?');
 
