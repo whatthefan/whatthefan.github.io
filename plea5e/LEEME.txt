@@ -7,6 +7,10 @@ COMO PUBLICARLA (5 minutos, gratis, sin instalar nada)
       index.html   <- la web entera
       og.jpg       <- la foto que sale al compartir el enlace
       r/           <- las paginas de salto de cada local (ver abajo)
+      marca/       <- el logotipo en vector y en PNG
+      qr/          <- el codigo QR que lleva a plea5e.es
+      producto/    <- la placa recortada, con transparencia
+      tarjeta/     <- tu tarjeta lista para imprimir
       robots.txt
       LEEME.txt    <- esto
 
@@ -81,6 +85,22 @@ qr/     el codigo QR que lleva a  https://plea5e.es
         apuntando a esta web (Netlify > Domain management > Add a domain).
         Mientras no lo este, el QR se lee pero no abre nada.
 
+producto/  la placa de mesa recortada del fondo, con transparencia de
+           verdad. La foto del catalogo lleva un fondo gris pegado; estas
+           no, asi que valen para ponerlas sobre cualquier color.
+
+          placa-recortada.png   655x719. La placa a pelo, sin margen.
+                                Para meterla sobre otra imagen o diseno.
+
+          placa-cuadrada.png    1000x1000. La misma centrada en un
+                                cuadrado, con aire alrededor y una sombra
+                                suave. ESTA es la que va bien de imagen de
+                                producto en Stripe: como ahi sale pequena
+                                y sobre blanco, una sola pieza reconocible
+                                funciona mejor que una lamina con texto.
+
+          Para cambiarla en Stripe: Productos > tu producto > la imagen.
+
 tarjeta/  la tarjetita tuya (la misma foto que mandaste) lista para
           imprimir, con el QR cambiado para que lleve a plea5e.es y el
           texto de abajo actualizado a ese mismo dominio.
@@ -140,13 +160,19 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    SI SE TE OLVIDA, LA WEB LO APANA
    Si el cliente vuelve por su cuenta sin que Stripe nos diga nada, se le
    recupera el pedido y le sale un "?ya has pagado la senal?" con una
-   casilla. Si la marca, el WhatsApp que te llega dice:
+   casilla. Fijate en el circulo del mensaje que te llega:
 
-       SENAL: dice que ha pagado los 25 EUR
-       SIN referencia de Stripe - compruebalo en tu panel antes de disenar
+       VERDE     Senal pagada - 25 EUR, a descontar del pedido
+                 Referencia: cs_live_...
+                 -> Stripe lo confirmo. Cuadra con tu panel.
 
-   O sea: no se cuela como pago comprobado. Sabras de un vistazo cual
-   viene verificado y cual te toca mirar a mano.
+       AMARILLO  Senal pagada - 25 EUR, a descontar del pedido
+                 Sin referencia automatica
+                 -> Lo dice el cliente y no tenemos confirmacion.
+                    Miralo en Stripe antes de ponerte a disenar.
+
+   El circulo es para ti; al cliente no se le dice nada desagradable,
+   que el mensaje lo escribe el y lo lee antes de enviartelo.
 
    COMO COMPROBAR QUE COBRAS DE VERDAD
    Abre tu propio enlace en el movil. Si arriba sale un cartel naranja de
