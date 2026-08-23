@@ -154,6 +154,66 @@ las fotos a archivos aparte y cargarlas segun bajas. Es un rato de
 trabajo y no cambia como se ve.
 
 
+EL GENERADOR DE PLACAS  (taller/generador.html)
+-----------------------------------------------
+Esto no es para el cliente: es tu herramienta. Esta en la carpeta
+taller/, que no sale enlazada en ningun sitio de la web y que ademas
+esta bloqueada en robots.txt, asi que Google no la indexa. Se abre de
+dos maneras:
+
+    a) doble clic en el archivo, desde tu ordenador
+    b) tuweb.es/taller/generador.html, una vez subida la carpeta
+
+QUE HACE
+Le metes el nombre del negocio, el enlace de Google y el logo, y te
+dibuja la placa terminada, lista para ensenarsela al cliente o para
+mandarla a imprimir. Los tres formatos: placa 90x90, expositor 76x118
+y tarjeta 85x54.
+
+LO QUE HACE SOLO
+  - Saca los colores del logo que subas y te los pone como botones.
+    Elige de entrada el mas oscuro con color, que es donde el texto
+    blanco se lee. Si no te convence, tocas otro o eliges el tuyo.
+  - Calcula el color de las estrellas y las rayas a partir del de la
+    banda, para que siempre haya contraste.
+  - Encoge el texto hasta que quepa, a lo ancho y a lo alto. Da igual
+    que el bar se llame "El Rincon de Manolo y sus Hijos": cabe.
+  - Monta el QR con correccion de errores alta, la que aguanta que la
+    placa se raye o se ensucie y siga leyendo.
+
+EL ENLACE DE GOOGLE
+Vale de las tres maneras:
+  - el codigo del sitio a secas   ->  ChIJZca-8BbQDQ0RIByaopjYtHY
+  - el enlace de "Pedir resenas"  ->  https://g.page/r/...
+  - cualquier direccion pegada
+Si le das el codigo a secas, el te monta el enlace de escribir resena.
+
+PARA LA IMPRENTA
+Marca "Sangrado de 3 mm" y el fondo se sale por los cuatro lados, con
+la linea de corte marcada. Es lo que te va a pedir la imprenta. El PNG
+sale a 2000 px de lado largo: para 90 mm son unos 565 puntos por
+pulgada, de sobra.
+
+PARA ENSENARSELO AL CLIENTE
+Sin sangrado. El boton "Descargar PNG" te lo baja; "Copiar imagen" lo
+deja en el portapapeles para pegarlo en WhatsApp directamente. En el
+movil, si el boton no hace nada, deja el dedo pulsado sobre la imagen y
+dale a Guardar.
+
+LO QUE NO HACE
+  - No sube nada a ningun sitio. Todo se dibuja en tu navegador. El
+    logo del cliente no sale de tu movil.
+  - No sustituye tu criterio. Si el logo viene en mala calidad, o el
+    nombre queda raro, o el color no pega, eso lo ves tu. La maquina
+    pone la plantilla; el ojo lo pones tu.
+  - No graba el chip NFC. Eso sigue siendo aparte.
+
+SI NO TIENES INTERNET
+Funciona igual, pero la letra sera la del sistema en vez de la de la
+marca. Para ensenar una idea vale; para mandar a imprimir, abrelo con
+internet.
+
+
 LOS MODELOS 3D DE LAS PLACAS
 ----------------------------
 Las tres fichas de producto (placa de mesa, expositor de pie y tarjeta de
