@@ -18,13 +18,19 @@ function igual(a, b) {
 
 exports.handler = async function (event) {
   const cabeceras = { 'Content-Type': 'application/json; charset=utf-8' };
-  const esperada = process.env.PANEL_CLAVE;
+  /* Se recortan los espacios de los dos lados. Pegando las variables en
+     Netlify es facilisimo que se cuele un espacio o un salto de linea al
+     final del valor: tu escribes la contrasena bien, el servidor tiene
+     guardada la tuya "con una cola", y no entras nunca. Como una
+     contrasena que empieza o acaba en espacio no la quiere nadie, se
+     quitan y santas pascuas. */
+  const esperada = String(process.env.PANEL_CLAVE || '').trim();
   if (!esperada) {
     return { statusCode: 500, headers: cabeceras,
              body: '{"error":"falta PANEL_CLAVE en la configuracion"}' };
   }
-  const dada = (event.headers['x-panel-clave'] ||
-                (event.queryStringParameters || {}).clave || '');
+  const dada = String(event.headers['x-panel-clave'] ||
+                      (event.queryStringParameters || {}).clave || '').trim();
   if (!igual(dada, esperada)) {
     return { statusCode: 401, headers: cabeceras, body: '{"error":"contrasena"}' };
   }
