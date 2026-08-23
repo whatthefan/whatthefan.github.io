@@ -160,7 +160,7 @@
 (function () {
   'use strict';
 
-  var API   = '/.netlify/functions/encargos';
+  var API   = '/api/encargos';
   var GUARD = 'plea5e_panel_clave';
   var clave = '';
   var todo  = [];
@@ -233,7 +233,7 @@
       })
       .catch(function (err) {
         if (err instanceof TypeError) {
-          throw new Error('No hay respuesta. ¿Estás abriendo esto en plea5e.es y no en un archivo suelto?');
+          throw new Error('No hay respuesta del servidor. ¿Estás en plea5e.es y no en un archivo suelto?');
         }
         throw err;
       });

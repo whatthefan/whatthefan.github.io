@@ -1,12 +1,15 @@
-# Netlify lee esto solo. Las paginas siguen siendo HTML suelto: no hay
-# nada que compilar, por eso no hay comando de construccion.
+# Netlify ya solo sirve los archivos: el generador, la web y el panel.
+# Las funciones y el almacen viven en Cloudflare (functions/api/), que es
+# donde esta ahora el negocio. Este archivo se queda para que plea5e.es
+# siga en pie en Netlify mientras dure la mudanza; el dia que el dominio
+# apunte a Cloudflare, se puede borrar.
 [build]
   publish = "."
-  functions = "netlify/functions"
 
 # El taller es para ti, no para los clientes. Ademas de estar fuera del
 # robots.txt, aqui se le dice a los buscadores que no lo indexen aunque
-# alguien enlace la pagina desde fuera.
+# alguien enlace la pagina desde fuera. El equivalente en Cloudflare es
+# el archivo _headers.
 [[headers]]
   for = "/taller/*"
   [headers.values]

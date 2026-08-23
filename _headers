@@ -1,0 +1,6 @@
+# Cloudflare Pages lee este archivo. Es el equivalente al bloque de
+# cabeceras del netlify.toml: el taller es para ti, no para los clientes.
+# Ademas de estar fuera del robots.txt, aqui se le dice a los buscadores
+# que no lo indexen aunque alguien enlace la pagina desde fuera.
+/taller/*
+  X-Robots-Tag: noindex, nofollow

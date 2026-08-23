@@ -1,24 +1,46 @@
-/* Recibe el encargo del cliente, lo guarda, le pide a Claude el brief de
-   diseño y te manda a ti el correo con el enlace del generador ya montado.
-   Netlify la publica sola en  /.netlify/functions/encargo
+/* Recibe el encargo del cliente, lo guarda, elige los colores y te manda
+   el correo con el enlace del generador ya montado.
 
-   Variables de entorno (Netlify > Project configuration > Environment):
-     ANTHROPIC_API_KEY   la clave de la API de Claude (OPCIONAL)
-     RESEND_API_KEY      la clave de Resend, para el correo
-     CORREO_AVISO        a dónde te llegan los avisos
-     CORREO_DE           desde qué dirección salen (dominio verificado)
-     PANEL_CLAVE         la contraseña del panel de pedidos
+   Cloudflare Pages publica esto solo en  /api/encargo , por estar en
+   functions/api/encargo.js. No hay que configurar ninguna ruta.
 
-   Si falta ANTHROPIC_API_KEY no pasa nada: los colores los elige la
-   tabla por oficio de lib/encargo.js, que es gratis y acierta el tono.
-   Si falta RESEND_API_KEY tampoco se pierde nada, el encargo se queda en
-   el panel. Que falle un extra no puede costar un pedido. */
+   ── Lo que necesita, y lo que pasa si falta ──────────────────────────
 
-'use strict';
+   ENCARGOS            el almacén (KV). Es lo único imprescindible para
+                       que el pedido quede guardado. Si falla, el correo
+                       sale igual y el pedido no se pierde del todo.
+   ANTHROPIC_API_KEY   la IA que elige los colores. OPCIONAL: sin ella
+                       los elige la tabla por oficio, gratis.
+   RESEND_API_KEY      el correo. Sin ella el encargo se queda en el
+                       panel y ya lo ves tú.
+   CORREO_AVISO        a dónde te llegan los avisos.
+   CORREO_DE           desde qué dirección salen.
 
-const { getStore } = require('@netlify/blobs');
-const Anthropic = require('@anthropic-ai/sdk');
-const L = require('./lib/encargo.js');
+   La regla de toda la función: que falle un extra NUNCA puede costar un
+   pedido. Por eso se guarda antes de avisar, y por eso cada paso va en
+   su propio try. */
+
+import * as L from '../../lib/encargo.mjs';
+
+/* El SDK de Anthropic se carga a mano y solo cuando hace falta.
+
+   Pedirlo arriba con un import normal parece más limpio, pero si un día
+   no está instalado —o el entorno le falta alguna pieza de Node— la
+   función entera revienta ANTES de ejecutarse, y un pedido pagado se
+   pierde por culpa de un extra opcional. Ya pasó una vez con el almacén
+   de Netlify y costó media hora a ciegas.
+
+   Así, si no carga, se sigue con la tabla de colores y el cliente ni se
+   entera. */
+async function cargaAnthropic() {
+  try {
+    const m = await import('@anthropic-ai/sdk');
+    return m.default || m.Anthropic;
+  } catch (err) {
+    console.error('sin SDK de Anthropic: ' + (err && err.message));
+    return null;
+  }
+}
 
 const SISTEMA = `Eres el ayudante de diseño de PLEA5E, que fabrica placas
 con chip NFC y código QR para que los clientes de un negocio le dejen
@@ -51,11 +73,17 @@ Reglas: no te inventes datos del negocio que no te hayan dado. No pongas
 el logo ni describas dibujos. Si el cliente pide colores concretos,
 mándanlos ellos.`;
 
-/* le pedimos a Claude el brief. Si algo falla, se sigue sin brief. */
-async function pideBrief(encargo) {
-  if (!process.env.ANTHROPIC_API_KEY) return null;
+/* Le pedimos a Claude el brief. Si algo falla —no hay clave, se cae la
+   red, contesta algo que no se entiende— se devuelve null y quien llama
+   tira de la tabla por oficio. No hace falta red de seguridad para las
+   negativas del modelo: cualquier respuesta que no sea el JSON esperado
+   acaba en el mismo sitio, que es la tabla. */
+async function pideBrief(encargo, env) {
+  if (!env.ANTHROPIC_API_KEY) return null;
+  const Anthropic = await cargaAnthropic();
+  if (!Anthropic) return null;
   try {
-    const client = new Anthropic();
+    const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
     const datos = [
       'Negocio: ' + encargo.negocio,
       encargo.lema      ? 'Lema que propone: ' + encargo.lema : '',
@@ -68,13 +96,16 @@ async function pideBrief(encargo) {
 
     const r = await client.messages.create({
       model: 'claude-opus-5',
-      max_tokens: 1200,
-      /* trabajo corto y acotado: no hace falta gastar en pensar mucho */
+      /* Holgado a propósito: es un tope, no un gasto. Ajustado corto, el
+         razonamiento del modelo se come el hueco y la respuesta llega
+         cortada por la mitad. */
+      max_tokens: 8000,
+      /* Elegir tres colores no da para mucho pensar; con esto sale más
+         barato y más rápido. */
       output_config: { effort: 'low' },
       system: SISTEMA,
       messages: [{ role: 'user', content: datos }]
     });
-    /* el contenido es una lista de bloques; nos quedamos con el texto */
     const txt = (r.content || [])
       .filter((b) => b.type === 'text')
       .map((b) => b.text)
@@ -86,10 +117,16 @@ async function pideBrief(encargo) {
   }
 }
 
-async function avisa(encargo, enlace, brief, ref) {
-  const clave = process.env.RESEND_API_KEY;
-  const para  = process.env.CORREO_AVISO;
-  const desde = process.env.CORREO_DE;
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+async function avisa(encargo, enlace, brief, ref, env) {
+  const clave = env.RESEND_API_KEY;
+  const para  = env.CORREO_AVISO;
+  const desde = env.CORREO_DE;
   if (!clave || !para || !desde) return false;
 
   const fila = (k, v) => (v ? `<tr><td style="padding:3px 12px 3px 0;color:#666">${k}</td><td style="padding:3px 0"><b>${esc(v)}</b></td></tr>` : '');
@@ -130,56 +167,56 @@ async function avisa(encargo, enlace, brief, ref) {
   return r.ok;
 }
 
-function esc(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+const JSON_CAB = { 'Content-Type': 'application/json; charset=utf-8' };
 
-exports.handler = async function (event) {
-  const cabeceras = { 'Content-Type': 'application/json; charset=utf-8' };
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: cabeceras, body: '{"error":"solo POST"}' };
-  }
+export async function onRequestPost(context) {
+  const { request, env } = context;
 
   let crudo;
-  try { crudo = JSON.parse(event.body || '{}'); }
-  catch (e) { return { statusCode: 400, headers: cabeceras, body: '{"error":"no entiendo el envío"}' }; }
+  try { crudo = await request.json(); }
+  catch (e) {
+    return new Response('{"error":"no entiendo el envío"}', { status: 400, headers: JSON_CAB });
+  }
 
   /* el cepo para robots: un campo escondido que una persona nunca rellena */
-  if (crudo.web) return { statusCode: 200, headers: cabeceras, body: '{"ok":true}' };
+  if (crudo && crudo.web) {
+    return new Response('{"ok":true}', { status: 200, headers: JSON_CAB });
+  }
 
   const { encargo, faltan } = L.limpia(crudo);
   if (faltan.length) {
-    return { statusCode: 400, headers: cabeceras,
-             body: JSON.stringify({ error: 'Faltan ' + faltan.join(' y ') + '.' }) };
+    return new Response(JSON.stringify({ error: 'Faltan ' + faltan.join(' y ') + '.' }),
+                        { status: 400, headers: JSON_CAB });
   }
 
   const cuando = Date.now();
   const ref = L.referencia(cuando, encargo.negocio);
   encargo.google = L.enlaceResena(encargo.google);
 
-  /* Primero la IA, si hay clave. Si no la hay —o falla, o contesta algo
-     que no se entiende— entra la tabla de colores por oficio, que no
-     cuesta nada y acierta el tono. Así el encargo NUNCA llega sin una
-     propuesta de color: en el peor caso llega con el verde de siempre. */
-  const brief = (await pideBrief(encargo)) || L.coloresPorOficio(encargo);
-  const base = process.env.URL || ('https://' + (event.headers.host || 'plea5e.es'));
+  const brief = (await pideBrief(encargo, env)) || L.coloresPorOficio(encargo);
+  const base = new URL(request.url).origin;
   const enlace = L.enlaceGenerador(base, encargo, brief);
 
   /* Se guarda ANTES de avisar: si el correo falla, el encargo sigue en el
      panel. Al revés se perdería. */
+  let guardado = false;
   try {
-    const store = getStore('encargos');
-    await store.setJSON(String(cuando) + '-' + ref, {
-      ref, cuando, encargo, brief, enlace, estado: 'nuevo'
-    });
+    if (!env.ENCARGOS) throw new Error('falta el almacén ENCARGOS');
+    await env.ENCARGOS.put(String(cuando) + '-' + ref,
+                           JSON.stringify({ ref, cuando, encargo, brief, enlace, estado: 'nuevo' }));
+    guardado = true;
   } catch (err) {
     console.error('guardar: ' + (err && err.message));
   }
 
-  const avisado = await avisa(encargo, enlace, brief, ref);
+  const avisado = await avisa(encargo, enlace, brief, ref, env);
 
-  return { statusCode: 200, headers: cabeceras,
-           body: JSON.stringify({ ok: true, ref: ref, avisado: avisado }) };
-};
+  return new Response(JSON.stringify({ ok: true, ref, avisado, guardado }),
+                      { status: 200, headers: JSON_CAB });
+}
+
+/* Cualquier otro método: fuera. El formulario solo manda POST. */
+export async function onRequest(context) {
+  if (context.request.method === 'POST') return onRequestPost(context);
+  return new Response('{"error":"solo POST"}', { status: 405, headers: JSON_CAB });
+}

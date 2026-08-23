@@ -1266,7 +1266,11 @@
       });
 
       try {
-        var url = '/.netlify/functions/encargo';
+        /* Una sola dirección que vale en los dos sitios: en Cloudflare la
+           sirve functions/api/encargo.js, y en Netlify hay un reenvío en
+           el netlify.toml que la manda a su función. Así mudarse de
+           proveedor no obliga a tocar la web. */
+        var url = '/api/encargo';
         if (navigator.sendBeacon) {
           navigator.sendBeacon(url, new Blob([cuerpo], { type: 'application/json' }));
         } else {
