@@ -219,9 +219,13 @@
         if (r.status === 401) throw new Error('Esa contraseña no es.');
         if (r.status === 500) {
           return r.json().catch(function () { return {}; }).then(function (d) {
-            throw new Error(/PANEL_CLAVE/.test(d.error || '')
-              ? 'Falta poner PANEL_CLAVE en las variables de Netlify.'
-              : 'El servidor ha fallado. Mira los registros de la función en Netlify.');
+            if (/PANEL_CLAVE/.test(d.error || '')) {
+              throw new Error('Falta poner PANEL_CLAVE en las variables de Netlify.');
+            }
+            /* El detalle que manda el servidor, tal cual. Decir solo "el
+               servidor ha fallado" obliga a ir a buscar los registros de
+               Netlify, y eso desde el móvil es una odisea. */
+            throw new Error(d.error || 'El servidor ha fallado y no ha dicho por qué.');
           });
         }
         if (!r.ok) throw new Error('No he podido leer los pedidos (' + r.status + ').');

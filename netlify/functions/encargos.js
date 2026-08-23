@@ -3,7 +3,31 @@
 
 'use strict';
 
-const { getStore } = require('@netlify/blobs');
+/* La libreria se carga a mano y con red debajo. Si se pide arriba con un
+   require normal y no esta instalada, la funcion revienta ANTES de
+   ejecutarse: Netlify contesta un 500 pelado y desde el panel solo se ve
+   "el servidor ha fallado", que no dice nada. Cargandola asi se puede
+   distinguir "falta la libreria" de "el almacen no esta configurado", que
+   son dos problemas con dos arreglos distintos. */
+function abreAlmacen(nombre) {
+  var blobs;
+  try {
+    blobs = require('@netlify/blobs');
+  } catch (err) {
+    var e = new Error('Falta la libreria @netlify/blobs en el despliegue. ' +
+                      'Netlify no ha instalado las dependencias del package.json.');
+    e.causa = 'libreria';
+    throw e;
+  }
+  try {
+    return blobs.getStore(nombre);
+  } catch (err) {
+    var e2 = new Error('El almacen de Netlify (Blobs) no esta disponible: ' +
+                       (err && err.message ? err.message : 'sin detalle'));
+    e2.causa = 'almacen';
+    throw e2;
+  }
+}
 
 /* Comparación en tiempo constante. Con un === normal se puede ir adivinando
    la contraseña midiendo lo que tarda en contestar; es rebuscado, pero
@@ -42,20 +66,22 @@ exports.handler = async function (event) {
       return { statusCode: 400, headers: cabeceras, body: '{"error":"envio raro"}' };
     }
     try {
-      const store = getStore('encargos');
+      const store = abreAlmacen('encargos');
       const uno = await store.get(d.clave, { type: 'json' });
       if (!uno) return { statusCode: 404, headers: cabeceras, body: '{"error":"no esta"}' };
       uno.estado = d.estado;
       await store.setJSON(d.clave, uno);
       return { statusCode: 200, headers: cabeceras, body: '{"ok":true}' };
     } catch (err) {
-      console.error(err && err.message);
-      return { statusCode: 500, headers: cabeceras, body: '{"error":"no se ha podido guardar"}' };
+      const detalle = (err && err.message) || 'sin detalle';
+      console.error(detalle);
+      return { statusCode: 500, headers: cabeceras,
+               body: JSON.stringify({ error: detalle }) };
     }
   }
 
   try {
-    const store = getStore('encargos');
+    const store = abreAlmacen('encargos');
     const { blobs } = await store.list();
     /* la clave empieza por la fecha en milisegundos, así que ordenar por
        clave al revés deja los nuevos arriba sin tener que leerlos */
@@ -67,7 +93,12 @@ exports.handler = async function (event) {
     }
     return { statusCode: 200, headers: cabeceras, body: JSON.stringify({ lista }) };
   } catch (err) {
-    console.error(err && err.message);
-    return { statusCode: 500, headers: cabeceras, body: '{"error":"no se ha podido leer"}' };
+    /* El detalle se devuelve tal cual, y a proposito: aqui solo se llega
+       DESPUES de acertar la contrasena, asi que lo lee el dueno y nadie
+       mas. Sin el detalle, diagnosticar esto es ir a ciegas. */
+    const detalle = (err && err.message) || 'sin detalle';
+    console.error(detalle);
+    return { statusCode: 500, headers: cabeceras,
+             body: JSON.stringify({ error: detalle, causa: (err && err.causa) || 'lectura' }) };
   }
 };
