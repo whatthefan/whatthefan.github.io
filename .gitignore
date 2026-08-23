@@ -1,0 +1,8 @@
+# lo que produce el despliegue, no el codigo
+node_modules/
+.netlify/
+entrega/
+
+# basura de los sistemas operativos
+.DS_Store
+Thumbs.db
