@@ -1,9 +1,12 @@
 {
   "name": "plea5e-web",
   "private": true,
-  "description": "La web de PLEA5E. Las paginas son HTML suelto y no necesitan nada; esto es solo para las funciones de netlify/functions.",
+  "description": "La web de PLEA5E. Las paginas son HTML suelto y no necesitan nada; las dependencias son para las funciones de netlify/functions y para montar el generador de placas.",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.70.0",
     "@netlify/blobs": "^8.1.0"
+  },
+  "devDependencies": {
+    "qrcode-generator": "^1.4.4"
   }
 }

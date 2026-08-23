@@ -2,17 +2,17 @@
    diseño y te manda a ti el correo con el enlace del generador ya montado.
    Netlify la publica sola en  /.netlify/functions/encargo
 
-   Variables de entorno (Netlify > Site configuration > Environment):
-     ANTHROPIC_API_KEY   la clave de la API de Claude
+   Variables de entorno (Netlify > Project configuration > Environment):
+     ANTHROPIC_API_KEY   la clave de la API de Claude (OPCIONAL)
      RESEND_API_KEY      la clave de Resend, para el correo
      CORREO_AVISO        a dónde te llegan los avisos
      CORREO_DE           desde qué dirección salen (dominio verificado)
      PANEL_CLAVE         la contraseña del panel de pedidos
 
-   Si falta ANTHROPIC_API_KEY el encargo se guarda igual, solo que sin
-   brief: lo decides tú en el generador. Si falta RESEND_API_KEY tampoco
-   se pierde nada, se queda en el panel. Que falle un extra no puede
-   costar un pedido. */
+   Si falta ANTHROPIC_API_KEY no pasa nada: los colores los elige la
+   tabla por oficio de lib/encargo.js, que es gratis y acierta el tono.
+   Si falta RESEND_API_KEY tampoco se pierde nada, el encargo se queda en
+   el panel. Que falle un extra no puede costar un pedido. */
 
 'use strict';
 
@@ -159,7 +159,11 @@ exports.handler = async function (event) {
   const ref = L.referencia(cuando, encargo.negocio);
   encargo.google = L.enlaceResena(encargo.google);
 
-  const brief = await pideBrief(encargo);
+  /* Primero la IA, si hay clave. Si no la hay —o falla, o contesta algo
+     que no se entiende— entra la tabla de colores por oficio, que no
+     cuesta nada y acierta el tono. Así el encargo NUNCA llega sin una
+     propuesta de color: en el peor caso llega con el verde de siempre. */
+  const brief = (await pideBrief(encargo)) || L.coloresPorOficio(encargo);
   const base = process.env.URL || ('https://' + (event.headers.host || 'plea5e.es'));
   const enlace = L.enlaceGenerador(base, encargo, brief);
 

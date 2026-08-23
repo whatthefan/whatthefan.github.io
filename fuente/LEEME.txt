@@ -1,0 +1,23 @@
+La tipografia de las placas
+===========================
+
+montserrat-latin.woff2 es el subconjunto latino de Montserrat, la letra
+con la que estan hechas las placas originales. Va metida DENTRO de
+taller/generador.html en base64, no enlazada a Google, y a proposito:
+
+  Si el generador pidiera la letra a un servidor de fuera, el dia que no
+  haya red -o Google cambie la direccion, o simplemente tarde- el
+  navegador dibujaria la placa con otra letra sin decir nada. Eso no se
+  nota mirando la pantalla con prisa; se nota cuando llegan doscientas
+  placas impresas y no son las de siempre.
+
+Montserrat es de Julieta Ulanovsky y colaboradores, y esta bajo la SIL
+Open Font License 1.1. El texto completo de la licencia esta en OFL.txt,
+aqui al lado. La licencia permite meterla dentro de un documento como
+esto; lo que pide a cambio es que la licencia viaje con ella, que es
+justo lo que hace este archivo.
+
+Para rehacer el generador despues de tocar gen/plantilla.html:
+
+    npm install
+    python3 gen/construye.py

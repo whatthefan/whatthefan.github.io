@@ -116,6 +116,139 @@ function leeBrief(txt) {
   return brief;
 }
 
+/* ══════════ colores por oficio, sin IA y sin gastar un euro ══════════
+
+   La IA elige mejor —entiende "queremos algo como el toldo de la
+   puerta"— pero cuesta una cuenta, una tarjeta y saldo. Esto no cuesta
+   nada y acierta el tono general, que es el 90% del trabajo: una
+   cervecería en verde botella y oro, una heladería en rosa y crema, un
+   sushi en negro y rojo.
+
+   Se mira lo que ha escrito el cliente: el nombre del negocio y lo que
+   ha contado. La primera regla que encaja, gana. Si no encaja ninguna,
+   sale el verde de la plantilla de siempre, que nunca queda mal.
+
+   Los colores de la banda son todos OSCUROS a propósito: encima va el
+   título en blanco. Los fondos, claros. Eso no se negocia, es lo que
+   hace que se lea. */
+
+var OFICIOS = [
+  { que: /cervecer|cerveza|birr|brew|tap ?room|lupul/i,
+    banda: '#2E2410', fondo: '#F3EAD6', acento: '#D9A441',
+    lema: 'Cervezas · Tapas', porque: 'Marrón cebada y oro de caña, que es lo que pide una cervecería.' },
+  { que: /bodeg|vinote|vinos|enote|taberna|tasca/i,
+    banda: '#4A1220', fondo: '#F2E7DC', acento: '#C9A227',
+    lema: 'Vinos · Tapas', porque: 'Burdeos de vino tinto con el oro de la marca.' },
+  { que: /pizz|italian|trattor|pasta/i,
+    banda: '#123322', fondo: '#F5EDE0', acento: '#C4342B',
+    lema: 'Pizza · Pasta', porque: 'Verde y rojo de bandera italiana, pero apagados para que no chillen.' },
+  { que: /sushi|japon|ramen|wok|asiátic|asiatic|poke|thai|chin/i,
+    banda: '#14161A', fondo: '#F0EDE6', acento: '#C4342B',
+    lema: '', porque: 'Negro tinta y rojo, la pareja de siempre en la cocina asiática.' },
+  { que: /mexic|taquer|taco|burrit|tex.?mex/i,
+    banda: '#3B1E14', fondo: '#F6EBD5', acento: '#E0A02A',
+    lema: 'Tacos · Cocina mexicana', porque: 'Barro y maíz: los colores de una taquería.' },
+  { que: /kebab|döner|doner|turc|shawarma/i,
+    banda: '#4A1512', fondo: '#F4EADA', acento: '#D9A441',
+    lema: '', porque: 'Rojo oscuro y oro, que es como se rotula un kebab.' },
+  { que: /hamburgues|burger|smash/i,
+    banda: '#2A1A10', fondo: '#F5EBDA', acento: '#D98A1F',
+    lema: 'Hamburguesas', porque: 'Marrón de pan tostado y mostaza.' },
+  { que: /marisquer|marisco|arroce|paella|pescad|chiringuit|playa|beach/i,
+    banda: '#123B52', fondo: '#F1EDE2', acento: '#D9A441',
+    lema: '', porque: 'Azul de mar con el oro de la marca.' },
+  { que: /asador|parrill|brasa|carn|steak|churrasc/i,
+    banda: '#3A1A16', fondo: '#F3EADB', acento: '#C9762A',
+    lema: 'Carnes a la brasa', porque: 'Rojo de brasa y naranja de fuego, en tono apagado.' },
+  { que: /helader|helad|gelat|horchat/i,
+    banda: '#6E2340', fondo: '#FBEFE9', acento: '#E7A0B4',
+    lema: '', porque: 'Rosa fresa sobre crema: es el color que la gente espera de una heladería.' },
+  { que: /pasteler|panader|obrador|horno|repostr|repost|tarta|croissant/i,
+    banda: '#4A3018', fondo: '#F8EFDC', acento: '#D9A441',
+    lema: '', porque: 'Marrón de horno y dorado de masa.' },
+  { que: /cafeter|café|cafe|tostador|coffee|brunch|desayun/i,
+    banda: '#3A2418', fondo: '#F4EADB', acento: '#C08A46',
+    lema: 'Café · Desayunos', porque: 'Marrón de café tostado y leche.' },
+  { que: /coctel|cóctel|cocktail|gin|pub|discotec|copas|club/i,
+    banda: '#241436', fondo: '#F1EDF3', acento: '#C9A227',
+    lema: '', porque: 'Morado de noche con oro: se ve bien con poca luz.' },
+  { que: /peluquer|barber|barbershop/i,
+    banda: '#16181C', fondo: '#F2F0EA', acento: '#C9A227',
+    lema: '', porque: 'Negro y oro, el código de toda la vida de una barbería.' },
+  { que: /estétic|estetic|belleza|uñas|unas|spa|masaj|depilac/i,
+    banda: '#3E2447', fondo: '#F7EFF3', acento: '#C89BB0',
+    lema: '', porque: 'Malva y rosa empolvado, que es el tono del sector.' },
+  { que: /gimnas|crossfit|fitness|box|entrenami|pádel|padel/i,
+    banda: '#1B1F26', fondo: '#EFF1F0', acento: '#7A9A1E',
+    lema: '', porque: 'Gris grafito y verde: se lee de lejos y no parece un restaurante.' },
+  { que: /clínic|clinic|dental|dentist|fisio|podol|veterinar|médic|medic|farmac|óptic|optic/i,
+    banda: '#123B5C', fondo: '#EEF2F4', acento: '#2E9BB5',
+    lema: '', porque: 'Azul sanitario: es lo que da confianza en una consulta.' },
+  { que: /hotel|hostal|apartament|aloja|turism|casa rural/i,
+    banda: '#152A45', fondo: '#F2EEE4', acento: '#C9A227',
+    lema: '', porque: 'Azul marino y oro, el tono de recepción de hotel.' },
+  { que: /florister|flores|jardín|jardin|vivero|planta/i,
+    banda: '#1E3A22', fondo: '#F2F0E4', acento: '#D97A5A',
+    lema: '', porque: 'Verde hoja con un coral de flor.' },
+  { que: /joyer|relojer|orfebr/i,
+    banda: '#16161A', fondo: '#F4F1EA', acento: '#C9A227',
+    lema: '', porque: 'Negro y oro: el fondo desaparece y lo que brilla es la marca.' },
+  { que: /ferreter|taller|mecánic|mecanic|neumátic|neumatic|chapa|pintura|fontaner|electricist/i,
+    banda: '#1E2A38', fondo: '#F0F0EC', acento: '#D97A1F',
+    lema: '', porque: 'Azul acero y naranja de señal: el par que se usa en industria.' },
+  { que: /inmobiliar|abogad|asesor|gestor|seguro|consultor|notar/i,
+    banda: '#182B40', fondo: '#F1F1ED', acento: '#C9A227',
+    lema: '', porque: 'Azul serio y oro discreto, sin adornos.' },
+  { que: /fruter|ultramarin|carnicer|charcuter|colmad|comestibl|herbolar|dietétic|dietetic/i,
+    banda: '#1E3A2A', fondo: '#F3F0E3', acento: '#D9A441',
+    lema: '', porque: 'Verde de mercado con oro, que es la combinación de la plantilla.' },
+  { que: /tatua|tattoo|piercing/i,
+    banda: '#141416', fondo: '#EFEDE8', acento: '#B8342B',
+    lema: '', porque: 'Negro y rojo tinta.' },
+  { que: /librer|papeler|copister|imprent|encuadern/i,
+    banda: '#243A2E', fondo: '#F4F1E6', acento: '#C9A227',
+    lema: '', porque: 'Verde de tapa de libro y oro de letra impresa.' },
+  { que: /boutiqu|moda|ropa|calzado|zapat|tienda|complement/i,
+    banda: '#1A1A1C', fondo: '#F3F1EC', acento: '#C9A227',
+    lema: '', porque: 'Negro y oro: en tienda de moda, cuanto más callado el fondo, mejor.' },
+  { que: /lavander|tintorer|autoescuela|academ|escuela|guarder/i,
+    banda: '#173A55', fondo: '#F0F2F2', acento: '#D9A441',
+    lema: '', porque: 'Azul limpio y oro.' },
+  { que: /restaurant|cocina|menú|menu|comida|cater|bistr/i,
+    banda: '#4A1220', fondo: '#F2E9DC', acento: '#C9A227',
+    lema: 'Cocina · Sobremesa', porque: 'Burdeos y oro, el par clásico de carta de restaurante.' },
+  { que: /\bbar\b|mesón|meson|cafetín|cantina/i,
+    banda: '#192E26', fondo: '#ECE2D3', acento: '#E8C46A',
+    lema: 'Bar · Cocina · Sobremesa', porque: 'El verde botella y el oro de la plantilla de siempre.' }
+];
+
+var POR_DEFECTO = {
+  banda: '#192E26', fondo: '#ECE2D3', acento: '#E8C46A', lema: '',
+  porque: 'No he sabido de qué va el negocio por lo que ha escrito, así que va con el verde y el oro de la plantilla. Cámbialo en el generador si no pega.'
+};
+
+/* Devuelve un brief con la misma forma que el de la IA, para que el
+   resto del camino no tenga que enterarse de cuál de los dos vino. */
+function coloresPorOficio(encargo) {
+  var e = encargo || {};
+  /* ojo con el nombre: 'texto' ya es la función que limpia cadenas ahí
+     arriba, y llamar así a esta variable la tapaba dentro de la función */
+  var donde = [e.negocio, e.lema, e.notas, e.redes].filter(Boolean).join(' ');
+  var elegido = POR_DEFECTO;
+  for (var i = 0; i < OFICIOS.length; i++) {
+    if (OFICIOS[i].que.test(donde)) { elegido = OFICIOS[i]; break; }
+  }
+  return {
+    banda: elegido.banda,
+    fondo: elegido.fondo,
+    acento: elegido.acento,
+    /* si el cliente ya ha propuesto un lema, manda el suyo */
+    lema: texto(e.lema, LIMITES.lema) || elegido.lema || '',
+    titulo: '',
+    porque: elegido.porque
+  };
+}
+
 /* Un identificador corto y legible para nombrar el encargo. No es
    secreto: solo sirve para hablar de él ("el 7K3M2"). */
 function referencia(cuando, negocio) {
@@ -125,5 +258,6 @@ function referencia(cuando, negocio) {
 }
 
 module.exports = { limpia: limpia, enlaceResena: enlaceResena,
+                   coloresPorOficio: coloresPorOficio, OFICIOS: OFICIOS,
                    enlaceGenerador: enlaceGenerador, leeBrief: leeBrief,
                    referencia: referencia, LIMITES: LIMITES, FORMATOS: FORMATOS };
