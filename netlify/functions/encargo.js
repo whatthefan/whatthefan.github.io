@@ -105,6 +105,7 @@ async function avisa(encargo, enlace, brief, ref) {
         ${fila('Redes', encargo.redes)}
         ${fila('Pedido', encargo.formato + ' × ' + encargo.cantidad)}
         ${fila('Google', encargo.google)}
+        ${fila('Pago', encargo.pago)}
       </table>
       ${encargo.notas ? `<p style="margin:14px 0 0"><b>Lo que pide:</b><br>${esc(encargo.notas)}</p>` : ''}
       ${brief && brief.porque ? `<p style="margin:14px 0 0;padding:10px 12px;background:#faf6ec;border-left:3px solid #E8C46A"><b>Propuesta de color:</b> ${esc(brief.porque)}</p>` : ''}

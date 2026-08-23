@@ -1207,6 +1207,11 @@
         : (SENAL_MODO === 'auto' ? 'Paga la fianza para enviarlo' : 'Primero haz el Bizum');
       if (listo) {
         ponerWhats(boton, lineas.join('\n'));
+        /* al bloquearlo le quitamos el target para que no hubiera forma de
+           colarse; ahora que se ha pagado hay que devolvérselo, o WhatsApp
+           se abriría en esta misma pestaña y el cliente perdería la web */
+        boton.setAttribute('target', '_blank');
+        boton.setAttribute('rel', 'noopener');
       } else {
         /* sin href no hay forma de colarse: ni tocando, ni con el
            teclado, ni abriendo en pestaña nueva */
@@ -1219,6 +1224,60 @@
     lineas.push('', '¿Me mandáis la propuesta de diseño?');
     ponerWhats(boton, lineas.join('\n'));
   }
+  /* ---- el aviso al taller ----
+     Cuando el cliente le da al botón, el pedido sale por WhatsApp COMO
+     SIEMPRE —ese mensaje no cambia ni una coma— y además, por detrás, el
+     mismo pedido llega a la web: se guarda, la IA propone los colores
+     dentro de la plantilla de siempre y a ti te entra el correo con el
+     diseño ya montado, listo para mirarlo y mandárselo.
+
+     Reglas de esto:
+       · Va DESPUÉS, no antes. Si esto fallara, el WhatsApp ya ha salido.
+       · Se calla si falla. No hay red, la función no está subida todavía,
+         el servidor tiene un mal día: da igual, el cliente no ve nada
+         raro y el pedido te llega igual por WhatsApp.
+       · Una sola vez por pedido, aunque le dé al botón cinco veces.
+       · sendBeacon está pensado justo para esto: el navegador lo manda
+         aunque la página se vaya en ese mismo instante, que es lo que
+         pasa al saltar a WhatsApp. Si no lo tiene, fetch con keepalive. */
+  (function(){
+    var boton = document.getElementById('rWhats');
+    if (!boton) return;
+    var enviado = false;
+
+    boton.addEventListener('click', function(){
+      if (enviado) return;
+      /* sin href el botón está bloqueado esperando la fianza: eso no es
+         un pedido todavía */
+      if (!boton.getAttribute('href')) return;
+
+      var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
+      if (!v('negocio')) return;      /* la función lo rechazaría igual */
+
+      enviado = true;
+      var cuerpo = JSON.stringify({
+        negocio:  v('negocio'),
+        ciudad:   v('ciudad'),
+        tel:      v('tel'),
+        notas:    v('notas'),
+        formato:  sel.prod,
+        cantidad: sel.cant,
+        pago:     SENAL_REF || (SENAL_MANUAL ? 'dice que pagó, sin referencia' : '')
+      });
+
+      try {
+        var url = '/.netlify/functions/encargo';
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(url, new Blob([cuerpo], { type: 'application/json' }));
+        } else {
+          fetch(url, { method:'POST', keepalive:true,
+                       headers:{ 'Content-Type':'application/json' }, body:cuerpo })
+            .catch(function(){});   /* que un fallo no ensucie la consola */
+        }
+      } catch (e) {}
+    });
+  })();
+
   var opProd = document.getElementById('opProd'), opCant = document.getElementById('opCant');
   opProd.addEventListener('click', function(e){
     var b = e.target.closest('.op'); if (!b) return;

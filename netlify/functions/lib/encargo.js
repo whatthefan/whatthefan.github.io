@@ -7,7 +7,8 @@
 
 var LIMITES = {
   negocio: 80, ciudad: 60, direccion: 160, tel: 24,
-  correo: 120, google: 300, redes: 200, notas: 600, lema: 60
+  correo: 120, google: 300, redes: 200, notas: 600, lema: 60,
+  pago: 80
 };
 var FORMATOS = ['placa', 'stand', 'tarjeta'];
 
@@ -32,6 +33,11 @@ function limpia(crudo) {
     google:    texto(d.google,    LIMITES.google),
     redes:     texto(d.redes,     LIMITES.redes),
     notas:     texto(d.notas,     LIMITES.notas),
+    /* la referencia que devuelve Stripe al volver del pago. No decide
+       nada —quien la manda es el navegador del cliente, o sea que se
+       puede inventar—, solo sirve para cuadrarla contra el panel de
+       Stripe de un vistazo. */
+    pago:      texto(d.pago,      LIMITES.pago),
     formato:   FORMATOS.indexOf(d.formato) > -1 ? d.formato : 'placa',
     cantidad:  Math.max(1, Math.min(500, parseInt(d.cantidad, 10) || 1))
   };
