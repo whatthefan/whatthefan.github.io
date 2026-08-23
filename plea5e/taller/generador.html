@@ -107,6 +107,12 @@ canvas{display:none}
     </div>
 
     <div class="campo">
+      <label for="fLema">Lema (opcional)</label>
+      <input id="fLema" type="text" placeholder="Bar · Cocina · Sobremesa" autocomplete="off">
+      <span class="pista">Sale en pequeño debajo del nombre, con las letras separadas.</span>
+    </div>
+
+    <div class="campo">
       <label for="fGoogle">Enlace de Google o código del sitio</label>
       <input id="fGoogle" type="text" placeholder="ChIJZca-8BbQDQ0RIByaopjYtHY" autocomplete="off">
       <span class="pista">Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección. Lo que pegues es lo que llevará el QR.</span>
@@ -136,16 +142,26 @@ canvas{display:none}
       <label>Color de la banda</label>
       <div class="paleta" id="paleta"><span class="pista" id="paletaVacia">Sube un logo y aquí salen sus colores.</span></div>
       <div class="color-fila">
-        <input type="color" id="fBanda" value="#42639C" aria-label="Color de la banda">
-        <code id="bandaHex">#42639C</code>
+        <input type="color" id="fBanda" value="#192E26" aria-label="Color de la banda">
+        <code id="bandaHex">#192E26</code>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Color del fondo</label>
+      <div class="color-fila">
+        <input type="color" id="fFondo" value="#ECE2D3" aria-label="Color del fondo">
+        <code id="fondoHex">#ECE2D3</code>
+        <button type="button" class="btn btn-fan" id="fondoCrema" style="padding:6px 12px;font-size:.78rem">Crema</button>
+        <button type="button" class="btn btn-fan" id="fondoBlanco" style="padding:6px 12px;font-size:.78rem">Blanco</button>
       </div>
     </div>
 
     <div class="campo">
       <label>Color de las líneas y las estrellas</label>
       <div class="color-fila">
-        <input type="color" id="fAcento" value="#F5EE7A" aria-label="Color del acento">
-        <code id="acentoHex">#F5EE7A</code>
+        <input type="color" id="fAcento" value="#E8C46A" aria-label="Color del acento">
+        <code id="acentoHex">#E8C46A</code>
         <button type="button" class="btn btn-fan" id="acentoAuto" style="padding:6px 12px;font-size:.78rem">Automático</button>
       </div>
     </div>
@@ -160,6 +176,7 @@ canvas{display:none}
       <label class="marca"><input type="checkbox" id="fSangrado"><span>Sangrado de 3 mm (para la imprenta)</span></label>
       <label class="marca"><input type="checkbox" id="fGoogleLogo" checked><span>Poner la G de Google</span></label>
       <label class="marca"><input type="checkbox" id="fNfc" checked><span>Poner el icono de acercar el móvil</span></label>
+      <label class="marca"><input type="checkbox" id="fMarco" checked><span>Poner las esquinas de encuadre</span></label>
     </div>
   </form>
 
@@ -2504,16 +2521,19 @@ var qrcode = function() {
   var est = {
     formato: 'placa',
     negocio: '',
+    lema: '',
     google: '',
     logo: null,          /* Image ya cargada */
     queSeVe: 'ambos',
-    banda: '#42639C',
-    acento: '#F5EE7A',
+    banda:  '#192E26',   /* el verde de la plantilla buena */
+    fondo:  '#ECE2D3',   /* el crema, no blanco: es lo que le da el aire */
+    acento: '#E8C46A',
     acentoAuto: true,
     titulo: '¡Nos encantaría tu reseña en Google!',
     sangrado: false,
     conG: true,
-    conNfc: true
+    conNfc: true,
+    conMarco: true
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -2550,7 +2570,6 @@ var qrcode = function() {
     var l1 = luz(a), l2 = luz(b);
     return (Math.max(l1,l2) + 0.05) / (Math.min(l1,l2) + 0.05);
   }
-  /* el texto de encima: el que más contraste dé */
   function encima(fondo) {
     return contraste(fondo, '#FFFFFF') >= contraste(fondo, '#101216') ? '#FFFFFF' : '#101216';
   }
@@ -2562,11 +2581,21 @@ var qrcode = function() {
     var c = aRGB(hex);
     return aHex(c[0]*(1-k), c[1]*(1-k), c[2]*(1-k));
   }
-  /* el acento automático: un tono claro que se vea sobre la banda. Si la
-     banda ya es clara, tira a oscuro. */
+  /* El acento. La plantilla buena lleva las estrellas y las rayas EN ORO,
+     sea cual sea el color de la banda, y es lo que le da el aire de la
+     marca. Así que primero se prueba el oro; solo si sobre esa banda no se
+     vería (una banda ya dorada, por ejemplo) se cae a un tono sacado de la
+     propia banda. */
+  var ORO_PLACA = '#E8C46A';
   function acentoDe(banda) {
+    if (contraste(banda, ORO_PLACA) >= 3) return ORO_PLACA;
     var claro = aclara(banda, .58), oscuro = oscurece(banda, .55);
     return contraste(banda, claro) >= contraste(banda, oscuro) ? claro : oscuro;
+  }
+  /* el color del texto sobre el fondo crema: su mismo tono pero muy
+     oscuro, que queda mejor que un negro plano */
+  function tintaDe(fondo) {
+    return luz(fondo) > 0.4 ? '#1B1D1F' : '#F4F1EA';
   }
 
   /* ══════════ los colores que trae el logo ══════════ */
@@ -2599,8 +2628,6 @@ var qrcode = function() {
       var s = cubos[k];
       return { hex: aHex(s.r/s.n, s.g/s.n, s.b/s.n), n: s.n, sat: s.sat/s.n };
     });
-    /* ordenamos por cuánto sale Y cuánto color tiene: un gris que ocupa
-       medio logo no es "el color de la marca" */
     lista.sort(function (a, b) { return (b.n * (0.35 + b.sat)) - (a.n * (0.35 + a.sat)); });
 
     var fuera = [];
@@ -2614,11 +2641,9 @@ var qrcode = function() {
     });
     return fuera.map(function (t) { return t.hex; });
   }
-  /* de esos colores, el mejor para la banda: oscuro y con color, que es
-     donde el texto blanco se lee */
   function mejorBanda(lista) {
     var buenos = lista.filter(function (h) { return luz(h) < 0.45; });
-    return (buenos[0] || lista[0] || '#42639C');
+    return (buenos[0] || lista[0] || '#192E26');
   }
 
   /* ══════════ dibujar ══════════ */
@@ -2635,8 +2660,8 @@ var qrcode = function() {
   /* Texto que se encoge hasta caber, partiendo por palabras.
      Mira el ANCHO y también el ALTO: mirando solo el ancho, en la tarjeta
      el título cabía a lo largo pero se salía de la banda por abajo y se
-     leía sobre el blanco. Devuelve las líneas y el tamaño que ha salido. */
-  var INTERLINEA = 1.18;
+     leía sobre el fondo. Devuelve las líneas y el tamaño que ha salido. */
+  var INTERLINEA = 1.16;
   function reparte(txt, ancho, tam, peso, maxLineas, maxAlto) {
     var palabras = String(txt).trim().split(/\s+/).filter(Boolean);
     if (!palabras.length) return { lineas: [], tam: tam, alto: 0 };
@@ -2656,12 +2681,10 @@ var qrcode = function() {
         && (!maxAlto || alto <= maxAlto);
       if (cabe) return { lineas: lineas, tam: t, alto: alto };
     }
-    /* si ni al mínimo cabe, se pinta al mínimo: más vale pequeño que fuera */
     cx.font = peso + ' ' + suelo + 'px Rubik, system-ui, sans-serif';
     return { lineas: [String(txt)], tam: suelo, alto: suelo };
   }
 
-  /* pinta un bloque de líneas centrado en (x, y) */
   function bloque(t, x, y, color, mayus) {
     cx.fillStyle = color;
     cx.font = cx.font.replace(/[\d.]+px/, t.tam + 'px');
@@ -2669,6 +2692,22 @@ var qrcode = function() {
     t.lineas.forEach(function (l, i) {
       cx.fillText(mayus ? l.toUpperCase() : l, x, arranque + i * t.tam * INTERLINEA);
     });
+  }
+
+  /* texto con las letras separadas, para el lema */
+  function espaciado(txt, x, y, tam, sep, color, peso) {
+    cx.save();
+    cx.fillStyle = color;
+    cx.font = (peso || '600') + ' ' + tam + 'px Rubik, system-ui, sans-serif';
+    var letras = String(txt).toUpperCase().split('');
+    var total = letras.reduce(function (a, l) { return a + cx.measureText(l).width + sep; }, 0) - sep;
+    var px = x - total / 2;
+    letras.forEach(function (l) {
+      cx.fillText(l, px + cx.measureText(l).width / 2, y);
+      px += cx.measureText(l).width + sep;
+    });
+    cx.restore();
+    return total;
   }
 
   function estrella(x, y, r, color) {
@@ -2681,22 +2720,28 @@ var qrcode = function() {
     cx.closePath(); cx.fill(); cx.restore();
   }
 
-  /* la fila de cinco estrellas con su rayita a cada lado */
-  function cintaEstrellas(cxx, cy, ancho, r, color) {
-    var hueco = r * 2.5, total = hueco * 4;
-    for (var i = 0; i < 5; i++) estrella(cxx - total/2 + i*hueco, cy, r, color);
-    var raya = (ancho - total - r*4) / 2;
-    if (raya > r) {
-      cx.save();
-      cx.strokeStyle = color; cx.lineWidth = Math.max(1, r * 0.20); cx.lineCap = 'round';
-      cx.beginPath();
-      cx.moveTo(cxx - ancho/2, cy); cx.lineTo(cxx - total/2 - r*1.9, cy);
-      cx.moveTo(cxx + total/2 + r*1.9, cy); cx.lineTo(cxx + ancho/2, cy);
-      cx.stroke(); cx.restore();
-    }
+  /* La cabecera: dos rayas de lado a lado y las cinco estrellas encima,
+     que es como está montada la plantilla buena. Las rayas van a sangre,
+     no se cortan: se cortan solas con el redondeo de la placa. */
+  function rayasYEstrellas(bx, bw, y1, y2, grueso, r, color) {
+    cx.save();
+    cx.strokeStyle = color; cx.lineWidth = grueso; cx.lineCap = 'butt';
+    cx.beginPath();
+    cx.moveTo(bx, y1); cx.lineTo(bx + bw, y1);
+    cx.moveTo(bx, y2); cx.lineTo(bx + bw, y2);
+    cx.stroke();
+    cx.restore();
+    var cy = (y1 + y2) / 2, hueco = r * 2.6, total = hueco * 4;
+    for (var i = 0; i < 5; i++) estrella(bx + bw/2 - total/2 + i*hueco, cy, r, color);
   }
 
-  function dibujaG(x, y, tam) {
+  function dibujaG(x, y, tam, conCirculo, fondoCirculo) {
+    if (conCirculo) {
+      cx.save();
+      cx.fillStyle = fondoCirculo || '#FFFFFF';
+      cx.beginPath(); cx.arc(x, y, tam * 0.86, 0, Math.PI * 2); cx.fill();
+      cx.restore();
+    }
     cx.save();
     cx.translate(x - tam/2, y - tam/2);
     cx.scale(tam / 48, tam / 48);
@@ -2704,49 +2749,109 @@ var qrcode = function() {
     cx.restore();
   }
 
-  /* El icono de "acerca el móvil": las ondas del contactless, las mismas
-     que llevan las tarjetas de crédito, y un teléfono al lado.
-     Va dibujado y no pegado como imagen: así escala a cualquier tamaño sin
-     verse pixelado, que es justo lo que hace falta para imprimir.
-     Las medidas van en fracciones de A (el alto del icono) para que no
-     haya que tocar nada al cambiar de formato. */
+  /* Las cuatro esquinas de encuadre alrededor del icono, como el visor de
+     una cámara. Salen en la plantilla buena y son lo que le dice al
+     cliente "esto de aquí es lo que tienes que tocar". */
+  function esquinas(x, y, w, h, largo, grueso, color) {
+    cx.save();
+    cx.strokeStyle = color; cx.lineWidth = grueso; cx.lineCap = 'butt'; cx.lineJoin = 'miter';
+    [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]]
+      .forEach(function (e) {
+        cx.beginPath();
+        cx.moveTo(e[0] + e[2]*largo, e[1]);
+        cx.lineTo(e[0], e[1]);
+        cx.lineTo(e[0], e[1] + e[3]*largo);
+        cx.stroke();
+      });
+    cx.restore();
+  }
+
+  /* El icono de acercar el móvil, dibujado a mano alzada con trazos: el
+     óvalo del campo de lectura, las ondas dentro y la mano con el
+     teléfono. Es el de la plantilla buena. Todo en fracciones de A (el
+     alto del icono) para que valga a cualquier tamaño y no pixele. */
   function dibujaNfc(x, y, A, color) {
     cx.save();
-    cx.translate(x - A * 0.06, y);          /* centrado a ojo del conjunto */
+    cx.translate(x, y);
     cx.strokeStyle = color; cx.lineCap = 'round'; cx.lineJoin = 'round';
 
-    /* las tres ondas, abriéndose hacia el teléfono */
-    cx.lineWidth = A * 0.052;
+    /* 1. el óvalo del campo de lectura */
+    cx.lineWidth = A * 0.040;
+    cx.beginPath();
+    cx.ellipse(-A * 0.16, 0, A * 0.56, A * 0.44, 0, 0, Math.PI * 2);
+    cx.stroke();
+
+    /* 2. las tres ondas, abriéndose hacia el teléfono. Van DENTRO del
+       óvalo, ocupando su mitad izquierda: el centro de los arcos queda
+       fuera por la izquierda, pero los arcos en sí caen dentro. */
+    cx.lineWidth = A * 0.062;
     for (var i = 0; i < 3; i++) {
       cx.beginPath();
-      cx.arc(-A * 0.56, 0, A * (0.34 + i * 0.155), -Math.PI * 0.27, Math.PI * 0.27);
+      cx.arc(-A * 0.58, 0, A * (0.19 + i * 0.13), -Math.PI * 0.30, Math.PI * 0.30);
       cx.stroke();
     }
 
-    /* el teléfono, un poco girado, como quien lo acerca a la placa */
-    cx.translate(A * 0.30, 0);
-    cx.rotate(0.20);
-    cx.lineWidth = A * 0.048;
-    var w = A * 0.30, hh = A * 0.56, rr = A * 0.07;
+    /* 3. la mano y el teléfono, asomando por el lado derecho del óvalo.
+       Van rellenos de blanco para que tapen el óvalo y las ondas que
+       quedan por detrás: sin ese relleno se ve todo cruzado. */
+    cx.save();
+    cx.translate(A * 0.44, A * 0.02);
+    cx.rotate(0.15);
+
+    /* la mano: un puño visto de canto, sujetando el móvil por abajo */
+    cx.fillStyle = '#FFFFFF';
+    cx.lineWidth = A * 0.040;
     cx.beginPath();
-    cx.moveTo(-w/2 + rr, -hh/2);
-    cx.arcTo( w/2, -hh/2,  w/2,  hh/2, rr);
-    cx.arcTo( w/2,  hh/2, -w/2,  hh/2, rr);
-    cx.arcTo(-w/2,  hh/2, -w/2, -hh/2, rr);
-    cx.arcTo(-w/2, -hh/2,  w/2, -hh/2, rr);
-    cx.closePath(); cx.stroke();
-    /* el altavoz de arriba, que es lo que lo hace leerse como un móvil */
-    cx.lineWidth = A * 0.034;
+    cx.moveTo(-A * 0.26,  A * 0.03);
+    cx.bezierCurveTo(-A * 0.36,  A * 0.13, -A * 0.34,  A * 0.34, -A * 0.16, A * 0.40);
+    cx.bezierCurveTo( A * 0.02,  A * 0.46,  A * 0.32,  A * 0.44,  A * 0.38, A * 0.28);
+    cx.bezierCurveTo( A * 0.43,  A * 0.14,  A * 0.36,  A * 0.02,  A * 0.26, A * -0.02);
+    cx.closePath();
+    cx.fill(); cx.stroke();
+
+    /* los pliegues de los dedos */
+    cx.lineWidth = A * 0.028;
+    for (var f = 0; f < 3; f++) {
+      cx.beginPath();
+      cx.moveTo((-0.145 + f * 0.115) * A, (0.185 + f * 0.022) * A);
+      cx.quadraticCurveTo((-0.105 + f * 0.115) * A, (0.315 + f * 0.016) * A,
+                          (-0.025 + f * 0.115) * A, (0.300 + f * 0.016) * A);
+      cx.stroke();
+    }
+
+    /* el teléfono, por delante de la mano */
+    cx.fillStyle = '#FFFFFF';
+    cx.lineWidth = A * 0.040;
+    var w = A * 0.25, hh = A * 0.50, rr = A * 0.052, cyF = -A * 0.16;
     cx.beginPath();
-    cx.moveTo(-w * 0.17, -hh/2 + A * 0.065);
-    cx.lineTo( w * 0.17, -hh/2 + A * 0.065);
+    cx.moveTo(-w/2 + rr, cyF - hh/2);
+    cx.arcTo( w/2, cyF - hh/2,  w/2, cyF + hh/2, rr);
+    cx.arcTo( w/2, cyF + hh/2, -w/2, cyF + hh/2, rr);
+    cx.arcTo(-w/2, cyF + hh/2, -w/2, cyF - hh/2, rr);
+    cx.arcTo(-w/2, cyF - hh/2,  w/2, cyF - hh/2, rr);
+    cx.closePath();
+    cx.fill(); cx.stroke();
+
+    /* el altavoz de arriba */
+    cx.lineWidth = A * 0.022;
+    cx.beginPath();
+    cx.moveTo(-A * 0.045, cyF - hh/2 + A * 0.052);
+    cx.lineTo( A * 0.045, cyF - hh/2 + A * 0.052);
     cx.stroke();
+
+    /* y el NFC escrito en la pantalla */
+    cx.fillStyle = color;
+    cx.font = '700 ' + (A * 0.095) + 'px Rubik, system-ui, sans-serif';
+    cx.textAlign = 'center'; cx.textBaseline = 'middle';
+    cx.fillText('NFC', 0, cyF + A * 0.02);
     cx.restore();
+
+    cx.restore();
+    cx.textAlign = 'center'; cx.textBaseline = 'middle';
   }
 
   function dibujaQR(txt, x, y, lado, oscuro) {
     if (!txt) {
-      /* sin enlace: un hueco marcado, para que se vea que falta algo */
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.22)'; cx.lineWidth = Math.max(2, lado*0.012);
       cx.setLineDash([lado*0.05, lado*0.04]);
@@ -2754,7 +2859,6 @@ var qrcode = function() {
       cx.setLineDash([]);
       cx.fillStyle = 'rgba(0,0,0,.35)';
       cx.font = '600 ' + (lado*0.085) + 'px Rubik, system-ui, sans-serif';
-      cx.textAlign = 'center'; cx.textBaseline = 'middle';
       cx.fillText('QR', x, y);
       cx.restore();
       return;
@@ -2796,27 +2900,20 @@ var qrcode = function() {
     var W = Math.round(totW * px), H = Math.round(totH * px);
     lienzo.width = W; lienzo.height = H;
 
-    var bx = sang * px, by = sang * px;               /* esquina del área útil */
-    var bw = mmW * px, bh = mmH * px;                 /* área útil */
+    var bx = sang * px, by = sang * px;
+    var bw = mmW * px, bh = mmH * px;
     var radio = Math.min(bw, bh) * 0.045;
 
-    var textoOscuro = '#1D2026';
-    var sobreBanda = encima(est.banda);
-    var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
-
     cx.clearRect(0, 0, W, H);
-    /* si hay sangrado, el fondo se sale por los cuatro lados; si no, el
-       lienzo es justo la placa */
-    cx.fillStyle = '#FFFFFF';
+    cx.fillStyle = est.fondo;
     if (sang) { cx.fillRect(0, 0, W, H); }
     else { redondo(0, 0, W, H, radio); cx.fill(); }
 
     cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-    if (F.tumbado) pintaTumbado(bx, by, bw, bh, acento, sobreBanda, textoOscuro);
-    else           pintaDePie(bx, by, bw, bh, acento, sobreBanda, textoOscuro);
+    if (F.tumbado) pintaTumbado(bx, by, bw, bh, radio);
+    else           pintaDePie(bx, by, bw, bh, radio);
 
-    /* la marca de corte, cuando hay sangrado */
     if (sang) {
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
@@ -2827,112 +2924,150 @@ var qrcode = function() {
     return { W: W, H: H, mm: [totW, totH], dpi: Math.round(px * 25.4) };
   }
 
-  /* ---- placa y expositor: todo en columna ---- */
-  function pintaDePie(bx, by, bw, bh, acento, sobreBanda, oscuro) {
-    var margen = bw * 0.075;
-    var anchoUtil = bw - margen*2;
-
-    /* 1. la banda de arriba */
-    var altoBanda = bh * 0.285;
+  /* La banda de arriba con el borde de abajo curvado: más baja en los
+     lados y más alta en el centro. Medido sobre la plantilla buena: baja
+     al 0,275 del alto en los bordes y sube al 0,248 en el medio. */
+  function banda(bx, by, bw, bh, radio, alto, arco) {
     cx.save();
-    redondo(bx, by, bw, bh, Math.min(bw,bh)*0.045); cx.clip();
-    var grad = cx.createLinearGradient(bx, by, bx + bw, by + altoBanda);
-    grad.addColorStop(0, aclara(est.banda, .10));
-    grad.addColorStop(1, oscurece(est.banda, .18));
+    redondo(bx, by, bw, bh, radio); cx.clip();
+    /* la sombra suave por debajo de la curva, que es lo que hace que
+       parezca papel recortado y no un rectángulo pegado */
+    cx.fillStyle = 'rgba(0,0,0,.07)';
+    cx.beginPath();
+    cx.moveTo(bx, by);
+    cx.lineTo(bx, by + alto + arco*0.55);
+    cx.quadraticCurveTo(bx + bw/2, by + alto - arco*1.45, bx + bw, by + alto + arco*0.55);
+    cx.lineTo(bx + bw, by);
+    cx.closePath(); cx.fill();
+
+    var grad = cx.createLinearGradient(bx, by, bx + bw*0.35, by + alto);
+    grad.addColorStop(0, aclara(est.banda, .09));
+    grad.addColorStop(1, oscurece(est.banda, .12));
     cx.fillStyle = grad;
-    cx.fillRect(bx, by, bw, altoBanda);
+    cx.beginPath();
+    cx.moveTo(bx, by);
+    cx.lineTo(bx, by + alto);
+    cx.quadraticCurveTo(bx + bw/2, by + alto - arco*2, bx + bw, by + alto);
+    cx.lineTo(bx + bw, by);
+    cx.closePath(); cx.fill();
     cx.restore();
+  }
 
-    /* 2. las cinco estrellas */
-    cintaEstrellas(bx + bw/2, by + altoBanda*0.235, anchoUtil, bh*0.021, acento);
+  /* ---- placa y expositor: todo en columna ---- */
+  function pintaDePie(bx, by, bw, bh, radio) {
+    var anchoUtil = bw * 0.86;
+    var centro = bx + bw/2;
+    var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
+    var sobreBanda = encima(est.banda);
+    var tinta = tintaDe(est.fondo);
 
-    /* 3. el texto de la banda, centrado en lo que queda por debajo de las
-       estrellas y sin pasarse de ahí */
-    var huecoY0 = by + altoBanda * 0.38, huecoAlto = altoBanda * 0.54;
-    var t = reparte(est.titulo, anchoUtil * 0.92, bh * 0.056, '800', 3, huecoAlto);
+    /* 1. la banda, con su curva */
+    var altoBanda = bh * 0.275, arco = bh * 0.027;
+    banda(bx, by, bw, bh, radio, altoBanda, arco);
+
+    /* 2. las dos rayas y las cinco estrellas */
+    rayasYEstrellas(bx, bw, by + bh*0.060, by + bh*0.082,
+                    Math.max(1, bh*0.0045), bh*0.021, acento);
+
+    /* 3. el título, centrado en lo que queda de banda */
+    var huecoY0 = by + bh*0.100, huecoAlto = altoBanda - bh*0.115;
+    var t = reparte(est.titulo, anchoUtil*0.90, bh*0.050, '800', 3, huecoAlto);
     cx.font = '800 ' + t.tam + 'px Rubik, system-ui, sans-serif';
-    bloque(t, bx + bw/2, huecoY0 + huecoAlto/2, sobreBanda, true);
+    bloque(t, centro, huecoY0 + huecoAlto/2, sobreBanda, true);
 
-    /* 4. la G de Google */
-    if (est.conG) dibujaG(bx + bw/2, by + bh*0.335, bh*0.062);
+    /* 4. la G, en su círculo, montada sobre la curva */
+    if (est.conG) dibujaG(centro, by + bh*0.293, bh*0.052, true, '#FFFFFF');
 
-    /* 5. la fila del medio: icono a la izquierda, QR a la derecha */
-    var filaY = by + bh*0.515;
-    var ladoQR = Math.min(bw*0.265, bh*0.245);
+    /* 5. la fila del medio: icono encuadrado a la izquierda, QR a la derecha */
+    var filaY = by + bh*0.487;
+    var ladoQR = Math.min(bw*0.28, bh*0.245);
     if (est.conNfc) {
-      dibujaNfc(bx + bw*0.325, filaY, bh*0.165, '#2B2F36');
-      dibujaQR(enlaceQR(), bx + bw*0.675, filaY, ladoQR, '#111318');
+      var icoX = bx + bw*0.30;
+      if (est.conMarco) {
+        esquinas(icoX - bw*0.225, filaY - bh*0.115, bw*0.45, bh*0.23,
+                 bh*0.030, Math.max(1, bh*0.0045), 'rgba(0,0,0,.30)');
+      }
+      dibujaNfc(icoX, filaY, bh*0.135, tinta);
+      dibujaQR(enlaceQR(), bx + bw*0.735, filaY, ladoQR, tinta);
     } else {
-      dibujaQR(enlaceQR(), bx + bw/2, filaY, ladoQR * 1.15, '#111318');
+      if (est.conMarco) {
+        esquinas(centro - ladoQR*0.78, filaY - ladoQR*0.78, ladoQR*1.56, ladoQR*1.56,
+                 bh*0.030, Math.max(1, bh*0.0045), 'rgba(0,0,0,.30)');
+      }
+      dibujaQR(enlaceQR(), centro, filaY, ladoQR*1.12, tinta);
     }
 
     /* 6. la instrucción */
-    var tIns = reparte(instruccion(), anchoUtil * 0.9, bh * 0.037, '700', 2, bh * 0.10);
-    cx.font = '700 ' + tIns.tam + 'px Rubik, system-ui, sans-serif';
-    bloque(tIns, bx + bw/2, by + bh*0.690, oscuro, true);
+    /* a dos líneas a propósito, como el original: cabría en una, pero
+       entonces se mete debajo del QR y se cruzan */
+    var tIns = reparte(instruccion(), anchoUtil*0.58, bh*0.040, '800', 2, bh*0.11);
+    cx.font = '800 ' + tIns.tam + 'px Rubik, system-ui, sans-serif';
+    bloque(tIns, centro, by + bh*0.660, tinta, true);
 
-    /* 7. el logo del cliente y su nombre */
-    zonaCliente(bx, by + bh*0.725, bw, bh*0.145, anchoUtil, oscuro);
+    /* 7. el cliente: logo o nombre, y su lema debajo */
+    var conLema = !!est.lema.trim();
+    zonaCliente(bx, by + bh*0.695, bw, bh*(conLema ? 0.078 : 0.100), anchoUtil, tinta);
+    if (conLema) {
+      espaciado(est.lema.trim(), centro, by + bh*0.786, bh*0.019, bh*0.0075,
+                aclara(tinta, .42), '600');
+    }
 
-    /* 8. abajo del todo, PLEA5E */
-    pie(bx, by + bh*0.912, bw, bh, anchoUtil, acento);
+    /* 8. la firma de PLEA5E y las estrellitas */
+    pie(bx, by + bh*0.828, bw, bh, anchoUtil, acento);
+    minisEstrellas(centro, by + bh*0.866, bh*0.0085, acento);
+
+    /* 9. las estrellas grandes asomando por abajo */
+    adornoAbajo(bx, by, bw, bh, radio, acento);
   }
 
-  /* ---- tarjeta: tumbada, así que el QR se va a un lado ----
-     La tarjeta es la que menos sitio tiene: 85 × 54 mm. Aquí no caben las
-     mismas holguras que en la placa, así que va todo por franjas medidas y
-     nada "a ojo". */
-  function pintaTumbado(bx, by, bw, bh, acento, sobreBanda, oscuro) {
+  /* ---- tarjeta: tumbada, así que el QR se va a un lado ---- */
+  function pintaTumbado(bx, by, bw, bh, radio) {
     var margen = bw * 0.045;
+    var centro = bx + bw/2;
+    var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
+    var sobreBanda = encima(est.banda);
+    var tinta = tintaDe(est.fondo);
 
-    /* 1. la banda */
-    var altoBanda = bh * 0.27;
-    cx.save();
-    redondo(bx, by, bw, bh, Math.min(bw,bh)*0.045); cx.clip();
-    var grad = cx.createLinearGradient(bx, by, bx + bw, by + altoBanda);
-    grad.addColorStop(0, aclara(est.banda, .10));
-    grad.addColorStop(1, oscurece(est.banda, .18));
-    cx.fillStyle = grad;
-    cx.fillRect(bx, by, bw, altoBanda);
-    cx.restore();
+    var altoBanda = bh * 0.30, arco = bh * 0.030;
+    banda(bx, by, bw, bh, radio, altoBanda, arco);
+    rayasYEstrellas(bx, bw, by + bh*0.055, by + bh*0.085,
+                    Math.max(1, bh*0.005), bh*0.027, acento);
 
-    cintaEstrellas(bx + bw/2, by + altoBanda*0.21, bw*0.55, bh*0.028, acento);
-    var huecoY0 = by + altoBanda*0.36, huecoAlto = altoBanda*0.56;
-    var t = reparte(est.titulo, bw*0.88, bh*0.10, '800', 2, huecoAlto);
+    var huecoY0 = by + bh*0.105, huecoAlto = altoBanda - bh*0.125;
+    var t = reparte(est.titulo, bw*0.90, bh*0.095, '800', 2, huecoAlto);
     cx.font = '800 ' + t.tam + 'px Rubik, system-ui, sans-serif';
-    bloque(t, bx + bw/2, huecoY0 + huecoAlto/2, sobreBanda, true);
+    bloque(t, centro, huecoY0 + huecoAlto/2, sobreBanda, true);
 
-    /* 2. el cuerpo: a la derecha el QR, a la izquierda todo lo demás */
-    var pieY  = by + bh*0.915;
-    var cY0   = by + altoBanda;
-    var cAlto = (pieY - bh*0.045) - cY0;
+    var pieY  = by + bh*0.905;
+    var cY0   = by + altoBanda + bh*0.01;
+    var cAlto = (pieY - bh*0.055) - cY0;
 
-    var ladoQR = Math.min(cAlto*0.94, bw*0.31);
+    var ladoQR = Math.min(cAlto*0.98, bw*0.30);
     var qrX = bx + bw - margen - ladoQR/2;
-    dibujaQR(enlaceQR(), qrX, cY0 + cAlto/2, ladoQR, '#111318');
+    dibujaQR(enlaceQR(), qrX, cY0 + cAlto/2, ladoQR, tinta);
 
     var izqW = (qrX - ladoQR/2 - bw*0.035) - (bx + margen);
     var izqX = bx + margen + izqW/2;
 
-    /* fila A: los dos iconos, uno al lado del otro */
-    var filaA = cY0 + cAlto*0.19;
+    var filaA = cY0 + cAlto*0.21;
     if (est.conG && est.conNfc) {
-      dibujaG(izqX - izqW*0.26, filaA, cAlto*0.30);
-      dibujaNfc(izqX + izqW*0.20, filaA, cAlto*0.34, '#2B2F36');
+      dibujaG(izqX - izqW*0.28, filaA, cAlto*0.26, true, '#FFFFFF');
+      dibujaNfc(izqX + izqW*0.18, filaA, cAlto*0.32, tinta);
     } else if (est.conG) {
-      dibujaG(izqX, filaA, cAlto*0.32);
+      dibujaG(izqX, filaA, cAlto*0.30, true, '#FFFFFF');
     } else if (est.conNfc) {
-      dibujaNfc(izqX, filaA, cAlto*0.36, '#2B2F36');
+      dibujaNfc(izqX, filaA, cAlto*0.36, tinta);
     }
 
-    /* fila B: la instrucción */
-    var tIns = reparte(instruccion(), izqW*0.98, cAlto*0.155, '700', 2, cAlto*0.24);
-    cx.font = '700 ' + tIns.tam + 'px Rubik, system-ui, sans-serif';
-    bloque(tIns, izqX, cY0 + cAlto*0.50, oscuro, true);
+    var tIns = reparte(instruccion(), izqW*0.98, cAlto*0.15, '800', 2, cAlto*0.23);
+    cx.font = '800 ' + tIns.tam + 'px Rubik, system-ui, sans-serif';
+    bloque(tIns, izqX, cY0 + cAlto*0.53, tinta, true);
 
-    /* fila C: el cliente */
-    zonaCliente(bx + margen, cY0 + cAlto*0.63, izqW, cAlto*0.36, izqW*0.96, oscuro);
-
+    zonaCliente(bx + margen, cY0 + cAlto*0.66, izqW, cAlto*0.24, izqW*0.96, tinta);
+    if (est.lema.trim()) {
+      espaciado(est.lema.trim(), izqX, cY0 + cAlto*0.955, cAlto*0.075, cAlto*0.028,
+                aclara(tinta, .42), '600');
+    }
     pie(bx, pieY, bw, bh, bw*0.80, acento);
   }
 
@@ -2941,52 +3076,45 @@ var qrcode = function() {
   }
 
   /* el bloque del cliente: logo, nombre, o los dos */
-  function zonaCliente(x, y, ancho, alto, anchoUtil, oscuro) {
+  function zonaCliente(x, y, ancho, alto, anchoUtil, tinta) {
     var ver = est.logo ? est.queSeVe : 'nombre';
     var nombre = est.negocio.trim();
     if (!nombre && ver === 'nombre') return;
 
-    if (ver === 'logo') {
-      meteImagen(est.logo, x + ancho/2, y + alto/2, anchoUtil*0.62, alto*0.95);
+    if (ver === 'logo' || (ver === 'ambos' && !nombre)) {
+      meteImagen(est.logo, x + ancho/2, y + alto/2, anchoUtil*0.70, alto*0.98);
       return;
     }
-    if (ver === 'ambos' && nombre) {
-      meteImagen(est.logo, x + ancho/2, y + alto*0.30, anchoUtil*0.66, alto*0.66);
-      var t1 = reparte(nombre, anchoUtil*0.92, alto*0.30, '700', 1, alto*0.30);
-      cx.fillStyle = oscuro;
+    if (ver === 'ambos') {
+      meteImagen(est.logo, x + ancho/2, y + alto*0.30, anchoUtil*0.62, alto*0.58);
+      var t1 = reparte(nombre, anchoUtil*0.92, alto*0.34, '700', 1, alto*0.34);
+      cx.fillStyle = tinta;
       cx.font = '700 ' + t1.tam + 'px Rubik, system-ui, sans-serif';
-      cx.fillText(t1.lineas[0], x + ancho/2, y + alto*0.86);
+      cx.fillText(t1.lineas[0], x + ancho/2, y + alto*0.83);
       return;
     }
-    if (ver === 'ambos') {   /* hay logo pero no nombre */
-      meteImagen(est.logo, x + ancho/2, y + alto/2, anchoUtil*0.62, alto*0.95);
-      return;
-    }
-    var t2 = reparte(nombre, anchoUtil*0.92, alto*0.52, '700', 2, alto*0.86);
+    var t2 = reparte(nombre, anchoUtil*0.94, alto*0.62, '700', 2, alto*0.95);
     cx.font = '700 ' + t2.tam + 'px Rubik, system-ui, sans-serif';
-    bloque(t2, x + ancho/2, y + alto*0.50, oscuro, false);
+    bloque(t2, x + ancho/2, y + alto*0.50, tinta, false);
   }
 
   /* El pie: la firma de PLEA5E. La raya no cruza el logotipo por detrás:
      se corta justo donde empiezan los brazos de la estrella y sigue al
-     otro lado, que es como está montado en la cabecera de la web. Por eso
-     hace falta saber a qué altura del dibujo cae esa banda: LOGO_LINEA. */
+     otro lado, que es como está montado en la cabecera de la web. */
   function pie(bx, y, bw, bh, anchoUtil, acento) {
-    var ORO   = '#E9BC46';               /* la firma va SIEMPRE en el oro de PLEA5E */
-    /* la raya, medio tono más clara que la estrella: si son el mismo oro
-       exacto se funden y "PLEA5E" deja de leerse */
-    var RAYA  = aclara(ORO, .34);
+    var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
+    var RAYA = aclara(ORO, .18);
     var centro = bx + bw * 0.5;
     var alto = 0, ancho = 0;
     if (logoPlea) {
-      alto = bh * 0.046;
+      alto = bh * 0.042;
       ancho = alto * LOGO_PROP;
-      var tope = anchoUtil * 0.52;
+      var tope = anchoUtil * 0.46;
       if (ancho > tope) { ancho = tope; alto = ancho / LOGO_PROP; }
     }
     cx.save();
     cx.strokeStyle = RAYA;
-    cx.lineWidth = Math.max(1, bh * 0.0030);
+    cx.lineWidth = Math.max(1, bh * 0.0032);
     cx.lineCap = 'butt';
     cx.beginPath();
     if (ancho) {
@@ -3000,6 +3128,26 @@ var qrcode = function() {
     if (logoPlea) {
       cx.drawImage(logoPlea, centro - ancho/2, y - alto * LOGO_LINEA, ancho, alto);
     }
+  }
+
+  /* las cinco estrellitas de debajo de la firma */
+  function minisEstrellas(x, y, r, color) {
+    var hueco = r * 3.1, total = hueco * 4;
+    for (var i = 0; i < 5; i++) estrella(x - total/2 + i*hueco, y, r, color);
+  }
+
+  /* Las estrellas grandes que asoman por el borde de abajo, cortadas por
+     el propio canto de la placa. Van muy claras: son un adorno, no tienen
+     que competir con nada. */
+  function adornoAbajo(bx, by, bw, bh, radio, acento) {
+    cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
+    cx.globalAlpha = 0.28;
+    var r = bh * 0.052, y = by + bh * 1.005;
+    [0.16, 0.50, 0.84].forEach(function (f) {
+      estrella(bx + bw * f, y, r, acento);
+    });
+    cx.restore();
   }
 
   /* Aceptamos las tres formas de dar el sitio: el código a secas, el
@@ -3044,18 +3192,28 @@ var qrcode = function() {
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
 
-  ['fNegocio','fGoogle','fTitulo'].forEach(function (id) {
+  ['fNegocio','fLema','fGoogle','fTitulo'].forEach(function (id) {
     $(id).addEventListener('input', function () {
-      est[{fNegocio:'negocio', fGoogle:'google', fTitulo:'titulo'}[id]] = this.value;
+      est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google', fTitulo:'titulo'}[id]] = this.value;
       refresca();
     });
   });
-  ['fSangrado','fGoogleLogo','fNfc'].forEach(function (id) {
+  ['fSangrado','fGoogleLogo','fNfc','fMarco'].forEach(function (id) {
     $(id).addEventListener('change', function () {
-      est[{fSangrado:'sangrado', fGoogleLogo:'conG', fNfc:'conNfc'}[id]] = this.checked;
+      est[{fSangrado:'sangrado', fGoogleLogo:'conG', fNfc:'conNfc', fMarco:'conMarco'}[id]] = this.checked;
       refresca();
     });
   });
+
+  /* el color del fondo */
+  function ponFondo(hex) {
+    est.fondo = hex.toUpperCase();
+    $('fFondo').value = est.fondo; $('fondoHex').textContent = est.fondo;
+    refresca();
+  }
+  $('fFondo').addEventListener('input', function () { ponFondo(this.value); });
+  $('fondoCrema').addEventListener('click',  function () { ponFondo('#ECE2D3'); });
+  $('fondoBlanco').addEventListener('click', function () { ponFondo('#FFFFFF'); });
 
   $('fBanda').addEventListener('input', function () {
     est.banda = this.value.toUpperCase();

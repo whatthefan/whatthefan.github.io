@@ -170,12 +170,23 @@ dibuja la placa terminada, lista para ensenarsela al cliente o para
 mandarla a imprimir. Los tres formatos: placa 90x90, expositor 76x118
 y tarjeta 85x54.
 
+LA PLANTILLA
+Es la buena: banda verde oscuro con el borde de abajo curvado, fondo
+crema (no blanco), dos rayas de oro con las cinco estrellas encima, la G
+de Google en su circulo blanco montada sobre la curva, las esquinas de
+encuadre alrededor del icono, el nombre con su lema debajo, y abajo la
+firma de PLEA5E con sus cinco estrellitas y las estrellas grandes
+asomando por el canto.
+
+Todo eso sale de una sola cosa que puedes tocar: los tres colores
+(banda, fondo y acento). El resto lo coloca solo.
+
 LO QUE HACE SOLO
   - Saca los colores del logo que subas y te los pone como botones.
     Elige de entrada el mas oscuro con color, que es donde el texto
     blanco se lee. Si no te convence, tocas otro o eliges el tuyo.
-  - Calcula el color de las estrellas y las rayas a partir del de la
-    banda, para que siempre haya contraste.
+  - Pone las estrellas y las rayas EN ORO, que es lo de la plantilla, y
+    solo se sale de ahi si sobre esa banda el oro no se veria.
   - Encoge el texto hasta que quepa, a lo ancho y a lo alto. Da igual
     que el bar se llame "El Rincon de Manolo y sus Hijos": cabe.
   - Monta el QR con correccion de errores alta, la que aguanta que la
