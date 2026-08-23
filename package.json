@@ -1,11 +1,16 @@
 {
   "name": "plea5e-web",
   "private": true,
-  "description": "La web de PLEA5E. Las paginas son HTML suelto y no necesitan nada; las dependencias son para las funciones de functions/api y para montar el generador de placas.",
+  "description": "La web de PLEA5E. Las paginas de public/ son HTML suelto y no necesitan nada; las dependencias son para el Worker de src/ y para montar el generador de placas.",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "generador": "python3 gen/construye.py"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.70.0"
   },
   "devDependencies": {
-    "qrcode-generator": "^1.4.4"
+    "qrcode-generator": "^1.4.4",
+    "wrangler": "^4.0.0"
   }
 }

@@ -1,8 +1,7 @@
 /* Recibe el encargo del cliente, lo guarda, elige los colores y te manda
    el correo con el enlace del generador ya montado.
 
-   Cloudflare Pages publica esto solo en  /api/encargo , por estar en
-   functions/api/encargo.js. No hay que configurar ninguna ruta.
+   La sirve el Worker de src/index.js en  /api/encargo .
 
    ── Lo que necesita, y lo que pasa si falta ──────────────────────────
 
@@ -20,7 +19,7 @@
    pedido. Por eso se guarda antes de avisar, y por eso cada paso va en
    su propio try. */
 
-import * as L from '../../lib/encargo.mjs';
+import * as L from '../lib/encargo.mjs';
 
 /* El SDK de Anthropic se carga a mano y solo cuando hace falta.
 

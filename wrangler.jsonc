@@ -1,0 +1,33 @@
+{
+  // La configuracion del Worker. Cloudflare la lee al desplegar; no hay
+  // que tocar nada en el panel salvo las variables y el almacen.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "plea5e",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-01",
+
+  // Lo pide la libreria de Anthropic, que usa piezas de Node. Sin esto,
+  // la IA no arranca (y los colores los pondria la tabla, que tampoco
+  // seria un drama, pero mejor que funcione).
+  "compatibility_flags": ["nodejs_compat"],
+
+  // La web entera. Todo lo que no sea /api/... sale de aqui, servido por
+  // Cloudflare desde el sitio mas cercano al cliente.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+
+  // El almacen de pedidos (KV) NO va aqui todavia: hace falta el
+  // identificador que da Cloudflare al crearlo, y hasta entonces un
+  // valor inventado haria fallar el despliegue entero. Se anade despues,
+  // cuando exista:
+  //
+  //   "kv_namespaces": [
+  //     { "binding": "ENCARGOS", "id": "el-identificador-que-te-den" }
+  //   ]
+  //
+  // Mientras no este, la web y el generador funcionan igual; lo unico
+  // que no funciona es el panel, y lo dice con esas palabras.
+  "observability": { "enabled": true }
+}

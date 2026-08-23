@@ -10,13 +10,18 @@ import io, json, os, re, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
-SALIDA = os.path.join(RAIZ, 'zip', 'taller', 'generador.html')
+SALIDA = os.path.join(RAIZ, 'public', 'taller', 'generador.html')
 
 h = io.open(os.path.join(AQUI, 'plantilla.html'), encoding='utf-8').read()
 
 # ── la librería de QR (MIT, de Kazuhiko Arase) ──
-qr = io.open(os.path.join(RAIZ, 'node_modules', 'qrcode-generator', 'dist', 'qrcode.js'),
-             encoding='utf-8').read()
+# segun la version, el paquete pone el archivo en la raiz o en dist/
+CANDIDATOS = [os.path.join(RAIZ, 'node_modules', 'qrcode-generator', 'qrcode.js'),
+              os.path.join(RAIZ, 'node_modules', 'qrcode-generator', 'dist', 'qrcode.js')]
+FUENTE_QR = next((p for p in CANDIDATOS if os.path.exists(p)), None)
+assert FUENTE_QR, ('no encuentro la libreria de QR. Ejecuta npm install. '
+                   'He mirado en:\n  ' + '\n  '.join(CANDIDATOS))
+qr = io.open(FUENTE_QR, encoding='utf-8').read()
 assert 'var qrcode = function()' in qr, 'la libreria de QR no es la que espero'
 assert h.count('/*__QR__*/') == 1
 h = h.replace('/*__QR__*/', '\n' + qr + '\n')
@@ -25,7 +30,7 @@ h = h.replace('/*__QR__*/', '\n' + qr + '\n')
 # OJO: va el de LETRAS OSCURAS. El de la web las lleva blancas, porque allí
 # se apoya sobre el fondo negro; sobre la placa, que es blanca, esas letras
 # desaparecen y solo queda la estrella. Se ve raro y cuesta darse cuenta.
-FUENTE = os.path.join(RAIZ, 'zip', 'marca', 'marca-plea5e-claro.svg')
+FUENTE = os.path.join(RAIZ, 'public', 'marca', 'marca-plea5e-claro.svg')
 web = io.open(FUENTE, encoding='utf-8').read()
 assert '#FFFFFF' not in web, 'este logotipo lleva letras blancas: sobre la placa no se verían'
 # Nos quedamos SOLO con lo de dentro. Si arrastramos también los atributos

@@ -4,7 +4,7 @@
 # siga en pie en Netlify mientras dure la mudanza; el dia que el dominio
 # apunte a Cloudflare, se puede borrar.
 [build]
-  publish = "."
+  publish = "public"
 
 # El taller es para ti, no para los clientes. Ademas de estar fuera del
 # robots.txt, aqui se le dice a los buscadores que no lo indexen aunque

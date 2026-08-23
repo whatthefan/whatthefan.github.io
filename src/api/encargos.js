@@ -1,7 +1,7 @@
 /* Lo que lee y actualiza el panel de pedidos. Pide contraseña: sin ella
    no devuelve nada.
 
-   Cloudflare Pages lo publica solo en  /api/encargos .
+   La sirve el Worker de src/index.js en  /api/encargos .
 
    Necesita:
      PANEL_CLAVE   la contraseña del panel
@@ -46,7 +46,8 @@ export async function onRequest(context) {
   if (!env.ENCARGOS) {
     return responde({
       error: 'El almacén de pedidos no está conectado. En Cloudflare: ' +
-             'Settings → Bindings → añadir un KV namespace con el nombre ENCARGOS.'
+             'el Worker → Settings → Bindings → añadir un KV namespace ' +
+             'con el nombre de variable ENCARGOS.'
     }, 500);
   }
 

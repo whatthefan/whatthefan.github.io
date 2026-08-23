@@ -1,91 +1,111 @@
-MUDAR PLEA5E A CLOUDFLARE PAGES
-===============================
+MUDAR PLEA5E A CLOUDFLARE
+=========================
 
 Por que nos mudamos
 -------------------
 Netlify paso a un sistema de creditos: cuando se agotan, la web sigue
-online pero no se puede publicar nada hasta el mes siguiente. Cloudflare
-Pages no tiene saldo que se agote: tiene topes diarios que se reinician
-solos, y son tan altos que este negocio no los va a rozar.
+online pero no se puede publicar nada hasta el mes siguiente. Nos dejo
+tirados a mitad de arreglar el panel. Cloudflare no tiene saldo que se
+agote: tiene topes diarios que se reinician solos, y son tan altos que
+este negocio no los va a rozar.
+
+Va como Worker, no como Pages
+-----------------------------
+Cloudflare tenia dos productos: Pages para webs y Workers para codigo.
+Ahora empuja todo a Workers, y el panel ya ni ofrece Pages cuando
+conectas un repositorio. Asi que el proyecto esta montado como Worker:
+src/index.js recibe TODAS las peticiones, atiende las dos de /api/... y
+el resto se las pide a public/, que son los archivos de la web.
 
 Lo que hay que hacer, por orden
 -------------------------------
 
 1. CREAR EL PROYECTO
-   dash.cloudflare.com -> Workers & Pages -> Create -> Pages ->
-   Connect to Git -> elegir el repositorio.
+   dash.cloudflare.com -> Workers & Pages -> Create -> Connect to Git ->
+   elegir el repositorio.
 
-   Ajustes de construccion:
-     Framework preset .......  None
-     Build command ..........  npm install
-     Build output directory .  /            (la raiz, tal cual)
+   En la pantalla de ajustes:
+     Project name ......  plea5e          <- IMPORTANTE, ver abajo
+     Build command .....  (vacio)
+     Deploy command ....  npx wrangler deploy
+     Root directory ....  /
 
-   El "npm install" no compila nada: solo baja la libreria de la IA para
-   que la funcion la encuentre. Las paginas son HTML suelto.
+   El nombre tiene que ser "plea5e" porque es el que lleva escrito el
+   wrangler.jsonc. Si no coinciden, el despliegue se queja.
 
-2. EL ALMACEN DE PEDIDOS
-   Sin esto el panel no tiene donde guardar nada.
+   No hace falta build command: Cloudflare instala las dependencias solo
+   al ver el package.json, y las paginas son HTML suelto.
 
-   a) Workers & Pages -> KV -> Create namespace.
-      Nombre: encargos-plea5e   (el nombre da igual)
+2. PROBAR ANTES DE TOCAR EL DOMINIO
+   Cloudflare te da una direccion tipo  plea5e.<lo-que-sea>.workers.dev
+   Comprueba ahi:
+     /                          la web
+     /taller/generador.html     el generador de placas
+     /taller/pedidos.html       el panel
 
-   b) En el proyecto de Pages -> Settings -> Bindings ->
-      Add -> KV namespace
-        Variable name ....  ENCARGOS      <- ESTE nombre SI importa
-        KV namespace .....  el que acabas de crear
+   La web y el generador tienen que ir a la primera. El panel dira que
+   el almacen no esta conectado: normal, es el paso 3.
 
-   Si el nombre de la variable no es exactamente ENCARGOS, el panel
-   dira que el almacen no esta conectado.
+3. EL ALMACEN DE PEDIDOS
+   a) Storage & Databases -> KV -> Create.
+      Nombre: encargos-plea5e  (el nombre da igual)
+      Copia el IDENTIFICADOR que te da: una linea larga de letras y
+      numeros. No es un secreto, es solo un identificador.
 
-3. LAS VARIABLES
-   Settings -> Variables and Secrets. Las mismas de siempre:
+   b) Pegalo en wrangler.jsonc, donde estan las instrucciones puestas en
+      comentario. Queda asi:
+
+         "kv_namespaces": [
+           { "binding": "ENCARGOS", "id": "aqui-el-identificador" }
+         ]
+
+      Si no te apanas editando en el movil, mandamelo y lo pongo yo.
+
+4. LAS VARIABLES
+   El Worker -> Settings -> Variables and Secrets:
 
      PANEL_CLAVE .........  la contrasena del panel
      RESEND_API_KEY ......  la clave de Resend (el correo)
      CORREO_AVISO ........  a donde te llegan los avisos
      CORREO_DE ...........  onboarding@resend.dev
      ANTHROPIC_API_KEY ...  OPCIONAL. Sin ella los colores los elige la
-                            tabla por oficio de lib/encargo.mjs, gratis.
+                            tabla por oficio de src/lib/encargo.mjs,
+                            gratis.
 
-   Marcalas como "Secret" salvo los dos correos.
+   Marcalas como Secret salvo los dos correos.
 
-4. COMPATIBILIDAD CON NODE
-   Settings -> Runtime -> Compatibility flags -> anadir:  nodejs_compat
-   Lo pide la libreria de Anthropic. Si no la usas, tampoco estorba.
+5. EL DOMINIO, LO ULTIMO
+   El Worker -> Settings -> Domains & Routes -> Add -> Custom domain ->
+   plea5e.es
 
-5. PROBAR ANTES DE TOCAR EL DOMINIO
-   Cloudflare te da una direccion tipo  plea5e.pages.dev . Comprueba ahi:
-     /                          la web
-     /taller/generador.html     el generador de placas
-     /taller/pedidos.html       el panel, con la contrasena
-
-   Si el panel entra y dice "Todavia no ha entrado ningun pedido", esta
-   todo bien. Si dice otra cosa, el mensaje explica que falta.
-
-6. EL DOMINIO, LO ULTIMO
-   Custom domains -> Set up a domain -> plea5e.es
    Hasta este paso, plea5e.es sigue sirviendose desde Netlify y no se
-   entera nadie. Si algo sale mal en los pasos 1 a 5, no ha pasado nada.
+   entera nadie. Si algo sale mal en los pasos 1 a 4, no ha pasado nada.
 
 Que se queda en Netlify
 -----------------------
-Nada importante. El netlify.toml sigue en el repositorio para que
-plea5e.es aguante en pie mientras dure la mudanza. El dia que el dominio
-apunte a Cloudflare, se puede borrar ese archivo.
+Nada importante. El netlify.toml sigue aqui para que plea5e.es aguante
+en pie mientras dure la mudanza. El dia que el dominio apunte a
+Cloudflare, se puede borrar ese archivo.
 
-Donde esta cada cosa ahora
---------------------------
-  functions/api/encargo.js    recibe el pedido, elige colores, guarda,
-                              manda el correo
-  functions/api/encargos.js   lo que lee y actualiza el panel
-  lib/encargo.mjs             la logica que comparten los dos: validar,
-                              montar el enlace del generador y la tabla
-                              de colores por oficio
-  _headers                    el "no me indexes" del taller
-  taller/generador.html       el generador de placas
-  taller/pedidos.html         el panel
-  gen/                        el codigo fuente del generador
-  fuente/                     la tipografia Montserrat y su licencia
+Donde esta cada cosa
+--------------------
+  wrangler.jsonc          la configuracion del Worker
+  src/index.js            reparte: /api/... a las funciones, el resto a
+                          los archivos
+  src/api/encargo.js      recibe el pedido, elige colores, guarda, manda
+                          el correo
+  src/api/encargos.js     lo que lee y actualiza el panel
+  src/lib/encargo.mjs     la logica que comparten: validar, montar el
+                          enlace del generador y la tabla de colores por
+                          oficio
+  public/                 la web entera
+  public/_headers         el "no me indexes" del taller
+  public/taller/          el generador y el panel
+  gen/                    el codigo fuente del generador de placas
+  fuente/                 la tipografia Montserrat y su licencia
 
 Para rehacer el generador despues de tocar gen/plantilla.html:
   npm install && python3 gen/construye.py
+
+Para comprobar que el despliegue va a compilar, sin desplegar:
+  npx wrangler deploy --dry-run

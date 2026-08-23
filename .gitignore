@@ -1,6 +1,7 @@
 # lo que produce el despliegue, no el codigo
 node_modules/
 .netlify/
+.wrangler/
 entrega/
 
 # basura de los sistemas operativos
