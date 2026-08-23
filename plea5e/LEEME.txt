@@ -286,8 +286,13 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    Esa fecha es LO UNICO que hay que tocar. De ahi salen solas tres
    cosas, y por eso no pueden contradecirse entre ellas:
 
-       - el contador de la portada y el del ticket del pedido
-         (dias : horas : min : seg, corriendo de verdad)
+       - las dos cuentas atras: una encima de las tres fichas de
+         producto y otra dentro del ticket del pedido. Son una linea
+         chiquita, del tipo "OFERTA DE LANZAMIENTO acaba en 38d 23h
+         54m 12s", a proposito: estuvo un rato siendo una caja grande
+         en la portada y lo que hacia era empujar las fichas 186 px
+         hacia abajo. El que entra tiene que ver lo que vendes, no un
+         reloj.
        - la cinta dorada de arriba, donde pone "Acaba el 30 de
          septiembre"
        - la linea de las condiciones de venta: "Los precios de
@@ -312,8 +317,9 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
           fichas de producto y quita los <span class="antes"> y
           <span class="ahorro">.
 
-   En las ultimas 48 horas el contador se pone naranja solo, para meter
-   un poco de prisa sin gritar.
+   En las ultimas 48 horas las dos lineas se ponen naranjas solas, para
+   meter un poco de prisa sin gritar. Y si pasas el raton por encima sale
+   la fecha entera.
 
    OJO CON ALARGARLA SIEMPRE: si la fecha se mueve cada mes, deja de ser
    una oferta y pasa a ser el precio de siempre con un reloj al lado.

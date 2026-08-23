@@ -1027,38 +1027,28 @@ td .destaca{color:var(--oro);font-weight:700}
    contador y el texto legal no pueden decir tres fechas distintas.
    Cuando la fecha pasa, el JS pone .sin-oferta en el <html> y todo esto
    desaparece solo: nadie ve "quedan -3 dias". */
-.reloj{display:flex;flex-direction:column;gap:10px;align-items:flex-start;text-align:left;
-  margin-top:20px;padding:15px 17px;border-radius:var(--r);
-  border:1px solid rgba(233,188,70,.34);
-  background:linear-gradient(180deg,rgba(233,188,70,.13),rgba(233,188,70,.04))}
-.reloj-etq{display:flex;align-items:flex-start;gap:8px;font-size:.71rem;font-weight:700;
-  line-height:1.35;letter-spacing:.13em;text-transform:uppercase;color:var(--oro)}
-.reloj-etq::before{content:"";width:6px;height:6px;flex:none;margin-top:.28em;border-radius:50%;
-  background:var(--oro);
+/* Una sola linea y punto. Estuvo un rato siendo una caja grande en la
+   portada y lo que hacia era empujar las fichas de producto fuera de la
+   pantalla: el que entra tiene que ver lo que vendes, no un reloj. */
+.reloj-min{display:inline-flex;align-items:center;flex-wrap:wrap;gap:0 7px;
+  padding:5px 11px 5px 10px;border-radius:999px;
+  font-size:.72rem;line-height:1.6;font-weight:600;color:var(--txt-2);
+  background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.3)}
+.reloj-min .rm-pt{width:5px;height:5px;flex:none;border-radius:50%;background:var(--oro);
   box-shadow:0 0 0 0 rgba(233,188,70,.55);animation:relojLatir 1.8s ease-out infinite}
-@keyframes relojLatir{to{box-shadow:0 0 0 9px rgba(233,188,70,0)}}
-.reloj-caja{display:flex;align-items:flex-start;gap:7px}
-.reloj .ud{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:56px;
-  padding:9px 7px 7px;border-radius:12px;background:rgba(6,8,14,.55);border:1px solid var(--borde)}
-.reloj .ud b{font-family:"Anton",sans-serif;font-weight:400;font-size:1.6rem;line-height:1;
-  color:var(--txt);font-variant-numeric:tabular-nums;letter-spacing:.03em}
-.reloj .ud i{font-style:normal;font-size:.58rem;font-weight:700;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--txt-3)}
-.reloj .sep{align-self:flex-start;margin-top:11px;font-size:1.1rem;font-weight:700;color:var(--oro-os)}
-.reloj-pie{font-size:.77rem;line-height:1.5;color:var(--txt-2)}
-/* las ultimas 48 horas se ven distintas, sin ponerse a gritar */
-.reloj.urge{border-color:rgba(226,106,80,.5);
-  background:linear-gradient(180deg,rgba(226,106,80,.14),rgba(226,106,80,.04))}
-.reloj.urge .reloj-etq,.reloj.urge .sep{color:#E8836A}
-.reloj.urge .reloj-etq::before{background:#E8836A;box-shadow:0 0 0 0 rgba(232,131,106,.55)}
-/* el que va dentro del ticket del pedido: mas plano y a todo lo ancho */
-.reloj.mini{margin:16px 0 0;padding:12px 13px;gap:8px;align-items:stretch;width:100%;align-self:stretch}
-.reloj.mini .reloj-caja{gap:5px}
-.reloj.mini .ud{flex:1;min-width:0;padding:6px 3px 5px}
-.reloj.mini .ud b{font-size:1.16rem}
-.reloj.mini .sep{margin-top:8px;font-size:.95rem}
-.reloj.mini .reloj-pie{display:none}
-@media (prefers-reduced-motion:reduce){.reloj-etq::before{animation:none}}
+@keyframes relojLatir{to{box-shadow:0 0 0 8px rgba(233,188,70,0)}}
+.reloj-min .rm-etq{font-size:.65rem;font-weight:800;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--oro)}
+.reloj-min .rm-cuenta{white-space:nowrap;font-variant-numeric:tabular-nums}
+.reloj-min .rm-cuenta b{color:var(--txt);font-weight:700}
+/* las ultimas 48 horas, sin ponerse a gritar */
+.reloj-min.urge{border-color:rgba(226,106,80,.5);background:rgba(226,106,80,.11)}
+.reloj-min.urge .rm-etq{color:#E8836A}
+.reloj-min.urge .rm-pt{background:#E8836A;box-shadow:0 0 0 0 rgba(232,131,106,.55)}
+/* donde se apoya: debajo del texto de la seccion y dentro del ticket */
+.enc .reloj-min{margin-top:14px}
+.lado-b .reloj-min{margin-top:14px}
+@media (prefers-reduced-motion:reduce){.reloj-min .rm-pt{animation:none}}
 /* con la oferta terminada no queda ni la cinta ni el contador */
 html.sin-oferta .cinta{display:none}
 
@@ -1499,7 +1489,6 @@ body::after{
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Envío incluido</span>
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Sin cuotas ni apps</span>
         </div>
-        <div class="reloj" data-reloj hidden></div>
         <div class="acciones">
           <a class="btn btn-oro" href="#pedido">Pedirlo ahora</a>
           <a class="btn btn-fan" href="#productos">Ver productos y precios</a>
@@ -1517,6 +1506,7 @@ body::after{
       <span class="etq">Qué te llevas</span>
       <h2>Tres formatos<br>de placa NFC</h2>
       <p>Todos llevan chip NFC programado y código QR impreso, y se diseñan de cero con tu marca. Casi todos empiezan por la placa de mesa; debajo de cada uno pone para qué local va mejor.</p>
+      <span class="reloj-min" data-reloj hidden></span>
     </div>
 
     <p class="desliza"><svg width="14" height="14" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg> Desliza para verlos</p>
@@ -1640,7 +1630,9 @@ body::after{
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Envío gratis a península</li>
           <li id="incFianzaLi" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span>La fianza de <b id="incFianza">25 €</b> va dentro del precio</span></li>
         </ul>
-        <div class="reloj mini" data-reloj hidden></div>
+        <!-- aquí la columna es estrecha: etiqueta corta para que no se
+             parta en dos líneas -->
+        <span class="reloj-min corto" data-reloj hidden></span>
         <!-- La fianza va ANTES del WhatsApp: primero se paga, y solo
              entonces se abre el chat con el pedido escrito. El bloque
              entero se oculta si no hay número de Bizum en la
@@ -6144,7 +6136,8 @@ three/build/three.module.js:
 
   /* ---- la cinta dorada y la cuenta atrás ----
      Un solo reloj para toda la página: se pinta en cada elemento que
-     lleve data-reloj (la portada y el ticket del pedido). */
+     lleve data-reloj: una l\u00ednea encima de las fichas de producto y
+     otra dentro del ticket del pedido. Peque\u00f1as a prop\u00f3sito. */
   (function(){
     var relojes = [].slice.call(document.querySelectorAll('[data-reloj]'));
     var cinta   = document.getElementById('cinta');
@@ -6170,20 +6163,22 @@ three/build/three.module.js:
       if (cinta) cinta.classList.add('rodando');
     }
 
-    var HUECOS = [['d','d\u00edas'], ['h','horas'], ['m','min'], ['s','seg']];
+    var HUECOS = [['d','d'], ['h','h'], ['m','m'], ['s','s']];
     relojes.forEach(function(r){
       r.innerHTML =
-        '<span class="reloj-etq">' +
-          (r.classList.contains('mini') ? 'La oferta acaba en' : 'La oferta de lanzamiento acaba en') +
+        '<span class="rm-pt" aria-hidden="true"></span>' +
+        '<span class="rm-etq">' +
+          (r.classList.contains('corto') ? 'Oferta' : 'Oferta de lanzamiento') +
         '</span>' +
-        '<span class="reloj-caja" role="timer">' +
-          HUECOS.map(function(u, i){
-            return (i ? '<span class="sep" aria-hidden="true">:</span>' : '') +
-                   '<span class="ud"><b data-r="' + u[0] + '">--</b><i>' + u[1] + '</i></span>';
-          }).join('') +
-        '</span>' +
-        '<span class="reloj-pie">Hasta el ' + OFERTA.dia +
-          '. Despu\u00e9s vuelven los precios de siempre.</span>';
+        '<span class="rm-cuenta" role="timer">acaba en ' +
+          HUECOS.map(function(u){
+            return '<b data-r="' + u[0] + '">--</b>' + u[1];
+          }).join(' ') +
+        '</span>';
+      /* la fecha entera, para quien pase el rat\u00f3n por encima o
+         navegue con lector de pantalla */
+      r.title = 'La oferta de lanzamiento acaba el ' + OFERTA.dia +
+                '. Despu\u00e9s vuelven los precios de siempre.';
       r.hidden = false;
     });
 
