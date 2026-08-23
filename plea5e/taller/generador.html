@@ -185,6 +185,7 @@ canvas{display:none}
     <div class="acciones">
       <button type="button" class="btn btn-oro" id="descarga">Descargar PNG</button>
       <button type="button" class="btn btn-fan" id="copia">Copiar imagen</button>
+      <button type="button" class="btn btn-fan" id="copiaEnlace">Copiar enlace</button>
       <span class="ficha" id="ficha"></span>
     </div>
     <p class="aviso" id="avisoQR">Escribe el enlace de Google para que salga el QR. Sin él la placa se dibuja igual, pero con un hueco.</p>
@@ -3335,6 +3336,86 @@ var qrcode = function() {
       'descargar sí funciona.';
   }
 
+  /* ══════════ el encargo viaja dentro del enlace ══════════
+
+     Esta es la pieza que engancha el generador con el resto: un enlace
+     del tipo
+
+         .../generador.html#n=Morro+Fino&l=Bar+Cocina&g=ChIJ...
+
+     abre el generador con todo puesto y la placa ya dibujada. No hace
+     falta escribir nada.
+
+     Va detrás de la almohadilla (#) y no detrás de la interrogación a
+     propósito: lo que va detrás de # NO sale del navegador, no viaja en
+     la petición ni queda escrito en los registros del servidor. El
+     nombre del negocio y su enlace de Google son datos de un cliente;
+     cuantos menos sitios los vean, mejor.
+
+     El logo no cabe aquí: eso sigue llegando como archivo. */
+  var CLAVES = {
+    n: 'negocio', l: 'lema', g: 'google', t: 'titulo',
+    f: 'formato', b: 'banda', d: 'fondo', a: 'acento'
+  };
+
+  function leeEncargo() {
+    var crudo = (location.hash || '').replace(/^#/, '');
+    if (!crudo || crudo.indexOf('=') < 0) return false;
+    var puesto = false;
+    crudo.split('&').forEach(function (par) {
+      var i = par.indexOf('='); if (i < 0) return;
+      var k = CLAVES[par.slice(0, i)];
+      if (!k) return;
+      var v;
+      try { v = decodeURIComponent(par.slice(i + 1).replace(/\+/g, ' ')); } catch (e) { return; }
+      if (k === 'formato') {
+        if (!FORMATOS[v]) return;
+        est.formato = v;
+        [].forEach.call($('fFormato').children, function (o) {
+          o.setAttribute('aria-pressed', o.dataset.v === v ? 'true' : 'false');
+        });
+        $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
+      } else if (k === 'banda' || k === 'fondo' || k === 'acento') {
+        if (!/^#?[0-9A-Fa-f]{6}$/.test(v)) return;
+        var hex = (v.charAt(0) === '#' ? v : '#' + v).toUpperCase();
+        est[k] = hex;
+        var caja = { banda:'fBanda', fondo:'fFondo', acento:'fAcento' }[k];
+        var eco  = { banda:'bandaHex', fondo:'fondoHex', acento:'acentoHex' }[k];
+        $(caja).value = hex; $(eco).textContent = hex;
+        if (k === 'acento') est.acentoAuto = false;
+      } else {
+        est[k] = v;
+        var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle', titulo:'fTitulo' }[k];
+        if (campo) $(campo).value = v;
+      }
+      puesto = true;
+    });
+    return puesto;
+  }
+
+  function enlaceEncargo() {
+    var trozos = [];
+    Object.keys(CLAVES).forEach(function (corta) {
+      var largo = CLAVES[corta], v = est[largo];
+      if (largo === 'acento' && est.acentoAuto) return;   /* si es automático, no hace falta */
+      if (!v) return;
+      trozos.push(corta + '=' + encodeURIComponent(v));
+    });
+    return location.origin + location.pathname + '#' + trozos.join('&');
+  }
+
+  $('copiaEnlace').addEventListener('click', function () {
+    var b = this, txt = enlaceEncargo();
+    var listo = function (ok) {
+      b.textContent = ok ? 'Enlace copiado' : 'Cópialo a mano';
+      if (!ok) prompt('Este es el enlace del diseño:', txt);
+      setTimeout(function () { b.textContent = 'Copiar enlace'; }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () { listo(true); }, function () { listo(false); });
+    } else { listo(false); }
+  });
+
   /* ══════════ arranque ══════════ */
   function cargaLogoPlea() {
     return new Promise(function (ok) {
@@ -3356,7 +3437,12 @@ var qrcode = function() {
 
   Promise.all([cargaLogoPlea(), esperaLetra()]).then(function () {
     $('medidaTxt').textContent = '90 × 90 mm · Placa de mesa';
+    if (leeEncargo() && est.acentoAuto) ponAcento(acentoDe(est.banda), true);
     refresca();
+  });
+  /* si pega otro enlace encima sin recargar, que también lo coja */
+  window.addEventListener('hashchange', function () {
+    if (leeEncargo()) { if (est.acentoAuto) ponAcento(acentoDe(est.banda), true); refresca(); }
   });
 })();
 </script>

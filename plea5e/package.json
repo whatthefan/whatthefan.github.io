@@ -1,0 +1,9 @@
+{
+  "name": "plea5e-web",
+  "private": true,
+  "description": "La web de PLEA5E. Las paginas son HTML suelto y no necesitan nada; esto es solo para las funciones de netlify/functions.",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0",
+    "@netlify/blobs": "^8.1.0"
+  }
+}
