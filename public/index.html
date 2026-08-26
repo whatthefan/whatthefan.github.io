@@ -49,7 +49,14 @@
         "name": "España"
       },
       "knowsLanguage": "es",
-      "slogan": "Reseñas de 5 estrellas sin pedirlas dos veces"
+      "slogan": "Reseñas de 5 estrellas sin pedirlas dos veces",
+      "legalName": "Juan Fernández Selma",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Córdoba",
+        "addressRegion": "Córdoba",
+        "addressCountry": "ES"
+      }
     },
     {
       "@type": "WebSite",
@@ -912,10 +919,17 @@
   /* ================= RELLENA ESTO CUANDO LO TENGAS =================
      Datos del titular para el aviso legal. Lo que dejes en blanco
      simplemente no sale; no hace falta tocar nada más.               */
+  /* Los datos del vendedor. Salen en el Aviso legal, que se abre desde el
+     enlace pequeño del pie: ahí es donde la ley pide que estén y donde
+     nadie tropieza con ellos por casualidad.
+
+     OJO con el domicilio: la ley pide una direccion, y "Cordoba" es una
+     ciudad. Falta calle, numero y codigo postal. Mientras siga asi, el
+     aviso legal esta incompleto. */
   var DATOS = {
-    titular:   '',   // FALTA. Tu nombre completo o la razón social
-    nif:       '',   // FALTA. Tu NIF o el CIF de la sociedad
-    domicilio: '',   // FALTA. Calle, número, código postal y ciudad
+    titular:   'Juan Fernández Selma',
+    nif:       '49891813Y',
+    domicilio: 'Córdoba (España)',   // INCOMPLETO: falta calle, número y C.P.
     email:     'juanfersem@gmail.com'
   };
 
