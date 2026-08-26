@@ -43,7 +43,7 @@
       "description": "Placas, expositores de pie y tarjetas con chip NFC y código QR para que los clientes dejen reseñas en Google. Diseñadas a medida con la marca de cada negocio.",
       "telephone": "+34661403219",
       "email": "juanfersem@gmail.com",
-      "priceRange": "15 € - 25 €",
+      "priceRange": "15 € - 30 €",
       "areaServed": {
         "@type": "Country",
         "name": "España"
@@ -147,7 +147,7 @@
       "offers": {
         "@type": "Offer",
         "url": "https://plea5e.es/#pedido",
-        "price": "25.00",
+        "price": "30.00",
         "priceCurrency": "EUR",
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
@@ -923,13 +923,12 @@
      enlace pequeño del pie: ahí es donde la ley pide que estén y donde
      nadie tropieza con ellos por casualidad.
 
-     OJO con el domicilio: la ley pide una direccion, y "Cordoba" es una
-     ciudad. Falta calle, numero y codigo postal. Mientras siga asi, el
-     aviso legal esta incompleto. */
+     Al domicilio solo le falta el codigo postal. Cuando lo tengas, se
+     anade aqui y ya esta completo. */
   var DATOS = {
     titular:   'Juan Fernández Selma',
     nif:       '49891813Y',
-    domicilio: 'Córdoba (España)',   // INCOMPLETO: falta calle, número y C.P.
+    domicilio: 'C/ Poeta Alonso de Bonilla, 19 · Córdoba (España)',   // falta el código postal
     email:     'juanfersem@gmail.com'
   };
 
@@ -1193,7 +1192,7 @@
                suelta:25, precio:function(n){ return n>=20?15.5:n>=12?17.5:n>=5?20:n>=3?22:25; } },
     stand:   { nombre:'Expositor de pie', uno:'expositor de pie', varias:'expositores de pie', cada:'cada uno',
                ancho:46, solapa:-22,
-               suelta:25, precio:function(n){ return n>=20?16.5:n>=12?19:n>=5?21:n>=3?23:25; } },
+               suelta:30, precio:function(n){ return n>=20?19:n>=12?22:n>=5?25:n>=3?27:30; } },
     tarjeta: { nombre:'Tarjeta de mano', uno:'tarjeta de mano', varias:'tarjetas de mano', cada:'cada una',
                ancho:62, solapa:-34, packs:[20,30,50,100],
                suelta:15, precio:function(n){ return n>=100?9.5:n>=50?11.5:n>=30?13:15; } }
@@ -1635,6 +1634,8 @@
       '<h4>Al pulsar el botón pasan dos cosas</h4>' +
       '<p>Se abre WhatsApp con el mensaje escrito, que envías tú. Y al mismo tiempo <b>ese mismo pedido llega también a nuestro servidor</b>, para que no se nos pierda entre conversaciones y para ir preparándote el diseño.</p>' +
       '<p>Lo que se guarda es lo que has escrito: nombre del negocio, ciudad, teléfono, lo que nos cuentes, el producto y la cantidad, y la referencia del pago si has pagado la fianza. Nada más: ni tu navegación, ni tu ubicación, ni de dónde vienes.</p>' +
+      '<h4>Quién responde de tus datos</h4>' +
+      '<p>El responsable es ' + esc(DATOS.titular) + ', con NIF ' + esc(DATOS.nif) + ' y domicilio en ' + esc(DATOS.domicilio) + '. Para cualquier cosa relacionada con tus datos, escribe a ' + esc(DATOS.email) + '.</p>' +
       '<h4>Para qué y con qué base</h4>' +
       '<p>Con una única finalidad: prepararte el presupuesto, el diseño y el pedido. La base legal es tu propia solicitud y, si compras, el contrato.</p>' +
       '<p>Los conservamos mientras dure la relación comercial y después el tiempo que obliga la ley para las facturas. No los vendemos ni los cedemos a nadie con fines comerciales.</p>' +
