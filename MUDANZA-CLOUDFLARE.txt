@@ -20,48 +20,45 @@ el resto se las pide a public/, que son los archivos de la web.
 Lo que hay que hacer, por orden
 -------------------------------
 
-1. CREAR EL PROYECTO
+1. CREAR EL PROYECTO                                        [HECHO]
    dash.cloudflare.com -> Workers & Pages -> Create -> Connect to Git ->
    elegir el repositorio.
 
-   En la pantalla de ajustes:
-     Project name ......  plea5e          <- IMPORTANTE, ver abajo
-     Build command .....  (vacio)
-     Deploy command ....  npx wrangler deploy
-     Root directory ....  /
+   Ya esta conectado, y cada push a la rama despliega solo. El Worker se
+   llama:
 
-   El nombre tiene que ser "plea5e" porque es el que lleva escrito el
-   wrangler.jsonc. Si no coinciden, el despliegue se queja.
+       whatthefan-github-io
 
-   No hace falta build command: Cloudflare instala las dependencias solo
-   al ver el package.json, y las paginas son HTML suelto.
+   Cloudflare lo bautizo con el nombre del repositorio y un Worker no se
+   puede renombrar, asi que el wrangler.jsonc lleva ESE nombre escrito.
+   Da igual de cara al publico: la gente entra por plea5e.es.
 
-2. PROBAR ANTES DE TOCAR EL DOMINIO
-   Cloudflare te da una direccion tipo  plea5e.<lo-que-sea>.workers.dev
-   Comprueba ahi:
+   Si algun dia se despliega desde el ordenador con otro nombre en el
+   wrangler.jsonc, Cloudflare no avisa: crea un Worker NUEVO y te quedan
+   dos webs vivas, una vieja y otra nueva, sin saber cual estas mirando.
+
+2. PROBAR ANTES DE TOCAR EL DOMINIO                         [HECHO]
+   Cloudflare da una direccion tipo
+       whatthefan-github-io.<lo-que-sea>.workers.dev
+   Ahi se comprueba:
      /                          la web
      /taller/generador.html     el generador de placas
      /taller/pedidos.html       el panel
 
-   La web y el generador tienen que ir a la primera. El panel dira que
-   el almacen no esta conectado: normal, es el paso 3.
+   El panel no funcionara hasta que este puesta la contrasena: paso 4.
 
-3. EL ALMACEN DE PEDIDOS
-   a) Storage & Databases -> KV -> Create.
-      Nombre: encargos-plea5e  (el nombre da igual)
-      Copia el IDENTIFICADOR que te da: una linea larga de letras y
-      numeros. No es un secreto, es solo un identificador.
+3. EL ALMACEN DE PEDIDOS                                    [HECHO]
+   El KV ya esta creado y ya esta escrito en el wrangler.jsonc:
 
-   b) Pegalo en wrangler.jsonc, donde estan las instrucciones puestas en
-      comentario. Queda asi:
+       nombre en el panel .....  encargos-plea5e
+       identificador ..........  22d3750e7f964c08ac98843119f1201c
+       nombre en el codigo ....  ENCARGOS
 
-         "kv_namespaces": [
-           { "binding": "ENCARGOS", "id": "aqui-el-identificador" }
-         ]
+   No hay que tocar nada mas. Si alguna vez se borra ese KV desde el
+   panel, el despliegue empieza a fallar entero (no solo el panel):
+   habria que crear otro y cambiar el identificador aqui.
 
-      Si no te apanas editando en el movil, mandamelo y lo pongo yo.
-
-4. LAS VARIABLES
+4. LAS VARIABLES                                            <-- AQUI VAS
    El Worker -> Settings -> Variables and Secrets:
 
      PANEL_CLAVE .........  la contrasena del panel
@@ -72,7 +69,12 @@ Lo que hay que hacer, por orden
                             tabla por oficio de src/lib/encargo.mjs,
                             gratis.
 
-   Marcalas como Secret salvo los dos correos.
+   Marcalas como Secret salvo los dos correos. Al guardarlas, Cloudflare
+   vuelve a desplegar solo.
+
+   Para comprobar que ha calado: abre /taller/pedidos.html en la
+   direccion workers.dev y mete la clave. Si entra y dice que no hay
+   pedidos, esta todo bien: el almacen responde y esta vacio.
 
 5. EL DOMINIO, LO ULTIMO
    El Worker -> Settings -> Domains & Routes -> Add -> Custom domain ->
@@ -80,6 +82,13 @@ Lo que hay que hacer, por orden
 
    Hasta este paso, plea5e.es sigue sirviendose desde Netlify y no se
    entera nadie. Si algo sale mal en los pasos 1 a 4, no ha pasado nada.
+
+   El dia que se haga, hay que acordarse de dos cosas de fuera de aqui:
+     - Stripe: el enlace de pago vuelve a
+       https://plea5e.es/?pagado={CHECKOUT_SESSION_ID}. Si el dominio
+       cambia y el enlace no, el cliente paga y vuelve a la web vieja.
+     - Resend: verificar el dominio para poder mandar los avisos desde
+       una direccion de plea5e.es en vez de onboarding@resend.dev.
 
 Que se queda en Netlify
 -----------------------

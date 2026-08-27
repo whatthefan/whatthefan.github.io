@@ -2,7 +2,14 @@
   // La configuracion del Worker. Cloudflare la lee al desplegar; no hay
   // que tocar nada en el panel salvo las variables y el almacen.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "plea5e",
+
+  // El nombre TIENE que ser el mismo que el del Worker que ya existe en
+  // el panel. Cloudflare lo bautizo con el nombre del repositorio al
+  // conectarlo, y un Worker no se puede renombrar. Si aqui pusiera otra
+  // cosa, un despliegue hecho desde el ordenador crearia un SEGUNDO
+  // Worker con ese otro nombre y tendriamos dos webs distintas vivas.
+  // El nombre no lo ve nadie: el publico entra por plea5e.es.
+  "name": "whatthefan-github-io",
   "main": "src/index.js",
   "compatibility_date": "2026-08-01",
 
@@ -18,16 +25,15 @@
     "binding": "ASSETS"
   },
 
-  // El almacen de pedidos (KV) NO va aqui todavia: hace falta el
-  // identificador que da Cloudflare al crearlo, y hasta entonces un
-  // valor inventado haria fallar el despliegue entero. Se anade despues,
-  // cuando exista:
+  // El almacen de pedidos. El identificador es el del KV que se llama
+  // "encargos-plea5e" en Storage & Databases. No es un secreto: es solo
+  // la direccion del cajon, y sin la cuenta no abre nada.
   //
-  //   "kv_namespaces": [
-  //     { "binding": "ENCARGOS", "id": "el-identificador-que-te-den" }
-  //   ]
-  //
-  // Mientras no este, la web y el generador funcionan igual; lo unico
-  // que no funciona es el panel, y lo dice con esas palabras.
+  // ENCARGOS es el nombre con el que lo llama el codigo (src/api/*.js).
+  // Ese nombre no se toca aunque el cajon se llame de otra forma.
+  "kv_namespaces": [
+    { "binding": "ENCARGOS", "id": "22d3750e7f964c08ac98843119f1201c" }
+  ],
+
   "observability": { "enabled": true }
 }
