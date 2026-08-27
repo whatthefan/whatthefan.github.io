@@ -127,7 +127,7 @@
             }
           }
         },
-        "priceValidUntil": "2027-12-31"
+        "priceValidUntil": "2026-09-30"
       },
       "image": [
         "https://plea5e.es/producto/placa-cuadrada.png",
@@ -193,7 +193,7 @@
             }
           }
         },
-        "priceValidUntil": "2027-12-31"
+        "priceValidUntil": "2026-09-30"
       },
       "image": [
         "https://plea5e.es/producto/placa-recortada.png"
@@ -258,7 +258,7 @@
             }
           }
         },
-        "priceValidUntil": "2027-12-31"
+        "priceValidUntil": "2026-09-30"
       },
       "image": [
         "https://plea5e.es/producto/placa-cuadrada.png"
@@ -295,7 +295,7 @@
         },
         {
           "@type": "Question",
-          "name": "¿Por qué cuesta 25 €?",
+          "name": "¿Por qué cuesta 25 € una placa?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Porque no es una pegatina impresa. Dentro lleva un chip programable, grabado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada."
@@ -491,7 +491,7 @@
 <div class="cinta" id="cinta" aria-label="Oferta de lanzamiento">
   <!-- el JS rehace esta cinta con la fecha de OFERTA.fin dentro; lo que
        hay escrito aquí es lo que se lee si el JS no llega a arrancar -->
-  <div class="rueda" id="ruedaOferta"><ul><li><b>Oferta de lanzamiento</b></li><li>Hasta −24 % en las placas</li><li>Diseño con tu marca, 0 €</li><li>Envío gratis a península</li><li>La fianza de 25 € va dentro del precio</li></ul></div>
+  <div class="rueda" id="ruedaOferta"><ul><li><b>Oferta de lanzamiento</b></li><li>Hasta −25 % en las placas</li><li>Diseño con tu marca, 0 €</li><li>Envío gratis a península</li><li>La fianza de 25 € va dentro del precio</li></ul></div>
 </div>
 
 <main id="arriba">
@@ -551,6 +551,10 @@
           <p class="medida">90 × 90 mm · metacrilato 3 mm · <b>chip NFC</b></p>
           <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje 3M. Está delante del cliente todo el rato, por eso es la que más reseñas trae. Dentro lleva un <b>chip programable</b> grabado con tu ficha de Google: el cliente acerca el móvil y se le abre la reseña.</p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
+          <!-- la escala por cantidad la escribe el JS desde la misma tabla
+               que cobra el pedido: no puede anunciar un precio que luego
+               no salga en el ticket -->
+          <p class="escala" data-escala="placa" hidden></p>
           <a class="btn btn-oro" href="#pedido" data-pide="placa">Pedir esta</a>
         </div>
       </article>
@@ -564,7 +568,8 @@
           <p class="paraquien">Para <b>barra, mostrador o terraza</b></p>
           <p class="medida">76 × 118 mm · chapa doblada en L · <b>chip NFC</b></p>
           <p class="desc">De pie sobre la mesa, la barra o el mostrador. No se pega a nada, así que lo mueves cuando quieras. Ideal para terraza y para la zona de cobro. Dentro lleva un <b>chip programable</b> grabado con tu ficha de Google: el cliente acerca el móvil y se le abre la reseña.</p>
-          <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
+          <p class="pvp"><span class="n">30 €</span><span class="antes">39 €</span><span class="ahorro" aria-label="23 por ciento de descuento">-23%</span><small>por unidad</small></p>
+          <p class="escala" data-escala="stand" hidden></p>
           <a class="btn btn-oro" href="#pedido" data-pide="stand">Pedir este</a>
         </div>
       </article>
@@ -579,6 +584,7 @@
           <p class="medida">85 × 54 mm · PVC laminado · <b>chip NFC</b></p>
           <p class="desc">La lleva el camarero en el delantal y la acerca al móvil al cobrar o al dejar la cuenta. Cabe en cualquier bolsillo. Dentro lleva un <b>chip programable</b> grabado con tu ficha de Google: el cliente acerca el móvil y se le abre la reseña.</p>
           <p class="pvp"><span class="n">15 €</span><span class="antes">20 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad · packs de 20 a 100</small></p>
+          <p class="escala" data-escala="tarjeta" hidden></p>
           <a class="btn btn-oro" href="#pedido" data-pide="tarjeta">Pedir esta</a>
         </div>
       </article>
@@ -805,7 +811,7 @@
         <p>No. Pagas una vez y es tuyo. El enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p></details>
       <details class="sube"><summary>¿La fianza de 25 € se paga aparte?</summary>
         <p>No, va dentro del precio. Son los primeros 25 € del pedido, no un extra: se pagan antes de que nos pongamos a diseñar y se te descuentan del total. Si tu pedido son 100 €, pagas 25 € ahora y 75 € cuando el diseño te guste. Y si el pedido son 25 €, ya está pagado entero.</p></details>
-      <details class="sube"><summary>¿Por qué cuesta 25 €?</summary>
+      <details class="sube"><summary>¿Por qué cuesta 25 € una placa?</summary>
         <p>Porque no es una pegatina impresa. Dentro lleva un chip programable, grabado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada.</p></details>
       <details class="sube"><summary>¿De verdad lo hacéis todo a medida?</summary>
         <p>Sí. Colores, tipografía, logo, formato y hasta el texto. Si quieres el expositor en negro con tu logo dorado, se hace. Si lo quieres cuadrado en vez de rectangular, se hace. Y si necesitas un formato que no está en la web, nos lo dices y te decimos si podemos.</p></details>
@@ -1038,7 +1044,7 @@
        anunciar un día distinto al que cuenta el reloj */
     if (rueda) {
       var trozos = ['<b>Oferta de lanzamiento</b>',
-                    'Hasta \u221224 % en las placas',
+                    'Hasta \u221225 % en las placas',
                     'Dise\u00f1o con tu marca, 0 \u20ac',
                     'Env\u00edo gratis a pen\u00ednsula',
                     'La fianza de ' + BIZUM.fianza + ' \u20ac va dentro del precio',
@@ -1204,6 +1210,11 @@
   });
   var sel = { prod:'placa', cant:5 };
   var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; };
+  /* el euro corto, para las líneas donde los céntimos solo estorban:
+     20 € en vez de 20,00 €, pero 17,50 € sigue llevando los suyos */
+  var eurC = function(v){
+    return (v % 1 === 0 ? String(v) : v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})) + ' €';
+  };
 
   function elegir(grupo, valor){
     [].forEach.call(grupo.children, function(b){
@@ -1243,6 +1254,28 @@
       return '<button class="op" type="button" data-v="' + n + '" aria-pressed="false">' + txt + '</button>';
     }).join('');
   }
+
+  /* ---- la escala por cantidad, en la ficha de cada producto ----
+     El precio grande de la ficha es el de una unidad, y así se queda: es
+     el que ancla. Debajo va, en pequeño, lo que baja al llevarse varias,
+     sacado de la MISMA tabla que luego cobra el pedido. Si algún día se
+     tocan los precios, esta línea se entera sola. */
+  (function(){
+    document.querySelectorAll('[data-escala]').forEach(function(e){
+      var c = CAT[e.dataset.escala];
+      if (!c) return;
+      var lista = c.packs || CANT_SUELTA, trozos = [], abierto = false;
+      lista.forEach(function(n){
+        if (n <= 1) return;
+        if (!c.packs && n >= 20) { abierto = true; return; }   /* eso es presupuesto, no precio */
+        if (c.precio(n) < c.suelta - 0.01) trozos.push(n + ' ud, ' + eurC(c.precio(n)));
+      });
+      if (!trozos.length) return;
+      e.textContent = (c.packs ? 'Packs: ' : 'Por cantidad: ') + trozos.join(' · ') +
+                      (abierto ? ' · 20 o más, presupuesto' : '');
+      e.hidden = false;
+    });
+  })();
 
   function refrescar(){
     var c = CAT[sel.prod], n = sel.cant, ud = c.precio(n), total = ud * n;

@@ -757,6 +757,10 @@ td .destaca{color:var(--oro);font-weight:700}
   .prod.sube.ver .pvp .ahorro,.prod.sube.ver .pvp .ahorro::after{animation:none}
 }
 .prod .pvp small{font-size:.74rem;color:var(--claro-txt-2);width:100%;margin-top:-2px}
+/* lo que baja el precio al llevarse varias: pequeño, para que no compita
+   con el precio grande, pero delante de los ojos antes del botón */
+.prod .escala{margin-top:8px;font-size:.76rem;line-height:1.45;color:var(--claro-txt-2);
+  font-variant-numeric:tabular-nums}
 .prod .btn{width:100%}
 
 /* el chip destacado dentro de la linea de medidas de cada ficha */
