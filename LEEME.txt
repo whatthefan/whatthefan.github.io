@@ -170,22 +170,6 @@ dibuja la placa terminada, lista para ensenarsela al cliente o para
 mandarla a imprimir. Los tres formatos: placa 90x90, expositor 76x118
 y tarjeta 85x54.
 
-LAS MEDIDAS, QUE ES LO QUE MAS CARO SALE SI FALLA
-Las buenas son las que vende la web, y son las de arriba. El generador
-estuvo un tiempo dibujando el expositor a 100x150 y la tarjeta a 55x85
-(de pie), que no era lo que se vendia: un archivo de un tamano y una
-pieza de otro es dinero tirado en imprenta. Ya esta cuadrado.
-
-Si algun dia cambia una medida hay que tocarla en DOS sitios:
-
-    gen/plantilla.html   ->  el bloque FORMATOS
-    public/index.html    ->  en tres puntos: la ficha de datos de
-                             Google (arriba del todo), la linea de
-                             medidas de cada ficha de producto y el
-                             texto pequeno de los botones del pedido
-
-Y despues volver a montar el generador (mas abajo pone como).
-
 LA PLANTILLA
 Es la buena: banda verde oscuro con el borde de abajo curvado, fondo
 crema (no blanco), dos rayas de oro con las cinco estrellas encima, la G
@@ -196,22 +180,6 @@ asomando por el canto.
 
 Todo eso sale de una sola cosa que puedes tocar: los tres colores
 (banda, fondo y acento). El resto lo coloca solo.
-
-LA TARJETA VA TUMBADA, Y ES OTRO REPARTO
-La placa y el expositor son la misma composicion en columna, cambiando
-el tamano. La tarjeta no: 85x54 es el tamano de una tarjeta de credito,
-y en un rectangulo tan bajo la composicion en columna no cabe -el
-titulo y el QR acaban pisandose-. Asi que la tarjeta lleva la plantilla
-doblada por la mitad, como la de las fotos:
-
-    IZQUIERDA (el color)      las cinco estrellas con sus rayas, el
-                              reclamo, el nombre del negocio y el lema
-    DERECHA (el crema)        la G de Google, el icono del chip con sus
-                              esquinas de encuadre, el QR, el "toca o
-                              escanea" y la firma de PLEA5E
-
-Mismos elementos, misma marca, mismos colores: solo cambia el reparto.
-La placa de mesa NO se ha tocado ni un pixel al hacer esto.
 
 LO QUE HACE SOLO
   - Saca los colores del logo que subas y te los pone como botones.

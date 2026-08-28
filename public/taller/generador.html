@@ -2509,25 +2509,16 @@ var qrcode = function() {
   var LOGO_SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1281\" height=\"288\" viewBox=\"-3202 -1259 6404 1438\">\n<title>PLEA5E</title>\n\n<g fill=\"#E9BC46\">\n  \n  <path d=\"M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z\"/>\n  <path d=\"M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z\"/>\n  <path d=\"M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z\"/>\n</g>\n<g fill=\"#0A0E16\">\n  <path d=\"M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9\"/>\n  <path d=\"M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5\"/>\n</g>\n<path fill=\"#0A0E16\" d=\"M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2\"/>\n</svg>";
 
   /* ══════════ los tres formatos ══════════ */
-  /* LAS MEDIDAS SON LAS QUE VENDE LA WEB. No se tocan aqui sin tocarlas
-     alli: si el archivo sale de un tamano y la pieza se fabrica de otro,
-     es dinero tirado en imprenta. Estan en index.html en tres sitios (la
-     ficha de datos de Google, la linea .medida de cada producto y el
-     .mm de los botones del pedido).
-
-     La placa y el expositor salen de la MISMA composicion en columna:
-     cambia el tamano, no el dibujo.
-
-     La tarjeta NO. Va tumbada, porque 85 x 54 es el tamano de una
-     tarjeta de credito y asi se vende y asi sale en las fotos. La
-     composicion en columna no cabe en un rectangulo tan bajo -el titulo
-     y el QR acaban pisandose-, asi que la tarjeta lleva la plantilla
-     doblada por la mitad: el color a la izquierda y el crema a la
-     derecha. Mismos elementos, misma marca, otro reparto. */
+  /* Los tres salen de la MISMA plantilla: cambia el tamano, no el
+     dibujo. Las proporciones estan medidas sobre los originales:
+     la placa es cuadrada y el expositor va a 2:3, que es exactamente
+     lo que da el diseno del Morro Fino (1114x1670). La tarjeta se
+     dibuja de pie, no tumbada: tumbada no cabe esta composicion y
+     salia otra cosa distinta, que es justo lo que no queremos. */
   var FORMATOS = {
     placa:   { nombre: 'Placa de mesa',    mm: [90, 90],  reja: 'cuadrada' },
-    stand:   { nombre: 'Expositor de pie', mm: [76, 118], reja: 'alta' },
-    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],  reja: 'ancha' }
+    stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
+    tarjeta: { nombre: 'Tarjeta de mano',  mm: [55, 85],  reja: 'alta' }
   };
 
   /* La G de Google, en sus cuatro colores. Son los trazos oficiales sobre
@@ -3053,8 +3044,7 @@ var qrcode = function() {
 
     cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-    if (F.reja === 'ancha') pintaTumbada(bx, by, bw, bh, radio);
-    else                    pintaDePie(bx, by, bw, bh, radio);
+    pintaDePie(bx, by, bw, bh, radio);
 
     if (sang) {
       cx.save();
@@ -3179,17 +3169,9 @@ var qrcode = function() {
     /* 5. la fila del medio: el icono a la izquierda y el QR a la
           derecha, separados 0,31 del alto y centrados como pareja. */
     var filaY = by + bh*R.fila;
-    /* El QR y la separación están medidos en fracción del ALTO, que es
-       como venían de los originales. En un formato más estrecho que
-       aquellos eso se sale por los lados: el expositor a 76 × 118 deja
-       el marco del icono pegado al canto. Así que la pareja se mide
-       también contra el ANCHO y se encoge lo justo para que quepa.
-       En la placa y en el expositor viejo estos topes no llegaban a
-       morder, o sea que no cambia nada de lo ya impreso. */
-    var ladoQR = Math.min(bh*C.qr, bw*0.36);
+    var ladoQR = Math.min(bh*C.qr, bw*0.42);
     if (est.conNfc) {
-      /* la pareja ocupa sep + el medio marco + el medio QR */
-      var sep = Math.min(bh * C.separacion, bw*0.88 - ladoQR*1.162);
+      var sep = bh * C.separacion;
       var icoX = centro - sep/2, qrX = centro + sep/2;
       /* Medido en el original: el icono es 1,09 veces el lado del QR de
          ancho, y su alto sale solo. El marco lo envuelve con holgura. */
@@ -3236,121 +3218,6 @@ var qrcode = function() {
 
     /* 9. las estrellas grandes asomando por abajo */
     adornoAbajo(bx, by, bw, bh, radio, acento);
-  }
-
-  /* La misma banda, pero de pie y pegada al lado izquierdo: el borde de
-     la derecha es el que se curva, saliendo 'arco' en el centro. Es la
-     de arriba girada un cuarto de vuelta, con el mismo halo y la misma
-     franja oscura por dentro que le dan grosor. */
-  function bandaLateral(bx, by, bw, bh, radio, ancho, arco, grosorSombra) {
-    cx.save();
-    redondo(bx, by, bw, bh, radio); cx.clip();
-    var grad = cx.createRadialGradient(bx, by + bh/2, 0, bx, by + bh/2, bh*0.98);
-    grad.addColorStop(0, aclara(est.banda, .26));
-    grad.addColorStop(0.55, aclara(est.banda, .05));
-    grad.addColorStop(1, oscurece(est.banda, .16));
-    cx.fillStyle = grad;
-    cx.beginPath();
-    cx.moveTo(bx, by);
-    cx.lineTo(bx + ancho, by);
-    cx.quadraticCurveTo(bx + ancho + arco*2, by + bh/2, bx + ancho, by + bh);
-    cx.lineTo(bx, by + bh);
-    cx.closePath(); cx.fill();
-
-    cx.fillStyle = oscurece(est.banda, .30);
-    cx.beginPath();
-    cx.moveTo(bx + ancho - grosorSombra, by);
-    cx.quadraticCurveTo(bx + ancho - grosorSombra + arco*2, by + bh/2,
-                        bx + ancho - grosorSombra, by + bh);
-    cx.lineTo(bx + ancho, by + bh);
-    cx.quadraticCurveTo(bx + ancho + arco*2, by + bh/2, bx + ancho, by);
-    cx.closePath(); cx.fill();
-    cx.restore();
-  }
-
-  /* ---- la tarjeta, tumbada ----
-     Las medidas van en fraccion del ancho para lo horizontal y del alto
-     para lo vertical, igual que en la de pie. El panel de color se lleva
-     0,44 del ancho: lo justo para que el reclamo entre en tres lineas
-     sin comerle sitio al QR, que es lo unico que no puede encoger. */
-  function pintaTumbada(bx, by, bw, bh, radio) {
-    var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
-    var sobreBanda = encima(est.banda);
-    var tinta = tintaDe(est.fondo);
-
-    var panel = bw * 0.44, arco = bw * 0.016;
-    bandaLateral(bx, by, bw, bh, radio, panel, arco, bw * 0.008);
-
-    /* ══ el lado del color ══ */
-    var cIzq = bx + panel/2, utilIzq = panel * 0.82;
-
-    /* las dos rayas y las cinco estrellas, arriba */
-    rayasYEstrellas(bx + panel*0.09, utilIzq,
-                    by + bh*0.125, by + bh*0.175,
-                    Math.max(1, bw*0.0038), bw*0.0130, acento);
-
-    /* el reclamo, centrado en la mitad de arriba del panel */
-    var t = reparte(est.titulo, utilIzq, bh*0.098, '800', 3, bh*0.29, true);
-    cx.font = '800 ' + t.tam + 'px Montse, system-ui, sans-serif';
-    bloque(t, cIzq, by + bh*0.385, sobreBanda, false);
-
-    /* el cliente: su logo o su nombre, y el lema debajo */
-    var conLema = !!est.lema.trim();
-    zonaCliente(bx, by + bh*(conLema ? 0.585 : 0.615), panel,
-                bh*(conLema ? 0.165 : 0.215), utilIzq, sobreBanda);
-    if (conLema) {
-      espaciado(est.lema.trim(), cIzq, by + bh*0.835, bh*0.036, bh*0.0135,
-                aclara(sobreBanda, .30), '600');
-    }
-
-    /* ══ el lado del crema ══ */
-    var x0 = bx + panel + arco, anchoDer = bx + bw - x0;
-    var cDer = x0 + anchoDer/2;
-
-    /* la G, arriba. Aqui va sin el disco blanco: no hay curva de la que
-       colgarla y el fondo ya es claro. */
-    if (est.conG) dibujaG(cDer, by + bh*0.175, anchoDer*0.115, false);
-
-    /* El chip y el QR, en fila, que es lo que manda en esta cara. La
-       pareja se queda en 0,42 del ancho del crema: mas separada, el
-       marco del icono se sale por la curva del panel y el QR se pega al
-       canto de la derecha. */
-    var filaY = by + bh*0.465;
-    var ladoQR = Math.min(bh*0.37, anchoDer*0.37);
-    if (est.conNfc) {
-      var sep = anchoDer * 0.42;
-      var icoX = cDer - sep/2, qrX = cDer + sep/2;
-      var U = ladoQR * 1.15;
-      if (est.conMarco) {
-        var mw = U*1.15, mh = U*0.611*1.40;
-        esquinas(icoX - mw/2, filaY - mh/2, mw, mh,
-                 bh*0.045, Math.max(1, bh*0.0060), 'rgba(0,0,0,.32)');
-      }
-      dibujaNfc(icoX, filaY, U, tinta, est.fondo);
-      dibujaQR(enlaceQR(), qrX, filaY, ladoQR, tinta);
-    } else {
-      if (est.conMarco) {
-        esquinas(cDer - ladoQR*0.78, filaY - ladoQR*0.78, ladoQR*1.56, ladoQR*1.56,
-                 bh*0.048, Math.max(1, bh*0.0062), 'rgba(0,0,0,.32)');
-      }
-      dibujaQR(enlaceQR(), cDer, filaY, ladoQR*1.15, tinta);
-    }
-
-    /* la instruccion */
-    var tIns = reparte(instruccion(), anchoDer*0.80, bh*0.058, '800', 2, bh*0.135, true);
-    cx.font = '800 ' + tIns.tam + 'px Montse, system-ui, sans-serif';
-    bloque(tIns, cDer, by + bh*0.725, tinta, false);
-
-    /* la firma de PLEA5E. El alto de referencia va estirado a proposito:
-       'pie' mide el logotipo en fraccion del alto, y en una pieza tumbada
-       el alto es el lado corto, asi que a pelo saldria una firma que no
-       se lee. El ancho util lo sigue limitando igual. */
-    pie(x0, by + bh*0.838, anchoDer, bh*1.55, anchoDer*0.78, acento);
-    minisEstrellas(cDer, by + bh*0.902, bw*0.0068, acento);
-    if (est.conTel && TELEFONO) {
-      espaciado(TELEFONO, cDer, by + bh*0.948, bh*0.026, bh*0.0100,
-                aclara(tinta, .52), '600');
-    }
   }
 
   function instruccion() {
