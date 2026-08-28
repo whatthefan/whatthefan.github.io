@@ -932,6 +932,14 @@ html.sin-oferta .cinta{display:none}
 .btn.grande{width:100%;font-size:1rem;padding:16px 22px}
 .pie-wa{font-size:.71rem;color:var(--txt-3);margin-top:10px;line-height:1.5}
 .pie-wa a{color:var(--txt-2)}
+/* el aviso de datos: más apagado todavía que el pie del botón, que está
+   ahí por obligación y no para competir con nada */
+.pie-datos{display:block;margin-top:9px;padding-top:9px;font-size:.66rem;line-height:1.5;
+  color:var(--txt-3);border-top:1px solid var(--borde);text-align:left}
+.pie-datos b{color:var(--txt-2);font-weight:600}
+.pie-datos .enl{font:inherit;color:var(--txt-2);background:none;border:0;padding:0;
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.pie-datos .enl:hover{color:var(--oro)}
 @media (max-width:640px){
   .paso-r{flex-direction:column;align-items:flex-start;gap:10px}
   .opciones{margin-left:0}
@@ -1096,3 +1104,70 @@ body::after{
 /* el nombre del negocio no cabe compartiendo fila: se lleva la suya */
 .campos-p #negocio{flex:1 1 100%}
 
+
+/* ══════════ dos clientes de verdad, arriba del todo ══════════
+   Dos nombres con foto en la portada valen más que cualquier frase que
+   podamos escribir nosotros. Las fotos son las mismas placas que se ven
+   luego en su sección, recortadas en redondo y superpuestas. */
+.prueba{display:inline-flex;align-items:center;gap:12px;margin-top:20px;
+  padding:9px 16px 9px 10px;border-radius:999px;text-decoration:none;
+  border:1px solid var(--borde-claro);background:rgba(255,255,255,.03);
+  transition:border-color .18s,background .18s,transform .18s}
+.prueba:hover{border-color:var(--oro);background:rgba(233,188,70,.07);transform:translateY(-2px)}
+.prueba .caras{display:flex;flex:none}
+.prueba .caras img{width:38px;height:38px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--noche);margin-left:-13px;background:var(--noche-2)}
+.prueba .caras img:first-child{margin-left:0}
+.prueba-txt{font-size:.84rem;color:var(--txt-2);line-height:1.35}
+.prueba-txt b{color:var(--txt);font-weight:700}
+.prueba-txt small{display:block;font-size:.73rem;color:var(--txt-3);margin-top:1px}
+@media (max-width:420px){.prueba{width:100%;border-radius:16px}}
+
+/* ══════════ el pedido, ahora con varios productos ══════════ */
+/* la coletilla del paso 1: "marca los que quieras" */
+.paso-r .pregunta small{display:block;margin-top:3px;font-weight:500;
+  font-size:.72rem;line-height:1.35;color:var(--txt-3);max-width:22ch}
+/* una fila de cantidades por producto marcado */
+.cants{display:flex;flex-direction:column;gap:10px;margin-left:auto;min-width:0}
+.linea-cant{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px 12px}
+.linea-cant .opciones{margin-left:0}
+.linea-nom{font-size:.78rem;font-weight:600;color:var(--txt-3)}
+@media (max-width:640px){
+  .cants{margin-left:0;width:100%}
+  .linea-cant{justify-content:flex-start}
+  .linea-nom{width:100%}
+}
+/* el desglose del ticket cuando hay más de un producto */
+.lado-b .detalle .lineas{list-style:none;margin:0;padding:0;display:grid;gap:5px;text-align:left}
+.lado-b .detalle .lineas li{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.lado-b .detalle .lineas b{color:var(--txt);font-weight:700;white-space:nowrap}
+.lado-b .detalle .det-ahorro{display:block;margin-top:6px;color:var(--oro);font-weight:700}
+/* la regla de la fianza, en pequeñito al lado de la cifra */
+.senal-regla{font-size:.78rem;color:var(--txt-3)}
+
+/* ══════════ el pago no se enseña de entrada ══════════
+   Primero eligen, luego se presentan, y solo entonces aparece la fianza.
+   Mientras tanto, en su hueco va esta pista: que se vea que falta un
+   paso, no que hay un peaje. */
+.siguiente{display:flex;align-items:flex-start;gap:9px;margin-top:16px;padding:12px 14px;
+  border-radius:14px;text-align:left;font-size:.82rem;line-height:1.5;color:var(--txt-2);
+  border:1px dashed var(--borde-claro);background:rgba(255,255,255,.02)}
+.siguiente b{color:var(--txt)}
+.siguiente svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke:var(--oro);
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* la fianza entra deslizándose, para que se note que es un paso ganado */
+.senal-paso{animation:asomaFianza .34s cubic-bezier(.2,.8,.3,1)}
+@keyframes asomaFianza{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.senal-paso{animation:none}}
+
+/* la salida del que aún no se fía: un enlace, no un botón que compita
+   con el de pagar */
+.senal-llamada{display:block;width:100%;margin-top:11px;padding:8px 4px;font:inherit;
+  font-size:.78rem;color:var(--txt-3);background:none;border:0;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;transition:color .18s}
+.senal-llamada:hover{color:var(--txt)}
+.senal-llamada-ok{display:flex;align-items:flex-start;gap:9px;margin:11px 0 0;padding:11px 12px;
+  border-radius:12px;font-size:.79rem;line-height:1.5;text-align:left;color:var(--txt-2);
+  background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.3)}
+.senal-llamada-ok svg{width:15px;height:15px;flex:none;margin-top:2px;fill:none;stroke:var(--oro);
+  stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}

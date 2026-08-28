@@ -77,7 +77,15 @@ export async function onRequest(context) {
     /* La clave empieza por la fecha en milisegundos, así que ordenar por
        clave al revés deja los nuevos arriba sin tener que abrirlos. */
     const { keys } = await env.ENCARGOS.list({ limit: 1000 });
-    const claves = keys.map((k) => k.name).sort().reverse().slice(0, 100);
+    /* Fuera las claves 'id-...': no son pedidos, son el índice que
+       permite reconocer un pedido que ya había para actualizarlo en vez
+       de duplicarlo. Y hay que quitarlas ANTES de cortar por 100: como
+       la lista va ordenada al revés y la 'i' va detrás de los dígitos,
+       si no se filtran se ponen las primeras y te tapan los pedidos de
+       verdad. */
+    const claves = keys.map((k) => k.name)
+      .filter((n) => !n.startsWith('id-'))
+      .sort().reverse().slice(0, 100);
     const lista = [];
     for (const k of claves) {
       const crudo = await env.ENCARGOS.get(k);
