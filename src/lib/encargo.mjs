@@ -16,12 +16,47 @@ export var LIMITES = {
   pago: 80
 };
 export var FORMATOS = ['placa', 'stand', 'tarjeta'];
+/* cómo se llama cada formato cuando hay que escribirlo para una persona.
+   El plural va escrito aparte porque no se hace añadiendo una ese:
+   "placas de mesa", no "placa de mesas". */
+export var NOMBRES = {
+  placa:   'placa de mesa',
+  stand:   'expositor de pie',
+  tarjeta: 'tarjeta de mano'
+};
+export var PLURALES = {
+  placa:   'placas de mesa',
+  stand:   'expositores de pie',
+  tarjeta: 'tarjetas de mano'
+};
 
 function texto(v, max) {
   if (typeof v !== 'string') return '';
   /* fuera los caracteres de control: no pintan nada y ensucian los
      correos y el panel */
   return v.replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+/* una cantidad razonable: entre 1 y 500 */
+function cuantas(v) {
+  return Math.max(1, Math.min(500, parseInt(v, 10) || 1));
+}
+
+/* El pedido escrito para una persona: "5 placas de mesa + 20 tarjetas de
+   mano". Lo usan el correo del aviso y el panel, para que los dos digan
+   lo mismo. */
+export function resumenPedido(encargo) {
+  var ls = (encargo && encargo.lineas) || [];
+  if (!ls.length && encargo && encargo.formato) {
+    ls = [{ formato: encargo.formato, cantidad: encargo.cantidad }];
+  }
+  return ls.map(function (l) {
+    var n = l.cantidad;
+    var nombre = (n === 1 ? NOMBRES[l.formato] : PLURALES[l.formato]) || l.formato;
+    /* 20 o más de placa o expositor es la cesta abierta de la web */
+    if (l.formato !== 'tarjeta' && n >= 20) return '20 o más ' + nombre;
+    return n + ' ' + nombre;
+  }).join(' + ');
 }
 
 /* Deja el encargo en limpio o dice qué falta. Nunca lanza: un formulario
@@ -43,9 +78,32 @@ export function limpia(crudo) {
        puede inventar—, solo sirve para cuadrarla contra el panel de
        Stripe de un vistazo. */
     pago:      texto(d.pago,      LIMITES.pago),
+    /* los euros de fianza que dice haber pagado. Solo informativo: quien
+       manda es el cobro que veas en Stripe. */
+    fianza:    Math.max(0, Math.min(100000, parseInt(d.fianza, 10) || 0)),
     formato:   FORMATOS.indexOf(d.formato) > -1 ? d.formato : 'placa',
-    cantidad:  Math.max(1, Math.min(500, parseInt(d.cantidad, 10) || 1))
+    cantidad:  cuantas(d.cantidad)
   };
+
+  /* Un pedido puede llevar VARIOS productos: placas para las mesas y
+     tarjetas para el delantal, por ejemplo. Vienen en 'lineas'. Si no
+     viene ninguna —un navegador con la web vieja en caché, o cualquier
+     otra cosa que llame a esta función— se arma una sola línea con el
+     formato y la cantidad sueltos, que siguen llegando igual. */
+  var vistos = {};
+  e.lineas = [];
+  if (d.lineas && typeof d.lineas.length === 'number') {
+    for (var i = 0; i < d.lineas.length; i++) {
+      var l = d.lineas[i] || {};
+      if (FORMATOS.indexOf(l.formato) < 0 || vistos[l.formato]) continue;
+      vistos[l.formato] = true;
+      e.lineas.push({ formato: l.formato, cantidad: cuantas(l.cantidad) });
+    }
+  }
+  if (!e.lineas.length) e.lineas = [{ formato: e.formato, cantidad: e.cantidad }];
+  /* que el formato suelto y la primera línea no puedan discrepar */
+  e.formato  = e.lineas[0].formato;
+  e.cantidad = e.lineas[0].cantidad;
 
   var faltan = [];
   if (!e.negocio) faltan.push('el nombre del negocio');

@@ -237,6 +237,57 @@ tres escenas 3D nada mas abrir la pagina. Si el movil o el navegador no
 puede con el 3D, se queda la foto de siempre y no se rompe nada.
 
 
+EL PEDIDO CON VARIOS PRODUCTOS
+------------------------------
+En el paso 1 se pueden marcar VARIOS productos y todos van en el mismo
+pedido. La combinacion natural -placas para las mesas y tarjetas para el
+delantal- antes habia que pedirla dos veces o explicarla a mano en las
+notas; era la venta que se estaba dejando escapar.
+
+Como funciona:
+
+    - Los botones del paso 1 se encienden y se apagan. El ultimo que
+      quede encendido no se puede apagar: un pedido de nada no es un
+      pedido.
+    - El paso 2 saca UNA FILA DE CANTIDADES POR CADA producto marcado,
+      con su nombre delante. Con uno solo, el nombre no sale (sobra).
+    - Cada producto se queda con la cantidad que le pusiste aunque lo
+      apagues y lo vuelvas a encender.
+    - El ticket suma todo, ensena el desglose linea a linea y el ahorro
+      total, y la pila de piezas pinta una fila por producto (cada uno
+      con su tamano, que una tarjeta y una placa no miden lo mismo).
+    - El WhatsApp sale con una linea por producto y el total debajo.
+    - El "Pedir esta" de cada ficha: si todavia no has tocado el paso 1,
+      cambia la eleccion por esa; si ya habias montado una mezcla, se
+      ANADE en vez de borrarte lo que llevabas.
+
+El pedido te llega igual por correo y al panel de taller/pedidos.html,
+donde ahora se lee "5 placas de mesa + 20 tarjetas de mano".
+
+
+EL PLAZO Y LA GARANTIA DEL CHIP, ESCRITOS
+-----------------------------------------
+Las dos preguntas que siempre llegaban por WhatsApp antes de pedir ya
+estan contestadas en la web, para que no haya que preguntarlas:
+
+    PLAZO      "2-7 dias de preparacion y 1-3 de envio" en el ticket del
+               pedido, "En tu mesa en 3-10 dias" en la portada y en la
+               cinta, una pregunta entera en el bloque de dudas y el
+               apartado 9 de las condiciones de venta. Son los mismos
+               numeros que ya le declaramos a Google en la ficha de
+               datos, asi que no pueden decir cosas distintas.
+
+    CHIP       "Si un chip no lee, te lo reponemos" en el ticket y en la
+               portada, con la letra pequena en el apartado 7 de las
+               condiciones: reposicion sin coste, envio incluido, de
+               origen o durante el primer ano de uso normal; no entra lo
+               que rompa el propio local (perforado, doblado, quemado o
+               arrancado).
+
+Si cambias los dias, cambialos tambien en el bloque de datos de Google
+del index.html (handlingTime y transitTime, arriba del todo).
+
+
 LO QUE FALTA POR RELLENAR
 -------------------------
 Abre index.html con el Bloc de notas y busca:
@@ -249,20 +300,59 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 0) EL COBRO DE LA FIANZA. Hay dos maneras, y la web escoge sola.
 
    ANTES DE NADA: la web ya NO dice "senal" en ningun sitio. Ahora se
-   llama FIANZA y en todos lados se explica lo mismo: los 25 EUR no
-   son un cobro aparte, son los primeros 25 EUR del pedido. En el
-   ticket se lee "Hoy pagas 25,00 EUR de fianza y el resto, 75,00
-   EUR, cuando el diseno te guste". Si el pedido son 25 EUR o menos,
-   la web dice que queda pagado entero.
+   llama FIANZA y en todos lados se explica lo mismo: no es un cobro
+   aparte, son los primeros euros del pedido.
+
+   LA FIANZA YA NO ES FIJA: ES EL 30 % DEL PEDIDO, MINIMO 15 EUR.
+   Antes eran 25 EUR siempre, y eso hacia que el pedido mas pequeno
+   -una placa suelta, justo el que sirve para probar- se pagara entero
+   por adelantado, y el expositor al 83 %. Demasiada friccion donde
+   menos convenia. Ahora sale asi:
+
+       1 placa (25 EUR)          ->  15 EUR   (antes: 25, el 100 %)
+       1 expositor (30 EUR)      ->  15 EUR   (antes: 25, el 83 %)
+       5 placas (100 EUR)        ->  30 EUR
+       12 placas (210 EUR)       ->  63 EUR
+       20 tarjetas (300 EUR)     ->  90 EUR
+       presupuesto por cerrar    ->  15 EUR
+
+   Se redondea a euros enteros y nunca pasa del propio pedido. Los dos
+   numeros se cambian en un sitio y ya esta, en el index.html:
+
+       porcentaje: 30      <- % del pedido
+       minimo:     15      <- euros, el suelo
+       descuenta:  true    <- true = va DENTRO del precio final
+
+   De ahi salen solos el ticket, el paso 5, el mensaje de WhatsApp, las
+   condiciones de venta y las preguntas. No hay que tocar ningun texto.
 
    ---- MANERA A: COBRO AUTOMATICO (es la que esta puesta) ------------
-   YA ESTA MONTADO. El enlace de pago de tu Stripe esta metido:
+   YA ESTA MONTADO, y hay DOS enlaces de pago de tu Stripe metidos:
 
+       porEuro (el que se usa)
+       https://buy.stripe.com/cNieVd3YDfEZeLxbdw5Rm01
+       Producto "Fianza del diseno PLEA5E", 1,00 EUR la unidad, con la
+       cantidad ajustable de 15 a 500. La web le pide las unidades que
+       hagan falta: 30 unidades = 30 EUR. Asi un solo enlace cobra
+       CUALQUIER importe, que es lo que hace falta ahora que la fianza
+       se mueve con el pedido.
+
+       enlace + importe (el viejo, de reserva)
        https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00
+       Cobra 25 EUR y solo eso. Se queda ahi por si algun dia quitas el
+       de arriba: entonces la web lo usaria cuando la fianza saliera
+       justo 25 EUR, y para los demas importes pediria Bizum.
 
    El cliente monta el pedido, le da a "Pagar la fianza", paga con Bizum,
    Apple Pay, Google Pay o tarjeta, vuelve solo y se le desbloquea el
    WhatsApp con la referencia del cobro dentro del mensaje.
+
+   OJO CON LA CANTIDAD AJUSTABLE: en la pantalla de Stripe sale un
+   selector y el cliente puede bajarla. Por eso el minimo esta puesto
+   en 15, que es la fianza mas pequena posible: menos de eso no puede
+   pagar. Pero MIRA EL IMPORTE EN TU PANEL antes de ponerte a disenar:
+   el WhatsApp te dice lo que TOCABA pagar, y quien manda es el cobro
+   que ves en Stripe.
 
    LO PRIMERO QUE TIENES QUE COMPROBAR
    Que en ese enlace de pago, en Stripe, esta puesta la REDIRECCION.
@@ -280,14 +370,19 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    recupera el pedido y le sale un "?ya has pagado la fianza?" con una
    casilla. Fijate en el circulo del mensaje que te llega:
 
-       VERDE     Fianza pagada - 25 EUR (ya dentro del total)
+       VERDE     Fianza pagada - 30 EUR (ya dentro del total)
                  Referencia: cs_live_...
                  -> Stripe lo confirmo. Cuadra con tu panel.
 
-       AMARILLO  Fianza pagada - 25 EUR (ya dentro del total)
+       AMARILLO  Fianza pagada - 30 EUR (ya dentro del total)
                  Sin referencia automatica
                  -> Lo dice el cliente y no tenemos confirmacion.
                     Miralo en Stripe antes de ponerte a disenar.
+
+   El importe que sale ahi es el que se pago, no el que tocaria ahora:
+   si el cliente amplia el pedido despues de pagar, el mensaje sigue
+   diciendo lo que puso y anade "Queda por pagar: ... al aprobar el
+   diseno" con la diferencia nueva.
 
    El circulo es para ti; al cliente no se le dice nada desagradable,
    que el mensaje lo escribe el y lo lee antes de enviartelo.
@@ -325,14 +420,15 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    en "Pagar". "Comprar" suena a que se lleva la placa ya, y esto es la
    fianza del diseno.
 
-   ---- MANERA B: BIZUM A MANO (la de mientras tanto) ------------------
-   Es lo que hay si dejas 'enlace' vacio. Sale tu numero de Bizum y una
-   casilla de "ya lo he enviado" que desbloquea el WhatsApp. Se fia de
-   la palabra del cliente, asi que mira el movil antes de ponerte.
+   ---- MANERA B: BIZUM A MANO (la de respaldo) ------------------------
+   Es lo que sale cuando NINGUN enlace sabe cobrar ese importe: si
+   vacias los dos enlaces, o si dejas solo el viejo de 25 EUR y la
+   fianza de ese pedido no son 25 EUR. Sale tu numero de Bizum, el
+   importe exacto y una casilla de "ya lo he enviado" que desbloquea el
+   WhatsApp. Se fia de la palabra del cliente, asi que mira el movil
+   antes de ponerte.
 
        numero:    '661403219'   <- OJO, ahora esta el mismo del WhatsApp
-       fianza:    25            <- euros
-       descuenta: true          <- true = va DENTRO del precio final
 
    Si pones 'descuenta' en false, la web cambia sola el discurso: pasa a
    decir que la fianza cubre el trabajo de diseno y que no se descuenta.
@@ -341,17 +437,18 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 
    CAMBIA ESE NUMERO si tu Bizum esta en otro movil.
 
-   Si vacias las dos cosas (enlace y numero), el paso desaparece y el
-   boton de WhatsApp funciona directo, como antes. Ojo: las condiciones
-   de venta hablan de la fianza, asi que si la quitas, avisa para
-   repasar ese texto.
+   Si vacias las tres cosas (los dos enlaces y el numero), el paso
+   desaparece y el boton de WhatsApp funciona directo, como antes. Ojo:
+   las condiciones de venta hablan de la fianza, asi que si la quitas,
+   avisa para repasar ese texto.
 
 
    ---- LA OFERTA DE LANZAMIENTO Y SU CUENTA ATRAS --------------------
    Justo debajo del bloque de la fianza hay este:
 
        var OFERTA = {
-         fin: '2026-09-30T23:59:59'
+         fin: '2026-09-30T23:59:59',
+         renueva: true
        };
 
    Esa fecha es LO UNICO que hay que tocar. De ahi salen solas tres
@@ -375,49 +472,68 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
        fin: '2026-11-15T23:59:59'
 
    QUE PASA CUANDO LLEGA LA FECHA
-   Se apaga solo. Desaparecen la cinta dorada y los dos contadores, y
-   las condiciones dejan de prometer la oferta. Nadie ve un contador en
-   negativo ni una promesa caducada.
+   Con 'renueva' en true -que es como esta puesto ahora- SE ALARGA
+   SOLA AL MES SIGUIENTE. El 30 de septiembre pasa a ser el 31 de
+   octubre, y luego el 30 de noviembre, y asi. La cinta, los dos
+   contadores y las condiciones dicen la fecha nueva sin que tengas que
+   entrar a tocar nada. Si se cumple el plazo con la web abierta, el
+   reloj salta a la fecha nueva y sigue contando.
 
-   LO QUE NO SE APAGA SOLO: los precios tachados de las fichas (25 EUR
-   con 33 EUR tachado, -24%). Esos estan escritos a mano en el HTML.
-   Asi que cuando llegue el dia tienes dos opciones:
+   POR QUE SE HIZO ASI. Antes, al llegar la fecha, se apagaban la cinta
+   y los contadores... pero los precios tachados de las fichas (25 EUR
+   con 33 EUR tachado, -24%) estan escritos a mano en el HTML y NO se
+   apagan. La web se quedaba ensenando un tachado sin ninguna oferta
+   detras: lo peor de las dos opciones. Ahora las dos cosas van juntas.
 
-       a) Alargar la oferta -> pon una fecha nueva en 'fin' y ya esta.
-       b) Terminarla de verdad -> cambia esos precios a mano en las tres
-          fichas de producto y quita los <span class="antes"> y
+   COMO TERMINARLA DE VERDAD, si algun dia quieres:
+       1. Pon 'renueva' en false.
+       2. Cuando pase la fecha, sube a mano los precios de las tres
+          fichas de producto y quitales el <span class="antes"> y el
           <span class="ahorro">.
 
    En las ultimas 48 horas las dos lineas se ponen naranjas solas, para
    meter un poco de prisa sin gritar. Y si pasas el raton por encima sale
    la fecha entera.
 
-   OJO CON ALARGARLA SIEMPRE: si la fecha se mueve cada mes, deja de ser
-   una oferta y pasa a ser el precio de siempre con un reloj al lado.
-   Eso, ademas de quemar la credibilidad, en España lo puede mirar
-   Consumo. Si vas a tener ese precio todo el ano, es mas honesto quitar
-   el tachado y dejar 25 EUR a secas.
+   LO QUE HAY QUE SABER DE ALARGARLA SIEMPRE: si la fecha se mueve cada
+   mes, deja de ser una oferta y pasa a ser el precio de siempre con un
+   reloj al lado. Eso, ademas de quemar la credibilidad, en España lo
+   puede mirar Consumo, que para eso mira el precio mas bajo de los
+   ultimos 30 dias. Si el 25 EUR va a ser el precio todo el ano, lo mas
+   limpio es quitar el tachado y dejar 25 EUR a secas. Queda dicho.
 
-1) DATOS  -> para el aviso legal.
+1) DATOS  -> para el aviso legal.  YA ESTA COMPLETO.
    En España, si vendes por internet, el aviso legal tiene que llevar
-   tu nombre o razon social, tu NIF y tu domicilio. Ahora mismo esas
-   lineas no salen porque estan vacias, y el aviso legal esta incompleto.
-   Lo que dejes en blanco simplemente no aparece, no rompe nada.
+   tu nombre o razon social, tu NIF y tu domicilio ENTERO, con codigo
+   postal. Ya estan los cuatro datos puestos:
 
-   ESTO MISMO VALE PARA LAS CONDICIONES DE VENTA (el boton nuevo del
-   pie). Su apartado 1, "Quien vende", sale de estos mismos datos. Unas
+       titular:   'Juan Fernandez Selma'
+       nif:       '49891813Y'
+       domicilio: 'C/ Poeta Alonso de Bonilla, 19 · 14012 Cordoba (España)'
+       email:     'juanfersem@gmail.com'
+
+   ESTO MISMO VALE PARA LAS CONDICIONES DE VENTA (el boton del pie).
+   Su apartado 1, "Quien vende", sale de estos mismos datos. Lo que
+   dejes en blanco simplemente no aparece, no rompe nada, pero unas
    condiciones sin nombre, NIF y domicilio no sirven de mucho si algun
-   dia hay una discusion, asi que rellenalos antes de empezar a cobrar.
+   dia hay una discusion.
 
-       titular:   'Tu nombre o razon social'
-       nif:       '12345678A'
-       domicilio: 'Calle Ejemplo 1, 41001 Sevilla'
-       email:     'hola@plea5e.es'
+   El codigo postal va tambien en la ficha de datos que lee Google
+   (el bloque de arriba del todo del index.html, el de las llaves).
+   Si algun dia te mudas, cambialo en LOS DOS SITIOS.
 
 2) LOCALES -> los enlaces de Piccola y BARVI.
    Ya estan puestos: son los mismos codigos de Google que llevan
    impresos en el QR de sus placas, asi que la placa de cada uno ya
    es pulsable y lleva a dejarles resena, y sale "Ver donde esta".
+
+   Y AHORA SALEN TAMBIEN EN LA PORTADA, arriba del todo, debajo de los
+   botones: sus dos nombres con la foto de su placa recortada en
+   redondo, y un enlace que baja a su seccion. Dos clientes de verdad
+   con nombre y foto convencen mas que cualquier frase que escribamos
+   nosotros, y estaban enterrados a media pagina. Si algun dia quitas un
+   local, acuerdate de quitarlo tambien de ahi: se busca "prueba" en el
+   index.html.
 
        piccola: ChIJZca-8BbQDQ0RIByaopjYtHY
        barvi:   ChIJjYNmjvrRDQ0RVVaESvW5Yhs

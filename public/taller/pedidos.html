@@ -296,6 +296,22 @@
     return 'https://wa.me/' + n;
   }
 
+  /* El pedido en palabras. Ahora puede llevar varios productos, así que
+     se lee de 'lineas'; los encargos de antes solo traen formato y
+     cantidad sueltos y se leen igual de bien. */
+  var NOMBRES  = { placa:'placa de mesa',  stand:'expositor de pie',  tarjeta:'tarjeta de mano' };
+  var PLURALES = { placa:'placas de mesa', stand:'expositores de pie', tarjeta:'tarjetas de mano' };
+  function resumen(e) {
+    var ls = (e && e.lineas && e.lineas.length) ? e.lineas
+           : (e && e.formato ? [{ formato:e.formato, cantidad:e.cantidad }] : []);
+    return ls.map(function (l) {
+      var n = +l.cantidad || 1;
+      var nombre = (n === 1 ? NOMBRES[l.formato] : PLURALES[l.formato]) || l.formato;
+      if (l.formato !== 'tarjeta' && n >= 20) return '20 o más ' + nombre;
+      return n + ' ' + nombre;
+    }).join(' + ');
+  }
+
   function fila(k, v, enlace) {
     if (!v) return '';
     var dentro = enlace ? '<a href="' + esc(enlace) + '" target="_blank" rel="noopener">' + esc(v) + '</a>'
@@ -344,7 +360,7 @@
           '</div>' +
           '<p class="cuando">' + fecha(i.cuando) + '</p>' +
           '<table class="datos">' +
-            fila('Pedido', (e.formato || '') + ' × ' + (e.cantidad || '')) +
+            fila('Pedido', resumen(e)) +
             fila('Ciudad', e.ciudad) +
             fila('Dirección', e.direccion) +
             fila('Teléfono', e.tel, wa) +
@@ -352,6 +368,7 @@
             fila('Redes', e.redes, /^https?:/i.test(e.redes || '') ? e.redes : '') +
             fila('Google', e.google, /^https?:/i.test(e.google || '') ? e.google : '') +
             fila('Pago', e.pago) +
+            fila('Fianza', e.fianza ? e.fianza + ' €' : '') +
           '</table>' +
           (e.notas ? '<p class="notas">' + esc(e.notas) + '</p>' : '') +
           (b.porque || colores

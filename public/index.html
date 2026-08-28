@@ -53,6 +53,8 @@
       "legalName": "Juan Fernández Selma",
       "address": {
         "@type": "PostalAddress",
+        "streetAddress": "C/ Poeta Alonso de Bonilla, 19",
+        "postalCode": "14012",
         "addressLocality": "Córdoba",
         "addressRegion": "Córdoba",
         "addressCountry": "ES"
@@ -295,6 +297,30 @@
         },
         {
           "@type": "Question",
+          "name": "¿Cuánto tarda en llegar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Entre 3 y 10 días desde que apruebas el diseño: de 2 a 7 días de preparación (diseño, impresión y grabado del chip) y de 1 a 3 días de envío a península. Si te corre prisa, dínoslo al pedirlo y te decimos qué podemos hacer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Y si un chip no lee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Te lo reponemos sin coste, envío incluido. Cada chip se prueba con un móvil antes de salir, pero si alguno falla al llegar o deja de leer, nos mandas una foto por WhatsApp y te sale otro. La misma garantía vale si la pieza llega rota o mal impresa."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto hay que pagar por adelantado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El 30 % del pedido, con un mínimo de 15 €. Es una fianza para ponernos a diseñar, y no es dinero de más: va dentro del precio y se descuenta del total. El resto se paga cuando el diseño te gusta, justo antes de imprimir."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "¿Por qué cuesta 25 €?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -518,12 +544,26 @@
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Diseño a medida gratis</span>
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Envío incluido</span>
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Sin cuotas ni apps</span>
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> En tu mesa en 3-10 días</span>
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Si un chip no lee, te lo reponemos</span>
         </div>
         <div class="acciones">
           <a class="btn btn-oro" href="#pedido">Pedirlo ahora</a>
           <a class="btn btn-fan" href="#productos">Ver productos y precios</a>
         </div>
         <p class="bajo">Desde <b class="oro">25 €</b> · no se imprime nada hasta que apruebas el diseño.</p>
+
+        <!-- Dos clientes de verdad, con su foto, arriba del todo: pesa más
+             que cualquier frase que podamos escribir nosotros. Las fotos
+             son las mismas placas que se ven abajo, en su sección. -->
+        <a class="prueba" href="#clientes">
+          <span class="caras" aria-hidden="true">
+            <img src="assets/img/bcd3cec2e61f.jpg" alt="" width="44" height="44" loading="lazy" decoding="async">
+            <img src="assets/img/87c348f619be.jpg" alt="" width="44" height="44" loading="lazy" decoding="async">
+          </span>
+          <span class="prueba-txt"><b>Heladería Piccola</b> y <b>BARVI</b> ya las tienen en sus mesas
+            <small>Córdoba · mira sus placas y déjales tu reseña</small></span>
+        </a>
       </div>
     </div>
   </div>
@@ -603,7 +643,7 @@
     <div class="rapido sube">
       <div class="lado-a">
         <div class="paso-r">
-          <span class="num">1</span><span class="pregunta">¿Qué quieres?</span>
+          <span class="num">1</span><span class="pregunta">¿Qué quieres?<small>Marca los que quieras: van en el mismo pedido</small></span>
           <div class="opciones foto-op" id="opProd" role="group" aria-label="Producto">
             <button class="op" type="button" data-v="placa" aria-pressed="true">
               <img src="assets/img/38fddc03af4a.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
@@ -622,12 +662,9 @@
 
         <div class="paso-r">
           <span class="num">2</span><span class="pregunta">¿Cuántas?</span>
-          <div class="opciones" id="opCant" role="group" aria-label="Cantidad">
-            <button class="op" type="button" data-v="1" aria-pressed="false">1</button>
-            <button class="op" type="button" data-v="5" aria-pressed="true">5</button>
-            <button class="op" type="button" data-v="12" aria-pressed="false">12</button>
-            <button class="op" type="button" data-v="20" aria-pressed="false">20 o más</button>
-          </div>
+          <!-- una fila de cantidades por cada producto marcado; lo pinta el
+               JS, porque depende de lo que se haya elegido arriba -->
+          <div class="cants" id="opCant"></div>
         </div>
 
         <div class="paso-r datos-p">
@@ -652,13 +689,18 @@
         <div class="pila" id="pila" aria-hidden="true"></div>
         <p class="pila-txt" id="pilaTxt">5 placas de mesa</p>
         <p class="cifra" id="rTotal">100,00 €</p>
-        <p class="detalle" id="rDetalle">5 placas de mesa · 20,00 € cada una · ahorras 25,00 €</p>
+        <div class="detalle" id="rDetalle">5 placas de mesa · 20,00 € cada una · ahorras 25,00 €</div>
         <p class="reparto" id="rReparto" hidden></p>
         <ul class="incluye">
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Diseño con tu marca, incluido</li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Chip NFC + QR programados</li>
+          <!-- las dos preguntas que siempre llegan por WhatsApp antes de
+               pedir: cuándo llega y qué pasa si el chip falla. Contestadas
+               aquí, en el ticket, ya no hace falta preguntarlas. -->
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span><b>2-7 días</b> de preparación y <b>1-3</b> de envío</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span>Si un chip no lee, <b>te lo reponemos</b></span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Envío gratis a península</li>
-          <li id="incFianzaLi" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span>La fianza de <b id="incFianza">25 €</b> va dentro del precio</span></li>
+          <li id="incFianzaLi" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span>La fianza de <b id="incFianza">15 €</b> va dentro del precio</span></li>
         </ul>
         <!-- aquí la columna es estrecha: etiqueta corta para que no se
              parta en dos líneas -->
@@ -669,9 +711,10 @@
              configuración, y entonces el botón funciona como siempre. -->
         <div class="senal-paso" id="senalPaso" hidden>
           <p class="senal-paso-tit"><span class="np">5</span>Antes de darle: la fianza</p>
-          <p class="senal-paso-txt">Para ponernos a diseñar te pedimos una fianza de <b id="senalCifra">25 €</b>. <span id="senalDesc">No es dinero de más: van dentro del precio final, se te descuentan del total.</span></p>
+          <p class="senal-paso-txt">Para ponernos a diseñar te pedimos una fianza de <b id="senalCifra">15 €</b> <span class="senal-regla" id="senalRegla"></span>. <span id="senalDesc">No es dinero de más: van dentro del precio final, se te descuentan del total.</span></p>
           <dl class="senal-datos">
             <dt>Bizum a</dt><dd class="senal-num" id="senalNum">—</dd>
+            <dt>Importe</dt><dd id="senalImporte">15 €</dd>
             <dt>Concepto</dt><dd id="senalCon">El nombre de tu negocio</dd>
           </dl>
           <label class="senal-check" id="senalCheck"><input type="checkbox" id="senalHecho"><span>Ya he enviado la fianza</span></label>
@@ -799,12 +842,16 @@
     <div class="faq">
       <details class="sube" open><summary>¿El cliente tiene que descargarse algo?</summary>
         <p>No. Los Android e iPhone de los últimos años leen NFC de fábrica: acercan el móvil y se les abre solo el formulario de reseña. Y si alguien lleva un móvil viejo o el NFC apagado, ahí tiene el QR.</p></details>
+      <details class="sube"><summary>¿Cuánto tarda en llegar?</summary>
+        <p>Entre <b>3 y 10 días</b> desde que apruebas el diseño: de 2 a 7 días de preparación —diseño, impresión y grabado del chip— y de 1 a 3 días de envío a península. Si te corre prisa, dínoslo al hacer el pedido y te decimos qué podemos hacer.</p></details>
       <details class="sube"><summary>¿Lleva al mapa o directamente a escribir la reseña?</summary>
         <p>Directamente a la ventana de escribir, con las estrellas ya delante. Cuantos menos pasos hay, más reseñas se terminan.</p></details>
       <details class="sube"><summary>¿Hay que pagar algo cada mes?</summary>
         <p>No. Pagas una vez y es tuyo. El enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p></details>
-      <details class="sube"><summary>¿La fianza de 25 € se paga aparte?</summary>
-        <p>No, va dentro del precio. Son los primeros 25 € del pedido, no un extra: se pagan antes de que nos pongamos a diseñar y se te descuentan del total. Si tu pedido son 100 €, pagas 25 € ahora y 75 € cuando el diseño te guste. Y si el pedido son 25 €, ya está pagado entero.</p></details>
+      <details class="sube"><summary>¿Cuánto hay que pagar por adelantado?</summary>
+        <p>Una fianza: <b data-fianza-regla>el 30 % del pedido, con un mínimo de 15 €</b>. No es dinero de más, va dentro del precio y se descuenta del total. Si tu pedido son 100 €, pagas 30 € ahora y 70 € cuando el diseño te guste. Si es una sola pieza, son 15 € y punto: lo demás, al aprobarlo.</p></details>
+      <details class="sube"><summary>¿Y si un chip no lee?</summary>
+        <p><b>Te lo reponemos sin coste, envío incluido.</b> Cada chip se prueba con un móvil antes de salir de aquí, pero si alguno llega fallando o deja de leer, nos mandas una foto por WhatsApp y te sale otro. Lo mismo si la pieza llega rota o mal impresa.</p></details>
       <details class="sube"><summary>¿Por qué cuesta 25 €?</summary>
         <p>Porque no es una pegatina impresa. Dentro lleva un chip programable, grabado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada.</p></details>
       <details class="sube"><summary>¿De verdad lo hacéis todo a medida?</summary>
@@ -923,33 +970,61 @@
      enlace pequeño del pie: ahí es donde la ley pide que estén y donde
      nadie tropieza con ellos por casualidad.
 
-     Al domicilio solo le falta el codigo postal. Cuando lo tengas, se
-     anade aqui y ya esta completo. */
+     El domicilio va COMPLETO, con código postal: sin él, el aviso legal
+     se queda a medias de cara a la ley. */
   var DATOS = {
     titular:   'Juan Fernández Selma',
     nif:       '49891813Y',
-    domicilio: 'C/ Poeta Alonso de Bonilla, 19 · Córdoba (España)',   // falta el código postal
+    domicilio: 'C/ Poeta Alonso de Bonilla, 19 · 14012 Córdoba (España)',
     email:     'juanfersem@gmail.com'
   };
 
   /* La fianza que se paga para que te pongas a diseñar. Son los
      primeros euros del pedido, no un cobro aparte: la web lo dice así en
      todos lados mientras 'descuenta' esté en true.
-     MIENTRAS 'numero' ESTÉ VACÍO, EL APARTADO DE BIZUM NO SALE EN LA WEB.
-     Es a propósito: más vale que no salga a que salga sin número y la
-     gente no sepa a dónde pagar. Pon el número y aparece solo. */
+
+     YA NO ES UNA CIFRA FIJA, ES PROPORCIONAL. Con los 25 € de antes, el
+     pedido más pequeño —una placa suelta, que es justo el de prueba— se
+     pagaba entero por adelantado, y un expositor, al 83 %. Demasiada
+     fricción justo en el pedido que sirve para perder el miedo. Ahora se
+     adelanta un porcentaje del pedido con un suelo por debajo del cual
+     no baja: el que prueba con una pieza adelanta 15 €, y el que pide
+     cien adelanta lo que le toca.
+
+     MIENTRAS 'numero' ESTÉ VACÍO Y NO HAYA ENLACE DE PAGO, EL APARTADO
+     NO SALE EN LA WEB. Es a propósito: más vale que no salga a que salga
+     sin decir a dónde se paga. Pon el número y aparece solo. */
   var BIZUM = {
     // El Bizum "a mano": el cliente te lo manda al móvil y marca una
     // casilla diciendo que lo ha hecho. Es el modo de respaldo, el que
-    // se usa mientras no tengas montado el cobro automático de abajo.
+    // se usa cuando el cobro automático no puede cobrar ese importe.
     //
     // ¡¡CAMBIA ESTE NÚMERO SI EL BIZUM VA A OTRO SITIO!!
     // De momento está puesto el mismo del WhatsApp para que el paso se
     // vea funcionando. Si tu Bizum está en otro móvil, cámbialo aquí.
     numero:  '661403219',
-    fianza:  25,     // euros
+    porcentaje: 30,  // % del pedido que se adelanta
+    minimo:     15,  // euros: por debajo de esto no baja nunca
     descuenta: true  // true = la fianza va DENTRO del precio final
   };
+
+  /* Lo que hay que adelantar en un pedido de 'total' euros.
+
+     Siempre en euros enteros: es lo que se teclea en un Bizum y lo que
+     sabe cobrar el enlace de pago. Y nunca más que el propio pedido, no
+     vaya a ser que en un pedido pequeño la fianza se pase de largo. */
+  function fianzaDe(total){
+    if (!(total > 0)) return BIZUM.minimo;        /* presupuesto sin cerrar */
+    var v = Math.max(BIZUM.minimo, Math.round(total * BIZUM.porcentaje / 100));
+    return Math.min(v, Math.round(total));
+  }
+  /* La regla en palabras. Sale de la misma configuración que el número,
+     así que el ticket, las condiciones de venta y las preguntas no
+     pueden acabar diciendo cosas distintas. */
+  var FIANZA_REGLA = 'el ' + BIZUM.porcentaje + ' % del pedido, con un mínimo de ' + BIZUM.minimo + ' €';
+  [].forEach.call(document.querySelectorAll('[data-fianza-regla]'), function(e){
+    e.textContent = FIANZA_REGLA;
+  });
 
   /* ---- COBRO AUTOMÁTICO (Bizum, Apple Pay, Google Pay y tarjeta) ----
      En cuanto pegues aquí tu enlace de pago, el paso 5 del pedido deja
@@ -969,10 +1044,50 @@
           las llaves van tal cual, Stripe las rellena solo)
        5. Copia el enlace que te da y pégalo aquí abajo.
 
-     Mientras esté vacío, todo sigue funcionando con el Bizum a mano. */
+     Mientras esté vacío, todo sigue funcionando con el Bizum a mano.
+
+     ── OJO, ESTO CAMBIÓ AL HACER LA FIANZA PROPORCIONAL ──────────────
+     Un enlace de pago de Stripe cobra SIEMPRE la misma cantidad. Mientras
+     la fianza eran 25 € fijos, con uno bastaba. Ahora el importe cambia
+     con el pedido, así que hay dos casillas:
+
+       enlace + importe   el enlace de toda la vida, que cobra 25 € y
+                          solo eso. La web lo usa cuando la fianza sale
+                          justo esa cifra, y para el resto de importes
+                          enseña el Bizum a mano.
+
+       porEuro            un enlace de 1 € con la cantidad ajustable.
+                          Con él se cobra CUALQUIER importe: la web pide
+                          15 unidades para 15 €, 63 para 63 €. En cuanto
+                          lo pegues aquí, el botón de pagar sale siempre
+                          y el Bizum a mano deja de hacer falta.
+
+     El de porEuro YA ESTÁ CREADO en tu Stripe: producto "Fianza del
+     diseño PLEA5E", 1,00 € la unidad, cantidad ajustable de 15 a 500 y
+     la misma vuelta a plea5e.es. Ese mínimo de 15 es la red de
+     seguridad: en la pantalla de Stripe se puede tocar la cantidad, y
+     así nadie puede pagar menos que la fianza más pequeña.
+
+     AUN ASÍ, MIRA EL IMPORTE EN STRIPE antes de ponerte a diseñar: el
+     WhatsApp te dice lo que TOCABA pagar, y quien manda es el cobro que
+     ves en tu panel.                                                   */
   var PAGO = {
-    enlace: 'https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00'
+    enlace:  'https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00',
+    importe: 25,     // lo que cobra ESE enlace, tal y como está en Stripe
+    // el de 1 € por unidad: cobra el importe exacto, sea cual sea
+    porEuro: 'https://buy.stripe.com/cNieVd3YDfEZeLxbdw5Rm01'
   };
+
+  /* El enlace que cobra EXACTAMENTE esa fianza, o cadena vacía si no hay
+     ninguno que sepa cobrarla. Nunca se manda a alguien a una pantalla
+     de pago por un importe distinto del que le hemos dicho. */
+  function enlaceDePago(fianza){
+    var euro = String(PAGO.porEuro || '').trim();
+    if (euro) return euro + (euro.indexOf('?') > -1 ? '&' : '?') + 'quantity=' + fianza;
+    var fijo = String(PAGO.enlace || '').trim();
+    if (fijo && fianza === PAGO.importe) return fijo;
+    return '';
+  }
 
   /* Enlaces de cada local: son los mismos códigos de Google que llevan
      impresos en el QR de su placa. Si vacías 'resena' o 'mapa', el botón
@@ -997,12 +1112,21 @@
 
      Formato: 'AAAA-MM-DDTHH:MM:SS' (hora del que mira la web).
 
-     CUANDO PASE LA FECHA, la cinta dorada y el contador desaparecen
-     solos. Los precios tachados de las fichas NO cambian solos: si de
-     verdad se acaba la oferta, súbelos a mano. Y si la quieres alargar,
-     pon aquí una fecha nueva y ya está.                                */
+     QUÉ PASA CUANDO LLEGA LA FECHA. Con 'renueva' en true —que es como
+     está— la oferta se alarga sola al mes siguiente: la cinta, el
+     contador y las condiciones pasan a decir la fecha nueva sin que
+     tengas que tocar nada. Ese era el problema de antes: la cinta y el
+     contador se apagaban solos, pero los precios tachados de las fichas
+     están escritos a mano en el HTML y NO se apagan, así que la web se
+     quedaba enseñando un 33 € tachado sin ninguna oferta detrás.
+
+     Si algún día quieres terminarla de verdad, pon 'renueva' en false:
+     al pasar la fecha desaparecen la cinta y los contadores, y entonces
+     hay que subir a mano los precios de las tres fichas y quitarles el
+     <span class="antes"> y el <span class="ahorro">.                    */
   var OFERTA = {
-    fin: '2026-09-30T23:59:59'
+    fin: '2026-09-30T23:59:59',
+    renueva: true
   };
   /* la fecha ya convertida, para que todo el mundo lea la misma */
   OFERTA.fecha = (function(){
@@ -1011,13 +1135,39 @@
     var d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
     return isNaN(d.getTime()) ? null : d;
   })();
+  /* ¿la fecha cae en el último día de su mes? Entonces al saltar de mes
+     se queda también en el último, que es lo que se espera: 30 de
+     septiembre → 31 de octubre → 30 de noviembre. */
+  OFERTA.finDeMes = !!OFERTA.fecha &&
+    OFERTA.fecha.getDate() === new Date(OFERTA.fecha.getFullYear(), OFERTA.fecha.getMonth() + 1, 0).getDate();
+
+  OFERTA.textos = function(){
+    OFERTA.dia = OFERTA.fecha
+      ? OFERTA.fecha.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' }) : '';
+    OFERTA.diaCorto = OFERTA.fecha
+      ? OFERTA.fecha.toLocaleDateString('es-ES', { day:'numeric', month:'long' }) : '';
+  };
+
+  /* La empuja de mes en mes hasta que vuelva a quedar por delante.
+     Devuelve true si la ha movido. El tope es un seguro tonto: sin él,
+     un reloj de sistema disparatado daría vueltas para siempre. */
+  OFERTA.rodar = function(){
+    if (!OFERTA.renueva || !OFERTA.fecha) return false;
+    var d = OFERTA.fecha, movida = false, vueltas = 0;
+    while (d.getTime() <= Date.now() && vueltas++ < 600) {
+      var a = d.getFullYear(), m = d.getMonth() + 1;
+      var ultimo = new Date(a, m + 1, 0).getDate();
+      var dia = OFERTA.finDeMes ? ultimo : Math.min(d.getDate(), ultimo);
+      d = new Date(a, m, dia, d.getHours(), d.getMinutes(), d.getSeconds());
+      movida = true;
+    }
+    if (movida) { OFERTA.fecha = d; OFERTA.textos(); }
+    return movida;
+  };
+
+  OFERTA.textos();
+  OFERTA.rodar();          /* si la fecha ya pasó, se pone sola en el mes que viene */
   OFERTA.viva = function(){ return !!OFERTA.fecha && OFERTA.fecha.getTime() > Date.now(); };
-  OFERTA.dia  = OFERTA.fecha
-    ? OFERTA.fecha.toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' })
-    : '';
-  OFERTA.diaCorto = OFERTA.fecha
-    ? OFERTA.fecha.toLocaleDateString('es-ES', { day:'numeric', month:'long' })
-    : '';
 
   /* ---- la cinta dorada y la cuenta atrás ----
      Un solo reloj para toda la página: se pinta en cada elemento que
@@ -1036,19 +1186,28 @@
 
     /* la cinta se rehace aquí para meterle la fecha de fin: así no puede
        anunciar un día distinto al que cuenta el reloj */
-    if (rueda) {
+    function pintarCinta(){
+      if (!rueda) return;
       var trozos = ['<b>Oferta de lanzamiento</b>',
                     'Hasta \u221224 % en las placas',
                     'Dise\u00f1o con tu marca, 0 \u20ac',
                     'Env\u00edo gratis a pen\u00ednsula',
-                    'La fianza de ' + BIZUM.fianza + ' \u20ac va dentro del precio',
+                    'Fianza desde ' + BIZUM.minimo + ' \u20ac, dentro del precio',
+                    'En tu mesa en 3-10 d\u00edas',
                     'Acaba el ' + OFERTA.diaCorto];
       var ul = '<ul><li>' + trozos.join('</li><li>') + '</li></ul>';
       rueda.innerHTML = ul + ul + ul + ul;
       if (cinta) cinta.classList.add('rodando');
     }
+    pintarCinta();
 
     var HUECOS = [['d','d'], ['h','h'], ['m','m'], ['s','s']];
+    function ponerTitulo(r){
+      /* la fecha entera, para quien pase el raton por encima o navegue
+         con lector de pantalla */
+      r.title = 'La oferta de lanzamiento acaba el ' + OFERTA.dia +
+                '. Despu\u00e9s vuelven los precios de siempre.';
+    }
     relojes.forEach(function(r){
       r.innerHTML =
         '<span class="rm-pt" aria-hidden="true"></span>' +
@@ -1060,10 +1219,7 @@
             return '<b data-r="' + u[0] + '">--</b>' + u[1];
           }).join(' ') +
         '</span>';
-      /* la fecha entera, para quien pase el rat\u00f3n por encima o
-         navegue con lector de pantalla */
-      r.title = 'La oferta de lanzamiento acaba el ' + OFERTA.dia +
-                '. Despu\u00e9s vuelven los precios de siempre.';
+      ponerTitulo(r);
       r.hidden = false;
     });
 
@@ -1071,7 +1227,16 @@
     var tic = 0;
     function pintar(){
       var falta = OFERTA.fecha.getTime() - Date.now();
-      if (falta <= 0) { clearInterval(tic); apagar(); return; }
+      if (falta <= 0) {
+        /* se acabó justo con la web abierta. Si la oferta se alarga
+           sola, se rehacen la cinta y los rótulos con la fecha nueva y
+           el reloj sigue contando; si no, se apaga todo. */
+        if (OFERTA.rodar()) {
+          pintarCinta();
+          relojes.forEach(ponerTitulo);
+          falta = OFERTA.fecha.getTime() - Date.now();
+        } else { clearInterval(tic); apagar(); return; }
+      }
       var s = Math.floor(falta / 1000);
       var v = { d: Math.floor(s / 86400), h: Math.floor(s / 3600) % 24,
                 m: Math.floor(s / 60) % 60, s: s % 60 };
@@ -1185,6 +1350,13 @@
      esté apagada, el pedido se envía directo como se ha hecho siempre. */
   var SENAL_ACTIVA = false;
   var SENAL_MODO   = '';    /* 'auto' = se paga aquí; 'mano' = Bizum y casilla */
+  /* Euros ya pagados de fianza. Se congela en el momento del pago: si
+     después amplían el pedido, lo pagado sigue siendo lo que fue y el
+     ticket enseña lo que queda, en vez de inventarse una cifra nueva. */
+  var SENAL_PAGADO = 0;
+  /* lo rellena el bloque de la fianza: pone la caja al día para el
+     importe de este pedido y devuelve con qué se puede cobrar */
+  var SENAL_PINTAR = null;
 
   var CAT = {
     placa:   { nombre:'Placa de mesa', uno:'placa de mesa', varias:'placas de mesa', cada:'cada una',
@@ -1202,31 +1374,87 @@
     var im = document.querySelector('#opProd .op[data-v="' + k + '"] img');
     CAT[k].mini = im ? im.src : '';
   });
-  var sel = { prod:'placa', cant:5 };
-  var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; };
+  /* ── EL PEDIDO, QUE YA NO ES DE UN SOLO PRODUCTO ────────────────────
+     Antes solo se podía elegir una cosa, y la combinación más natural
+     —placas para las mesas y tarjetas para el delantal— había que
+     pedirla dos veces o explicarla a mano en las notas.
 
-  function elegir(grupo, valor){
-    [].forEach.call(grupo.children, function(b){
-      b.setAttribute('aria-pressed', b.dataset.v === String(valor) ? 'true' : 'false');
+     'prods' guarda lo que está marcado, en el orden en que se marcó.
+     'cant' guarda la cantidad de CADA producto, esté marcado o no: si lo
+     quitas y lo vuelves a poner, sale como lo habías dejado. */
+  var sel = { prods:['placa'], cant:{ placa:5, stand:5, tarjeta:20 } };
+  /* ¿ha tocado el cliente los productos? Si no, el "Pedir esta" de una
+     ficha cambia la elección; si sí, la respeta y añade. */
+  var tocado = false;
+
+  var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; };
+  /* la fianza siempre sale en euros redondos, que es como se teclea un
+     Bizum: "15 €", no "15,00 €" */
+  var entero = function(v){ return Math.round(v).toLocaleString('es-ES') + ' €'; };
+
+  /* Una línea del pedido con sus cuentas hechas. 'abierta' es la cesta
+     de 20 o más, que no tiene precio cerrado hasta que la miramos. */
+  function linea(k){
+    var c = CAT[k], n = sel.cant[k] || (c.packs ? c.packs[0] : 1);
+    var abierta = !c.packs && n >= 20, ud = c.precio(n);
+    return { k:k, c:c, n:n, abierta:abierta, ud:ud,
+             total:  abierta ? 0 : ud * n,
+             ahorro: abierta ? 0 : c.suelta * n - ud * n };
+  }
+  /* Lo que suma el pedido entero. Si alguna línea es de las abiertas, el
+     total deja de ser un número y pasa a ser un presupuesto. */
+  function cuentas(){
+    var r = { lineas: sel.prods.map(linea), total:0, ahorro:0, abierto:false };
+    r.lineas.forEach(function(l){
+      if (l.abierta) r.abierto = true;
+      r.total += l.total; r.ahorro += l.ahorro;
+    });
+    return r;
+  }
+  /* "5 placas de mesa" · "20 o más placas de mesa" */
+  function cuantas(l){
+    return l.abierta ? '20 o más ' + l.c.varias
+                     : l.n + ' ' + (l.n === 1 ? l.c.uno : l.c.varias);
+  }
+  /* lo que toca adelantar por el pedido tal y como está ahora mismo */
+  function fianzaActual(){
+    var q = cuentas();
+    return fianzaDe(q.abierto ? 0 : q.total);
+  }
+
+  /* marca los botones de un grupo. 'valores' puede ser uno o varios */
+  function elegir(grupo, valores){
+    var v = [].concat(valores).map(String);
+    [].forEach.call(grupo.querySelectorAll('.op'), function(b){
+      b.setAttribute('aria-pressed', v.indexOf(b.dataset.v) > -1 ? 'true' : 'false');
     });
   }
-  /* la pila: tantas piezas como unidades, para que se vea de un vistazo */
+
+  /* la pila: tantas piezas como unidades, para que se vea de un vistazo.
+     Con varios productos, cada uno pone su fila (y su tamaño, que una
+     tarjeta y una placa no miden lo mismo). Doce piezas como mucho entre
+     todos: más allá no se cuentan, solo hacen ruido. */
   var pila = document.getElementById('pila'), pilaTxt = document.getElementById('pilaTxt');
   var pilaAhora = '';
-  function pintarPila(c, n, abierto){
-    var visibles = Math.min(n, 12), clave = sel.prod + ':' + visibles + ':' + abierto;
+  function pintarPila(ls, abierto){
+    var clave = ls.map(function(l){ return l.k + ':' + l.n; }).join('|') + ':' + abierto;
     if (clave === pilaAhora) return;
     pilaAhora = clave;
-    pila.style.setProperty('--pw', c.ancho + 'px');
-    pila.style.setProperty('--sol', (visibles > 1 ? c.solapa : 0) + 'px');
-    // en filas de 6: doce piezas seguidas se solapan tanto que no se cuentan
-    var porFila = visibles > 6 ? Math.ceil(visibles / 2) : visibles;
-    var h = '', i = 0;
-    while (i < visibles) {
-      h += '<span class="fila">';
-      for (var j = 0; j < porFila && i < visibles; j++, i++) h += '<img src="' + c.mini + '" alt="">';
-      h += '</span>';
-    }
+    var tope = Math.max(1, Math.floor(12 / ls.length)), h = '';
+    ls.forEach(function(l){
+      var visibles = Math.min(l.n, tope);
+      // en dos filas cuando pasan de seis: seguidas se solapan tanto que
+      // ya no se cuentan
+      var porFila = visibles > 6 ? Math.ceil(visibles / 2) : visibles, i = 0;
+      while (i < visibles) {
+        h += '<span class="fila" style="--pw:' + l.c.ancho + 'px;--sol:' +
+             (porFila > 1 ? l.c.solapa : 0) + 'px">';
+        for (var j = 0; j < porFila && i < visibles; j++, i++) {
+          h += '<img src="' + l.c.mini + '" alt="">';
+        }
+        h += '</span>';
+      }
+    });
     if (abierto) h += '<span class="mas">y las que hagan falta</span>';
     pila.innerHTML = h;
   }
@@ -1236,100 +1464,148 @@
      venden en packs cerrados (20/30/50/100): cada cantidad tiene precio
      fijo, nunca es "a convenir". */
   var CANT_SUELTA = [1, 5, 12, 20];
-  function pintarOpCant(c){
-    var lista = c.packs || CANT_SUELTA;
-    opCant.innerHTML = lista.map(function(n){
-      var txt = !c.packs && n === 20 ? '20 o más' : String(n);
-      return '<button class="op" type="button" data-v="' + n + '" aria-pressed="false">' + txt + '</button>';
+  /* Una fila de cantidades por cada producto marcado. El nombre solo
+     sale cuando hay más de uno: con uno solo sobra, ya lo pone arriba. */
+  function pintarCants(){
+    var varios = sel.prods.length > 1;
+    opCant.innerHTML = sel.prods.map(function(k){
+      var c = CAT[k], lista = c.packs || CANT_SUELTA, n = sel.cant[k];
+      var ops = lista.map(function(x){
+        var txt = !c.packs && x === 20 ? '20 o más' : String(x);
+        return '<button class="op" type="button" data-v="' + x + '" aria-pressed="' +
+               (x === n ? 'true' : 'false') + '">' + txt + '</button>';
+      }).join('');
+      return '<div class="linea-cant" data-p="' + k + '">' +
+               (varios ? '<span class="linea-nom">' + c.nombre + '</span>' : '') +
+               '<div class="opciones" role="group" aria-label="Cuántas: ' + c.nombre + '">' +
+                 ops +
+               '</div></div>';
     }).join('');
   }
 
   function refrescar(){
-    var c = CAT[sel.prod], n = sel.cant, ud = c.precio(n), total = ud * n;
-    var abierto = !c.packs && n >= 20;
-    var ahorro = c.suelta * n - total;
-    pintarPila(c, n, abierto);
-    pilaTxt.textContent = abierto
-      ? '20 o más ' + c.varias
-      : n + ' ' + (n === 1 ? c.uno : c.varias);
+    var q = cuentas(), ls = q.lineas, abierto = q.abierto, total = q.total;
+    pintarPila(ls, abierto);
+    pilaTxt.textContent = ls.map(cuantas).join(' + ');
+
     var rTotal = document.getElementById('rTotal'), nuevoTotal = abierto ? 'Presupuesto' : eur(total);
     if (rTotal.textContent !== nuevoTotal) {
       rTotal.textContent = nuevoTotal;
       rTotal.classList.remove('pulso'); void rTotal.offsetWidth; rTotal.classList.add('pulso');
     }
-    document.getElementById('rDetalle').textContent = abierto
-      ? 'Te pasamos precio de cadena en el día'
-      : n === 1
-        ? 'Diseño y envío incluidos'
-        : eur(ud) + ' ' + c.cada + (ahorro > 0.01 ? ' · ahorras ' + eur(ahorro) : '');
+
+    /* el desglose. Con un solo producto es una línea suelta, como toda la
+       vida; con varios hace falta la lista, o no hay manera de saber de
+       dónde sale el total. */
+    var det = document.getElementById('rDetalle');
+    if (ls.length === 1) {
+      var l1 = ls[0];
+      det.textContent = l1.abierta
+        ? 'Te pasamos precio de cadena en el día'
+        : l1.n === 1
+          ? 'Diseño y envío incluidos'
+          : eur(l1.ud) + ' ' + l1.c.cada + (l1.ahorro > 0.01 ? ' · ahorras ' + eur(l1.ahorro) : '');
+    } else {
+      det.innerHTML = '<ul class="lineas">' + ls.map(function(l){
+          /* aquí sí va abreviado: la columna del ticket es estrecha y
+             "cada una" parte la línea en dos */
+          return '<li><span>' + cuantas(l) +
+                 (l.abierta ? '' : ' · ' + eur(l.ud) + ' c/u') + '</span><b>' +
+                 (l.abierta ? 'a convenir' : eur(l.total)) + '</b></li>';
+        }).join('') + '</ul>' +
+        (q.ahorro > 0.01 ? '<span class="det-ahorro">ahorras ' + eur(q.ahorro) + '</span>' : '');
+    }
+
+    /* La fianza: lo que toca por este pedido, o lo que ya se pagó si el
+       pago está hecho. Se recalcula cada vez porque ahora depende del
+       tamaño del pedido, y el pedido cambia mientras lo montan. */
+    var fianza = fianzaDe(abierto ? 0 : total);
+    var modo   = SENAL_ACTIVA && SENAL_PINTAR ? SENAL_PINTAR(fianza) : '';
+    var pideFianza = SENAL_ACTIVA && !!modo;
+    /* lo que de verdad se ha pagado ya; 0 si todavía nada */
+    var acuenta = SENAL_PAGADO;
+
     /* cuánto se paga hoy y cuánto después: es la forma más corta de
        explicar que la fianza no es un recargo, sino el principio del pago */
     var reparto = document.getElementById('rReparto');
     if (reparto) {
-      if (!SENAL_ACTIVA || !BIZUM.descuenta) {
+      if (!pideFianza || !BIZUM.descuenta) {
         reparto.hidden = true;
-      } else if (abierto) {
-        reparto.hidden = false;
-        reparto.innerHTML = 'La fianza de <b>' + eur(BIZUM.fianza) +
-          '</b> se descuenta del presupuesto que te pasemos.';
-      } else if (total > BIZUM.fianza + 0.01) {
-        reparto.hidden = false;
-        reparto.innerHTML = 'Hoy pagas <b>' + eur(BIZUM.fianza) + '</b> de fianza y el resto, <b>' +
-          eur(total - BIZUM.fianza) + '</b>, cuando el diseño te guste. La fianza va dentro de esos ' +
-          eur(total) + ', no es dinero de más.';
       } else {
+        var hoy = acuenta || fianza;
+        var ya  = acuenta > 0;
         reparto.hidden = false;
-        reparto.innerHTML = 'Con la fianza de <b>' + eur(BIZUM.fianza) +
-          '</b> el pedido queda pagado entero: no hay nada más que pagar.';
+        if (abierto) {
+          reparto.innerHTML = 'La fianza de <b>' + entero(hoy) + '</b> ' +
+            (ya ? 'que has pagado se descuenta' : 'se descuenta') +
+            ' del presupuesto que te pasemos.';
+        } else if (total > hoy + 0.01) {
+          reparto.innerHTML = (ya ? 'Ya has pagado <b>' + entero(hoy) + '</b>'
+                                  : 'Hoy pagas <b>' + entero(hoy) + '</b> de fianza') +
+            ' y el resto, <b>' + eur(total - hoy) + '</b>, cuando el diseño te guste. ' +
+            'La fianza va dentro de esos ' + eur(total) + ', no es dinero de más.';
+        } else {
+          reparto.innerHTML = 'Con la fianza de <b>' + entero(hoy) +
+            '</b> el pedido queda pagado entero: no hay nada más que pagar.';
+        }
       }
     }
+    /* y la misma cifra en la lista de lo que va incluido */
+    var incLi = document.getElementById('incFianzaLi'), incTx = document.getElementById('incFianza');
+    if (incLi && incTx) {
+      if (pideFianza && BIZUM.descuenta) { incTx.textContent = entero(acuenta || fianza); incLi.hidden = false; }
+      else incLi.hidden = true;
+    }
+
     var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
     /* El mensaje lo escribe el CLIENTE y lo lee él antes de enviarlo, así
        que va redactado en su voz y sin nada que suene a ficha interna.
        Los *asteriscos* los pinta WhatsApp en negrita, que se lee mucho
        mejor que las mayúsculas. */
-    var lineas = [
-      'Hola PLEA5E, quiero hacer un pedido 👇',
-      '',
-      '*' + c.nombre + '* × ' + (abierto ? '20 o más' : n),
-      abierto ? 'Precio a convenir'
-              : eur(total) + (n === 1 ? '' : '  ·  ' + eur(ud) + ' ' + c.cada),
-      '',
+    var lineas = ['Hola PLEA5E, quiero hacer un pedido 👇', ''];
+    ls.forEach(function(l){
+      lineas.push('*' + l.c.nombre + '* × ' + (l.abierta ? '20 o más' : l.n));
+      lineas.push(l.abierta ? 'Precio a convenir'
+                            : eur(l.total) + (l.n === 1 ? '' : '  ·  ' + eur(l.ud) + ' ' + l.c.cada));
+    });
+    if (ls.length > 1) {
+      lineas.push('', '*Total:* ' + (abierto ? 'a convenir' : eur(total)));
+    }
+    lineas.push('',
       '*Negocio:* ' + (v('negocio') || '—'),
       '*Ciudad:* ' + (v('ciudad') || '—'),
-      '*Teléfono:* ' + (v('tel') || '—')
-    ];
+      '*Teléfono:* ' + (v('tel') || '—'));
     if (v('notas')) { lineas.push('', '*Cómo lo quiero:*', v('notas')); }
 
     var boton = document.getElementById('rWhats');
     var hecho = document.getElementById('senalHecho');
 
-    if (SENAL_ACTIVA) {
+    if (pideFianza) {
       /* el concepto del Bizum es el nombre del negocio: si ya lo han
          escrito, se lo ponemos delante para que no se lo inventen */
       var con = document.getElementById('senalCon');
       if (con) con.textContent = v('negocio') || 'El nombre de tu negocio';
-      if (SENAL_PONER_ENLACE) SENAL_PONER_ENLACE();
 
-      var cola = BIZUM.descuenta ? ' (ya dentro del total)' : ' (cubre el diseño)';
+      var cola   = BIZUM.descuenta ? ' (ya dentro del total)' : ' (cubre el diseño)';
+      /* si volvió del pago en otro navegador no sabemos cuánto pagó, pero
+         la referencia lo lleva: mejor no decir una cifra que decirla mal */
+      var cifra  = acuenta ? ' · ' + entero(acuenta) + cola : cola;
       if (SENAL_REF) {
         /* volvió de Stripe con su referencia: este pago se puede cuadrar */
-        lineas.push('', '✅ *Fianza pagada* · ' + BIZUM.fianza + ' €' + cola,
-                        'Referencia: ' + SENAL_REF);
+        lineas.push('', '✅ *Fianza pagada*' + cifra, 'Referencia: ' + SENAL_REF);
       } else if (SENAL_MANUAL) {
         /* pagó, pero Stripe no lo trajo de vuelta y no tenemos referencia.
            El círculo amarillo es la señal para el vendedor de que a este
            le toca mirarlo en el panel. Al cliente no se le dice nada raro:
            bastante hace con haber pagado. */
-        lineas.push('', '🟡 *Fianza pagada* · ' + BIZUM.fianza + ' €' + cola,
-                        'Sin referencia automática');
+        lineas.push('', '🟡 *Fianza pagada*' + cifra, 'Sin referencia automática');
       } else {
-        lineas.push('', '✅ *Fianza enviada por Bizum* · ' + BIZUM.fianza + ' €' + cola);
+        lineas.push('', '✅ *Fianza enviada por Bizum*' + cifra);
       }
       /* que se vea negro sobre blanco lo que queda por pagar: la fianza
          no se suma al total, se resta de él */
-      if (BIZUM.descuenta && !abierto && total > BIZUM.fianza + 0.01) {
-        lineas.push('Queda por pagar: ' + eur(total - BIZUM.fianza) + ' al aprobar el diseño');
+      if (BIZUM.descuenta && !abierto && acuenta && total > acuenta + 0.01) {
+        lineas.push('Queda por pagar: ' + eur(total - acuenta) + ' al aprobar el diseño');
       }
       lineas.push('', '¿Me mandáis la propuesta de diseño?');
 
@@ -1338,7 +1614,7 @@
       boton.setAttribute('aria-disabled', listo ? 'false' : 'true');
       document.getElementById('rWhatsTxt').textContent = listo
         ? 'Enviar el pedido por WhatsApp'
-        : (SENAL_MODO === 'auto' ? 'Paga la fianza para enviarlo' : 'Primero haz el Bizum');
+        : (modo === 'auto' ? 'Paga la fianza para enviarlo' : 'Primero haz el Bizum');
       if (listo) {
         ponerWhats(boton, lineas.join('\n'));
         /* al bloquearlo le quitamos el target para que no hubiera forma de
@@ -1355,6 +1631,12 @@
       return;
     }
 
+    /* sin fianza que pedir (o sin forma de cobrarla): el botón va directo,
+       como se ha hecho toda la vida */
+    boton.classList.remove('espera');
+    boton.setAttribute('aria-disabled', 'false');
+    boton.setAttribute('target', '_blank');
+    document.getElementById('rWhatsTxt').textContent = 'Enviar el pedido por WhatsApp';
     lineas.push('', '¿Me mandáis la propuesta de diseño?');
     ponerWhats(boton, lineas.join('\n'));
   }
@@ -1394,9 +1676,14 @@
         ciudad:   v('ciudad'),
         tel:      v('tel'),
         notas:    v('notas'),
-        formato:  sel.prod,
-        cantidad: sel.cant,
-        pago:     SENAL_REF || (SENAL_MANUAL ? 'dice que pagó, sin referencia' : '')
+        /* el pedido entero, que ya puede llevar más de un producto */
+        lineas:   sel.prods.map(function(k){ return { formato:k, cantidad: sel.cant[k] }; }),
+        /* y la primera línea también suelta: el correo y el panel llevan
+           desde siempre leyendo estos dos y no hay por qué romperlos */
+        formato:  sel.prods[0],
+        cantidad: sel.cant[sel.prods[0]],
+        pago:     SENAL_REF || (SENAL_MANUAL ? 'dice que pagó, sin referencia' : ''),
+        fianza:   SENAL_PAGADO
       });
 
       try {
@@ -1417,31 +1704,47 @@
   })();
 
   var opProd = document.getElementById('opProd'), opCant = document.getElementById('opCant');
+  /* Los productos se marcan y se desmarcan: van todos al mismo pedido.
+     El último no se puede desmarcar, que un pedido de nada no es un
+     pedido. */
   opProd.addEventListener('click', function(e){
     var b = e.target.closest('.op'); if (!b) return;
-    if (b.dataset.v !== sel.prod) {
-      sel.prod = b.dataset.v;
-      var c = CAT[sel.prod];
-      pintarOpCant(c);
-      sel.cant = c.packs ? c.packs[0] : 5;
+    var k = b.dataset.v; if (!CAT[k]) return;
+    var i = sel.prods.indexOf(k);
+    if (i > -1) {
+      if (sel.prods.length === 1) return;
+      sel.prods.splice(i, 1);
+    } else {
+      sel.prods.push(k);
     }
-    elegir(opProd, sel.prod); elegir(opCant, sel.cant); refrescar();
+    tocado = true;
+    elegir(opProd, sel.prods); pintarCants(); refrescar();
   });
+  /* cada fila de cantidades manda sobre su propio producto */
   opCant.addEventListener('click', function(e){
     var b = e.target.closest('.op'); if (!b) return;
-    sel.cant = +b.dataset.v; elegir(opCant, sel.cant); refrescar();
+    var caja = b.closest('.linea-cant'); if (!caja) return;
+    var k = caja.dataset.p; if (!CAT[k]) return;
+    sel.cant[k] = +b.dataset.v;
+    elegir(caja, sel.cant[k]);
+    refrescar();
   });
   ['negocio','ciudad','tel','notas'].forEach(function(id){
     var e = document.getElementById(id); if (e) e.addEventListener('input', refrescar);
   });
+  elegir(opProd, sel.prods);
+  pintarCants();
   refrescar();
 
-  /* los botones de producto preseleccionan */
+  /* El "Pedir esta" de cada ficha. Si todavía no han tocado los
+     productos, cambia la elección por esa; si ya han montado una mezcla,
+     se AÑADE a lo que llevaban en vez de borrárselo. */
   [].forEach.call(document.querySelectorAll('[data-pide]'), function(a){
     a.addEventListener('click', function(){
-      sel.prod = a.dataset.pide;
-      elegir(opProd, sel.prod);
-      refrescar();
+      var k = a.dataset.pide; if (!CAT[k]) return;
+      if (!tocado) sel.prods = [k];
+      else if (sel.prods.indexOf(k) < 0) sel.prods.push(k);
+      elegir(opProd, sel.prods); pintarCants(); refrescar();
     });
   });
 
@@ -1558,8 +1861,10 @@
   var esc = function(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
   var dato = function(etq, v){ return v ? '<li><b>' + etq + ':</b> ' + esc(v) + '</li>' : ''; };
   /* la fianza, escrita tal y como está configurada arriba, para que el
-     texto legal y lo que se ve en la web no puedan decir cosas distintas */
-  var SENAL_TXT = BIZUM.fianza + ' €';
+     texto legal y lo que se ve en la web no puedan decir cosas distintas.
+     Ya no es una cifra, es una regla: "el 30 % del pedido, con un mínimo
+     de 15 €". */
+  var SENAL_TXT = FIANZA_REGLA;
 
   var LEGAL = {
     condiciones: ['Condiciones de venta',
@@ -1576,22 +1881,22 @@
 
       '<h4>3. Precios</h4>' +
       '<p>Los precios de la web son por unidad, con el IVA incluido, e incluyen el diseño y el envío a península. Bajan por cantidad, según la tabla del apartado de pedido. Valen salvo error tipográfico; si se cuela uno, te avisamos antes de cobrar nada y tú decides.</p>' +
-      '<p>La fianza de ' + SENAL_TXT + ' que se paga al principio <b>va incluida en ese precio</b>: son los primeros ' + SENAL_TXT + ' del pedido, no un cobro aparte.</p>' +
+      '<p>La fianza que se paga al principio —' + SENAL_TXT + '— <b>va incluida en ese precio</b>: son los primeros euros del pedido, no un cobro aparte.</p>' +
       (OFERTA.viva() ? '<p>Los precios de lanzamiento que ves ahora están en vigor <b>hasta el ' + OFERTA.dia + '</b>. A partir de esa fecha se aplican las tarifas normales.</p>' : '') +
       '<p>Baleares, Canarias, Ceuta y Melilla: escríbenos y te pasamos el envío aparte antes de cerrar el pedido.</p>' +
 
       '<h4>4. Cómo se hace el pedido</h4>' +
       '<p>No hay compra automática en esta web. El pedido se cierra por WhatsApp, en este orden:</p>' +
       '<ol><li>Nos dices qué quieres y nos pasas tu marca.</li>' +
-      '<li>Pagas la fianza de ' + SENAL_TXT + ', por Bizum, Apple Pay, Google Pay o tarjeta.</li>' +
+      '<li>Pagas la fianza (' + SENAL_TXT + '), por Bizum, Apple Pay, Google Pay o tarjeta.</li>' +
       '<li>Te enseñamos la propuesta de diseño y la cambias hasta que te guste.</li>' +
       '<li>Das el visto bueno por escrito, pagas el resto y se imprime.</li></ol>' +
       '<p>El contrato queda cerrado cuando apruebas el diseño. A partir de ahí ya no se puede cambiar el pedido.</p>' +
 
       '<h4>5. La fianza</h4>' +
-      '<p>Son ' + SENAL_TXT + ' que se pagan antes de que nos pongamos a diseñar. Se pagan por Bizum, Apple Pay, Google Pay o tarjeta.</p>' +
+      '<p>Es <b>' + SENAL_TXT + '</b>, redondeado a euros, y se paga antes de que nos pongamos a diseñar, por Bizum, Apple Pay, Google Pay o tarjeta. La cifra exacta de tu pedido la ves en el ticket antes de pagar nada.</p>' +
       '<p>' + (BIZUM.descuenta
-        ? 'La fianza <b>no se suma</b> al precio: son los primeros ' + SENAL_TXT + ' del pedido y <b>se descuentan</b> del importe final. Si el pedido cuesta ' + SENAL_TXT + ' o menos, queda pagado del todo.'
+        ? 'La fianza <b>no se suma</b> al precio: son los primeros euros del pedido y <b>se descuentan</b> del importe final. El resto se paga cuando apruebas el diseño.'
         : 'La fianza cubre el trabajo de diseño y <b>no se descuenta</b> del importe final.') +
       '</p>' +
       '<p>Si decides no seguir adelante, <b>la fianza no se devuelve</b>, porque el diseño ya está hecho. Lo que sí es tuyo es ese trabajo: te pasamos la propuesta en imagen para que la veas.</p>' +
@@ -1601,8 +1906,9 @@
       '<p>Por eso la ley de consumo deja fuera del derecho de desistimiento los productos hechos a medida o claramente personalizados (artículo 103.c del texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios). Este es exactamente ese caso, y por eso te enseñamos el diseño y esperamos a tu visto bueno antes de imprimir: ese es el momento de decir que no.</p>' +
       '<p>Si además compras como empresa o autónomo para tu negocio, no eres consumidor a efectos de esa ley y el derecho de desistimiento no te aplica en ningún caso.</p>' +
 
-      '<h4>7. Si algo llega mal</h4>' +
+      '<h4>7. Si algo llega mal · garantía del chip</h4>' +
       '<p>Otra cosa distinta es que el pedido llegue roto, mal impreso, con el chip que no lee o con algo que no es lo que aprobaste. Eso <b>se repone sin coste</b>, incluido el envío. Avísanos por WhatsApp en cuanto lo recibas, con una foto, y lo resolvemos.</p>' +
+      '<p><b>La garantía del chip, por escrito: si un chip NFC no lee, te lo reponemos.</b> Cada uno se prueba con un móvil antes de salir de aquí, pero la electrónica falla, y si falla es cosa nuestra. Vale tanto si viene fallando de origen como si deja de leer durante el <b>primer año</b> de uso normal. No entra lo que rompa el propio local: un chip perforado, doblado, quemado o arrancado de la pieza.</p>' +
       '<p>Si compras como consumidor, tienes además la garantía legal de conformidad de tres años que reconoce la ley española.</p>' +
 
       '<h4>8. Tu marca</h4>' +
@@ -1611,7 +1917,8 @@
       '<p>El diseño que te hacemos es para tus placas. Los textos, fotografías, modelos 3D y el diseño de esta web son de PLEA5E y no se pueden copiar.</p>' +
 
       '<h4>9. Plazos</h4>' +
-      '<p>El plazo depende de la cantidad y de cuánto tardemos entre los dos en cerrar el diseño. Te damos una fecha por WhatsApp al confirmar el pedido y te avisamos si se mueve.</p>' +
+      '<p>Desde que apruebas el diseño: <b>de 2 a 7 días laborables de preparación</b> (impresión y grabado de los chips) y <b>de 1 a 3 días de envío</b> a península. En total, entre 3 y 10 días.</p>' +
+      '<p>El reloj empieza con tu visto bueno, no con el pedido: lo que tardemos entre los dos en cerrar el diseño no cuenta, porque eso depende también de ti. Los pedidos grandes y los formatos que no están en la web pueden tardar más; en ese caso te damos la fecha por WhatsApp antes de que pagues nada. Si se mueve, te avisamos.</p>' +
 
       '<h4>10. Ley y reclamaciones</h4>' +
       '<p>Se aplica la legislación española. Si algo no sale bien, lo primero es escribirnos: casi todo se arregla hablando. Si eres consumidor y no llegamos a un acuerdo, puedes acudir a la Junta Arbitral de Consumo de tu comunidad o a los juzgados que te correspondan por tu domicilio.</p>' +
@@ -1624,7 +1931,7 @@
         dato('Nombre', DATOS.titular) + dato('NIF', DATOS.nif) +
         dato('Domicilio', DATOS.domicilio) + dato('Correo', DATOS.email) +
         '<li><b>Teléfono y WhatsApp:</b> 661 40 32 19</li></ul>' +
-      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el IVA, el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga una fianza de ' + SENAL_TXT + ' desde la propia web, que va incluida en el precio final y no se suma a él; hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
+      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el IVA, el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga desde la propia web una fianza de ' + SENAL_TXT + ', que va incluida en el precio final y no se suma a él; hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. El plazo de entrega es de 2 a 7 días de preparación y de 1 a 3 de envío desde que apruebas el diseño. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
       '<h4>Propiedad intelectual</h4><p>Los textos, fotografías, modelos 3D y diseños de esta web son de PLEA5E. Los logotipos y marcas de los locales que aparecen como ejemplo pertenecen a sus dueños y se muestran con su permiso. Google y el logotipo de Google son marcas de Google LLC; PLEA5E no está asociada ni patrocinada por Google.</p>' +
       '<h4>Responsabilidad</h4><p>Ponemos cuidado en que todo lo que se publica aquí sea correcto, pero no respondemos de las interrupciones del servicio de hospedaje ni del contenido de las páginas ajenas a las que enlazamos (Google, WhatsApp).</p>' +
       '<h4>Legislación</h4><p>Se aplica la legislación española.</p>'],
@@ -1679,19 +1986,28 @@
 
   /* ---- la fianza, dentro del pedido ----
 
-     Hay tres modos, y la web escoge sola el que esté configurado:
+     Hay tres modos, y la web escoge sola el que pueda cobrar ESTE
+     importe, que desde que la fianza es proporcional ya no es siempre el
+     mismo:
 
-     A) COBRO AUTOMÁTICO (si PAGO.enlace tiene algo). El cliente le da a
-        "Pagar la fianza", paga con Bizum, Apple Pay, Google Pay o tarjeta
-        en la página de Stripe, y vuelve solo aquí. Al volver, la web
-        recupera el pedido que había montado, lo deja tal cual estaba y
-        desbloquea el WhatsApp con la referencia del pago dentro.
+     A) COBRO AUTOMÁTICO. Hay un enlace de pago capaz de cobrar
+        exactamente la fianza de este pedido (ver enlaceDePago). El
+        cliente le da a "Pagar la fianza", paga con Bizum, Apple Pay,
+        Google Pay o tarjeta en la página de Stripe, y vuelve solo aquí.
+        Al volver, la web recupera el pedido que había montado, lo deja
+        tal cual estaba y desbloquea el WhatsApp con la referencia del
+        pago dentro.
 
-     B) BIZUM A MANO (si solo hay BIZUM.numero). Le sale tu número y una
-        casilla de "ya lo he enviado" que desbloquea el botón.
+     B) BIZUM A MANO. No hay enlace que sepa cobrar ese importe —el de
+        importe fijo solo vale para su cifra— pero sí número de Bizum:
+        sale el número, el importe exacto y una casilla de "ya lo he
+        enviado" que desbloquea el botón.
 
-     C) NADA (si no hay ni una cosa ni la otra). El botón de WhatsApp va
-        directo, como toda la vida.
+     C) NADA (si no hay ni una cosa ni la otra). El paso desaparece y el
+        botón de WhatsApp va directo, como toda la vida.
+
+     Con el enlace de PAGO.porEuro puesto, el modo A vale para cualquier
+     importe y el B no llega a hacer falta nunca.
 
      Qué NO hace el modo A: comprobar el pago por su cuenta. Para eso
      haría falta un trocito de servidor que le pregunte a Stripe, y esta
@@ -1702,104 +2018,136 @@
      ningún cobro con esa referencia y lo verás al instante. */
   var SENAL_REF = '';
   var SENAL_MANUAL = false;   /* lo dice el cliente, sin referencia de Stripe */
-  var SENAL_PONER_ENLACE = null;  /* mantiene el href del botón de pagar al día */
 
   (function(){
     var paso = document.getElementById('senalPaso');
     if (!paso) return;
 
-    var num     = String(BIZUM.numero || '').replace(/\D/g, '');
-    var enlace  = String(PAGO.enlace || '').trim();
-    var CLAVE   = 'plea5e_pedido';
+    var num   = String(BIZUM.numero || '').replace(/\D/g, '');
+    var CLAVE = 'plea5e_pedido';
+    /* ¿hay algún enlace de pago, sea del importe que sea? */
+    var hayEnlace = !!String(PAGO.porEuro || '').trim() || !!String(PAGO.enlace || '').trim();
 
-    if (!enlace && !num) return;            /* modo C: nada que enseñar */
+    if (!hayEnlace && !num) return;         /* modo C: nada que enseñar */
 
-    paso.hidden = false;
     SENAL_ACTIVA = true;
 
-    document.getElementById('senalCifra').textContent = BIZUM.fianza + ' €';
+    var check   = document.getElementById('senalCheck');
+    var hecho   = document.getElementById('senalHecho');
+    var botonP  = document.getElementById('senalPagar');
+    var medios  = document.getElementById('senalMedios');
+    var datos   = paso.querySelector('.senal-datos');
+    var ok      = document.getElementById('senalOk');
+    var cifra   = document.getElementById('senalCifra');
+    var regla   = document.getElementById('senalRegla');
+    var importe = document.getElementById('senalImporte');
+    var pagarTx = document.getElementById('senalPagarTxt');
+
     document.getElementById('senalDesc').textContent = BIZUM.descuenta
       ? 'No es dinero de más: van dentro del precio final, se te descuentan del total.'
       : 'Cubre el trabajo de diseño y no se descuenta del total.';
-    /* y la misma idea, en la lista de lo que va incluido */
-    var incLi = document.getElementById('incFianzaLi'), incTx = document.getElementById('incFianza');
-    if (incLi && incTx && BIZUM.descuenta) { incTx.textContent = BIZUM.fianza + ' €'; incLi.hidden = false; }
+    document.getElementById('senalNum').textContent = num.length === 9
+      ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
+      : num;
 
-    var check  = document.getElementById('senalCheck');
-    var hecho  = document.getElementById('senalHecho');
-    var botonP = document.getElementById('senalPagar');
-    var medios = document.getElementById('senalMedios');
-    var datos  = paso.querySelector('.senal-datos');
-    var ok     = document.getElementById('senalOk');
+    function val(id){ var e = document.getElementById(id); return e ? e.value : ''; }
+    function pagada(){ return !!SENAL_REF || SENAL_MANUAL || (hecho && hecho.checked); }
 
-    /* ---------- modo B: el número a la vista y la casilla ---------- */
-    if (!enlace) {
-      SENAL_MODO = 'mano';
-      document.getElementById('senalNum').textContent = num.length === 9
-        ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
-        : num;
-      hecho.addEventListener('change', refrescar);
-      refrescar();
-      return;
+    /* El enlace del botón de pagar. Va con su href puesto, como un enlace
+       de verdad: navegar por JavaScript se lo come cualquier sitio que
+       corra la página dentro de un marco, y así además se puede pulsar
+       largo para abrirlo en otra pestaña.
+       El nombre del negocio viaja con el pago: en el panel de Stripe cada
+       cobro llega ya con el nombre de quien lo hizo. */
+    function ponerEnlace(url){
+      var quien = (val('negocio') || 'sin-nombre')
+                    .replace(/[^0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g, '').trim().slice(0, 60) || 'sin-nombre';
+      botonP.href = url + (url.indexOf('?') > -1 ? '&' : '?')
+                  + 'client_reference_id=' + encodeURIComponent(quien);
     }
 
-    /* ---------- modo A: cobro automático ---------- */
-    SENAL_MODO = 'auto';
-    /* el número y la casilla sobran: aquí se paga, no se promete */
-    if (datos) datos.hidden = true;
-    check.hidden = true;
-    botonP.hidden = false;
-    medios.hidden = false;
-    document.getElementById('senalPagarTxt').textContent = 'Pagar la fianza · ' + BIZUM.fianza + ' €';
+    /* Deja la caja de la fianza al día para el importe de este pedido y
+       dice con qué se puede cobrar: 'auto', 'mano' o nada. Lo llama
+       refrescar() en cada cambio, porque el importe se mueve con el
+       pedido. */
+    SENAL_PINTAR = function(fianza){
+      var pag = pagada();
+      /* si ya está pagada, manda lo que se pagó, no lo que tocaría ahora */
+      var mostrar = pag && SENAL_PAGADO ? SENAL_PAGADO : fianza;
+      cifra.textContent = entero(mostrar);
+      importe.textContent = entero(mostrar);
+      regla.textContent = pag ? '' : '(' + FIANZA_REGLA + ')';
+      if (pag) { paso.hidden = false; return SENAL_MODO || 'mano'; }
+
+      var url = enlaceDePago(fianza);
+      SENAL_MODO = url ? 'auto' : (num ? 'mano' : '');
+      /* sin forma de cobrar este importe no se pide fianza: antes que
+         mandar a nadie a pagar una cifra que no es la suya, se deja pasar
+         el pedido y ya se habla por WhatsApp */
+      paso.hidden = !SENAL_MODO;
+      if (SENAL_MODO === 'auto') {
+        if (datos) datos.hidden = true;
+        check.hidden = true;
+        botonP.hidden = false;
+        medios.hidden = false;
+        pagarTx.textContent = 'Pagar la fianza · ' + entero(fianza);
+        ponerEnlace(url);
+      } else if (SENAL_MODO === 'mano') {
+        if (datos) datos.hidden = false;
+        check.hidden = false;
+        botonP.hidden = true;
+        medios.hidden = true;
+      }
+      return SENAL_MODO;
+    };
+
+    /* la casilla del Bizum a mano: al marcarla se congela lo pagado */
+    hecho.addEventListener('change', function(){
+      SENAL_PAGADO = hecho.checked ? fianzaActual() : 0;
+      refrescar();
+    });
 
     /* Guardamos el pedido antes de salir a pagar, porque al volver la
        página se carga de cero y si no se pierde todo lo que había
-       marcado. Si el navegador no deja guardar (modo privado, ajustes),
-       no pasa nada: se vuelve igual, solo hay que remontar el pedido. */
+       marcado. Va también la fianza que se pagó: al volver puede que
+       hayan cambiado el pedido, y lo pagado es lo pagado. Si el navegador
+       no deja guardar (modo privado, ajustes), no pasa nada: se vuelve
+       igual, solo hay que remontar el pedido. */
     function guardar(){
       try {
         localStorage.setItem(CLAVE, JSON.stringify({
-          prod: sel.prod, cant: sel.cant,
+          prods: sel.prods, cant: sel.cant, fianza: fianzaActual(),
           negocio: val('negocio'), ciudad: val('ciudad'),
           tel: val('tel'), notas: val('notas'),
           cuando: Date.now()
         }));
       } catch (e) {}
     }
-    function val(id){ var e = document.getElementById(id); return e ? e.value : ''; }
 
+    /* Devuelve el pedido guardado (y lo deja puesto en la web) o null.
+       Entiende también los guardados por la web de un solo producto. */
     function recuperar(){
       var d;
-      try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return false; }
+      try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return null; }
       /* a las 6 horas ya no es el mismo pedido, es otro día */
-      if (!d || !d.cuando || Date.now() - d.cuando > 6 * 3600 * 1000) return false;
-      if (d.prod && CAT[d.prod]) {
-        sel.prod = d.prod;
-        pintarOpCant(CAT[d.prod]);
-        elegir(opProd, sel.prod);
+      if (!d || !d.cuando || Date.now() - d.cuando > 6 * 3600 * 1000) return null;
+      var prods = (d.prods || (d.prod ? [d.prod] : [])).filter(function(k){ return !!CAT[k]; });
+      if (prods.length) { sel.prods = prods; tocado = true; }
+      if (d.cant && typeof d.cant === 'object') {
+        Object.keys(d.cant).forEach(function(k){
+          if (CAT[k] && +d.cant[k]) sel.cant[k] = +d.cant[k];
+        });
+      } else if (+d.cant && sel.prods.length === 1) {
+        sel.cant[sel.prods[0]] = +d.cant;    /* guardado con la web vieja */
       }
-      if (d.cant) { sel.cant = d.cant; elegir(opCant, sel.cant); }
+      elegir(opProd, sel.prods);
+      pintarCants();
       ['negocio','ciudad','tel','notas'].forEach(function(id){
         var e = document.getElementById(id);
         if (e && d[id]) e.value = d[id];
       });
-      return true;
+      return d;
     }
-
-    /* El botón es un enlace de verdad, con su href puesto. Antes navegaba
-       por JavaScript (location.href) y eso se lo come cualquier sitio que
-       corra la página dentro de un marco. Así funciona hasta sin JS, y
-       además se puede pulsar largo para abrirlo en otra pestaña.
-       El nombre del negocio viaja con el pago: en el panel de Stripe cada
-       cobro llega ya con el nombre de quien lo hizo. */
-    function ponerEnlace(){
-      var quien = (val('negocio') || 'sin-nombre')
-                    .replace(/[^0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g, '').trim().slice(0, 60) || 'sin-nombre';
-      botonP.href = enlace + (enlace.indexOf('?') > -1 ? '&' : '?')
-                  + 'client_reference_id=' + encodeURIComponent(quien);
-    }
-    SENAL_PONER_ENLACE = ponerEnlace;
-    ponerEnlace();
 
     /* al pulsar solo guardamos el pedido; de navegar se encarga el enlace */
     botonP.addEventListener('click', function(){ guardar(); });
@@ -1808,11 +2156,11 @@
 
     /* ---------- la vuelta del pago ---------- */
     /* Stripe nos devuelve a  ...?pagado=cs_live_xxxx . Si eso viene, el
-       pago está hecho: recuperamos el pedido y abrimos el WhatsApp. */
-    /* Si volvió del pago, Stripe nos deja la referencia en la dirección.
-       Si NO la hay pero sí hay un pedido guardado de hace un rato, es que se
-       fue a pagar y ha vuelto por su cuenta: puede que la redirección de
-       Stripe no esté puesta. Le recuperamos el pedido y le preguntamos. */
+       pago está hecho: recuperamos el pedido y abrimos el WhatsApp.
+       Si NO la hay pero sí hay un pedido guardado de hace un rato, es que
+       se fue a pagar y ha vuelto por su cuenta: puede que la redirección
+       de Stripe no esté puesta. Le recuperamos el pedido y le
+       preguntamos. */
     function rescate(){
       var d;
       try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return; }
@@ -1824,6 +2172,7 @@
       caja.hidden = false;
       manual.addEventListener('change', function(){
         SENAL_MANUAL = manual.checked;
+        SENAL_PAGADO = manual.checked ? (+d.fianza || fianzaActual()) : 0;
         if (manual.checked) { try { localStorage.removeItem(CLAVE); } catch (e) {} }
         refrescar();
       });
@@ -1841,13 +2190,19 @@
        otra- la fianza está pagada igual, pero el pedido volvería a los
        valores de fábrica y te llegaría un WhatsApp que no es el suyo.
        Así que se lo decimos y que lo repase antes de enviarlo. */
-    var recuperado = recuperar();
+    var guardado = recuperar();
+    /* cuánto pagó: lo que se apuntó al salir. Si no lo tenemos, no nos lo
+       inventamos: el mensaje sale sin cifra y la referencia la lleva. */
+    SENAL_PAGADO = (guardado && +guardado.fianza) || 0;
 
     botonP.hidden = true;
     medios.hidden = true;
+    if (datos) datos.hidden = true;
+    check.hidden = true;
     ok.hidden = false;
+    paso.hidden = false;
     document.getElementById('senalRef').textContent = ref;
-    if (!recuperado) {
+    if (!guardado) {
       var aviso = document.getElementById('senalRepasa');
       if (aviso) aviso.hidden = false;
     }

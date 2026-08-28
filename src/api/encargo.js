@@ -89,7 +89,7 @@ async function pideBrief(encargo, env) {
       encargo.ciudad    ? 'Ciudad: ' + encargo.ciudad : '',
       encargo.direccion ? 'Dirección: ' + encargo.direccion : '',
       encargo.redes     ? 'Redes o web: ' + encargo.redes : '',
-      'Formato: ' + encargo.formato + ' × ' + encargo.cantidad,
+      'Pedido: ' + L.resumenPedido(encargo),
       encargo.notas     ? 'Lo que pide:\n' + encargo.notas : ''
     ].filter(Boolean).join('\n');
 
@@ -139,9 +139,10 @@ async function avisa(encargo, enlace, brief, ref, env) {
         ${fila('Teléfono', encargo.tel)}
         ${fila('Correo', encargo.correo)}
         ${fila('Redes', encargo.redes)}
-        ${fila('Pedido', encargo.formato + ' × ' + encargo.cantidad)}
+        ${fila('Pedido', L.resumenPedido(encargo))}
         ${fila('Google', encargo.google)}
         ${fila('Pago', encargo.pago)}
+        ${fila('Fianza', encargo.fianza ? encargo.fianza + ' €' : '')}
       </table>
       ${encargo.notas ? `<p style="margin:14px 0 0"><b>Lo que pide:</b><br>${esc(encargo.notas)}</p>` : ''}
       ${brief && brief.porque ? `<p style="margin:14px 0 0;padding:10px 12px;background:#faf6ec;border-left:3px solid #E8C46A"><b>Propuesta de color:</b> ${esc(brief.porque)}</p>` : ''}
