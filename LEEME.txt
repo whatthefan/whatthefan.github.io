@@ -279,6 +279,47 @@ El pedido te llega igual por correo y al panel de taller/pedidos.html,
 donde ahora se lee "5 placas de mesa + 20 tarjetas de mano".
 
 
+CUANDO TE LLEGA EL PEDIDO AL CORREO (y por que ya no se te escapa uno)
+----------------------------------------------------------------------
+El pedido te llega al correo y al panel de taller/pedidos.html con todo:
+negocio, ciudad, telefono, lo que ha pedido, sus notas, la referencia
+del pago, y un boton "Abrir el diseno" que abre el generador con el
+nombre, el enlace de Google y los colores ya elegidos.
+
+Antes eso solo salia cuando el cliente pulsaba el WhatsApp. Habia dos
+agujeros y los dos costaban dinero:
+
+    PAGABA Y SE IBA      Si pagaba la fianza y no volvia a pulsar el
+                         WhatsApp, a ti solo te llegaba el aviso de
+                         Stripe con el nombre del negocio. Habias
+                         cobrado y no sabias que te habian pedido.
+
+    SE ECHABA ATRAS      Si lo rellenaba todo y no llegaba a pagar, no
+                         te enterabas ni de que habia existido.
+
+Ahora el aviso sale desde TRES sitios, y el asunto del correo te dice
+en cual estas sin abrirlo:
+
+    ... se ha ido a pagar        pulso "Pagar la fianza" y se fue a
+                                 Stripe. Si no te llega el cobro en un
+                                 rato, este es al que hay que escribir.
+    ... FIANZA PAGADA            volvio y mando el WhatsApp. Cuadra la
+                                 referencia con tu panel de Stripe.
+    ... QUIERE QUE LE LLAMES     pulso "prefiero que me llameis antes de
+                                 pagar". No ha pagado nada: escribele tu.
+
+UN PEDIDO, UNA FICHA. Como el mismo pedido puede mandarse dos veces (se
+va a pagar y luego vuelve y envia), viaja con un identificador que no
+cambia. El servidor lo usa para ACTUALIZAR la ficha que ya tenia en vez
+de abrir otra: en el panel sigue habiendo una, no tres. Y los colores
+solo se le piden a la IA la primera vez, que la segunda ya los tenemos
+y seria pagar dos veces por la misma respuesta.
+
+Lo que TU marcas en el panel (nuevo / hecho / descartado) no se pisa
+cuando el pedido se actualiza: si ya lo habias dado por hecho, sigue
+hecho.
+
+
 EL PLAZO Y LA GARANTIA DEL CHIP, ESCRITOS
 -----------------------------------------
 Las dos preguntas que siempre llegaban por WhatsApp antes de pedir ya
@@ -317,7 +358,7 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    llama FIANZA y en todos lados se explica lo mismo: no es un cobro
    aparte, son los primeros euros del pedido.
 
-   LA FIANZA YA NO ES FIJA: ES EL 30 % DEL PEDIDO, MINIMO 15 EUR.
+   LA FIANZA YA NO ES FIJA: ES EL 50 % DEL PEDIDO, MINIMO 15 EUR.
    Antes eran 25 EUR siempre, y eso hacia que el pedido mas pequeno
    -una placa suelta, justo el que sirve para probar- se pagara entero
    por adelantado, y el expositor al 83 %. Demasiada friccion donde
@@ -325,17 +366,32 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 
        1 placa (25 EUR)          ->  15 EUR   (antes: 25, el 100 %)
        1 expositor (30 EUR)      ->  15 EUR   (antes: 25, el 83 %)
-       5 placas (100 EUR)        ->  30 EUR
-       12 placas (210 EUR)       ->  63 EUR
-       20 tarjetas (300 EUR)     ->  90 EUR
+       5 placas (100 EUR)        ->  50 EUR
+       12 placas (210 EUR)       -> 105 EUR
+       20 tarjetas (300 EUR)     -> 150 EUR
        presupuesto por cerrar    ->  15 EUR
 
-   Se redondea a euros enteros y nunca pasa del propio pedido. Los dos
-   numeros se cambian en un sitio y ya esta, en el index.html:
+   Fijate en que el pedido de prueba NO se mueve: ahi manda el minimo de
+   15. Lo que sube es el mediano y el grande, que es donde interesa
+   cubrirse. Se redondea a euros enteros y nunca pasa del propio pedido.
+   Los dos numeros se cambian en un sitio y ya esta, en el index.html:
 
-       porcentaje: 30      <- % del pedido
+       porcentaje: 50      <- % del pedido
        minimo:     15      <- euros, el suelo
        descuenta:  true    <- true = va DENTRO del precio final
+
+   Y LA FIANZA NO SE ENSENA DE ENTRADA. Antes lo primero que veia el que
+   entraba en el ticket era "Pagar la fianza · 50 EUR", antes incluso de
+   escribir su nombre, y eso se lee como un peaje en la puerta. Ahora el
+   ticket va por tramos:
+
+       1. eligen producto y cantidad  ->  precio y ahorro, del pago ni
+                                          una palabra
+       2. escriben nombre y telefono  ->  aparece la fianza, deslizandose
+       3. pagan                       ->  confirmacion y WhatsApp
+
+   Con el nombre y el telefono basta: es lo minimo para poder
+   contestarle a alguien.
 
    De ahi salen solos el ticket, el paso 5, el mensaje de WhatsApp, las
    condiciones de venta y las preguntas. No hay que tocar ningun texto.

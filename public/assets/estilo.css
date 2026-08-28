@@ -1144,3 +1144,30 @@ body::after{
 .lado-b .detalle .det-ahorro{display:block;margin-top:6px;color:var(--oro);font-weight:700}
 /* la regla de la fianza, en pequeñito al lado de la cifra */
 .senal-regla{font-size:.78rem;color:var(--txt-3)}
+
+/* ══════════ el pago no se enseña de entrada ══════════
+   Primero eligen, luego se presentan, y solo entonces aparece la fianza.
+   Mientras tanto, en su hueco va esta pista: que se vea que falta un
+   paso, no que hay un peaje. */
+.siguiente{display:flex;align-items:flex-start;gap:9px;margin-top:16px;padding:12px 14px;
+  border-radius:14px;text-align:left;font-size:.82rem;line-height:1.5;color:var(--txt-2);
+  border:1px dashed var(--borde-claro);background:rgba(255,255,255,.02)}
+.siguiente b{color:var(--txt)}
+.siguiente svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke:var(--oro);
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* la fianza entra deslizándose, para que se note que es un paso ganado */
+.senal-paso{animation:asomaFianza .34s cubic-bezier(.2,.8,.3,1)}
+@keyframes asomaFianza{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.senal-paso{animation:none}}
+
+/* la salida del que aún no se fía: un enlace, no un botón que compita
+   con el de pagar */
+.senal-llamada{display:block;width:100%;margin-top:11px;padding:8px 4px;font:inherit;
+  font-size:.78rem;color:var(--txt-3);background:none;border:0;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;transition:color .18s}
+.senal-llamada:hover{color:var(--txt)}
+.senal-llamada-ok{display:flex;align-items:flex-start;gap:9px;margin:11px 0 0;padding:11px 12px;
+  border-radius:12px;font-size:.79rem;line-height:1.5;text-align:left;color:var(--txt-2);
+  background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.3)}
+.senal-llamada-ok svg{width:15px;height:15px;flex:none;margin-top:2px;fill:none;stroke:var(--oro);
+  stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}

@@ -705,6 +705,16 @@
         <!-- aquí la columna es estrecha: etiqueta corta para que no se
              parta en dos líneas -->
         <span class="reloj-min corto" data-reloj hidden></span>
+
+        <!-- Lo que se ve MIENTRAS no han dicho quiénes son. Antes, lo
+             primero del ticket era "Pagar la fianza": un peaje en la
+             puerta, antes incluso de escribir su nombre. Ahora primero
+             eligen, luego se presentan, y solo entonces sale el pago. -->
+        <p class="siguiente" id="siguiente" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+          <span>Dinos <b>quién eres</b> ahí al lado y te decimos lo que hay que adelantar.</span>
+        </p>
+
         <!-- La fianza va ANTES del WhatsApp: primero se paga, y solo
              entonces se abre el chat con el pedido escrito. El bloque
              entero se oculta si no hay número de Bizum en la
@@ -727,6 +737,18 @@
           </a>
           <p class="senal-medios" id="senalMedios" hidden>Bizum, Apple&nbsp;Pay, Google&nbsp;Pay o tarjeta · pago seguro con Stripe</p>
 
+          <!-- La salida para el que no se fía todavía. Sin esto, el que
+               llega hasta aquí y se echa atrás en el pago se pierde
+               entero: ni se sabe que existió. Con esto, el pedido llega
+               igual y ya se le llama. -->
+          <button type="button" class="senal-llamada" id="senalLlamada">
+            Prefiero que me llaméis antes de pagar
+          </button>
+          <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
+            <span>Hecho: tenemos tu pedido y te escribimos hoy mismo. Si prefieres adelantarlo tú, ahí tienes el WhatsApp.</span>
+          </p>
+
           <!-- rescate: se fue a pagar y ha vuelto sin que Stripe nos diga nada -->
           <div class="senal-vuelta" id="senalVuelta" hidden>
             <p><b>¿Ya has pagado la fianza?</b> Deberíamos haberlo sabido solos. Si has pagado y has tenido que volver tú, márcalo aquí y sigue con el pedido: lo comprobamos por nuestra parte.</p>
@@ -746,7 +768,7 @@
         <!-- El aviso de datos va AQUÍ, pegado al botón, no solo en el pie:
              la ley pide informar en el momento de recoger los datos, y
              quien está rellenando el pedido no ve el pie. -->
-        <small class="pie-datos">Al enviarlo, <b>Juan Fernández Selma</b> tratará tus datos para prepararte el presupuesto y el diseño. Ni se venden ni se ceden. Puedes acceder a ellos, corregirlos o borrarlos cuando quieras. <button type="button" class="enl" data-legal="privacidad">Más, en Privacidad</button>.</small>
+        <small class="pie-datos">Al enviarlo, al pagar o al pedir que te llamemos, <b>Juan Fernández Selma</b> tratará tus datos para prepararte el presupuesto y el diseño. Ni se venden ni se ceden. Puedes acceder a ellos, corregirlos o borrarlos cuando quieras. <button type="button" class="enl" data-legal="privacidad">Más, en Privacidad</button>.</small>
       </aside>
     </div>
   </div>
@@ -1007,7 +1029,7 @@
     // De momento está puesto el mismo del WhatsApp para que el paso se
     // vea funcionando. Si tu Bizum está en otro móvil, cámbialo aquí.
     numero:  '661403219',
-    porcentaje: 30,  // % del pedido que se adelanta
+    porcentaje: 50,  // % del pedido que se adelanta
     minimo:     15,  // euros: por debajo de esto no baja nunca
     descuenta: true  // true = la fianza va DENTRO del precio final
   };
@@ -1520,12 +1542,29 @@
         (q.ahorro > 0.01 ? '<span class="det-ahorro">ahorras ' + eur(q.ahorro) + '</span>' : '');
     }
 
+    var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
+
+    /* El pago no se enseña de entrada. Primero eligen lo que quieren,
+       después dicen quiénes son, y SOLO ENTONCES aparece la fianza. Con
+       el bloque siempre a la vista, lo primero que veía el que entraba
+       era un "Pagar 30 €" antes de haber escrito su nombre, y eso se lee
+       como un peaje. Basta con el nombre y el teléfono: lo mínimo para
+       poder contestarle. */
+    var faltanDatos = !v('negocio') || !v('tel');
+    var pista = document.getElementById('siguiente');
+
     /* La fianza: lo que toca por este pedido, o lo que ya se pagó si el
        pago está hecho. Se recalcula cada vez porque ahora depende del
        tamaño del pedido, y el pedido cambia mientras lo montan. */
     var fianza = fianzaDe(abierto ? 0 : total);
-    var modo   = SENAL_ACTIVA && SENAL_PINTAR ? SENAL_PINTAR(fianza) : '';
+    var modo   = SENAL_ACTIVA && SENAL_PINTAR ? SENAL_PINTAR(fianza, faltanDatos) : '';
     var pideFianza = SENAL_ACTIVA && !!modo;
+    /* Hasta que no se presenten, del dinero NO se habla en ningún sitio
+       del ticket: ni la caja del reparto, ni la línea de lo incluido.
+       Con dejarlas puestas, esconder solo el botón de pagar no servía de
+       nada: lo primero que se leía seguía siendo "hoy pagas 50 €". */
+    var muestraFianza = pideFianza && !faltanDatos;
+    if (pista) pista.hidden = !(SENAL_ACTIVA && faltanDatos);
     /* lo que de verdad se ha pagado ya; 0 si todavía nada */
     var acuenta = SENAL_PAGADO;
 
@@ -1533,7 +1572,7 @@
        explicar que la fianza no es un recargo, sino el principio del pago */
     var reparto = document.getElementById('rReparto');
     if (reparto) {
-      if (!pideFianza || !BIZUM.descuenta) {
+      if (!muestraFianza || !BIZUM.descuenta) {
         reparto.hidden = true;
       } else {
         var hoy = acuenta || fianza;
@@ -1557,11 +1596,10 @@
     /* y la misma cifra en la lista de lo que va incluido */
     var incLi = document.getElementById('incFianzaLi'), incTx = document.getElementById('incFianza');
     if (incLi && incTx) {
-      if (pideFianza && BIZUM.descuenta) { incTx.textContent = entero(acuenta || fianza); incLi.hidden = false; }
+      if (muestraFianza && BIZUM.descuenta) { incTx.textContent = entero(acuenta || fianza); incLi.hidden = false; }
       else incLi.hidden = true;
     }
 
-    var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
     /* El mensaje lo escribe el CLIENTE y lo lee él antes de enviarlo, así
        que va redactado en su voz y sin nada que suene a ficha interna.
        Los *asteriscos* los pinta WhatsApp en negrita, que se lee mucho
@@ -1584,6 +1622,17 @@
     var boton = document.getElementById('rWhats');
     var hecho = document.getElementById('senalHecho');
 
+    /* Antes de saber quiénes son no hay nada que enviar ni que pagar. El
+       botón espera y dice lo que falta, sin mencionar dinero. */
+    if (SENAL_ACTIVA && faltanDatos) {
+      boton.classList.add('espera');
+      boton.setAttribute('aria-disabled', 'true');
+      boton.removeAttribute('href');
+      boton.removeAttribute('target');
+      document.getElementById('rWhatsTxt').textContent = 'Dinos quién eres para seguir';
+      return;
+    }
+
     if (pideFianza) {
       /* el concepto del Bizum es el nombre del negocio: si ya lo han
          escrito, se lo ponemos delante para que no se lo inventen */
@@ -1603,6 +1652,11 @@
            le toca mirarlo en el panel. Al cliente no se le dice nada raro:
            bastante hace con haber pagado. */
         lineas.push('', '🟡 *Fianza pagada*' + cifra, 'Sin referencia automática');
+      } else if (SENAL_LLAMADA) {
+        /* no ha pagado y lo dice él mismo: nada de dar por buena una
+           fianza que no está */
+        lineas.push('', '📞 *Todavía no he pagado la fianza*',
+                        'Prefiero que hablemos antes.');
       } else {
         lineas.push('', '✅ *Fianza enviada por Bizum*' + cifra);
       }
@@ -1613,7 +1667,7 @@
       }
       lineas.push('', '¿Me mandáis la propuesta de diseño?');
 
-      var listo = !!SENAL_REF || SENAL_MANUAL || (hecho && hecho.checked);
+      var listo = !!SENAL_REF || SENAL_MANUAL || SENAL_LLAMADA || (hecho && hecho.checked);
       boton.classList.toggle('espera', !listo);
       boton.setAttribute('aria-disabled', listo ? 'false' : 'true');
       document.getElementById('rWhatsTxt').textContent = listo
@@ -1645,65 +1699,95 @@
     ponerWhats(boton, lineas.join('\n'));
   }
   /* ---- el aviso al taller ----
-     Cuando el cliente le da al botón, el pedido sale por WhatsApp COMO
-     SIEMPRE —ese mensaje no cambia ni una coma— y además, por detrás, el
-     mismo pedido llega a la web: se guarda, la IA propone los colores
-     dentro de la plantilla de siempre y a ti te entra el correo con el
-     diseño ya montado, listo para mirarlo y mandárselo.
+     El pedido llega a la web por detrás: se guarda, la IA propone los
+     colores dentro de la plantilla de siempre y a ti te entra el correo
+     con el diseño ya montado, listo para mirarlo y mandárselo.
+
+     Sale desde TRES sitios, no solo del WhatsApp como antes:
+
+       'sin-pagar'  al irse a la pantalla de pago. Antes, si pagaba y no
+                    volvía a pulsar WhatsApp, tú te quedabas con el aviso
+                    de Stripe y el nombre del negocio y nada más: habías
+                    cobrado sin saber qué te habían pedido.
+       'llamada'    si prefiere que le llames antes de pagar. Ese cliente
+                    antes se perdía entero.
+       'pagado'     el WhatsApp de siempre, ya con la referencia del cobro.
+
+     Como el mismo pedido puede mandarse dos veces (se va a pagar, vuelve
+     y envía), viaja con un 'pedidoId' que no cambia. El servidor lo usa
+     para ACTUALIZAR el encargo que ya tenía en vez de crear otro: en el
+     panel sigue habiendo una ficha, no tres.
 
      Reglas de esto:
-       · Va DESPUÉS, no antes. Si esto fallara, el WhatsApp ya ha salido.
-       · Se calla si falla. No hay red, la función no está subida todavía,
-         el servidor tiene un mal día: da igual, el cliente no ve nada
-         raro y el pedido te llega igual por WhatsApp.
-       · Una sola vez por pedido, aunque le dé al botón cinco veces.
+       · Va DESPUÉS de lo que haya pulsado el cliente, nunca antes. Si
+         esto fallara, el WhatsApp ya ha salido y el pago ya se ha hecho.
+       · Se calla si falla. No hay red, el servidor tiene un mal día: da
+         igual, el cliente no ve nada raro.
+       · El mismo estado no se manda dos veces seguidas.
        · sendBeacon está pensado justo para esto: el navegador lo manda
          aunque la página se vaya en ese mismo instante, que es lo que
-         pasa al saltar a WhatsApp. Si no lo tiene, fetch con keepalive. */
+         pasa al saltar a WhatsApp o a Stripe. Si no lo tiene, fetch con
+         keepalive. */
+
+  /* El identificador del pedido. Sobrevive al viaje a Stripe porque se
+     guarda con el resto en localStorage; si no se puede guardar, el peor
+     caso es que te llegue una ficha nueva, que es lo que pasaba antes. */
+  var PEDIDO_ID = (function(){
+    try {
+      if (crypto && crypto.randomUUID) return crypto.randomUUID();
+    } catch (e) {}
+    return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  })();
+
+  var ENVIADO = '';   /* el último estado que ya se mandó */
+
+  function mandaEncargo(estado){
+    if (estado === ENVIADO) return;
+    var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
+    if (!v('negocio')) return;        /* el servidor lo rechazaría igual */
+    ENVIADO = estado;
+
+    var cuerpo = JSON.stringify({
+      pedidoId: PEDIDO_ID,
+      estado:   estado,
+      negocio:  v('negocio'),
+      ciudad:   v('ciudad'),
+      tel:      v('tel'),
+      notas:    v('notas'),
+      /* el pedido entero, que ya puede llevar más de un producto */
+      lineas:   sel.prods.map(function(k){ return { formato:k, cantidad: sel.cant[k] }; }),
+      /* y la primera línea también suelta: el correo y el panel llevan
+         desde siempre leyendo estos dos y no hay por qué romperlos */
+      formato:  sel.prods[0],
+      cantidad: sel.cant[sel.prods[0]],
+      pago:     SENAL_REF || (SENAL_MANUAL ? 'dice que pagó, sin referencia' : ''),
+      fianza:   SENAL_PAGADO || (estado === 'sin-pagar' ? fianzaActual() : 0)
+    });
+
+    try {
+      /* Una sola dirección que vale en los dos sitios: en Cloudflare la
+         sirve src/api/encargo.js, y en Netlify hay un reenvío en el
+         netlify.toml que la manda a su función. Así mudarse de proveedor
+         no obliga a tocar la web. */
+      var url = '/api/encargo';
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url, new Blob([cuerpo], { type: 'application/json' }));
+      } else {
+        fetch(url, { method:'POST', keepalive:true,
+                     headers:{ 'Content-Type':'application/json' }, body:cuerpo })
+          .catch(function(){});   /* que un fallo no ensucie la consola */
+      }
+    } catch (e) {}
+  }
+
   (function(){
     var boton = document.getElementById('rWhats');
     if (!boton) return;
-    var enviado = false;
-
     boton.addEventListener('click', function(){
-      if (enviado) return;
       /* sin href el botón está bloqueado esperando la fianza: eso no es
          un pedido todavía */
       if (!boton.getAttribute('href')) return;
-
-      var v = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
-      if (!v('negocio')) return;      /* la función lo rechazaría igual */
-
-      enviado = true;
-      var cuerpo = JSON.stringify({
-        negocio:  v('negocio'),
-        ciudad:   v('ciudad'),
-        tel:      v('tel'),
-        notas:    v('notas'),
-        /* el pedido entero, que ya puede llevar más de un producto */
-        lineas:   sel.prods.map(function(k){ return { formato:k, cantidad: sel.cant[k] }; }),
-        /* y la primera línea también suelta: el correo y el panel llevan
-           desde siempre leyendo estos dos y no hay por qué romperlos */
-        formato:  sel.prods[0],
-        cantidad: sel.cant[sel.prods[0]],
-        pago:     SENAL_REF || (SENAL_MANUAL ? 'dice que pagó, sin referencia' : ''),
-        fianza:   SENAL_PAGADO
-      });
-
-      try {
-        /* Una sola dirección que vale en los dos sitios: en Cloudflare la
-           sirve functions/api/encargo.js, y en Netlify hay un reenvío en
-           el netlify.toml que la manda a su función. Así mudarse de
-           proveedor no obliga a tocar la web. */
-        var url = '/api/encargo';
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon(url, new Blob([cuerpo], { type: 'application/json' }));
-        } else {
-          fetch(url, { method:'POST', keepalive:true,
-                       headers:{ 'Content-Type':'application/json' }, body:cuerpo })
-            .catch(function(){});   /* que un fallo no ensucie la consola */
-        }
-      } catch (e) {}
+      mandaEncargo(SENAL_REF || SENAL_MANUAL ? 'pagado' : 'enviado');
     });
   })();
 
@@ -1944,9 +2028,10 @@
       '<h4>Legislación</h4><p>Se aplica la legislación española.</p>'],
     privacidad: ['Privacidad',
       '<h4>Mientras rellenas el pedido, no sale nada</h4>' +
-      '<p>Lo que escribes en el bloque de pedido se queda en tu navegador. No se manda nada hasta que pulsas el botón de enviar. Si no lo pulsas, no nos llega nada.</p>' +
-      '<h4>Al pulsar el botón pasan dos cosas</h4>' +
-      '<p>Se abre WhatsApp con el mensaje escrito, que envías tú. Y al mismo tiempo <b>ese mismo pedido llega también a nuestro servidor</b>, para que no se nos pierda entre conversaciones y para ir preparándote el diseño.</p>' +
+      '<p>Lo que escribes en el bloque de pedido se queda en tu navegador. No se manda nada hasta que pulsas un botón. Si no pulsas ninguno, no nos llega nada.</p>' +
+      '<h4>Hay tres botones que sí lo mandan</h4>' +
+      '<p><b>Enviar por WhatsApp</b>, que además abre tu WhatsApp con el mensaje escrito para que lo envíes tú. <b>Pagar la fianza</b>, que lo manda antes de llevarte a la pantalla de pago. Y <b>prefiero que me llaméis</b>, que lo manda sin cobrarte nada.</p>' +
+      '<p>En los tres casos <b>el pedido llega a nuestro servidor</b>, para que no se nos pierda entre conversaciones y para ir preparándote el diseño. Es el mismo pedido: si pulsas dos de esos botones no se guardan dos, se actualiza el que ya había.</p>' +
       '<p>Lo que se guarda es lo que has escrito: nombre del negocio, ciudad, teléfono, lo que nos cuentes, el producto y la cantidad, y la referencia del pago si has pagado la fianza. Nada más: ni tu navegación, ni tu ubicación, ni de dónde vienes.</p>' +
       '<h4>Quién responde de tus datos</h4>' +
       '<p>El responsable es ' + esc(DATOS.titular) + ', con NIF ' + esc(DATOS.nif) + ' y domicilio en ' + esc(DATOS.domicilio) + '. Para cualquier cosa relacionada con tus datos, escribe a ' + esc(DATOS.email) + '.</p>' +
@@ -2028,6 +2113,9 @@
      ningún cobro con esa referencia y lo verás al instante. */
   var SENAL_REF = '';
   var SENAL_MANUAL = false;   /* lo dice el cliente, sin referencia de Stripe */
+  /* ha pedido que le llamemos antes de pagar: el pedido ya nos ha
+     llegado, así que el WhatsApp se le abre, pero de fianza pagada nada */
+  var SENAL_LLAMADA = false;
 
   (function(){
     var paso = document.getElementById('senalPaso');
@@ -2080,7 +2168,7 @@
        dice con qué se puede cobrar: 'auto', 'mano' o nada. Lo llama
        refrescar() en cada cambio, porque el importe se mueve con el
        pedido. */
-    SENAL_PINTAR = function(fianza){
+    SENAL_PINTAR = function(fianza, faltanDatos){
       var pag = pagada();
       /* si ya está pagada, manda lo que se pagó, no lo que tocaría ahora */
       var mostrar = pag && SENAL_PAGADO ? SENAL_PAGADO : fianza;
@@ -2088,6 +2176,8 @@
       importe.textContent = entero(mostrar);
       regla.textContent = pag ? '' : '(' + FIANZA_REGLA + ')';
       if (pag) { paso.hidden = false; return SENAL_MODO || 'mano'; }
+      /* todavía no sabemos quiénes son: ni una palabra de pagar */
+      if (faltanDatos) { paso.hidden = true; return SENAL_MODO || 'mano'; }
 
       var url = enlaceDePago(fianza);
       SENAL_MODO = url ? 'auto' : (num ? 'mano' : '');
@@ -2126,6 +2216,7 @@
     function guardar(){
       try {
         localStorage.setItem(CLAVE, JSON.stringify({
+          id: PEDIDO_ID,
           prods: sel.prods, cant: sel.cant, fianza: fianzaActual(),
           negocio: val('negocio'), ciudad: val('ciudad'),
           tel: val('tel'), notas: val('notas'),
@@ -2141,6 +2232,10 @@
       try { d = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch (e) { return null; }
       /* a las 6 horas ya no es el mismo pedido, es otro día */
       if (!d || !d.cuando || Date.now() - d.cuando > 6 * 3600 * 1000) return null;
+      /* el mismo pedido de antes de irse a pagar: recuperamos su
+         identificador para que el servidor actualice la ficha que ya
+         tiene en vez de abrirte otra */
+      if (d.id) PEDIDO_ID = d.id;
       var prods = (d.prods || (d.prod ? [d.prod] : [])).filter(function(k){ return !!CAT[k]; });
       if (prods.length) { sel.prods = prods; tocado = true; }
       if (d.cant && typeof d.cant === 'object') {
@@ -2159,8 +2254,31 @@
       return d;
     }
 
-    /* al pulsar solo guardamos el pedido; de navegar se encarga el enlace */
-    botonP.addEventListener('click', function(){ guardar(); });
+    /* Al pulsar: guardamos el pedido para cuando vuelva, y ADEMÁS te lo
+       mandamos ya. Antes esto último no pasaba, y quien pagaba y no
+       volvía a pulsar el WhatsApp te dejaba con el aviso de Stripe y un
+       nombre de negocio: cobrado y sin saber qué te habían pedido. De
+       navegar se encarga el enlace, aquí no se toca. */
+    botonP.addEventListener('click', function(){
+      guardar();
+      mandaEncargo('sin-pagar');
+    });
+
+    /* La salida para el que no se fía todavía. Te manda el pedido igual
+       —con lo que ya ha escrito— y le abre el WhatsApp, pero sin dar por
+       pagada ninguna fianza. */
+    var llamada = document.getElementById('senalLlamada');
+    var llamadaOk = document.getElementById('senalLlamadaOk');
+    if (llamada) {
+      llamada.addEventListener('click', function(){
+        if (!document.getElementById('negocio').value.trim()) return;
+        SENAL_LLAMADA = true;
+        mandaEncargo('llamada');
+        llamada.hidden = true;
+        if (llamadaOk) llamadaOk.hidden = false;
+        refrescar();
+      });
+    }
 
     refrescar();          /* deja el WhatsApp bloqueado hasta que se pague */
 

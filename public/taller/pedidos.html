@@ -299,6 +299,15 @@
   /* El pedido en palabras. Ahora puede llevar varios productos, así que
      se lee de 'lineas'; los encargos de antes solo traen formato y
      cantidad sueltos y se leen igual de bien. */
+  /* Dónde se quedó el cliente. Ojo, esto NO es el estado del taller
+     (nuevo / hecho / descartado), que sigue siendo tuyo y lo marcas tú:
+     esto lo pone él con lo que hace en la web. */
+  var PASOS = {
+    'sin-pagar': 'Se fue a pagar y no ha vuelto',
+    'pagado':    'Fianza pagada',
+    'llamada':   'Quiere que le llames antes de pagar',
+    'enviado':   'Enviado por WhatsApp'
+  };
   var NOMBRES  = { placa:'placa de mesa',  stand:'expositor de pie',  tarjeta:'tarjeta de mano' };
   var PLURALES = { placa:'placas de mesa', stand:'expositores de pie', tarjeta:'tarjetas de mano' };
   function resumen(e) {
@@ -369,6 +378,7 @@
             fila('Google', e.google, /^https?:/i.test(e.google || '') ? e.google : '') +
             fila('Pago', e.pago) +
             fila('Fianza', e.fianza ? e.fianza + ' €' : '') +
+            fila('En qué punto', PASOS[i.paso] || '') +
           '</table>' +
           (e.notas ? '<p class="notas">' + esc(e.notas) + '</p>' : '') +
           (b.porque || colores

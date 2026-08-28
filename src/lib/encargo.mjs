@@ -13,7 +13,20 @@
 export var LIMITES = {
   negocio: 80, ciudad: 60, direccion: 160, tel: 24,
   correo: 120, google: 300, redes: 200, notas: 600, lema: 60,
-  pago: 80
+  pago: 80, pedidoId: 60
+};
+/* En qué punto se mandó el pedido. De aquí sale el asunto del correo,
+   que es lo que miras antes de abrirlo:
+     sin-pagar  se ha ido a la pantalla de pago y aún no ha vuelto
+     pagado     ha vuelto del pago y ha mandado el WhatsApp
+     llamada    ha pedido que le llames antes de pagar nada
+     enviado    lo ha mandado sin que hubiera fianza que pedir  */
+export var ESTADOS = ['sin-pagar', 'pagado', 'llamada', 'enviado'];
+export var ESTADO_TXT = {
+  'sin-pagar': 'se ha ido a pagar',
+  'pagado':    'FIANZA PAGADA',
+  'llamada':   'QUIERE QUE LE LLAMES',
+  'enviado':   ''
 };
 export var FORMATOS = ['placa', 'stand', 'tarjeta'];
 /* cómo se llama cada formato cuando hay que escribirlo para una persona.
@@ -81,6 +94,13 @@ export function limpia(crudo) {
     /* los euros de fianza que dice haber pagado. Solo informativo: quien
        manda es el cobro que veas en Stripe. */
     fianza:    Math.max(0, Math.min(100000, parseInt(d.fianza, 10) || 0)),
+    /* El identificador que pone el navegador para que un mismo pedido
+       mandado dos veces —se va a pagar, vuelve y lo envía— actualice la
+       misma ficha en vez de abrir otra. No es secreto ni decide nada:
+       solo agrupa. */
+    pedidoId:  texto(d.pedidoId, LIMITES.pedidoId).replace(/[^0-9A-Za-z-]/g, ''),
+    /* en qué punto del pedido se mandó esto */
+    estado:    ESTADOS.indexOf(d.estado) > -1 ? d.estado : 'enviado',
     formato:   FORMATOS.indexOf(d.formato) > -1 ? d.formato : 'placa',
     cantidad:  cuantas(d.cantidad)
   };

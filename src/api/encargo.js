@@ -129,10 +129,23 @@ async function avisa(encargo, enlace, brief, ref, env) {
   if (!clave || !para || !desde) return false;
 
   const fila = (k, v) => (v ? `<tr><td style="padding:3px 12px 3px 0;color:#666">${k}</td><td style="padding:3px 0"><b>${esc(v)}</b></td></tr>` : '');
+
+  /* El aviso puede llegarte dos veces por el mismo pedido: al irse a
+     pagar y al volver. El cartel de arriba dice en cuál de las dos
+     estás, para que no parezcan dos pedidos distintos. */
+  const CARTEL = {
+    'sin-pagar': ['Se ha ido a pagar la fianza', 'Aún no ha vuelto. Si no te llega el cobro, este es al que hay que escribir.', '#8a6d1f', '#fdf6e3'],
+    'pagado':    ['Fianza pagada', 'Cuadra la referencia con tu panel de Stripe antes de ponerte.', '#1d6b3f', '#eaf7ef'],
+    'llamada':   ['Quiere que le llames antes de pagar', 'No ha pagado nada. Escríbele tú.', '#8a3f1f', '#fdefe8'],
+    'enviado':   ['', '', '', '']
+  };
+  const c = CARTEL[encargo.estado] || CARTEL.enviado;
+
   const html = `
     <div style="font:15px/1.55 system-ui,sans-serif;color:#111">
       <p style="margin:0 0 4px;font-size:13px;color:#777">Encargo ${esc(ref)}</p>
       <h2 style="margin:0 0 14px;font-size:20px">${esc(encargo.negocio)}</h2>
+      ${c[0] ? `<p style="margin:0 0 14px;padding:10px 12px;border-radius:8px;background:${c[3]};color:${c[2]};font-size:14px"><b>${esc(c[0])}</b><br><span style="color:#555">${esc(c[1])}</span></p>` : ''}
       <table style="border-collapse:collapse;font-size:14px">
         ${fila('Ciudad', encargo.ciudad)}
         ${fila('Dirección', encargo.direccion)}
@@ -159,7 +172,9 @@ async function avisa(encargo, enlace, brief, ref, env) {
     headers: { Authorization: 'Bearer ' + clave, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: desde, to: [para],
-      subject: 'Encargo ' + ref + ' · ' + encargo.negocio,
+      /* el asunto lleva en qué punto está: es lo que miras antes de abrir */
+      subject: 'Encargo ' + ref + ' · ' + encargo.negocio +
+               (L.ESTADO_TXT[encargo.estado] ? ' · ' + L.ESTADO_TXT[encargo.estado] : ''),
       html: html
     })
   });
@@ -189,11 +204,40 @@ export async function onRequestPost(context) {
                         { status: 400, headers: JSON_CAB });
   }
 
-  const cuando = Date.now();
-  const ref = L.referencia(cuando, encargo.negocio);
   encargo.google = L.enlaceResena(encargo.google);
 
-  const brief = (await pideBrief(encargo, env)) || L.coloresPorOficio(encargo);
+  /* ── ¿es un pedido nuevo o el mismo de hace un rato? ──
+     El mismo pedido puede llegar dos veces: una al irse a pagar y otra
+     al volver y mandar el WhatsApp. Si cada envío abriera su ficha,
+     el panel se llenaría de duplicados y no habría forma de saber cuál
+     es el bueno. Con el identificador que manda el navegador buscamos
+     la ficha que ya existe y la ACTUALIZAMOS.
+
+     Si el almacén falla o no viene identificador, se sigue como toda la
+     vida: ficha nueva. Un duplicado molesta; perder un pedido, no. */
+  let anterior = null, clave = null;
+  if (encargo.pedidoId && env.ENCARGOS) {
+    try {
+      clave = await env.ENCARGOS.get('id-' + encargo.pedidoId);
+      if (clave) {
+        const crudoAnt = await env.ENCARGOS.get(clave);
+        if (crudoAnt) anterior = JSON.parse(crudoAnt);
+      }
+    } catch (err) {
+      console.error('buscar el anterior: ' + (err && err.message));
+      anterior = null; clave = null;
+    }
+  }
+
+  const cuando = anterior ? anterior.cuando : Date.now();
+  const ref    = anterior ? anterior.ref    : L.referencia(cuando, encargo.negocio);
+
+  /* Los colores solo se piden UNA vez por pedido: en el segundo envío ya
+     los tenemos, y volver a preguntarle a la IA es pagar dos veces por
+     la misma respuesta. */
+  const brief = (anterior && anterior.brief)
+              || (await pideBrief(encargo, env))
+              || L.coloresPorOficio(encargo);
   const base = new URL(request.url).origin;
   const enlace = L.enlaceGenerador(base, encargo, brief);
 
@@ -202,8 +246,18 @@ export async function onRequestPost(context) {
   let guardado = false;
   try {
     if (!env.ENCARGOS) throw new Error('falta el almacén ENCARGOS');
-    await env.ENCARGOS.put(String(cuando) + '-' + ref,
-                           JSON.stringify({ ref, cuando, encargo, brief, enlace, estado: 'nuevo' }));
+    const k = clave || (String(cuando) + '-' + ref);
+    await env.ENCARGOS.put(k, JSON.stringify({
+      ref, cuando, encargo, brief, enlace,
+      /* el estado del taller (nuevo/hecho/descartado) no se pisa al
+         actualizar: si ya lo habías marcado como hecho, sigue hecho */
+      estado: (anterior && anterior.estado) || 'nuevo',
+      /* y el del cliente, que es el que cambia entre envío y envío */
+      paso: encargo.estado,
+      tocado: Date.now()
+    }));
+    /* el índice que permite encontrarla la próxima vez */
+    if (encargo.pedidoId) await env.ENCARGOS.put('id-' + encargo.pedidoId, k);
     guardado = true;
   } catch (err) {
     console.error('guardar: ' + (err && err.message));
@@ -211,7 +265,7 @@ export async function onRequestPost(context) {
 
   const avisado = await avisa(encargo, enlace, brief, ref, env);
 
-  return new Response(JSON.stringify({ ok: true, ref, avisado, guardado }),
+  return new Response(JSON.stringify({ ok: true, ref, avisado, guardado, nuevo: !anterior }),
                       { status: 200, headers: JSON_CAB });
 }
 
