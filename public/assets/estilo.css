@@ -932,6 +932,14 @@ html.sin-oferta .cinta{display:none}
 .btn.grande{width:100%;font-size:1rem;padding:16px 22px}
 .pie-wa{font-size:.71rem;color:var(--txt-3);margin-top:10px;line-height:1.5}
 .pie-wa a{color:var(--txt-2)}
+/* el aviso de datos: más apagado todavía que el pie del botón, que está
+   ahí por obligación y no para competir con nada */
+.pie-datos{display:block;margin-top:9px;padding-top:9px;font-size:.66rem;line-height:1.5;
+  color:var(--txt-3);border-top:1px solid var(--borde);text-align:left}
+.pie-datos b{color:var(--txt-2);font-weight:600}
+.pie-datos .enl{font:inherit;color:var(--txt-2);background:none;border:0;padding:0;
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.pie-datos .enl:hover{color:var(--oro)}
 @media (max-width:640px){
   .paso-r{flex-direction:column;align-items:flex-start;gap:10px}
   .opciones{margin-left:0}

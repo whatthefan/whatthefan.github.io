@@ -7,20 +7,22 @@ para que los clientes de un negocio dejen su reseña en Google.
 
 | | |
 |---|---|
-| `index.html` + `assets/` | La web. HTML suelto: no hay nada que compilar. |
-| `taller/generador.html` | El generador de placas. Herramienta interna, no enlazada desde la web y fuera del `robots.txt`. |
-| `netlify/functions/` | El servidor: recibe el encargo, pide el diseño a la IA, avisa por correo. |
-| `marca/`, `producto/`, `qr/`, `tarjeta/` | Logotipos, fotos y códigos. |
-| `r/` | Las páginas de salto de cada cliente. |
+| `public/` | Lo que se sirve. HTML suelto: no hay nada que compilar. |
+| `public/taller/generador.html` | El generador de placas. Herramienta interna, no enlazada desde la web y fuera del `robots.txt`. **Se monta**, no se edita: sale de `gen/plantilla.html` con `npm run generador`. |
+| `src/` | El Worker: recibe el encargo, pide el diseño a la IA, avisa por correo. `src/lib/` es la parte que no habla con nadie y se puede probar suelta. |
+| `gen/` | La plantilla del generador y el guion que lo monta. |
+| `public/marca/`, `producto/`, `qr/`, `tarjeta/` | Logotipos, fotos y códigos. |
+| `public/r/` | Las páginas de salto de cada cliente. |
 | `LEEME.txt` | El manual, en castellano llano. Empieza por ahí. |
 
 ## Cómo se publica
 
-Netlify lee este repositorio y publica solo. No hay comando de
-construcción: la carpeta se sirve tal cual.
+Cloudflare Workers, con `npm run deploy` (wrangler). La configuración
+está en `wrangler.jsonc`; `public/` se sirve tal cual y `src/` atiende
+`/api/`. El `netlify.toml` se queda por si hiciera falta volver.
 
 Las claves (Anthropic, Resend, la del panel) van en las variables de
-entorno de Netlify, **nunca en el código**: lo que entra en el
+entorno de Cloudflare, **nunca en el código**: lo que entra en el
 historial se queda ahí para siempre.
 
 ## Antes de tocar nada

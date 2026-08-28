@@ -170,6 +170,22 @@ dibuja la placa terminada, lista para ensenarsela al cliente o para
 mandarla a imprimir. Los tres formatos: placa 90x90, expositor 76x118
 y tarjeta 85x54.
 
+LAS MEDIDAS, QUE ES LO QUE MAS CARO SALE SI FALLA
+Las buenas son las que vende la web, y son las de arriba. El generador
+estuvo un tiempo dibujando el expositor a 100x150 y la tarjeta a 55x85
+(de pie), que no era lo que se vendia: un archivo de un tamano y una
+pieza de otro es dinero tirado en imprenta. Ya esta cuadrado.
+
+Si algun dia cambia una medida hay que tocarla en DOS sitios:
+
+    gen/plantilla.html   ->  el bloque FORMATOS
+    public/index.html    ->  en tres puntos: la ficha de datos de
+                             Google (arriba del todo), la linea de
+                             medidas de cada ficha de producto y el
+                             texto pequeno de los botones del pedido
+
+Y despues volver a montar el generador (mas abajo pone como).
+
 LA PLANTILLA
 Es la buena: banda verde oscuro con el borde de abajo curvado, fondo
 crema (no blanco), dos rayas de oro con las cinco estrellas encima, la G
@@ -180,6 +196,22 @@ asomando por el canto.
 
 Todo eso sale de una sola cosa que puedes tocar: los tres colores
 (banda, fondo y acento). El resto lo coloca solo.
+
+LA TARJETA VA TUMBADA, Y ES OTRO REPARTO
+La placa y el expositor son la misma composicion en columna, cambiando
+el tamano. La tarjeta no: 85x54 es el tamano de una tarjeta de credito,
+y en un rectangulo tan bajo la composicion en columna no cabe -el
+titulo y el QR acaban pisandose-. Asi que la tarjeta lleva la plantilla
+doblada por la mitad, como la de las fotos:
+
+    IZQUIERDA (el color)      las cinco estrellas con sus rayas, el
+                              reclamo, el nombre del negocio y el lema
+    DERECHA (el crema)        la G de Google, el icono del chip con sus
+                              esquinas de encuadre, el QR, el "toca o
+                              escanea" y la firma de PLEA5E
+
+Mismos elementos, misma marca, mismos colores: solo cambia el reparto.
+La placa de mesa NO se ha tocado ni un pixel al hacer esto.
 
 LO QUE HACE SOLO
   - Saca los colores del logo que subas y te los pone como botones.
@@ -223,6 +255,20 @@ SI NO TIENES INTERNET
 Funciona igual, pero la letra sera la del sistema en vez de la de la
 marca. Para ensenar una idea vale; para mandar a imprimir, abrelo con
 internet.
+
+COMO SE VUELVE A MONTAR (solo si se toca la plantilla)
+El generador es UN SOLO ARCHIVO con todo dentro: la libreria del QR, el
+logotipo y la tipografia. Ese archivo no se edita a mano: se monta desde
+gen/plantilla.html. Si tocas la plantilla (por ejemplo, una medida), hay
+que volver a montarlo o la web seguira sirviendo el de antes:
+
+    npm install          (solo la primera vez)
+    npm run generador
+
+Escribe "generador montado" y el tamano, y deja el archivo nuevo en
+public/taller/generador.html. Si algo no cuadra -falta el logo, la
+tipografia no es la que toca- se para y te lo dice en vez de sacar un
+archivo a medias.
 
 
 LOS MODELOS 3D DE LAS PLACAS
@@ -521,6 +567,30 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    El codigo postal va tambien en la ficha de datos que lee Google
    (el bloque de arriba del todo del index.html, el de las llaves).
    Si algun dia te mudas, cambialo en LOS DOS SITIOS.
+
+   LO QUE DICEN YA LOS CUATRO TEXTOS LEGALES
+   Se abren con los botones del pie y se escriben solos a partir de la
+   configuracion, asi que no hay que retocarlos a mano:
+
+     - Aviso legal: quien vende, NIF, domicilio completo, correo y
+       telefono; que no hay compra automatica; la fianza y el plazo.
+     - Condiciones de venta: los 10 apartados, con la fianza
+       proporcional, la FACTURA con el IVA desglosado (apartado 3), la
+       GARANTIA DEL CHIP por escrito (apartado 7), los plazos reales
+       (apartado 9) y las HOJAS DE QUEJAS Y RECLAMACIONES de la Junta
+       de Andalucia (apartado 10).
+     - Privacidad: quien responde, para que, cuanto se guarda y quien
+       mas lo ve. Y ademas hay un aviso corto pegado al boton de enviar
+       el pedido: la ley pide informar en el momento de recoger los
+       datos, y el que rellena el pedido no mira el pie.
+     - Cookies: esta web no pone ninguna. Lo unico que se cuenta son
+       las visitas de las paginas /r/ con Cloudflare Web Analytics, que
+       no usa cookies ni identifica a nadie; sirve para decirle a cada
+       local cuanta gente ha tocado su placa. Ahi lo pone.
+
+   LO QUE NO HAY QUE PONER: el enlace de la plataforma europea de
+   resolucion de litigios (ODR). Se derogo y la plataforma cerro en
+   julio de 2025. Si alguien te lo recomienda, ya no toca.
 
 2) LOCALES -> los enlaces de Piccola y BARVI.
    Ya estan puestos: son los mismos codigos de Google que llevan
