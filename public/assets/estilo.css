@@ -1171,3 +1171,17 @@ body::after{
   background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.3)}
 .senal-llamada-ok svg{width:15px;height:15px;flex:none;margin-top:2px;fill:none;stroke:var(--oro);
   stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ══════════ el resumen del pedido, como el de cualquier tienda ══════════
+   Subtotal, envío, IVA cuando toque y el total. El número grande de
+   arriba sigue siendo lo que se paga; esto es el desglose de dónde sale. */
+.impuesto{margin:4px 0 0; font-size:.76rem; color:var(--txt-3)}
+.resumen{display:grid; grid-template-columns:1fr auto; gap:7px 14px;
+  margin:14px 0 0; padding-top:14px; border-top:1px solid var(--borde);
+  text-align:left; font-size:.85rem}
+.resumen dt{color:var(--txt-2)}
+.resumen dd{margin:0; color:var(--txt); font-variant-numeric:tabular-nums; text-align:right}
+/* la última fila es el total: se separa y pesa más */
+.resumen dt.fin,.resumen dd.fin{
+  padding-top:10px; margin-top:3px; border-top:1px solid var(--borde);
+  font-weight:700; color:var(--txt); font-size:.95rem}

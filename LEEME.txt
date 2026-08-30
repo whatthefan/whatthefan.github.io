@@ -320,6 +320,56 @@ cuando el pedido se actualiza: si ya lo habias dado por hecho, sigue
 hecho.
 
 
+EL IVA: MONTADO Y APAGADO, ESPERANDO AL ALTA
+--------------------------------------------
+Todo el IVA esta programado y APAGADO. El dia que estes dado de alta se
+enciende con una linea en index.html:
+
+    var IVA = {
+      activo:   false,   <- pon true y ya esta
+      tipo:     21,
+      incluido: true
+    };
+
+Con 'activo' en true se enteran solos: el ticket, el mensaje de
+WhatsApp, las condiciones de venta y el aviso legal. No hay que tocar
+ningun texto a mano. Mientras este en false, la web no menciona el IVA
+en ningun sitio, que es como tiene que estar sin alta.
+
+LA UNICA DECISION DE VERDAD ES 'incluido'
+
+    true    El precio que se ve YA lleva el IVA. Pone 30 EUR, se pagan
+            30 EUR, y debajo en pequeno "Incluye 5,21 EUR de IVA". Es
+            como lo hacen las tiendas al consumidor.
+
+    false   El precio se ve SIN IVA y se suma al final. Pone 25 EUR y
+            el ticket saca "Subtotal 25 · IVA 5,25 · Total 30,25". Es
+            lo normal entre empresas.
+
+LAS DOS SALIDAS DAN CASI LO MISMO: 25 + IVA son 30,25 y 30 con el IVA
+dentro son 30. Veinticinco centimos. O sea que la eleccion es de como
+se lee, no de cuanto se cobra.
+
+OJO CON LOS PRECIOS SI ELIGES 'incluido: true'
+Si lo enciendes sin tocar los precios, de cada 25 EUR te quedas 20,66:
+estarias regalando el 17 %. Con esa opcion hay que subir los precios de
+CAT en index.html, y en LOS MISMOS SITIOS de siempre:
+
+    CAT (el precio por cantidad)     25 -> 30    30 -> 36    15 -> 18
+    la linea .pvp de cada ficha      y su precio tachado
+    la ficha de datos de Google      (el bloque de arriba del todo)
+    el "Desde 25 EUR" de la portada
+    el titulo y la descripcion de la pagina
+
+Con 'incluido: false' los precios se quedan como estan y no hay que
+tocar nada de eso: el IVA se suma encima solo.
+
+EL RESUMEN DEL PEDIDO
+Con IVA o sin el, el ticket ensena ahora las filas de cualquier tienda:
+subtotal, envio, IVA cuando toque, y el total. El numero grande sigue
+siendo lo que paga el cliente.
+
+
 EL PLAZO Y LA GARANTIA DEL CHIP, ESCRITOS
 -----------------------------------------
 Las dos preguntas que siempre llegaban por WhatsApp antes de pedir ya
