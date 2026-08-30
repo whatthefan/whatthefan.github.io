@@ -689,7 +689,13 @@
         <div class="pila" id="pila" aria-hidden="true"></div>
         <p class="pila-txt" id="pilaTxt">5 placas de mesa</p>
         <p class="cifra" id="rTotal">100,00 €</p>
+        <!-- la línea de impuestos va pegada al total, como en cualquier
+             tienda: el número grande es lo que se paga y debajo, en
+             pequeño, cuánto de eso es IVA -->
+        <p class="impuesto" id="rImpuesto" hidden></p>
         <div class="detalle" id="rDetalle">5 placas de mesa · 20,00 € cada una · ahorras 25,00 €</div>
+        <!-- subtotal, envío y el IVA cuando toque. Lo pinta el JS -->
+        <dl class="resumen" id="rResumen"></dl>
         <p class="reparto" id="rReparto" hidden></p>
         <ul class="incluye">
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Diseño con tu marca, incluido</li>
@@ -1005,6 +1011,38 @@
     email:     'juanfersem@gmail.com'
   };
 
+  /* ══════════ EL IVA ══════════
+
+     TODO ESTO ESTÁ MONTADO Y APAGADO. El día que estés dado de alta,
+     pones 'activo' en true, despliegas, y la web entera se entera sola:
+     el ticket, el mensaje de WhatsApp, las condiciones de venta y el
+     aviso legal. No hay que tocar ni un texto a mano.
+
+     MIENTRAS ESTÉ EN false la web no menciona el IVA en ningún sitio,
+     que es como tiene que estar mientras no haya alta.
+
+     ── 'incluido': la única decisión de verdad ──────────────────────
+     true   El precio que se ve YA lleva el IVA dentro. Es como lo hace
+            Two Jeys y como se hace en el comercio al consumidor: pone
+            30 €, se pagan 30 €, y debajo en pequeño "incluye 5,21 € de
+            IVA". Un número redondo y sin sorpresas al final.
+     false  El precio que se ve es SIN IVA y se suma al final. Es lo
+            normal entre empresas: pone 25 €, y en el ticket sale
+            "Subtotal 25 · IVA 5,25 · Total 30,25".
+
+     OJO CON LOS PRECIOS AL ENCENDERLO. Con 'incluido' en true y los
+     precios sin tocar, de cada 25 € te quedas 20,66: estarías regalando
+     el 17 %. Si eliges ese camino hay que subir los precios de CAT (ahí
+     abajo) a 30, 36 y 18, que dejan casi lo mismo que ganas hoy. Con
+     'incluido' en false los precios se quedan como están y el IVA se
+     suma encima. Las dos salidas dan lo mismo: 25 + IVA son 30,25, y
+     30 con el IVA dentro son 30. Veinticinco céntimos. */
+  var IVA = {
+    activo:   false,
+    tipo:     21,
+    incluido: true
+  };
+
   /* La fianza que se paga para que te pongas a diseñar. Son los
      primeros euros del pedido, no un cobro aparte: la web lo dice así en
      todos lados mientras 'descuenta' esté en true.
@@ -1051,6 +1089,20 @@
   [].forEach.call(document.querySelectorAll('[data-fianza-regla]'), function(e){
     e.textContent = FIANZA_REGLA;
   });
+
+  /* Cuando los precios se enseñan SIN el IVA, hay que decirlo donde se
+     ven: en las tres fichas de producto y en el "desde 25 €" de la
+     portada. Si el IVA va dentro del precio no hace falta advertir de
+     nada, que es justo la gracia de esa opción. */
+  var IVA_COLETILLA = IVA.activo && !IVA.incluido ? ' + IVA' : '';
+  if (IVA_COLETILLA) {
+    [].forEach.call(document.querySelectorAll('.prod .pvp small'), function(e){
+      e.textContent = e.textContent + ' · IVA no incluido';
+    });
+    [].forEach.call(document.querySelectorAll('.prod .pvp .n'), function(e){
+      e.textContent = e.textContent + IVA_COLETILLA;
+    });
+  }
 
   /* ---- COBRO AUTOMÁTICO (Bizum, Apple Pay, Google Pay y tarjeta) ----
      En cuanto pegues aquí tu enlace de pago, el paso 5 del pedido deja
@@ -1435,6 +1487,23 @@
       if (l.abierta) r.abierto = true;
       r.total += l.total; r.ahorro += l.ahorro;
     });
+
+    /* El reparto del IVA. 'base' es lo que se queda PLEA5E, 'iva' lo que
+       es de Hacienda y 'cobrar' lo que paga el cliente. Con el IVA
+       apagado los tres salen del mismo número y nadie se entera. */
+    if (!IVA.activo) {
+      r.base = r.total; r.iva = 0; r.cobrar = r.total;
+    } else if (IVA.incluido) {
+      /* el precio ya lo lleva dentro: se saca hacia atrás */
+      r.cobrar = r.total;
+      r.base   = r.total / (1 + IVA.tipo / 100);
+      r.iva    = r.cobrar - r.base;
+    } else {
+      /* el precio es sin IVA y se suma encima */
+      r.base   = r.total;
+      r.iva    = r.total * IVA.tipo / 100;
+      r.cobrar = r.base + r.iva;
+    }
     return r;
   }
   /* "5 placas de mesa" · "20 o más placas de mesa" */
@@ -1514,7 +1583,7 @@
     pintarPila(ls, abierto);
     pilaTxt.textContent = ls.map(cuantas).join(' + ');
 
-    var rTotal = document.getElementById('rTotal'), nuevoTotal = abierto ? 'Presupuesto' : eur(total);
+    var rTotal = document.getElementById('rTotal'), nuevoTotal = abierto ? 'Presupuesto' : eur(q.cobrar);
     if (rTotal.textContent !== nuevoTotal) {
       rTotal.textContent = nuevoTotal;
       rTotal.classList.remove('pulso'); void rTotal.offsetWidth; rTotal.classList.add('pulso');
@@ -1553,10 +1622,42 @@
     var faltanDatos = !v('negocio') || !v('tel');
     var pista = document.getElementById('siguiente');
 
+    /* La línea de impuestos, pegada al número grande */
+    var imp = document.getElementById('rImpuesto');
+    if (imp) {
+      if (IVA.activo && !abierto && q.iva > 0.005) {
+        imp.hidden = false;
+        /* el número grande es lo que se paga en los dos modos, así que
+           la frase es la misma: lo que cambia es de dónde sale */
+        imp.textContent = 'Incluye ' + eur(q.iva) + ' de IVA';
+      } else { imp.hidden = true; }
+    }
+
+    /* Las filas de siempre de un carrito: subtotal, envío y el IVA
+       cuando esté encendido. Con el pedido abierto no hay cifras que
+       poner, así que no se enseñan. */
+    var res = document.getElementById('rResumen');
+    if (res) {
+      if (abierto) { res.innerHTML = ''; res.hidden = true; }
+      else {
+        res.hidden = false;
+        var filas = [['Subtotal', eur(IVA.activo && IVA.incluido ? q.base : q.total)],
+                     ['Envío', 'Gratis a península']];
+        if (IVA.activo && q.iva > 0.005) {
+          filas.push(['IVA (' + IVA.tipo + ' %)', eur(q.iva)]);
+        }
+        filas.push(['Total', eur(q.cobrar)]);
+        res.innerHTML = filas.map(function(f, i){
+          var ult = i === filas.length - 1 ? ' class="fin"' : '';
+          return '<dt' + ult + '>' + f[0] + '</dt><dd' + ult + '>' + f[1] + '</dd>';
+        }).join('');
+      }
+    }
+
     /* La fianza: lo que toca por este pedido, o lo que ya se pagó si el
        pago está hecho. Se recalcula cada vez porque ahora depende del
        tamaño del pedido, y el pedido cambia mientras lo montan. */
-    var fianza = fianzaDe(abierto ? 0 : total);
+    var fianza = fianzaDe(abierto ? 0 : q.cobrar);
     var modo   = SENAL_ACTIVA && SENAL_PINTAR ? SENAL_PINTAR(fianza, faltanDatos) : '';
     var pideFianza = SENAL_ACTIVA && !!modo;
     /* Hasta que no se presenten, del dinero NO se habla en ningún sitio
@@ -1582,11 +1683,11 @@
           reparto.innerHTML = 'La fianza de <b>' + entero(hoy) + '</b> ' +
             (ya ? 'que has pagado se descuenta' : 'se descuenta') +
             ' del presupuesto que te pasemos.';
-        } else if (total > hoy + 0.01) {
+        } else if (q.cobrar > hoy + 0.01) {
           reparto.innerHTML = (ya ? 'Ya has pagado <b>' + entero(hoy) + '</b>'
                                   : 'Hoy pagas <b>' + entero(hoy) + '</b> de fianza') +
-            ' y el resto, <b>' + eur(total - hoy) + '</b>, cuando el diseño te guste. ' +
-            'La fianza va dentro de esos ' + eur(total) + ', no es dinero de más.';
+            ' y el resto, <b>' + eur(q.cobrar - hoy) + '</b>, cuando el diseño te guste. ' +
+            'La fianza va dentro de esos ' + eur(q.cobrar) + ', no es dinero de más.';
         } else {
           reparto.innerHTML = 'Con la fianza de <b>' + entero(hoy) +
             '</b> el pedido queda pagado entero: no hay nada más que pagar.';
@@ -1610,8 +1711,11 @@
       lineas.push(l.abierta ? 'Precio a convenir'
                             : eur(l.total) + (l.n === 1 ? '' : '  ·  ' + eur(l.ud) + ' ' + l.c.cada));
     });
-    if (ls.length > 1) {
-      lineas.push('', '*Total:* ' + (abierto ? 'a convenir' : eur(total)));
+    if (ls.length > 1 || (IVA.activo && !abierto)) {
+      lineas.push('', '*Total:* ' + (abierto ? 'a convenir' : eur(q.cobrar)));
+    }
+    if (IVA.activo && !abierto && q.iva > 0.005) {
+      lineas.push('(incluye ' + eur(q.iva) + ' de IVA)');
     }
     lineas.push('',
       '*Negocio:* ' + (v('negocio') || '—'),
@@ -1662,8 +1766,8 @@
       }
       /* que se vea negro sobre blanco lo que queda por pagar: la fianza
          no se suma al total, se resta de él */
-      if (BIZUM.descuenta && !abierto && acuenta && total > acuenta + 0.01) {
-        lineas.push('Queda por pagar: ' + eur(total - acuenta) + ' al aprobar el diseño');
+      if (BIZUM.descuenta && !abierto && acuenta && q.cobrar > acuenta + 0.01) {
+        lineas.push('Queda por pagar: ' + eur(q.cobrar - acuenta) + ' al aprobar el diseño');
       }
       lineas.push('', '¿Me mandáis la propuesta de diseño?');
 
@@ -1968,11 +2072,15 @@
       '<p>Vendemos el soporte físico y su programación. <b>No vendemos reseñas ni garantizamos ningún número de ellas</b>: eso depende de tus clientes. Tampoco tenemos relación con Google ni influimos en cómo funciona su plataforma.</p>' +
 
       '<h4>3. Precios</h4>' +
-      '<p>Los precios de la web son por unidad, con el IVA incluido, e incluyen el diseño y el envío a península. Bajan por cantidad, según la tabla del apartado de pedido. Valen salvo error tipográfico; si se cuela uno, te avisamos antes de cobrar nada y tú decides.</p>' +
+      '<p>Los precios de la web son por unidad' +
+      (IVA.activo ? (IVA.incluido ? ', con el IVA incluido,' : ', <b>sin IVA</b>: al total se le suma el ' + IVA.tipo + ' %,') : '') +
+      ' e incluyen el diseño y el envío a península. Bajan por cantidad, según la tabla del apartado de pedido. Valen salvo error tipográfico; si se cuela uno, te avisamos antes de cobrar nada y tú decides.</p>' +
       '<p>La fianza que se paga al principio —' + SENAL_TXT + '— <b>va incluida en ese precio</b>: son los primeros euros del pedido, no un cobro aparte.</p>' +
       (OFERTA.viva() ? '<p>Los precios de lanzamiento que ves ahora están en vigor <b>hasta el ' + OFERTA.dia + '</b>. A partir de esa fecha se aplican las tarifas normales.</p>' : '') +
       '<p>Baleares, Canarias, Ceuta y Melilla: escríbenos y te pasamos el envío aparte antes de cerrar el pedido.</p>' +
-      '<p><b>Factura:</b> pídenosla y te la mandamos por correo. Si la quieres a nombre de tu negocio, dinos el nombre fiscal, el NIF y la dirección al hacer el pedido.</p>' +
+      (IVA.activo
+        ? '<p><b>Factura:</b> te la mandamos por correo con cada pedido, con el IVA desglosado. Si la quieres a nombre de tu negocio, dinos el nombre fiscal, el NIF y la dirección al hacer el pedido y sale a nombre de la empresa.</p>'
+        : '<p><b>Factura:</b> pídenosla y te la mandamos por correo. Si la quieres a nombre de tu negocio, dinos el nombre fiscal, el NIF y la dirección al hacer el pedido.</p>') +
 
       '<h4>4. Cómo se hace el pedido</h4>' +
       '<p>No hay compra automática en esta web. El pedido se cierra por WhatsApp, en este orden:</p>' +
@@ -2022,7 +2130,9 @@
         dato('Nombre', DATOS.titular) + dato('NIF', DATOS.nif) +
         dato('Domicilio', DATOS.domicilio) + dato('Correo', DATOS.email) +
         '<li><b>Teléfono y WhatsApp:</b> 661 40 32 19</li></ul>' +
-      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el IVA, el diseño y el envío a península, y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga desde la propia web una fianza de ' + SENAL_TXT + ', que va incluida en el precio final y no se suma a él; hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. El plazo de entrega es de 2 a 7 días de preparación y de 1 a 3 de envío desde que apruebas el diseño. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
+      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el diseño y el envío a península' +
+      (IVA.activo ? (IVA.incluido ? ', y llevan el IVA incluido' : ', y no llevan el IVA, que se suma al total') : '') +
+      ', y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga desde la propia web una fianza de ' + SENAL_TXT + ', que va incluida en el precio final y no se suma a él; hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. El plazo de entrega es de 2 a 7 días de preparación y de 1 a 3 de envío desde que apruebas el diseño. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
       '<h4>Propiedad intelectual</h4><p>Los textos, fotografías, modelos 3D y diseños de esta web son de PLEA5E. Los logotipos y marcas de los locales que aparecen como ejemplo pertenecen a sus dueños y se muestran con su permiso. Google y el logotipo de Google son marcas de Google LLC; PLEA5E no está asociada ni patrocinada por Google.</p>' +
       '<h4>Responsabilidad</h4><p>Ponemos cuidado en que todo lo que se publica aquí sea correcto, pero no respondemos de las interrupciones del servicio de hospedaje ni del contenido de las páginas ajenas a las que enlazamos (Google, WhatsApp).</p>' +
       '<h4>Legislación</h4><p>Se aplica la legislación española.</p>'],
