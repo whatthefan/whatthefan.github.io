@@ -106,7 +106,7 @@
           "@id": "https://plea5e.es/#envio",
           "shippingRate": {
             "@type": "MonetaryAmount",
-            "value": "0",
+            "value": "3.99",
             "currency": "EUR"
           },
           "shippingDestination": {
@@ -172,7 +172,7 @@
           "@id": "https://plea5e.es/#envio",
           "shippingRate": {
             "@type": "MonetaryAmount",
-            "value": "0",
+            "value": "3.99",
             "currency": "EUR"
           },
           "shippingDestination": {
@@ -237,7 +237,7 @@
           "@id": "https://plea5e.es/#envio",
           "shippingRate": {
             "@type": "MonetaryAmount",
-            "value": "0",
+            "value": "3.99",
             "currency": "EUR"
           },
           "shippingDestination": {
@@ -1011,6 +1011,40 @@
     email:     'juanfersem@gmail.com'
   };
 
+  /* ══════════ EL ENVÍO ══════════
+
+     Hasta ahora el envío iba dentro del precio y lo pagabas tú. En un
+     pedido de una placa eso es más de la mitad de lo que te cuesta la
+     pieza, o sea que el pedido pequeño casi no dejaba nada.
+
+     'gratisDesde' es lo que de verdad mueve la aguja: quien iba a
+     llevarse una placa se lleva dos para no pagar el envío, y una placa
+     más son quince euros de margen contra los cuatro que perdonas.
+
+     Para volver al envío gratis de siempre: precio a 0. */
+  var ENVIO = {
+    precio:      3.99,   // euros por pedido. 0 = gratis siempre
+    gratisDesde: 60      // a partir de este total, gratis. 0 = sin umbral
+  };
+  /* ¿lleva envío este pedido? */
+  function envioDe(total){
+    if (!(ENVIO.precio > 0)) return 0;
+    if (ENVIO.gratisDesde > 0 && total >= ENVIO.gratisDesde) return 0;
+    return ENVIO.precio;
+  }
+
+  var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; };
+  /* la fianza siempre sale en euros redondos, que es como se teclea un
+     Bizum: "15 €", no "15,00 €" */
+  var entero = function(v){ return Math.round(v).toLocaleString('es-ES') + ' €'; };
+
+  /* Cómo se anuncia el envío por toda la web. Un solo sitio: si mañana
+     vuelve a ser gratis, o cambia el umbral, no hay que ir buscando
+     frases sueltas por el HTML. */
+  var ENVIO_TXT = !(ENVIO.precio > 0)  ? 'Envío gratis a península'
+                : ENVIO.gratisDesde > 0 ? 'Envío gratis desde ' + entero(ENVIO.gratisDesde)
+                :                         'Envío ' + eur(ENVIO.precio);
+
   /* ══════════ EL IVA ══════════
 
      TODO ESTO ESTÁ MONTADO Y APAGADO. El día que estés dado de alta,
@@ -1094,6 +1128,24 @@
      ven: en las tres fichas de producto y en el "desde 25 €" de la
      portada. Si el IVA va dentro del precio no hace falta advertir de
      nada, que es justo la gracia de esa opción. */
+  /* Los sitios donde la web promete envío gratis. Si ahora se cobra, no
+     pueden seguir diciéndolo: se cambian solos según la configuración. */
+  (function(){
+    var chip = [].slice.call(document.querySelectorAll('.chips .chip'))
+      .filter(function(c){ return /Env[íi]o incluido/.test(c.textContent); })[0];
+    var sitios = [].slice.call(document.querySelectorAll('.incluye li, #ruedaOferta li'))
+      .filter(function(l){ return /Env[íi]o gratis a pen/.test(l.textContent); });
+    if (chip) sitios.push(chip);
+    if (!(ENVIO.precio > 0)) return;      /* gratis de verdad: no se toca nada */
+
+    var txt = ENVIO_TXT;
+    sitios.forEach(function(el){
+      var t = el.lastChild;               /* el texto va detrás del icono */
+      if (t && t.nodeType === 3) t.textContent = (el.firstChild === t ? '' : ' ') + txt;
+      else el.textContent = txt;
+    });
+  })();
+
   var IVA_COLETILLA = IVA.activo && !IVA.incluido ? ' + IVA' : '';
   if (IVA_COLETILLA) {
     [].forEach.call(document.querySelectorAll('.prod .pvp small'), function(e){
@@ -1269,7 +1321,7 @@
       var trozos = ['<b>Oferta de lanzamiento</b>',
                     'Hasta \u221224 % en las placas',
                     'Dise\u00f1o con tu marca, 0 \u20ac',
-                    'Env\u00edo gratis a pen\u00ednsula',
+                    ENVIO_TXT,
                     'Fianza desde ' + BIZUM.minimo + ' \u20ac, dentro del precio',
                     'En tu mesa en 3-10 d\u00edas',
                     'Acaba el ' + OFERTA.diaCorto];
@@ -1465,11 +1517,6 @@
      ficha cambia la elección; si sí, la respeta y añade. */
   var tocado = false;
 
-  var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; };
-  /* la fianza siempre sale en euros redondos, que es como se teclea un
-     Bizum: "15 €", no "15,00 €" */
-  var entero = function(v){ return Math.round(v).toLocaleString('es-ES') + ' €'; };
-
   /* Una línea del pedido con sus cuentas hechas. 'abierta' es la cesta
      de 20 o más, que no tiene precio cerrado hasta que la miramos. */
   function linea(k){
@@ -1488,20 +1535,31 @@
       r.total += l.total; r.ahorro += l.ahorro;
     });
 
+    /* El envío, que se mira contra el importe de los productos: el
+       umbral del envío gratis se cuenta sobre lo que se lleva, no sobre
+       lo que acaba pagando. Un pedido abierto no tiene importe todavía,
+       así que tampoco tiene envío que calcular. */
+    r.envio = r.abierto ? 0 : envioDe(r.total);
+    r.envioBase = r.envio;   /* lo mismo salvo con el IVA metido dentro */
+
     /* El reparto del IVA. 'base' es lo que se queda PLEA5E, 'iva' lo que
-       es de Hacienda y 'cobrar' lo que paga el cliente. Con el IVA
-       apagado los tres salen del mismo número y nadie se entera. */
+       es de Hacienda y 'cobrar' lo que paga el cliente, envío incluido.
+       Con el IVA apagado no hay reparto y todo sale del mismo número. */
+    var conEnvio = r.total + r.envio;
     if (!IVA.activo) {
-      r.base = r.total; r.iva = 0; r.cobrar = r.total;
+      r.base = conEnvio; r.iva = 0; r.cobrar = conEnvio;
     } else if (IVA.incluido) {
       /* el precio ya lo lleva dentro: se saca hacia atrás */
-      r.cobrar = r.total;
-      r.base   = r.total / (1 + IVA.tipo / 100);
+      r.cobrar = conEnvio;
+      r.base   = conEnvio / (1 + IVA.tipo / 100);
       r.iva    = r.cobrar - r.base;
+      /* el envío también lleva el IVA dentro, así que en el ticket va
+         sin él: si no, el subtotal y el envío no sumarían el total */
+      r.envioBase = r.envio / (1 + IVA.tipo / 100);
     } else {
       /* el precio es sin IVA y se suma encima */
-      r.base   = r.total;
-      r.iva    = r.total * IVA.tipo / 100;
+      r.base   = conEnvio;
+      r.iva    = conEnvio * IVA.tipo / 100;
       r.cobrar = r.base + r.iva;
     }
     return r;
@@ -1641,8 +1699,14 @@
       if (abierto) { res.innerHTML = ''; res.hidden = true; }
       else {
         res.hidden = false;
-        var filas = [['Subtotal', eur(IVA.activo && IVA.incluido ? q.base : q.total)],
-                     ['Envío', 'Gratis a península']];
+        var filas = [['Subtotal', eur(IVA.activo && IVA.incluido ? q.base - q.envioBase : q.total)],
+                     ['Envío', q.envio > 0 ? eur(q.envioBase) : 'Gratis a península']];
+        /* cuánto le falta para que salga gratis: es la línea que hace que
+           el que iba a llevarse una se lleve dos */
+        if (q.envio > 0 && ENVIO.gratisDesde > 0) {
+          var falta = ENVIO.gratisDesde - q.total;
+          if (falta > 0) filas.push(['Te faltan ' + eur(falta) + ' para el envío gratis', '']);
+        }
         if (IVA.activo && q.iva > 0.005) {
           filas.push(['IVA (' + IVA.tipo + ' %)', eur(q.iva)]);
         }
@@ -1711,7 +1775,8 @@
       lineas.push(l.abierta ? 'Precio a convenir'
                             : eur(l.total) + (l.n === 1 ? '' : '  ·  ' + eur(l.ud) + ' ' + l.c.cada));
     });
-    if (ls.length > 1 || (IVA.activo && !abierto)) {
+    if (q.envio > 0) { lineas.push('', 'Envío: ' + eur(q.envio)); }
+    if (ls.length > 1 || q.envio > 0 || (IVA.activo && !abierto)) {
       lineas.push('', '*Total:* ' + (abierto ? 'a convenir' : eur(q.cobrar)));
     }
     if (IVA.activo && !abierto && q.iva > 0.005) {
@@ -2074,7 +2139,12 @@
       '<h4>3. Precios</h4>' +
       '<p>Los precios de la web son por unidad' +
       (IVA.activo ? (IVA.incluido ? ', con el IVA incluido,' : ', <b>sin IVA</b>: al total se le suma el ' + IVA.tipo + ' %,') : '') +
-      ' e incluyen el diseño y el envío a península. Bajan por cantidad, según la tabla del apartado de pedido. Valen salvo error tipográfico; si se cuela uno, te avisamos antes de cobrar nada y tú decides.</p>' +
+      ' e incluyen el diseño' +
+      (ENVIO.precio > 0
+        ? (ENVIO.gratisDesde > 0
+            ? '. El envío a península son ' + eur(ENVIO.precio) + ' por pedido, y es gratis a partir de ' + entero(ENVIO.gratisDesde)
+            : '. El envío a península son ' + eur(ENVIO.precio) + ' por pedido')
+        : ' y el envío a península') + '. Bajan por cantidad, según la tabla del apartado de pedido. Valen salvo error tipográfico; si se cuela uno, te avisamos antes de cobrar nada y tú decides.</p>' +
       '<p>La fianza que se paga al principio —' + SENAL_TXT + '— <b>va incluida en ese precio</b>: son los primeros euros del pedido, no un cobro aparte.</p>' +
       (OFERTA.viva() ? '<p>Los precios de lanzamiento que ves ahora están en vigor <b>hasta el ' + OFERTA.dia + '</b>. A partir de esa fecha se aplican las tarifas normales.</p>' : '') +
       '<p>Baleares, Canarias, Ceuta y Melilla: escríbenos y te pasamos el envío aparte antes de cerrar el pedido.</p>' +
@@ -2130,7 +2200,8 @@
         dato('Nombre', DATOS.titular) + dato('NIF', DATOS.nif) +
         dato('Domicilio', DATOS.domicilio) + dato('Correo', DATOS.email) +
         '<li><b>Teléfono y WhatsApp:</b> 661 40 32 19</li></ul>' +
-      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el diseño y el envío a península' +
+      '<h4>Uso de la web</h4><p>Los precios que ves incluyen el diseño' +
+      (ENVIO.precio > 0 ? ', y el envío a península se cobra aparte' : ' y el envío a península') +
       (IVA.activo ? (IVA.incluido ? ', y llevan el IVA incluido' : ', y no llevan el IVA, que se suma al total') : '') +
       ', y son válidos salvo error tipográfico. No hay compra automática: el pedido se cierra por WhatsApp. Antes de ponernos a diseñar se paga desde la propia web una fianza de ' + SENAL_TXT + ', que va incluida en el precio final y no se suma a él; hasta que no apruebas la propuesta no se imprime nada ni se cobra el resto. El plazo de entrega es de 2 a 7 días de preparación y de 1 a 3 de envío desde que apruebas el diseño. Lo tienes detallado en las <b>condiciones de venta</b>.</p>' +
       '<h4>Propiedad intelectual</h4><p>Los textos, fotografías, modelos 3D y diseños de esta web son de PLEA5E. Los logotipos y marcas de los locales que aparecen como ejemplo pertenecen a sus dueños y se muestran con su permiso. Google y el logotipo de Google son marcas de Google LLC; PLEA5E no está asociada ni patrocinada por Google.</p>' +
