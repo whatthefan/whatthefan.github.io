@@ -320,6 +320,52 @@ cuando el pedido se actualiza: si ya lo habias dado por hecho, sigue
 hecho.
 
 
+EL ENVIO: 3,99 EUR, GRATIS DESDE 60
+-----------------------------------
+Hasta ahora el envio iba dentro del precio y lo pagabas tu. En un pedido
+de UNA placa eso era mas de la mitad de lo que te cuesta la pieza: el
+pedido pequeno casi no dejaba nada. Ahora se cobra aparte, y se cambia
+en un solo sitio de index.html:
+
+    var ENVIO = {
+      precio:      3.99,   <- euros por pedido. 0 = gratis siempre
+      gratisDesde: 60      <- desde aqui, gratis. 0 = sin umbral
+    };
+
+LO QUE DE VERDAD MUEVE LA AGUJA ES 'gratisDesde'. Los 3,99 no arreglan
+el pedido de una placa: quince euros de margen no salen de ahi. Lo que
+lo arregla es que el que iba a llevarse una se lleve mas para no pagar
+el envio. Por eso el ticket, cuando el pedido no llega, saca la linea
+"Te faltan 35,00 EUR para el envio gratis".
+
+CON PONER ESOS DOS NUMEROS SE ENTERA TODA LA WEB, y no hay que tocar
+ningun texto a mano:
+
+    el chip de la portada           "Envio incluido" -> "Envio gratis
+                                    desde 60 EUR"
+    la cinta de la oferta           lo mismo
+    la lista de lo que incluye      lo mismo
+    el ticket del pedido            fila "Envio 3,99 EUR" o "Gratis a
+                                    peninsula", y el aviso de lo que
+                                    falta para que salga gratis
+    el mensaje de WhatsApp          linea "Envio: 3,99 EUR" y el total
+    las condiciones de venta        el punto 3
+    el aviso legal                  el parrafo de "Uso de la web"
+
+Para volver al envio gratis de siempre: 'precio' a 0 y ya esta, todos
+esos sitios vuelven solos a decir "Envio gratis a peninsula".
+
+DOS COSAS QUE HAY QUE TOCAR A MANO SI CAMBIAS EL PRECIO. La ficha de
+datos de Google (el bloque de arriba del todo de index.html) lleva el
+envio escrito tres veces, una por producto: busca "shippingRate" y
+cambia el "value". Y Baleares, Canarias, Ceuta y Melilla siguen fuera:
+las condiciones dicen que se presupuesta aparte, y asi sigue siendo.
+
+LA FIANZA SE CALCULA SOBRE EL TOTAL CON EL ENVIO DENTRO. Una placa son
+25 + 3,99 = 28,99, la mitad serian 14,50, y como el minimo son 15, se
+piden 15. Eso ya lo hace solo.
+
+
 EL IVA: MONTADO Y APAGADO, ESPERANDO AL ALTA
 --------------------------------------------
 Todo el IVA esta programado y APAGADO. El dia que estes dado de alta se
