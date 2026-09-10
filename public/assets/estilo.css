@@ -373,15 +373,16 @@ td .destaca{color:var(--oro);font-weight:700}
 .aviso b{color:var(--txt)}
 
 /* faq */
-.faq{margin-top:clamp(30px,3.4vw,44px);border-top:1px solid var(--claro-borde)}
+.faq{margin-top:clamp(20px,2.4vw,32px);border-top:1px solid var(--claro-borde)}
 .faq details{border-bottom:1px solid var(--claro-borde)}
-.faq summary{cursor:pointer;padding:20px 46px 20px 0;position:relative;list-style:none;font-weight:600;font-size:1rem}
+.faq summary{cursor:pointer;padding:15px 46px 15px 0;position:relative;list-style:none;font-weight:600;font-size:.97rem}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"";position:absolute;right:10px;top:50%;width:10px;height:10px;
   border-right:2px solid var(--oro-os);border-bottom:2px solid var(--oro-os);
   transform:translateY(-70%) rotate(45deg);transition:transform .22s}
 .faq details[open] summary::after{transform:translateY(-28%) rotate(225deg)}
-.faq details p{padding:0 0 22px;color:var(--claro-txt-2);max-width:72ch}
+.faq details p{padding:0 0 16px;color:var(--claro-txt-2);max-width:72ch;font-size:.94rem;line-height:1.6}
+.faq details p + p{padding-top:0;margin-top:-6px}
 
 /* pedido */
 .form-rej{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(32px,3.6vw,44px)}
@@ -416,6 +417,36 @@ td .destaca{color:var(--oro);font-weight:700}
   width:min(58%,420px);height:auto;z-index:0;pointer-events:none;
   fill:var(--oro);opacity:.062}
 .pie .env{position:relative;z-index:1}
+
+/* ══════════ ESTRELLAS DE FONDO POR TODA LA PÁGINA ══════════
+
+   La misma idea del pie, repartida: estrellas grandes casi invisibles
+   detrás de cada sección para que el fondo negro no se sienta vacío.
+
+   Van como ::before, dentro de la caja de la sección y sin salirse, para
+   no tener que poner overflow:hidden en ningún sitio: el resumen del
+   pedido es position:sticky y overflow oculto en un padre lo mata.
+
+   La opacidad es deliberadamente ridícula (.04). Si se nota, sobra. */
+.astro{position:relative}
+.astro > .env{position:relative;z-index:1}
+/* van en ::after y no en ::before porque el pedido y el "cómo funciona"
+   ya usaban ::before para su brillo ambiental, y se pisaban */
+.astro::after{content:"";position:absolute;pointer-events:none;z-index:0;
+  aspect-ratio:1;background:var(--oro);opacity:.04;
+  -webkit-mask:var(--estrella) center/contain no-repeat;
+          mask:var(--estrella) center/contain no-repeat}
+:root{--estrella:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4l14.1 29.3L96 37.9 72.9 60.1l5.6 31.6L50 76.8 21.5 91.7l5.6-31.6L4 37.9l31.9-4.6z' fill='%23000'/%3E%3C/svg%3E")}
+/* cada una en un sitio distinto y con un tamaño distinto: si estuvieran
+   todas iguales y centradas se leería como un patrón, y eso sí canta */
+#productos::after{width:min(46%,380px);right:-6%;top:8%}
+#pedido::after  {width:min(40%,320px);left:-8%;bottom:6%}
+#demo::after    {width:min(50%,400px);right:-4%;bottom:10%}
+#como::after    {width:min(38%,300px);left:-5%;top:12%}
+#ayuda::after   {width:min(44%,340px);right:-7%;top:20%}
+/* en la sección clara el dorado se pierde: ahí va un pelín más marcada */
+.sec-claro.astro::after{opacity:.05}
+@media (max-width:640px){.astro::after{opacity:.03}}
 .pie-rej{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:clamp(22px,3vw,44px)}
 @media (max-width:860px){.pie-rej{grid-template-columns:1fr 1fr}.pie-marca{grid-column:1/-1}}
 @media (max-width:480px){.pie-rej{grid-template-columns:1fr;gap:26px}}
@@ -604,8 +635,8 @@ td .destaca{color:var(--oro);font-weight:700}
 .obra figcaption{padding:14px 18px 16px}
 
 /* ---- preguntas compactas ---- */
-.faq summary{padding:16px 42px 16px 0;font-size:.96rem}
-.faq details p{padding-bottom:18px;font-size:.94rem}
+.faq summary{padding:13px 42px 13px 0;font-size:.93rem}
+.faq details p{padding-bottom:14px;font-size:.9rem}
 
 /* ================= MÓVIL: mismo aire que el escritorio ================= */
 @media (max-width:880px){
@@ -794,7 +825,7 @@ td .destaca{color:var(--oro);font-weight:700}
    Va entre el resumen y el boton de WhatsApp a proposito: es un paso
    mas del pedido, no un aviso al margen. El boton no se activa hasta
    que marcan la casilla. */
-.senal-paso{margin-top:18px;padding:16px;border-radius:var(--r);
+.senal-paso{margin-top:13px;padding:13px;border-radius:var(--r);
   background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.34);text-align:left}
 .senal-paso-tit{display:flex;align-items:center;gap:9px;margin:0 0 8px;
   font-weight:800;font-size:.95rem;color:var(--txt)}
@@ -932,37 +963,40 @@ html.sin-oferta .cinta{display:none}
 .foto-op .op[aria-pressed="true"] img{filter:drop-shadow(0 6px 11px rgba(0,0,0,.3))}
 
 /* resumen lateral con la pila de unidades */
-.lado-b{border:1px solid var(--borde-claro);border-radius:18px;padding:20px 18px 18px;
+/* El ticket ocupaba casi una pantalla entera de móvil él solo, y el
+   botón de enviar caía por debajo del borde. Todo lo de dentro va más
+   apretado; ninguna línea se quita, solo respiran menos. */
+.lado-b{border:1px solid var(--borde-claro);border-radius:18px;padding:16px 16px 15px;
   background:linear-gradient(180deg,rgba(233,188,70,.08),rgba(255,255,255,.02));
   display:flex;flex-direction:column;align-items:center;text-align:center;
   position:sticky;top:88px}
 @media (max-width:940px){.lado-b{position:static}}
 .ticket-tit{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);font-weight:700}
 .pila{display:flex;flex-direction:column;align-items:center;gap:5px;
-  min-height:104px;justify-content:center;margin:14px 0 4px;width:100%}
+  min-height:88px;justify-content:center;margin:11px 0 3px;width:100%}
 .pila .fila{display:flex;justify-content:center;align-items:flex-end}
 .pila img{width:var(--pw,54px);height:auto;margin-left:var(--sol,-32px);
   filter:drop-shadow(0 5px 10px rgba(0,0,0,.55))}
 .pila .fila img:first-child{margin-left:0}
 .pila .mas{margin:3px 0 0;font-size:.76rem;font-weight:700;color:var(--oro);letter-spacing:.01em}
 .pila-txt{font-size:.82rem;color:var(--txt-2);font-weight:600;margin-top:6px}
-.lado-b .cifra{font-family:"Anton",sans-serif;font-size:clamp(2.3rem,4.4vw,3rem);
-  line-height:.92;color:var(--oro);margin-top:10px}
+.lado-b .cifra{font-family:"Anton",sans-serif;font-size:clamp(2.1rem,4vw,2.7rem);
+  line-height:.92;color:var(--oro);margin-top:8px}
 .lado-b .cifra.pulso{animation:pulsoCifra .32s cubic-bezier(.2,.8,.3,1)}
 @keyframes pulsoCifra{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.lado-b .cifra.pulso{animation:none}}
 .lado-b .detalle{font-size:.79rem;color:var(--txt-3);margin-top:6px;min-height:2.3em}
-.incluye{list-style:none;width:100%;text-align:left;display:grid;gap:7px;margin:15px 0 16px;
-  padding-top:14px;border-top:1px solid var(--borde)}
-.incluye li{display:flex;align-items:center;gap:8px;font-size:.79rem;color:var(--txt-2)}
-.incluye svg{width:14px;height:14px;flex:none;fill:none;stroke:var(--oro);
+.incluye{list-style:none;width:100%;text-align:left;display:grid;gap:5px;margin:12px 0 12px;
+  padding-top:11px;border-top:1px solid var(--borde)}
+.incluye li{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--txt-2);line-height:1.35}
+.incluye svg{width:13px;height:13px;flex:none;fill:none;stroke:var(--oro);
   stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.btn.grande{width:100%;font-size:1rem;padding:16px 22px}
-.pie-wa{font-size:.71rem;color:var(--txt-3);margin-top:10px;line-height:1.5}
+.btn.grande{width:100%;font-size:.95rem;padding:14px 20px}
+.pie-wa{font-size:.71rem;color:var(--txt-3);margin-top:9px;line-height:1.45}
 .pie-wa a{color:var(--txt-2)}
 /* el aviso de datos: más apagado todavía que el pie del botón, que está
    ahí por obligación y no para competir con nada */
-.pie-datos{display:block;margin-top:9px;padding-top:9px;font-size:.66rem;line-height:1.5;
+.pie-datos{display:block;margin-top:8px;padding-top:8px;font-size:.64rem;line-height:1.45;
   color:var(--txt-3);border-top:1px solid var(--borde);text-align:left}
 .pie-datos b{color:var(--txt-2);font-weight:600}
 .pie-datos .enl{font:inherit;color:var(--txt-2);background:none;border:0;padding:0;
@@ -1186,8 +1220,8 @@ body::after{
    Primero eligen, luego se presentan, y solo entonces aparece la fianza.
    Mientras tanto, en su hueco va esta pista: que se vea que falta un
    paso, no que hay un peaje. */
-.siguiente{display:flex;align-items:flex-start;gap:9px;margin-top:16px;padding:12px 14px;
-  border-radius:14px;text-align:left;font-size:.82rem;line-height:1.5;color:var(--txt-2);
+.siguiente{display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:10px 12px;
+  border-radius:14px;text-align:left;font-size:.79rem;line-height:1.45;color:var(--txt-2);
   border:1px dashed var(--borde-claro);background:rgba(255,255,255,.02)}
 .siguiente b{color:var(--txt)}
 .siguiente svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke:var(--oro);
@@ -1213,9 +1247,9 @@ body::after{
    Subtotal, envío, IVA cuando toque y el total. El número grande de
    arriba sigue siendo lo que se paga; esto es el desglose de dónde sale. */
 .impuesto{margin:4px 0 0; font-size:.76rem; color:var(--txt-3)}
-.resumen{display:grid; grid-template-columns:1fr auto; gap:7px 14px;
-  margin:14px 0 0; padding-top:14px; border-top:1px solid var(--borde);
-  text-align:left; font-size:.85rem}
+.resumen{display:grid; grid-template-columns:1fr auto; gap:5px 14px;
+  margin:11px 0 0; padding-top:11px; border-top:1px solid var(--borde);
+  text-align:left; font-size:.82rem}
 .resumen dt{color:var(--txt-2)}
 .resumen dd{margin:0; color:var(--txt); font-variant-numeric:tabular-nums; text-align:right}
 /* la última fila es el total: se separa y pesa más */
