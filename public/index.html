@@ -1406,10 +1406,10 @@
   var CAT = {
     placa:   { nombre:'Placa de mesa', uno:'placa de mesa', varias:'placas de mesa', cada:'cada una',
                ancho:54, solapa:-27,
-               suelta:25, precio:function(n){ return n>=20?15.5:n>=12?17.5:n>=5?20:n>=3?22:25; } },
+               suelta:25, precio:function(n){ return n>=200?15:n>=100?15.5:n>=50?16:n>=25?17:n>=12?18:n>=5?20:n>=3?22:25; } },
     stand:   { nombre:'Expositor de pie', uno:'expositor de pie', varias:'expositores de pie', cada:'cada uno',
                ancho:46, solapa:-22,
-               suelta:28, precio:function(n){ return n>=20?17:n>=12?19:n>=5?22:n>=3?25:28; } },
+               suelta:28, precio:function(n){ return n>=200?17:n>=100?17.5:n>=50?18.5:n>=25?19.5:n>=12?21:n>=5?23:n>=3?25:28; } },
     tarjeta: { nombre:'Tarjeta de mano', uno:'tarjeta de mano', varias:'tarjetas de mano', cada:'cada una',
                ancho:62, solapa:-34, packs:[20,30,50,100],
                suelta:15, precio:function(n){ return n>=100?9.5:n>=50?11.5:n>=30?13:15; } }
@@ -1433,10 +1433,10 @@
   var tocado = false;
 
   /* Una línea del pedido con sus cuentas hechas. 'abierta' es la cesta
-     de 20 o más, que no tiene precio cerrado hasta que la miramos. */
+     de 200 o más, que no tiene precio cerrado hasta que la miramos. */
   function linea(k){
     var c = CAT[k], n = sel.cant[k] || (c.packs ? c.packs[0] : 1);
-    var abierta = !c.packs && n >= 20, ud = c.precio(n);
+    var abierta = !c.packs && n >= 200, ud = c.precio(n);
     return { k:k, c:c, n:n, abierta:abierta, ud:ud,
              total:  abierta ? 0 : ud * n,
              ahorro: abierta ? 0 : c.suelta * n - ud * n };
@@ -1479,9 +1479,9 @@
     }
     return r;
   }
-  /* "5 placas de mesa" · "20 o más placas de mesa" */
+  /* "5 placas de mesa" · "200 o más placas de mesa" */
   function cuantas(l){
-    return l.abierta ? '20 o más ' + l.c.varias
+    return l.abierta ? '200 o más ' + l.c.varias
                      : l.n + ' ' + (l.n === 1 ? l.c.uno : l.c.varias);
   }
   /* lo que toca adelantar por el pedido tal y como está ahora mismo */
@@ -1531,7 +1531,7 @@
      más" es una cesta abierta que se cotiza a mano. Las tarjetas solo se
      venden en packs cerrados (20/30/50/100): cada cantidad tiene precio
      fijo, nunca es "a convenir". */
-  var CANT_SUELTA = [1, 5, 12, 20];
+  var CANT_SUELTA = [1, 5, 12, 25, 50, 100, 200];
   /* Una fila de cantidades por cada producto marcado. El nombre solo
      sale cuando hay más de uno: con uno solo sobra, ya lo pone arriba. */
   function pintarCants(){
@@ -1539,7 +1539,7 @@
     opCant.innerHTML = sel.prods.map(function(k){
       var c = CAT[k], lista = c.packs || CANT_SUELTA, n = sel.cant[k];
       var ops = lista.map(function(x){
-        var txt = !c.packs && x === 20 ? '20 o más' : String(x);
+        var txt = !c.packs && x === 200 ? '200 o más' : String(x);
         return '<button class="op" type="button" data-v="' + x + '" aria-pressed="' +
                (x === n ? 'true' : 'false') + '">' + txt + '</button>';
       }).join('');
@@ -1686,7 +1686,7 @@
        mejor que las mayúsculas. */
     var lineas = ['Hola PLEA5E, quiero hacer un pedido 👇', ''];
     ls.forEach(function(l){
-      lineas.push('*' + l.c.nombre + '* × ' + (l.abierta ? '20 o más' : l.n));
+      lineas.push('*' + l.c.nombre + '* × ' + (l.abierta ? '200 o más' : l.n));
       lineas.push(l.abierta ? 'Precio a convenir'
                             : eur(l.total) + (l.n === 1 ? '' : '  ·  ' + eur(l.ud) + ' ' + l.c.cada));
     });

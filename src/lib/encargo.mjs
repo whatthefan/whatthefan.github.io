@@ -66,8 +66,8 @@ export function resumenPedido(encargo) {
   return ls.map(function (l) {
     var n = l.cantidad;
     var nombre = (n === 1 ? NOMBRES[l.formato] : PLURALES[l.formato]) || l.formato;
-    /* 20 o más de placa o expositor es la cesta abierta de la web */
-    if (l.formato !== 'tarjeta' && n >= 20) return '20 o más ' + nombre;
+    /* 200 o más de placa o expositor es la cesta abierta de la web */
+    if (l.formato !== 'tarjeta' && n >= 200) return '200 o más ' + nombre;
     return n + ' ' + nombre;
   }).join(' + ');
 }

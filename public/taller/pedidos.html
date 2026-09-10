@@ -316,7 +316,7 @@
     return ls.map(function (l) {
       var n = +l.cantidad || 1;
       var nombre = (n === 1 ? NOMBRES[l.formato] : PLURALES[l.formato]) || l.formato;
-      if (l.formato !== 'tarjeta' && n >= 20) return '20 o más ' + nombre;
+      if (l.formato !== 'tarjeta' && n >= 200) return '200 o más ' + nombre;
       return n + ' ' + nombre;
     }).join(' + ');
   }
