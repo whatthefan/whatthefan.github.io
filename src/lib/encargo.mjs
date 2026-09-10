@@ -147,6 +147,25 @@ export function enlaceResena(v) {
   return s;
 }
 
+/* El nombre corto que le proponemos a la placa:  plea5e.es/r/bar-manolo .
+   Es solo una propuesta, sale escrita en el generador y se puede cambiar
+   antes de imprimir. Lo que no puede es salir mal formada, porque el
+   panel de enlaces la rechazaría y el QR ya estaría impreso. */
+export function nombreCorto(v) {
+  var s = String(v || '').toLowerCase()
+    /* NFD parte la letra acentuada en letra + tilde suelta, y la segunda
+       mitad se va aqui. La ñ entra en el mismo saco y sale n. */
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 40)
+    .replace(/-$/, '');                                 /* por si cortó en un guion */
+  /* Las mismas reglas que enlace.js y que el generador: si no las cumple,
+     mejor no proponer nada que proponer algo que no se puede dar de alta. */
+  return /^[a-z0-9][a-z0-9-]{1,39}$/.test(s) ? s : '';
+}
+
 /* El enlace que abre el generador con todo puesto. Los datos van detrás
    de la almohadilla: así no salen del navegador de quien lo abre. */
 export function enlaceGenerador(base, e, brief) {
@@ -155,6 +174,7 @@ export function enlaceGenerador(base, e, brief) {
     ['n', e.negocio],
     ['l', b.lema || e.lema],
     ['g', e.google],
+    ['c', nombreCorto(e.negocio)],
     ['f', e.formato],
     ['b', b.banda],
     ['d', b.fondo],

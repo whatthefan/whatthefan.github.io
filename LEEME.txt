@@ -803,57 +803,87 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    como ejemplo y para enlazar sus resenas.
 
 
-LAS PAGINAS DE SALTO (carpeta r/)  -> para contar cuanta gente toca
+LAS DIRECCIONES CORTAS (plea5e.es/r/...)
 --------------------------------------------------------------------
-Dentro de r/ hay una pagina por local. Cuando publiques la web quedan en:
+ESTO ES LO MAS IMPORTANTE DE TODO EL ARCHIVO SI VAS A IMPRIMIR.
 
-      https://plea5e.netlify.app/r/piccola
-      https://plea5e.netlify.app/r/barvi
-      https://plea5e.netlify.app/r/fenomena
+El chip NFC se reprograma acercando el movil. El QR va IMPRESO y no se
+reprograma nunca. Asi que si el QR lleva grabada la direccion de Google
+del bar, esa placa queda atada a ese bar para siempre: el dia que cambie
+de nombre, de dueno o de ficha en Google, la placa se tira.
 
-Lo que hacen: se abren, esperan 350 ms, y saltan solas a la resena de
-Google de ese local. El cliente ve medio segundo de "Abriendo Google..."
-y ya esta escribiendo. Pesan 1,8 KB, cargan al instante.
+Con esto no. El QR lleva grabada una direccion NUESTRA:
 
-Para que sirven: si el QR y el chip apuntan ahi en vez de a Google
-directo, tu analitica cuenta cada visita. Asi sabes cuanta gente usa
-las placas de cada local y por dias. Hoy no lo sabes.
+      https://plea5e.es/r/bar-manolo
 
-QUE FALTA PARA QUE CUENTE
--------------------------
-La pagina esta hecha pero no cuenta nada todavia: hay que ponerle una
-analitica. Abre r/piccola/index.html con el Bloc de notas y busca
+y es en el panel donde se decide a donde salta. Cambiar el destino es
+apretar un boton. La placa que esta pegada en la mesa del bar no se
+toca.
 
-    AQUI VA EL CODIGO DE TU ANALITICA
+COMO SE USA, DE PRINCIPIO A FIN
+-------------------------------
+  1. Antes de imprimir, entra en   plea5e.es/taller/enlaces.html
+     (misma contrasena que el panel de pedidos) y crea la direccion:
+     el nombre corto, el negocio, y el enlace de Google.
 
-y pega ahi el trocito que te den. Lo mismo en r/barvi/index.html.
+  2. En el generador, rellena "Direccion corta" con ese mismo nombre.
+     Debajo de la vista previa te dice, con todas las letras, lo que
+     va a llevar grabado el QR. Leelo ANTES de mandar a imprimir.
 
-Cual escoger:
-  - Cloudflare Web Analytics -> GRATIS y sin cookies. Es por donde
-    yo empezaria. Al no usar cookies no necesitas banner de consentimiento.
-  - Plausible / Umami -> unos 9 EUR/mes, sin cookies, mas facil de leer.
-  - Netlify Analytics -> 9 EUR/mes por sitio, se mide en el servidor, asi
-    que NO lo bloquea ningun bloqueador de anuncios y es el mas fiable.
-    Si usas este, pon  var ESPERA = 0;  y el salto es instantaneo.
-  - Google Analytics -> gratis, pero usa cookies: en Espana te obliga a
-    banner de consentimiento de verdad, y en una pagina que dura medio
-    segundo eso es un lio. No lo recomiendo aqui.
+  3. Imprime.
 
-OJO CON LAS PLACAS YA IMPRESAS
-------------------------------
-Las de Piccola y BARVI llevan el QR impreso apuntando directo a Google.
-Un QR impreso no se puede cambiar: para que pasen por la pagina de salto
-habria que reimprimirlas.
+  4. El dia que haga falta cambiar el destino: panel de enlaces ->
+     "Cambiar el destino" -> pegar el nuevo. Efecto inmediato, sin
+     desplegar nada y sin tocar la placa.
 
-El chip NFC SI se puede reprogramar con el movil sin reimprimir nada.
-Asi que en las que ya estan puestas puedes cambiar solo el TAP, y dejar
-el QR como esta. Contaras los toques por NFC, que suelen ser la mayoria.
+SI DEJAS LA DIRECCION CORTA VACIA, el QR lleva la direccion de Google
+grabada a fuego, como antes. Funciona igual de bien, pero pierdes el
+poder cambiarla. Solo tiene sentido si el cliente no quiere pasar por
+nosotros.
 
-De aqui en adelante, en las placas nuevas pon las dos cosas apuntando a
-    https://plea5e.netlify.app/r/nombre-del-local
+EL PRECIO DE ESTO: un salto de mas. El cliente pasa por plea5e.es antes
+de llegar a Google. Es un salto del servidor, ni se ve. Pero si algun
+dia plea5e.es se cae, esos QR dejan de funcionar mientras dure. El
+directo a Google no depende de nosotros. Es el cambio que se hace a
+proposito para poder cambiar el destino luego.
 
-Para dar de alta un local nuevo: copia la carpeta r/piccola, renombrala,
-y dentro cambia el codigo de Google (el que va detras de placeid=).
+LOS TOQUES
+----------
+Cada salto se apunta. En el panel ves, por cada direccion, los toques
+de siempre y los de hoy.
 
-Y una cosa importante: el enlace directo a Google convierte mas, porque
-es un paso menos. Si un local no quiere estadisticas, dejale el directo.
+LO QUE CUENTA ES CUANTA GENTE ACERCA EL MOVIL. NO cuantas resenas se
+escriben. Google no nos dice quien escribio. No se lo prometas nunca a
+un cliente, porque no lo puedes cumplir.
+
+No se guarda nada de nadie: es un numero que sube, sin cookies, sin IP
+y sin nombre. Por eso no hace falta banner de consentimiento.
+
+DONDE VIVE ESTO
+---------------
+En el mismo almacen de los pedidos (ENCARGOS), con tres tipos de clave:
+
+      r-bar-manolo                 a donde salta
+      rt-bar-manolo                los toques de siempre
+      rc-bar-manolo-2026-09-10     los toques de ese dia
+
+Los de por dia se borran solos al ano y pico. El codigo esta en
+src/api/enlace.js (el salto) y src/api/enlaces.js (el panel).
+
+LAS TRES CARPETAS ANTIGUAS (r/piccola, r/barvi, r/fenomena)
+-----------------------------------------------------------
+Siguen funcionando exactamente igual que antes: si un nombre no esta
+dado de alta en el panel, se sirve la carpeta de siempre. No hay que
+migrarlas ni borrarlas.
+
+Si algun dia quieres que Piccola pase por el sistema nuevo, dala de
+alta en el panel con el nombre "piccola" y a partir de ese momento
+manda el panel en vez de la carpeta.
+
+OJO CON LAS PLACAS QUE YA ESTAN IMPRESAS
+----------------------------------------
+Las de Piccola y BARVI llevan el QR apuntando directo a Google. Eso no
+se puede cambiar sin reimprimir. El chip NFC de esas placas SI se puede
+reprogramar con el movil: acercalo y ponle la direccion corta. Asi al
+menos el TAP pasa por el sistema nuevo, que ademas suele ser por donde
+va la mayoria de la gente.
