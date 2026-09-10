@@ -720,7 +720,7 @@
              eligen, luego se presentan, y solo entonces sale el pago. -->
         <p class="siguiente" id="siguiente" hidden>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
-          <span>Dinos <b>quién eres</b> ahí al lado y te decimos lo que hay que adelantar.</span>
+          <span>Rellena <b>tus datos</b> ahí al lado y te decimos lo que hay que adelantar.</span>
         </p>
 
         <!-- La fianza va ANTES del WhatsApp: primero se paga, y solo
@@ -776,7 +776,12 @@
         <!-- El aviso de datos va AQUÍ, pegado al botón, no solo en el pie:
              la ley pide informar en el momento de recoger los datos, y
              quien está rellenando el pedido no ve el pie. -->
-        <small class="pie-datos">Al enviarlo, al pagar o al pedir que te llamemos, <b>Juan Fernández Selma</b> tratará tus datos para prepararte el presupuesto y el diseño. Ni se venden ni se ceden. Puedes acceder a ellos, corregirlos o borrarlos cuando quieras. <button type="button" class="enl" data-legal="privacidad">Más, en Privacidad</button>.</small>
+        <!-- Aquí va la marca, no el nombre del titular. Quien está
+             rellenando un pedido quiere saber qué empresa trata sus
+             datos, no cómo se llama el que está detrás. El nombre y el
+             NIF siguen donde la ley los pide de verdad: en el aviso
+             legal y en Privacidad, a un clic de aquí. -->
+        <small class="pie-datos">Al enviarlo, al pagar o al pedir que te llamemos, <b>PLEA5E</b> tratará tus datos para prepararte el presupuesto y el diseño. Ni se venden ni se ceden. Puedes acceder a ellos, corregirlos o borrarlos cuando quieras. <button type="button" class="enl" data-legal="privacidad">Más, en Privacidad</button>.</small>
       </aside>
     </div>
   </div>
@@ -872,14 +877,20 @@
 <a class="flota-wa" id="flotaWa" href="https://wa.me/34661403219?text=Hola%20PLEA5E%2C%20he%20visto%20la%20web%20y%20quiero%20informaci%C3%B3n%20sobre%20las%20placas%20de%20rese%C3%B1as." target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .5-.1.7.5l1 2.4c.1.2.1.4 0 .6l-.4.5-.3.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.5.4 0 .1 0 .6-.2 1.3z"/></svg><span>Escríbenos</span></a>
 
 <footer class="pie">
+  <!-- La estrella de la marca, grande y al fondo. Es decoración: va
+       marcada como oculta para los lectores de pantalla y no tapa nada
+       porque está detrás de todo y no recibe pulsaciones. -->
+  <svg class="pie-estrella" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <path d="M50 4l14.1 29.3L96 37.9 72.9 60.1l5.6 31.6L50 76.8 21.5 91.7l5.6-31.6L4 37.9l31.9-4.6z"/>
+  </svg>
   <div class="env">
     <div class="pie-rej">
       <div class="pie-marca">
         <a class="marca marca-pie" href="#arriba" aria-label="PLEA5E — inicio">
           <svg class="logotipo" viewBox="-4200 -1290 8400 1680" role="img" aria-label="PLEA5E"><g fill="#E9BC46">  <rect x="-4200.0" y="-760.0" width="998.2" height="100.5"/><rect x="3201.8" y="-760.0" width="998.2" height="100.5"/>  <path d="M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z"/>  <path d="M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z"/>  <path d="M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z"/></g><g fill="#FFFFFF">  <path d="M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9"/>  <path d="M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5"/></g><path fill="#0A0E16" d="M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2"/></svg>
         </a>
-        <span class="est5" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg></span>
         <p>Placas, expositores de pie y tarjetas con chip NFC y código QR para que tus clientes te dejen la reseña en Google sin buscarte. Diseñadas de cero con tu marca, fabricadas y enviadas desde España.</p>
+        <span class="est5" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg></span>
       </div>
 
       <nav class="pie-col" aria-label="Secciones">
@@ -1704,7 +1715,7 @@
       boton.setAttribute('aria-disabled', 'true');
       boton.removeAttribute('href');
       boton.removeAttribute('target');
-      document.getElementById('rWhatsTxt').textContent = 'Dinos quién eres para seguir';
+      document.getElementById('rWhatsTxt').textContent = 'Completa tus datos para continuar';
       return;
     }
 

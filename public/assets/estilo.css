@@ -199,7 +199,7 @@ section[id]{scroll-margin-top:74px}
 .migas{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-3);margin-bottom:14px}
 
 /* portada */
-.portada{position:relative;padding:clamp(40px,5vw,72px) 0 clamp(44px,6vw,72px);overflow:hidden}
+.portada{position:relative;padding:clamp(40px,5vw,72px) 0 clamp(28px,3.6vw,46px);overflow:hidden}
 .portada::after{content:"";position:absolute;top:-16%;right:-8%;width:min(780px,86vw);aspect-ratio:1;
   background:radial-gradient(circle,rgba(233,188,70,.16) 0%,rgba(233,188,70,.05) 38%,transparent 68%);
   pointer-events:none;z-index:0}
@@ -408,11 +408,21 @@ td .destaca{color:var(--oro);font-weight:700}
 .cierre .env{display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:space-between}
 .cierre h3{font-size:clamp(1.4rem,2.4vw,1.9rem)}
 .cierre p{color:var(--txt-2);font-size:.92rem;margin-top:6px}
-.pie{border-top:1px solid var(--borde);padding:clamp(34px,4vw,52px) 0 26px;background:rgba(255,255,255,.015)}
+.pie{position:relative;overflow:hidden;border-top:1px solid var(--borde);
+  padding:clamp(34px,4vw,52px) 0 26px;background:rgba(255,255,255,.015)}
+/* la estrella grande del fondo: marca de agua, centrada y detrás de todo.
+   Sin pointer-events no roba las pulsaciones a los enlaces del pie. */
+.pie-estrella{position:absolute;left:50%;top:50%;translate:-50% -50%;
+  width:min(58%,420px);height:auto;z-index:0;pointer-events:none;
+  fill:var(--oro);opacity:.062}
+.pie .env{position:relative;z-index:1}
 .pie-rej{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:clamp(22px,3vw,44px)}
 @media (max-width:860px){.pie-rej{grid-template-columns:1fr 1fr}.pie-marca{grid-column:1/-1}}
 @media (max-width:480px){.pie-rej{grid-template-columns:1fr;gap:26px}}
-.pie-marca .est5{font-size:13px;margin-top:10px}
+/* las cinco estrellas van ahora DEBAJO del párrafo, no pegadas al
+   logotipo: ahí competían con él y parecía que el logo llevaba
+   estrellas incrustadas */
+.pie-marca .est5{font-size:13px;margin-top:14px}
 .pie-marca p{margin-top:12px;max-width:42ch;font-size:.82rem;line-height:1.6;color:var(--txt-3)}
 .pie-col{display:flex;flex-direction:column;align-items:flex-start;gap:9px}
 .pie-col h4{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-2);
@@ -435,7 +445,21 @@ td .destaca{color:var(--oro);font-weight:700}
   padding-right:40px}
 /* el sello de la marca: la estrella con el 5, para los sitios pequenos */
 .marca-sello{width:38px;height:38px;flex:none;border-radius:10px}
-.legal-cab{display:flex;align-items:center;gap:13px}
+.legal-cab{display:flex;align-items:center;gap:13px;padding-right:44px}
+/* La X de cerrar. No tenia ni una linea de CSS: salia como un boton del
+   navegador, un cuadrado blanco encima del sello, y no se entendia que
+   era para cerrar. Va anclada arriba a la derecha y se queda ahi aunque
+   el texto largo se desplace. */
+.legal-x{position:sticky;position:-webkit-sticky;top:0;float:right;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;margin:-6px -6px 0 12px;
+  border:1px solid var(--borde-claro);border-radius:50%;
+  background:var(--panel);color:var(--txt-2);cursor:pointer;
+  transition:background .16s,color .16s,border-color .16s}
+.legal-x:hover{background:rgba(233,188,70,.12);border-color:var(--oro);color:var(--oro)}
+.legal-x:focus-visible{outline:2px solid var(--oro);outline-offset:2px}
+.legal-x svg{width:17px;height:17px;fill:none;stroke:currentColor;
+  stroke-width:2.3;stroke-linecap:round}
 
 
 
@@ -536,7 +560,7 @@ td .destaca{color:var(--oro);font-weight:700}
 @keyframes brilla{from{opacity:0;transform:scale(.4) rotate(-25deg)}to{opacity:1;transform:none}}
 
 /* ---- portada compacta ---- */
-.portada{padding:clamp(30px,4vw,54px) 0 clamp(34px,4.5vw,58px)}
+.portada{padding:clamp(30px,4vw,54px) 0 clamp(24px,3vw,40px)}
 .hueco{min-height:220px}
 #lienzo{max-height:min(44vh,400px)}
 .mandos{margin-top:2px}
@@ -560,7 +584,7 @@ td .destaca{color:var(--oro);font-weight:700}
 .pasos-fila p{font-size:.89rem;color:var(--txt-2)}
 
 /* ---- ejemplos compactos ---- */
-.sec-corta{padding:clamp(42px,5vw,68px) 0}
+.sec-corta{padding:clamp(34px,4vw,52px) 0}
 /* un brillo ambiental muy suave en un par de secciones, para que no se
    sientan planas; sin overflow:hidden en la sección para no romper el
    position:sticky del resumen del pedido */
@@ -590,9 +614,16 @@ td .destaca{color:var(--oro);font-weight:700}
   h2{font-size:clamp(1.65rem,6.4vw,2.4rem)}
   .sub{font-size:1rem;max-width:none}
   .enc > p{font-size:.97rem}
-  .sec{padding:56px 0}
-  .sec-corta{padding:46px 0}
-  .portada{padding:26px 0 34px}
+  /* AIRE. En el móvil sobraban casi cien píxeles entre el final de la
+     portada y el titular de productos, y eso es media pantalla en
+     blanco: el que baja cree que se ha acabado la página y se va.
+     Los márgenes de dentro de cada sección no se tocan, que ahí el aire
+     sí hace falta para que se lea. */
+  .sec{padding:40px 0}
+  .sec-corta{padding:30px 0}
+  .portada{padding:26px 0 18px}
+  .enc h2{margin-top:11px}
+  .enc > p{margin-top:11px}
   .hero-est .est5{font-size:24px}
 
   /* la fila de datos en dos por dos, con el mismo peso que en escritorio */
@@ -702,6 +733,7 @@ td .destaca{color:var(--oro);font-weight:700}
 .catalogo{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,22px);margin-top:clamp(28px,3.4vw,44px)}
 @media (max-width:880px){
   .catalogo{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:72%;
+    margin-top:16px;
     overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:18px;
     padding:2px 18px 14px;margin-inline:-18px;scrollbar-width:none}
   .catalogo::-webkit-scrollbar{display:none}
