@@ -339,7 +339,16 @@ a dia de hoy:
           pero NO te avisa nadie: te tienes que acordar de mirar el
           panel, y eso no funciona.
 
-LAS TRES VARIABLES, UNA A UNA
+  FALTA   PANEL_CLAVE. Sin ella no puedes entrar en /taller/pedidos.html
+          ni en /taller/enlaces.html: los dos te diran que falta.
+
+LAS CUATRO VARIABLES, UNA A UNA
+
+  PANEL_CLAVE      la contrasena de tus dos paneles: el de pedidos
+                   (/taller/pedidos.html) y el de enlaces
+                   (/taller/enlaces.html). Te la inventas tu. Sin ella
+                   los dos paneles no dejan entrar a nadie, ni a ti.
+                   Que sea larga y que no la uses en ningun otro sitio.
 
   RESEND_API_KEY   la clave de resend.com, que es quien manda el
                    correo. Te das de alta, creas una API key y la
@@ -357,6 +366,7 @@ LAS TRES VARIABLES, UNA A UNA
 COMO SE PONEN. NO van en ningun archivo: son secretos, y este
 repositorio es publico. Se meten desde la terminal, una a una:
 
+    npx wrangler secret put PANEL_CLAVE
     npx wrangler secret put RESEND_API_KEY
     npx wrangler secret put CORREO_AVISO
     npx wrangler secret put CORREO_DE
