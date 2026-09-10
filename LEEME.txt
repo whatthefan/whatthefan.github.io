@@ -676,7 +676,7 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
        titular:   'Juan Fernandez Selma'
        nif:       '49891813Y'
        domicilio: 'C/ Poeta Alonso de Bonilla, 19 · 14012 Cordoba (España)'
-       email:     'juanfersem@gmail.com'
+       email:     'hello.plea5e.es@gmail.com'
 
    ESTO MISMO VALE PARA LAS CONDICIONES DE VENTA (el boton del pie).
    Su apartado 1, "Quien vende", sale de estos mismos datos. Lo que
