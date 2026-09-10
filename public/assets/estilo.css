@@ -179,7 +179,6 @@ section[id]{scroll-margin-top:74px}
    salten todas a la vez, sino en fila, una pizca después de la anterior */
 .catalogo .prod:nth-child(2){transition-delay:.08s}
 .catalogo .prod:nth-child(3){transition-delay:.16s}
-.contentos .contento:nth-child(2){transition-delay:.1s}
 .pasos-fila .paso:nth-child(2){transition-delay:.1s}
 .pasos-fila .paso:nth-child(3){transition-delay:.2s}
 .faq details:nth-child(2){transition-delay:.05s}
@@ -439,16 +438,6 @@ td .destaca{color:var(--oro);font-weight:700}
 .legal-cab{display:flex;align-items:center;gap:13px}
 
 
-/* placas de clientes en 3D */
-.cli3d{position:relative;width:100%;max-width:360px;margin:0 auto;aspect-ratio:1}
-.cli3d .plano,.cli-lienzo{position:absolute;inset:0;width:100%;height:100%}
-.cli3d .plano{border-radius:6%;filter:drop-shadow(0 20px 36px rgba(0,0,0,.55));transition:opacity .35s}
-.cli3d.vivo .plano{opacity:0;pointer-events:none}
-.cli-lienzo{touch-action:pan-y;cursor:grab;filter:drop-shadow(0 20px 28px rgba(0,0,0,.62))}
-.cli3d.pulsable{cursor:pointer}
-.cli-enl{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin-top:12px}
-.enl-mapa{font-size:.8rem;color:var(--txt-3);text-decoration:underline}
-.enl-mapa:hover{color:var(--oro)}
 
 /* configurador junto al 3D */
 .config{margin-top:20px;border:1px solid var(--borde);border-radius:var(--r);
@@ -688,11 +677,18 @@ td .destaca{color:var(--oro);font-weight:700}
   .b-resena{right:-6px;top:2%}
   .b-nfc{left:-6px;bottom:10%}
 }
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .chip{display:inline-flex;align-items:center;gap:7px;font-size:.79rem;font-weight:600;
   color:var(--txt-2);background:rgba(255,255,255,.04);border:1px solid var(--borde);
   border-radius:999px;padding:7px 13px}
 .chip svg{width:13px;height:13px;fill:none;stroke:var(--oro);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+/* en el móvil las pastillas iban de una en una por línea y empujaban el
+   botón de pedir fuera de la pantalla: más apretadas caben dos por fila */
+@media (max-width:520px){
+  .chips{gap:6px;margin-top:14px}
+  .chip{font-size:.73rem;padding:5px 10px;gap:5px}
+  .chip svg{width:11px;height:11px}
+}
 
 /* franja de oferta */
 .franja{background:linear-gradient(90deg,#F0C558,var(--oro) 45%,#D9A82F);color:#100B00;overflow:hidden}
@@ -951,14 +947,6 @@ html.sin-oferta .cinta{display:none}
   .foto-op .op .mm{font-size:.63rem}
 }
 
-/* clientes contentos, sin tarjeta blanca */
-.contentos{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(18px,3vw,40px);
-  margin-top:clamp(28px,3.4vw,44px)}
-@media (max-width:720px){.contentos{grid-template-columns:1fr;max-width:420px;margin-inline:auto}}
-.contento{text-align:center}
-.contento .est5{font-size:15px;justify-content:center;margin-top:6px}
-.contento strong{display:block;margin-top:10px;font-size:1.02rem}
-.contento span{display:block;font-size:.86rem;color:var(--txt-2);margin-top:4px}
 .btn svg{width:18px;height:18px;fill:currentColor;flex:none}
 
 /* ============ v9: fondo y detalles ============ */
@@ -1109,19 +1097,36 @@ body::after{
    Dos nombres con foto en la portada valen más que cualquier frase que
    podamos escribir nosotros. Las fotos son las mismas placas que se ven
    luego en su sección, recortadas en redondo y superpuestas. */
-.prueba{display:inline-flex;align-items:center;gap:12px;margin-top:20px;
-  padding:9px 16px 9px 10px;border-radius:999px;text-decoration:none;
-  border:1px solid var(--borde-claro);background:rgba(255,255,255,.03);
-  transition:border-color .18s,background .18s,transform .18s}
-.prueba:hover{border-color:var(--oro);background:rgba(233,188,70,.07);transform:translateY(-2px)}
-.prueba .caras{display:flex;flex:none}
-.prueba .caras img{width:38px;height:38px;border-radius:50%;object-fit:cover;
-  border:2px solid var(--noche);margin-left:-13px;background:var(--noche-2)}
-.prueba .caras img:first-child{margin-left:0}
-.prueba-txt{font-size:.84rem;color:var(--txt-2);line-height:1.35}
-.prueba-txt b{color:var(--txt);font-weight:700}
-.prueba-txt small{display:block;font-size:.73rem;color:var(--txt-3);margin-top:1px}
-@media (max-width:420px){.prueba{width:100%;border-radius:16px}}
+/* los tres pasos del hero: qué pasa cuando alguien toca la placa.
+   Una sola fila, con la flecha dibujada entre pasos por CSS para no
+   meter tres iconos más en el HTML. */
+.tresp{display:flex;align-items:center;gap:4px;flex-wrap:wrap;
+  margin:18px 0 0;padding:0;list-style:none;counter-reset:none}
+.tresp li{display:inline-flex;align-items:center;gap:7px;
+  font-size:.78rem;color:var(--txt-2);line-height:1.2}
+.tresp li b{color:var(--txt);font-weight:600;white-space:nowrap}
+/* la flecha va delante de cada paso menos del primero */
+.tresp li + li::before{content:"";flex:none;width:13px;height:13px;margin-right:3px;
+  background:currentColor;opacity:.42;
+  -webkit-mask:var(--flecha) center/contain no-repeat;
+          mask:var(--flecha) center/contain no-repeat}
+.tresp{--flecha:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h13M13 6.5l5.5 5.5L13 17.5'/%3E%3C/svg%3E")}
+.tresp-i{display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:27px;height:27px;border-radius:50%;
+  border:1px solid var(--borde-claro);background:rgba(233,188,70,.06)}
+.tresp-i svg{width:14px;height:14px;fill:none;stroke:var(--oro);
+  stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+/* En el móvil los tres no caben en una fila con letra legible, y al
+   partirse la flecha se quedaba sola al principio de la segunda línea,
+   apuntando a nada. Así que ahí se apilan y la flecha desaparece: el
+   orden ya lo da la lista de arriba abajo. */
+@media (max-width:520px){
+  .tresp{flex-direction:column;align-items:flex-start;gap:7px;margin-top:16px}
+  .tresp li{font-size:.79rem}
+  .tresp li + li::before{display:none}
+  .tresp-i{width:24px;height:24px}
+  .tresp-i svg{width:12.5px;height:12.5px}
+}
 
 /* ══════════ el pedido, ahora con varios productos ══════════ */
 /* la coletilla del paso 1: "marca los que quieras" */
