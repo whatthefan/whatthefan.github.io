@@ -516,7 +516,7 @@
 <div class="cinta" id="cinta" aria-label="Oferta de lanzamiento">
   <!-- el JS rehace esta cinta con la fecha de OFERTA.fin dentro; lo que
        hay escrito aquí es lo que se lee si el JS no llega a arrancar -->
-  <div class="rueda" id="ruedaOferta"><ul><li><b>Oferta de lanzamiento</b></li><li>Hasta −24 % en las placas</li><li>Diseño con tu marca, 0 €</li><li>Envío gratis a península</li><li>La fianza de 25 € va dentro del precio</li></ul></div>
+  <div class="rueda" id="ruedaOferta"><ul><li><b>Oferta de lanzamiento</b></li><li>Hasta −25 % en las placas</li><li>Diseño con tu marca, 0 €</li><li>Envío gratis a península</li><li>La fianza de 25 € va dentro del precio</li></ul></div>
 </div>
 
 <main id="arriba">
@@ -592,7 +592,7 @@
           <p class="paraquien">Para bar, restaurante o cafetería <b>con mesas</b></p>
           <p class="medida">90 × 90 mm · metacrilato 3 mm · <b>chip NFC</b></p>
           <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje <b>3M</b>. Está delante del cliente todo el rato, por eso es la que más reseñas trae.</p>
-          <p class="pvp"><span class="n">25 €</span><span class="antes">33 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
+          <p class="pvp"><span class="n">25 €</span><span class="antes">33,50 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="placa">Pedir esta</a>
         </div>
       </article>
@@ -606,7 +606,7 @@
           <p class="paraquien">Para <b>barra, mostrador o terraza</b></p>
           <p class="medida">76 × 118 mm · chapa doblada en L · <b>chip NFC</b></p>
           <p class="desc">De pie sobre la mesa, la barra o el mostrador. <b>No se pega a nada</b>, así que lo mueves cuando quieras. Ideal para terraza y zona de cobro.</p>
-          <p class="pvp"><span class="n">28 €</span><span class="antes">37 €</span><span class="ahorro" aria-label="24 por ciento de descuento">-24%</span><small>por unidad</small></p>
+          <p class="pvp"><span class="n">28 €</span><span class="antes">37,50 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="stand">Pedir este</a>
         </div>
       </article>
@@ -1217,7 +1217,7 @@
      tengas que tocar nada. Ese era el problema de antes: la cinta y el
      contador se apagaban solos, pero los precios tachados de las fichas
      están escritos a mano en el HTML y NO se apagan, así que la web se
-     quedaba enseñando un 33 € tachado sin ninguna oferta detrás.
+     quedaba enseñando un 33,50 € tachado sin ninguna oferta detrás.
 
      Si algún día quieres terminarla de verdad, pon 'renueva' en false:
      al pasar la fecha desaparecen la cinta y los contadores, y entonces
@@ -1288,7 +1288,7 @@
     function pintarCinta(){
       if (!rueda) return;
       var trozos = ['<b>Oferta de lanzamiento</b>',
-                    'Hasta \u221224 % en las placas',
+                    'Hasta \u221225 % en las placas',
                     'Dise\u00f1o con tu marca, 0 \u20ac',
                     ENVIO_TXT,
                     'Fianza desde ' + BIZUM.minimo + ' \u20ac, dentro del precio',

@@ -423,30 +423,42 @@ td .destaca{color:var(--oro);font-weight:700}
    La misma idea del pie, repartida: estrellas grandes casi invisibles
    detrás de cada sección para que el fondo negro no se sienta vacío.
 
-   Van como ::before, dentro de la caja de la sección y sin salirse, para
-   no tener que poner overflow:hidden en ningún sitio: el resumen del
-   pedido es position:sticky y overflow oculto en un padre lo mata.
-
-   La opacidad es deliberadamente ridícula (.04). Si se nota, sobra. */
-.astro{position:relative}
+   Son grandes y se salen por el borde a propósito: una estrella entera y
+   centrada se lee como un icono, y una cortada se lee como diseño. Aun
+   así la opacidad es baja: tiene que verse, no leerse. */
+/* 'clip' y no 'hidden' a propósito: las estrellas se salen por los lados
+   y hay que recortarlas, pero 'hidden' convertiría la sección en un
+   contenedor de scroll y el resumen del pedido (position:sticky) dejaría
+   de pegarse. 'clip' recorta sin crear ese contenedor. */
+.astro{position:relative;overflow:clip}
 .astro > .env{position:relative;z-index:1}
 /* van en ::after y no en ::before porque el pedido y el "cómo funciona"
    ya usaban ::before para su brillo ambiental, y se pisaban */
 .astro::after{content:"";position:absolute;pointer-events:none;z-index:0;
-  aspect-ratio:1;background:var(--oro);opacity:.04;
+  aspect-ratio:1;background:var(--oro);opacity:.07;
   -webkit-mask:var(--estrella) center/contain no-repeat;
           mask:var(--estrella) center/contain no-repeat}
 :root{--estrella:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4l14.1 29.3L96 37.9 72.9 60.1l5.6 31.6L50 76.8 21.5 91.7l5.6-31.6L4 37.9l31.9-4.6z' fill='%23000'/%3E%3C/svg%3E")}
 /* cada una en un sitio distinto y con un tamaño distinto: si estuvieran
    todas iguales y centradas se leería como un patrón, y eso sí canta */
-#productos::after{width:min(46%,380px);right:-6%;top:8%}
-#pedido::after  {width:min(40%,320px);left:-8%;bottom:6%}
-#demo::after    {width:min(50%,400px);right:-4%;bottom:10%}
-#como::after    {width:min(38%,300px);left:-5%;top:12%}
-#ayuda::after   {width:min(44%,340px);right:-7%;top:20%}
+#productos::after{width:min(72%,620px);right:-16%;top:-4%;transform:rotate(14deg)}
+#pedido::after  {width:min(64%,540px);left:-18%;bottom:-6%;transform:rotate(-11deg)}
+#demo::after    {width:min(78%,660px);right:-14%;bottom:-8%;transform:rotate(9deg)}
+#como::after    {width:min(60%,500px);left:-15%;top:-2%;transform:rotate(-16deg)}
+#ayuda::after   {width:min(70%,580px);right:-17%;top:10%;transform:rotate(12deg)}
 /* en la sección clara el dorado se pierde: ahí va un pelín más marcada */
-.sec-claro.astro::after{opacity:.05}
-@media (max-width:640px){.astro::after{opacity:.03}}
+.sec-claro.astro::after{opacity:.09}
+@media (max-width:640px){.astro::after{opacity:.05}}
+/* Safari viejo (menos de la 16) no entiende 'clip'. Ahí no se recorta
+   nada, así que las estrellas se meten dentro: mejor una estrella entera
+   que una barra de scroll horizontal en toda la página. */
+@supports not (overflow:clip){
+  #productos::after{right:0;top:4%}
+  #pedido::after  {left:0;bottom:4%}
+  #demo::after    {right:0;bottom:4%}
+  #como::after    {left:0;top:4%}
+  #ayuda::after   {right:0;top:10%}
+}
 .pie-rej{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:clamp(22px,3vw,44px)}
 @media (max-width:860px){.pie-rej{grid-template-columns:1fr 1fr}.pie-marca{grid-column:1/-1}}
 @media (max-width:480px){.pie-rej{grid-template-columns:1fr;gap:26px}}
@@ -615,7 +627,10 @@ td .destaca{color:var(--oro);font-weight:700}
 .pasos-fila p{font-size:.89rem;color:var(--txt-2)}
 
 /* ---- ejemplos compactos ---- */
-.sec-corta{padding:clamp(34px,4vw,52px) 0}
+/* Poco aire arriba y abajo a propósito: entre dos secciones se suman los
+   dos, así que 26 aquí son 52 reales en el corte. Con más, la página se
+   siente rota en trozos sueltos en vez de seguida. */
+.sec-corta{padding:clamp(26px,2.8vw,36px) 0}
 /* un brillo ambiental muy suave en un par de secciones, para que no se
    sientan planas; sin overflow:hidden en la sección para no romper el
    position:sticky del resumen del pedido */
@@ -651,7 +666,7 @@ td .destaca{color:var(--oro);font-weight:700}
      Los márgenes de dentro de cada sección no se tocan, que ahí el aire
      sí hace falta para que se lea. */
   .sec{padding:40px 0}
-  .sec-corta{padding:30px 0}
+  .sec-corta{padding:22px 0}
   .portada{padding:26px 0 18px}
   .enc h2{margin-top:11px}
   .enc > p{margin-top:11px}
