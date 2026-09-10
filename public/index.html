@@ -1504,27 +1504,66 @@
      todos: más allá no se cuentan, solo hacen ruido. */
   var pila = document.getElementById('pila'), pilaTxt = document.getElementById('pilaTxt');
   var pilaAhora = '';
+  /* Las filas y el "y las que hagan falta" se crean una vez y se
+     reaprovechan. Ver el porqué dentro de pintarPila. */
+  var pilaFilas = [], pilaMasNodo = null;
+  function filaPila(i){
+    if (!pilaFilas[i]) {
+      var s = document.createElement('span');
+      s.className = 'fila';
+      pilaFilas[i] = s;
+    }
+    return pilaFilas[i];
+  }
+  function pilaMas(){
+    if (!pilaMasNodo) {
+      pilaMasNodo = document.createElement('span');
+      pilaMasNodo.className = 'mas';
+      pilaMasNodo.textContent = 'y las que hagan falta';
+    }
+    return pilaMasNodo;
+  }
   function pintarPila(ls, abierto){
     var clave = ls.map(function(l){ return l.k + ':' + l.n; }).join('|') + ':' + abierto;
     if (clave === pilaAhora) return;
     pilaAhora = clave;
-    var tope = Math.max(1, Math.floor(12 / ls.length)), h = '';
+    var tope = Math.max(1, Math.floor(12 / ls.length));
+    var usadas = 0;
+
     ls.forEach(function(l){
       var visibles = Math.min(l.n, tope);
       // en dos filas cuando pasan de seis: seguidas se solapan tanto que
       // ya no se cuentan
       var porFila = visibles > 6 ? Math.ceil(visibles / 2) : visibles, i = 0;
       while (i < visibles) {
-        h += '<span class="fila" style="--pw:' + l.c.ancho + 'px;--sol:' +
-             (porFila > 1 ? l.c.solapa : 0) + 'px">';
-        for (var j = 0; j < porFila && i < visibles; j++, i++) {
-          h += '<img src="' + l.c.mini + '" alt="">';
+        var fila = filaPila(usadas++);
+        fila.style.setProperty('--pw',  l.c.ancho + 'px');
+        fila.style.setProperty('--sol', (porFila > 1 ? l.c.solapa : 0) + 'px');
+        var cuantas = Math.min(porFila, visibles - i);
+        /* Las fotos que sobran se quitan, las que faltan se crean, y las
+           que ya estaban se QUEDAN. Antes se rehacía el HTML entero, o
+           sea que en cada toque el navegador tiraba hasta doce fotos y
+           las volvía a montar y a dibujar una por una. */
+        while (fila.children.length > cuantas) fila.removeChild(fila.lastChild);
+        while (fila.children.length < cuantas) {
+          var im = document.createElement('img');
+          im.alt = '';
+          fila.appendChild(im);
         }
-        h += '</span>';
+        [].forEach.call(fila.children, function(im){
+          if (im.getAttribute('src') !== l.c.mini) im.setAttribute('src', l.c.mini);
+        });
+        i += cuantas;
       }
     });
-    if (abierto) h += '<span class="mas">y las que hagan falta</span>';
-    pila.innerHTML = h;
+
+    /* lo que tiene que quedar dentro, en este orden */
+    var quiere = pilaFilas.slice(0, usadas);
+    if (abierto) quiere.push(pilaMas());
+    quiere.forEach(function(nodo, i){
+      if (pila.children[i] !== nodo) pila.insertBefore(nodo, pila.children[i] || null);
+    });
+    while (pila.children.length > quiere.length) pila.removeChild(pila.lastChild);
   }
 
   /* las placas y los expositores se piden sueltos (1, 5, 12...) y "20 o
@@ -1534,24 +1573,88 @@
   var CANT_SUELTA = [1, 5, 10, 20, 50, 100, 200];
   /* Una fila de cantidades por cada producto marcado. El nombre solo
      sale cuando hay más de uno: con uno solo sobra, ya lo pone arriba. */
-  function pintarCants(){
-    var varios = sel.prods.length > 1;
-    opCant.innerHTML = sel.prods.map(function(k){
-      var c = CAT[k], lista = c.packs || CANT_SUELTA, n = sel.cant[k];
-      var ops = lista.map(function(x){
-        var txt = !c.packs && x === 200 ? '200 o más' : String(x);
-        return '<button class="op" type="button" data-v="' + x + '" aria-pressed="' +
-               (x === n ? 'true' : 'false') + '">' + txt + '</button>';
-      }).join('');
-      return '<div class="linea-cant" data-p="' + k + '">' +
-               (varios ? '<span class="linea-nom">' + c.nombre + '</span>' : '') +
-               '<div class="opciones" role="group" aria-label="Cuántas: ' + c.nombre + '">' +
-                 ops +
-               '</div></div>';
-    }).join('');
+  /* La fila de un producto se monta UNA VEZ en toda la vida de la página
+     y se guarda aquí. Antes se rehacía el HTML entero de las cantidades
+     en cada toque: el navegador tiraba los botones y los volvía a crear,
+     con su medición y su dibujo, para acabar enseñando lo mismo. */
+  var filasCant = {};
+  function filaCant(k){
+    if (filasCant[k]) return filasCant[k];
+    var c = CAT[k], lista = c.packs || CANT_SUELTA;
+    var fila = document.createElement('div');
+    fila.className = 'linea-cant';
+    fila.dataset.p = k;
+
+    var nom = document.createElement('span');
+    nom.className = 'linea-nom';
+    nom.textContent = c.nombre;
+
+    var caja = document.createElement('div');
+    caja.className = 'opciones';
+    caja.setAttribute('role', 'group');
+    caja.setAttribute('aria-label', 'Cuántas: ' + c.nombre);
+    lista.forEach(function(x){
+      var b = document.createElement('button');
+      b.className = 'op';
+      b.type = 'button';
+      b.dataset.v = x;
+      b.setAttribute('aria-pressed', 'false');
+      b.textContent = !c.packs && x === 200 ? '200 o más' : String(x);
+      caja.appendChild(b);
+    });
+
+    fila.appendChild(nom);
+    fila.appendChild(caja);
+    filasCant[k] = fila;
+    return fila;
   }
 
+  /* Una fila por producto marcado, en el orden en que se marcaron. El
+     nombre del producto solo sale cuando hay más de uno: con uno solo
+     sobra, ya lo pone arriba. */
+  function pintarCants(){
+    var varios = sel.prods.length > 1;
+    /* fuera las filas de lo que se ha desmarcado */
+    [].slice.call(opCant.children).forEach(function(fila){
+      if (sel.prods.indexOf(fila.dataset.p) < 0) opCant.removeChild(fila);
+    });
+    /* y dentro las que falten, cada una en su sitio */
+    sel.prods.forEach(function(k, i){
+      var fila = filaCant(k);
+      if (opCant.children[i] !== fila) opCant.insertBefore(fila, opCant.children[i] || null);
+      fila.firstChild.hidden = !varios;
+      elegir(fila, sel.cant[k]);
+    });
+  }
+
+  /* ── POR QUE HAY DOS FUNCIONES Y NO UNA ─────────────────────────────
+     'pintarPedido' es el trabajo de verdad: rehace el ticket entero.
+     'refrescar' es lo que llama todo el mundo, y NO pinta: apunta que
+     hay que pintar y se sale.
+
+     Antes, cada toque en un producto hacía el trabajo entero ahí mismo,
+     antes de que el navegador tuviera ocasión de dibujar el botón
+     pulsado. O sea que lo primero que veía el cliente no era su toque,
+     era el resultado, un buen rato después. Ahora el botón se pinta en
+     el mismo golpe de pantalla que el toque y el ticket va detrás.
+
+     Y si algo llama tres veces seguidas —marcar producto, rehacer las
+     cantidades, recalcular— se pinta UNA. */
+  var pintadoPedido = 0;
   function refrescar(){
+    if (pintadoPedido) return;
+    pintadoPedido = requestAnimationFrame(function(){
+      pintadoPedido = 0;
+      pintarPedido();
+    });
+  }
+  /* para el arranque, donde no hay ningún toque que esperar */
+  function refrescarYa(){
+    if (pintadoPedido) { cancelAnimationFrame(pintadoPedido); pintadoPedido = 0; }
+    pintarPedido();
+  }
+
+  function pintarPedido(){
     var q = cuentas(), ls = q.lineas, abierto = q.abierto, total = q.total;
     pintarPila(ls, abierto);
     pilaTxt.textContent = ls.map(cuantas).join(' + ');
@@ -1906,7 +2009,7 @@
   });
   elegir(opProd, sel.prods);
   pintarCants();
-  refrescar();
+  refrescarYa();
 
   /* El "Pedir esta" de cada ficha. Si todavía no han tocado los
      productos, cambia la elección por esa; si ya han montado una mezcla,

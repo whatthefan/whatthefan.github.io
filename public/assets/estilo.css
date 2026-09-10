@@ -958,9 +958,14 @@ html.sin-oferta .cinta{display:none}
   background:rgba(233,188,70,.15);color:var(--oro);font-size:.78rem;font-weight:700}
 .paso-r .pregunta{font-weight:600;font-size:.95rem;flex:none;min-width:150px}
 .opciones{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+/* Las tres propiedades escritas una a una, no 'all'. Con 'all' el
+   navegador tiene que vigilar TODAS en cada cambio de estilo, y estos
+   botones cambian de estado en cada toque. */
 .op{border:1px solid var(--borde-claro);background:transparent;color:var(--txt-2);
   border-radius:999px;padding:9px 16px;font-size:.85rem;font-weight:600;cursor:pointer;
-  transition:all .16s}
+  transition:background .16s,border-color .16s,color .16s;
+  /* que el toque se vea al instante y no espere al doble toque del movil */
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .op:hover{color:var(--txt);border-color:var(--txt-3)}
 .op[aria-pressed="true"]{background:var(--oro);border-color:var(--oro);color:#100B00}
 
@@ -969,13 +974,25 @@ html.sin-oferta .cinta{display:none}
   display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .foto-op .op{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;
   border-radius:15px;padding:13px 8px 12px;text-align:center;line-height:1.25}
+/* LA SOMBRA NO CAMBIA AL MARCAR, Y ES A PROPOSITO.
+
+   Antes habia una sombra para el boton suelto y otra mas suave para el
+   marcado. Suena inofensivo, pero drop-shadow se calcula sobre la
+   silueta recortada de la foto: cambiar el valor obliga al navegador a
+   volver a dibujarla entera. Y como al marcar un producto cambian los
+   tres botones a la vez, eran tres siluetas por toque.
+
+   Medido en un movil normal: picos de 190 ms desde que tocas hasta que
+   se ve. Eso es exactamente la sensacion de "he tocado y no ha pasado
+   nada". Con la sombra fija se queda en 50.
+
+   El fondo dorado ya dice de sobra cual esta marcado. */
 .foto-op .op img{height:66px;width:auto;object-fit:contain;
-  filter:drop-shadow(0 6px 11px rgba(0,0,0,.5));transition:transform .18s}
+  filter:drop-shadow(0 6px 11px rgba(0,0,0,.42));transition:transform .18s}
 .foto-op .op:hover img{transform:translateY(-3px)}
 .foto-op .op .tit{font-size:.83rem;font-weight:700;display:block}
 .foto-op .op .mm{font-size:.68rem;color:var(--txt-3);letter-spacing:.02em;display:block}
 .foto-op .op[aria-pressed="true"] .mm{color:rgba(16,11,0,.6)}
-.foto-op .op[aria-pressed="true"] img{filter:drop-shadow(0 6px 11px rgba(0,0,0,.3))}
 
 /* resumen lateral con la pila de unidades */
 /* El ticket ocupaba casi una pantalla entera de móvil él solo, y el

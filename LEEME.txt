@@ -1,6 +1,45 @@
 PLEA5E - página web
 ====================
 
+
+COMO SE PUBLICA HOY  (LEE ESTO ANTES QUE NADA)
+==============================================
+
+NO se publica arrastrando nada a ninguna parte. Eso era antes y las
+instrucciones de mas abajo se quedaron de aquella epoca.
+
+Hoy se publica SOLO, al subir el codigo a GitHub. Comprobado: el Worker
+de Cloudflare se llama "whatthefan-github-io" y se actualiza cada vez
+que se empuja una rama.
+
+O SEA QUE SI HAS CAMBIADO ALGO Y NO LO VES EN plea5e.es, es una de
+estas tres, en este orden:
+
+  1. EL CAMBIO ESTA EN UNA RAMA Y NO EN main.
+     Es la razon nueve de cada diez veces. Mientras el cambio viva en
+     una rama, plea5e.es sigue enseñando lo que hay en main. Se
+     arregla juntando la rama con main (Pull Request -> Merge).
+
+  2. TU NAVEGADOR TE ENSEÑA LO GUARDADO.
+     Recarga forzando: Ctrl+Shift+R en Windows, Cmd+Shift+R en Mac. En
+     el movil, abre la web en una pestaña de incognito. Si ahi SI se ve
+     el cambio, era esto y no habia ningun problema.
+
+  3. EL DOMINIO NO APUNTA DONDE CREES.
+     Esta web vivio en Netlify y se esta mudando a Cloudflare. Si
+     plea5e.es todavia apunta a Netlify, quien manda es Netlify, y
+     Netlify publica SOLO desde main. Lo dice el propio netlify.toml.
+
+COMO SABER EN DIEZ SEGUNDOS SI LO QUE VES ESTA AL DIA: mira el precio
+tachado de la placa. Si pone 33,50 EUR y -25 %, estas viendo lo ultimo.
+Si pone 33 EUR y -24 %, estas viendo algo viejo.
+
+Y UNA COSA QUE NO SE VE: las contraseñas y claves (PANEL_CLAVE,
+RESEND_API_KEY...) NO estan en GitHub, a proposito, porque el
+repositorio es publico. Esas se ponen a mano una sola vez y no viajan
+con el codigo. Estan explicadas mas abajo.
+
+
 COMO PUBLICARLA (5 minutos, gratis, sin instalar nada)
 ------------------------------------------------------
 1. Descomprime este ZIP. Te queda una carpeta con:

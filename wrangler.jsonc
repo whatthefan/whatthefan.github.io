@@ -2,7 +2,13 @@
   // La configuracion del Worker. Cloudflare la lee al desplegar; no hay
   // que tocar nada en el panel salvo las variables y el almacen.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "plea5e",
+  // OJO CON ESTE NOMBRE. Es el del Worker que ya existe en tu cuenta de
+  // Cloudflare, y lo pone Cloudflare a partir del nombre del repositorio.
+  // Aqui ponia "plea5e", que no es ninguno: con eso, un `npm run deploy`
+  // no habria actualizado tu web, habria creado un Worker NUEVO y vacio
+  // al lado, y tu seguirias viendo la version de antes sin entender por
+  // que. Si algun dia le cambias el nombre en Cloudflare, cambialo aqui.
+  "name": "whatthefan-github-io",
   "main": "src/index.js",
   "compatibility_date": "2026-08-01",
 
