@@ -320,6 +320,70 @@ cuando el pedido se actualiza: si ya lo habias dado por hecho, sigue
 hecho.
 
 
+PARA QUE TE LLEGUEN LOS PEDIDOS (esto es lo que hay que terminar)
+-----------------------------------------------------------------
+Un pedido de la web hace este recorrido:
+
+    la web  ->  /api/encargo  ->  1. se guarda en el almacen (KV)
+                                  2. te llega un correo
+
+Si falta algo del camino, el pedido se pierde y no te enteras. Estado
+a dia de hoy:
+
+  HECHO   El almacen KV existe en Cloudflare, se llama
+          "encargos-plea5e", y ya esta conectado al Worker en
+          wrangler.jsonc. Con esto el pedido queda GUARDADO y sale en
+          /taller/pedidos.html aunque el correo falle.
+
+  FALTA   Las tres variables del correo. Sin ellas el pedido se guarda
+          pero NO te avisa nadie: te tienes que acordar de mirar el
+          panel, y eso no funciona.
+
+LAS TRES VARIABLES, UNA A UNA
+
+  RESEND_API_KEY   la clave de resend.com, que es quien manda el
+                   correo. Te das de alta, creas una API key y la
+                   copias. Es gratis para lo que tu vas a mandar.
+
+  CORREO_AVISO     donde quieres que te lleguen los avisos.
+                   Ahora mismo:  hello.plea5e.es@gmail.com
+
+  CORREO_DE        desde que direccion salen. Para poner una direccion
+                   tuya (pedidos@plea5e.es) hay que verificar el
+                   dominio en Resend, que es meter unos registros DNS.
+                   Para empezar puedes usar la direccion de pruebas
+                   que te da Resend y cambiarla despues.
+
+COMO SE PONEN. NO van en ningun archivo: son secretos, y este
+repositorio es publico. Se meten desde la terminal, una a una:
+
+    npx wrangler secret put RESEND_API_KEY
+    npx wrangler secret put CORREO_AVISO
+    npx wrangler secret put CORREO_DE
+
+Te pregunta el valor, lo pegas y ya esta. Se guardan cifradas en
+Cloudflare y no aparecen en el codigo.
+
+    npx wrangler secret list      <- para ver cuales hay puestas
+
+Y OPCIONAL, ANTHROPIC_API_KEY: la que elige los colores del diseño con
+IA. Sin ella los elige una tabla por oficio, gratis, y el cliente ni se
+entera. No es urgente.
+
+DESPUES DE PONERLAS, DESPLIEGA:
+
+    npm run deploy
+
+Mientras no lo hagas, todo esto sigue sin funcionar en plea5e.es.
+
+COMO COMPROBAR QUE VA. Entra en tu propia web, rellena un pedido con
+tus datos y mandalo. Tienen que pasar DOS cosas:
+    1. Sale en /taller/pedidos.html
+    2. Te llega el correo a hello.plea5e.es@gmail.com
+Si sale en el panel pero no llega el correo, es una de las tres
+variables. Si no sale en el panel, es el almacen.
+
+
 EL ENVIO: 3,99 EUR, GRATIS DESDE 60
 -----------------------------------
 Hasta ahora el envio iba dentro del precio y lo pagabas tu. En un pedido

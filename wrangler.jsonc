@@ -18,16 +18,16 @@
     "binding": "ASSETS"
   },
 
-  // El almacen de pedidos (KV) NO va aqui todavia: hace falta el
-  // identificador que da Cloudflare al crearlo, y hasta entonces un
-  // valor inventado haria fallar el despliegue entero. Se anade despues,
-  // cuando exista:
+  // El almacen de pedidos. Ya existe en Cloudflare con el nombre
+  // "encargos-plea5e"; este es su identificador. Aqui es donde se guarda
+  // cada encargo que entra por la web, y de aqui los lee el panel de
+  // /taller/pedidos.html.
   //
-  //   "kv_namespaces": [
-  //     { "binding": "ENCARGOS", "id": "el-identificador-que-te-den" }
-  //   ]
-  //
-  // Mientras no este, la web y el generador funcionan igual; lo unico
-  // que no funciona es el panel, y lo dice con esas palabras.
+  // Sin esta linea el Worker no encuentra el almacen y el pedido se
+  // pierde: por eso el panel salia vacio.
+  "kv_namespaces": [
+    { "binding": "ENCARGOS", "id": "22d3750e7f964c08ac98843119f1201c" }
+  ],
+
   "observability": { "enabled": true }
 }
