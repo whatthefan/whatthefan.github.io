@@ -292,7 +292,7 @@
           "name": "¿Hay que pagar algo cada mes?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Pagas una vez y es tuyo. El enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar."
+            "text": "Las placas no. Pagas una vez y son tuyas: el enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar. Aparte existe un seguimiento mensual de 35 € que es opcional, y las placas funcionan igual sin él."
           }
         },
         {
@@ -545,7 +545,7 @@
              empujaban el botón de pedir fuera de la pantalla. -->
         <div class="chips">
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Diseño a medida gratis</span>
-          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Sin cuotas ni apps</span>
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Pago único, sin apps</span>
           <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Lista en 3-10 días</span>
         </div>
         <div class="acciones">
@@ -840,6 +840,67 @@
   </div>
 </section>
 
+<!-- ============ el seguimiento, que es aparte ============
+
+     OJO CON ESTA SECCIÓN. Es lo único de toda la web que se cobra cada
+     mes, y el resto de la página promete justo lo contrario. Si alguna
+     vez cambias el precio, cámbialo también en la pregunta "¿Hay que
+     pagar algo cada mes?" de más abajo, o la web se contradice sola y
+     eso se nota más que cualquier otra cosa.
+
+     Y una cosa que NO se puede prometer aquí: cuántas reseñas se
+     escriben. Se cuenta cuánta gente acerca el móvil, que no es lo
+     mismo. Google no dice quién escribió. Está redactado a propósito
+     para no prometer lo que no se puede cumplir.                      -->
+<section class="sec-corta astro" id="seguimiento">
+  <div class="env">
+    <div class="enc sube">
+      <span class="etq">Opcional</span>
+      <h2>Y si quieres,<br>te lo llevamos nosotros</h2>
+      <p>Las placas funcionan solas y esto no les hace falta. Pero si quieres saber cuánta gente las usa, o cambiar a dónde llevan sin levantarlas de la mesa, eso lo hacemos desde aquí.</p>
+    </div>
+
+    <div class="serv">
+      <ul class="serv-lista">
+        <li class="sube">
+          <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg></span>
+          <div>
+            <h3>Cuánta gente las usa</h3>
+            <p>Un correo al mes con los toques de cada placa y cómo van por días. Sabes si la de la barra tira más que la de la terraza, y dónde poner la siguiente.</p>
+            <p class="serv-ojo">Se cuentan los toques, no las reseñas: Google no dice quién escribió.</p>
+          </div>
+        </li>
+        <li class="sube">
+          <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.6 13.4a4.5 4.5 0 0 0 6.4 0l2.8-2.8a4.5 4.5 0 0 0-6.4-6.4l-1.6 1.6"/><path d="M13.4 10.6a4.5 4.5 0 0 0-6.4 0l-2.8 2.8a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6"/></svg></span>
+          <div>
+            <h3>Cambiamos a dónde lleva</h3>
+            <p>El QR de tus placas apunta a una dirección nuestra, y desde ahí decidimos a dónde salta. Cambias de ficha en Google, abres otro local o te equivocas de enlace: se arregla en un minuto y la placa <b>no se toca</b>.</p>
+          </div>
+        </li>
+        <li class="sube">
+          <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.4l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span>
+          <div>
+            <h3>Cambio de imagen a mitad de precio</h3>
+            <p>Si cambias de nombre o de colores durante el primer año, te rehacemos las placas que ya tienes <b>por la mitad</b>. El diseño nuevo, gratis como siempre.</p>
+          </div>
+        </li>
+      </ul>
+
+      <aside class="serv-precio sube">
+        <p class="serv-eti">Seguimiento PLEA5E</p>
+        <p class="serv-num"><b>35 €</b><span>al mes</span></p>
+        <ul class="serv-mini">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Sin permanencia</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Se cancela cuando quieras</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Todas tus placas, no una</li>
+        </ul>
+        <a class="btn btn-oro" href="https://wa.me/34661403219?text=Hola%20PLEA5E%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20seguimiento%20mensual." target="_blank" rel="noopener">Pregúntanos por él</a>
+        <p class="serv-pie">Las placas <b>no lo necesitan</b>. Si no lo contratas nunca, funcionan exactamente igual.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
 <!-- ============ preguntas ============ -->
 <section class="sec-corta sec-claro astro" id="ayuda">
   <div class="env">
@@ -854,7 +915,8 @@
       <details class="sube"><summary>¿Cuánto tarda en llegar?</summary>
         <p>Entre <b>3 y 10 días</b> desde que apruebas el diseño: de 2 a 7 días de preparación —diseño, impresión y grabado del chip— y de 1 a 3 días de envío a península. Si te corre prisa, dínoslo al hacer el pedido y te decimos qué podemos hacer.</p></details>
       <details class="sube"><summary>¿Hay que pagar algo cada mes?</summary>
-        <p>No. Pagas una vez y es tuyo. El enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p></details>
+        <p>Las placas no. Pagas una vez y son tuyas: el enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p>
+        <p>Aparte tenemos un <a href="#seguimiento">seguimiento mensual</a> de 35 € para saber cuánta gente las usa y poder cambiar a dónde llevan. Es <b>opcional</b>: si no lo contratas nunca, las placas funcionan exactamente igual.</p></details>
       <details class="sube"><summary>¿Cuánto hay que pagar por adelantado?</summary>
         <p>Una fianza: <b data-fianza-regla>el 30 % del pedido, con un mínimo de 15 €</b>. No es dinero de más, va dentro del precio y se descuenta del total. Si tu pedido son 100 €, pagas 30 € ahora y 70 € cuando el diseño te guste. Si es una sola pieza, son 15 € y punto: lo demás, al aprobarlo.</p></details>
       <details class="sube"><summary>¿Y si un chip no lee?</summary>
