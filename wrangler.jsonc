@@ -2,7 +2,13 @@
   // La configuracion del Worker. Cloudflare la lee al desplegar; no hay
   // que tocar nada en el panel salvo las variables y el almacen.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "plea5e",
+  // OJO CON ESTE NOMBRE. Es el del Worker que ya existe en tu cuenta de
+  // Cloudflare, y lo pone Cloudflare a partir del nombre del repositorio.
+  // Aqui ponia "plea5e", que no es ninguno: con eso, un `npm run deploy`
+  // no habria actualizado tu web, habria creado un Worker NUEVO y vacio
+  // al lado, y tu seguirias viendo la version de antes sin entender por
+  // que. Si algun dia le cambias el nombre en Cloudflare, cambialo aqui.
+  "name": "whatthefan-github-io",
   "main": "src/index.js",
   "compatibility_date": "2026-08-01",
 
@@ -15,7 +21,19 @@
   // Cloudflare desde el sitio mas cercano al cliente.
   "assets": {
     "directory": "./public",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+
+    // POR DEFECTO, Cloudflare sirve el archivo ANTES de ejecutar el codigo:
+    // si existe public/r/piccola/index.html, la peticion a /r/piccola ni
+    // llega al Worker. Eso rompe las direcciones cortas, porque una carpeta
+    // vieja le ganaria siempre a lo que digas en el panel.
+    //
+    // Con esto, /r/... y /api/... pasan SIEMPRE por el codigo. Y cuando un
+    // nombre no esta dado de alta, es el propio codigo el que pide el
+    // archivo estatico (env.ASSETS.fetch), asi que las carpetas de siempre
+    // siguen funcionando igual. El orden lo decidimos nosotros y no el
+    // azar de que exista o no un archivo con ese nombre.
+    "run_worker_first": ["/r/*", "/api/*"]
   },
 
   // El almacen de pedidos. Ya existe en Cloudflare con el nombre

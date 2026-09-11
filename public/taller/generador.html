@@ -1,3 +1,14 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- El charset NO es de adorno. Este archivo está pensado para abrirse con
+     doble clic desde el escritorio, y ahí no hay servidor que diga en qué
+     alfabeto está escrito: lo tiene que decir el propio archivo. Sin esta
+     línea, el navegador se lo inventa y todas las tildes y las eñes salen
+     rotas ("direcciÃ³n"), tanto en los textos como en la placa. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Generador de placas · PLEA5E</title>
 <style>
 /* Montserrat, la letra de la plantilla de verdad, metida DENTRO del
@@ -41,6 +52,14 @@ input[type=text],input[type=url],select,textarea{
   border-radius:10px;padding:10px 12px;font:inherit;font-size:.92rem}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--oro);outline-offset:1px;border-color:transparent}
 textarea{resize:vertical;min-height:56px}
+
+/* el "plea5e.es/r/" pegado a la izquierda del hueco, para que se vea de un
+   golpe que ahi solo va el trozo final y no la direccion entera */
+.corta-caja{display:flex;align-items:stretch}
+.corta-caja span{display:flex;align-items:center;white-space:nowrap;font-size:.86rem;
+  color:var(--txt-3);background:var(--panel);border:1px solid var(--borde-claro);
+  border-right:0;border-radius:10px 0 0 10px;padding:0 2px 0 12px}
+.corta-caja input[type=text]{border-radius:0 10px 10px 0}
 
 .segm{display:flex;gap:6px;flex-wrap:wrap}
 .segm button{flex:1;min-width:88px;background:transparent;border:1px solid var(--borde-claro);
@@ -88,6 +107,8 @@ input[type=color]{width:42px;height:34px;padding:2px;border:1px solid var(--bord
 .malo{background:rgba(226,106,80,.11);border-color:rgba(226,106,80,.4)}
 canvas{display:none}
 </style>
+</head>
+<body>
 
 <div class="cab">
   <h1>Generador de <span>placas</span></h1>
@@ -121,7 +142,17 @@ canvas{display:none}
     <div class="campo">
       <label for="fGoogle">Enlace de Google o código del sitio</label>
       <input id="fGoogle" type="text" placeholder="ChIJZca-8BbQDQ0RIByaopjYtHY" autocomplete="off">
-      <span class="pista">Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección. Lo que pegues es lo que llevará el QR.</span>
+      <span class="pista">Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección.</span>
+    </div>
+
+    <div class="campo">
+      <label for="fCorta">Dirección corta <b>(recomendado)</b></label>
+      <div class="corta-caja">
+        <span>plea5e.es/r/</span>
+        <input id="fCorta" type="text" placeholder="bar-manolo" autocomplete="off"
+               inputmode="url" spellcheck="false">
+      </div>
+      <span class="pista">Si la pones, es <b>esto</b> lo que lleva el QR, y el destino se cambia luego desde el panel sin tocar la placa. Si la dejas vacía, el QR lleva la dirección de Google grabada para siempre. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir.</span>
     </div>
 
     <div class="campo">
@@ -195,6 +226,7 @@ canvas{display:none}
       <span class="ficha" id="ficha"></span>
     </div>
     <p class="aviso" id="avisoQR">Escribe el enlace de Google para que salga el QR. Sin él la placa se dibuja igual, pero con un hueco.</p>
+    <p class="aviso" id="avisoDestino" hidden></p>
     <p class="aviso" id="avisoGuardar">En el móvil, si el botón de descargar no hace nada, <b>deja el dedo pulsado sobre la imagen y dale a «Guardar»</b>.</p>
   </div>
 </div>
@@ -2536,6 +2568,7 @@ var qrcode = function() {
     negocio: '',
     lema: '',
     google: '',
+    corta: '',           /* el trozo final de plea5e.es/r/... */
     logo: null,          /* Image ya cargada */
     queSeVe: 'ambos',
     banda:  '#192E26',   /* el verde de la plantilla buena */
@@ -3299,9 +3332,33 @@ var qrcode = function() {
     cx.restore();
   }
 
-  /* Aceptamos las tres formas de dar el sitio: el código a secas, el
-     enlace de "pedir reseñas" o cualquier dirección pegada del navegador. */
+  /* Las mismas reglas que el panel de enlaces. Si esto y el panel no
+     coinciden, se puede imprimir un QR que apunta a una dirección que
+     luego no se deja crear, y eso son placas a la basura. */
+  var CORTA_VALIDA = /^[a-z0-9][a-z0-9-]{1,39}$/;
+
+  function nombreCorto() {
+    var v = est.corta.trim().toLowerCase();
+    return CORTA_VALIDA.test(v) ? v : '';
+  }
+
+  /* LO QUE VA GRABADO EN EL QR. Y esto es la decisión importante del
+     archivo entero:
+
+     Con dirección corta, el QR lleva plea5e.es/r/loquesea y el destino se
+     cambia luego desde /taller/enlaces.html. La placa que está pegada en
+     la mesa del bar no se toca nunca.
+
+     Sin ella, el QR lleva la dirección de Google grabada a fuego. El día
+     que el bar cambie de nombre, de dueño o de ficha, esa placa se tira.
+
+     Por eso la corta gana siempre que esté puesta. */
   function enlaceQR() {
+    var c = nombreCorto();
+    if (c) return 'https://plea5e.es/r/' + c;
+
+    /* Aceptamos las tres formas de dar el sitio: el código a secas, el
+       enlace de "pedir reseñas" o cualquier dirección pegada. */
     var v = est.google.trim();
     if (!v) return '';
     if (/^https?:\/\//i.test(v)) return v;
@@ -3321,7 +3378,21 @@ var qrcode = function() {
         '<span><b>' + info.W + ' × ' + info.H + '</b> px</span>' +
         '<span><b>' + info.mm[0] + ' × ' + info.mm[1] + '</b> mm</span>' +
         '<span><b>' + info.dpi + '</b> ppp</span>';
-      $('avisoQR').hidden = !!enlaceQR();
+      var qr = enlaceQR();
+      $('avisoQR').hidden = !!qr;
+
+      /* Lo que va grabado, escrito con todas las letras. Es lo único que
+         no se puede comprobar mirando la placa, y equivocarse aquí no se
+         arregla luego: sale a la vista para que se lea antes de imprimir. */
+      var av = $('avisoDestino');
+      av.hidden = !qr;
+      if (qr) {
+        av.innerHTML = nombreCorto()
+          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>. Dala de alta en ' +
+            '<b>/taller/enlaces.html</b> antes de imprimir, o el QR no llevará a ningún sitio.'
+          : 'El QR lleva la dirección de Google grabada. <b>No se podrá cambiar</b> ' +
+            'cuando esté impresa: si quieres poder, pon una dirección corta arriba.';
+      }
     });
   }
 
@@ -3341,11 +3412,30 @@ var qrcode = function() {
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
 
-  ['fNegocio','fLema','fGoogle','fTitulo'].forEach(function (id) {
+  ['fNegocio','fLema','fGoogle','fCorta','fTitulo'].forEach(function (id) {
     $(id).addEventListener('input', function () {
-      est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google', fTitulo:'titulo'}[id]] = this.value;
+      est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
+           fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
       refresca();
     });
+  });
+
+  /* Lo que se escriba ahí se limpia al salir del campo, no mientras se
+     escribe: corregirle las letras a alguien con el cursor en medio de la
+     palabra es de las cosas que más molestan de un formulario. */
+  $('fCorta').addEventListener('blur', function () {
+    /* NFD parte la letra acentuada en letra + tilde suelta y aquí se
+       quedan solo las letras. Se hace así y no con una lista de vocales
+       escrita a mano porque esa lista depende de que el archivo se lea en
+       el alfabeto correcto, y este archivo se abre desde el escritorio. */
+    var v = this.value.trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+      .slice(0, 40).replace(/-$/, '');
+    if (v === this.value) return;
+    this.value = v;
+    est.corta = v;
+    refresca();
   });
   ['fSangrado','fGoogleLogo','fNfc','fMarco'].forEach(function (id) {
     $(id).addEventListener('change', function () {
@@ -3502,7 +3592,7 @@ var qrcode = function() {
 
      El logo no cabe aquí: eso sigue llegando como archivo. */
   var CLAVES = {
-    n: 'negocio', l: 'lema', g: 'google', t: 'titulo',
+    n: 'negocio', l: 'lema', g: 'google', c: 'corta', t: 'titulo',
     f: 'formato', b: 'banda', d: 'fondo', a: 'acento'
   };
 
@@ -3533,7 +3623,8 @@ var qrcode = function() {
         if (k === 'acento') est.acentoAuto = false;
       } else {
         est[k] = v;
-        var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle', titulo:'fTitulo' }[k];
+        var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle',
+                      corta:'fCorta', titulo:'fTitulo' }[k];
         if (campo) $(campo).value = v;
       }
       puesto = true;
@@ -3594,3 +3685,6 @@ var qrcode = function() {
   });
 })();
 </script>
+
+</body>
+</html>

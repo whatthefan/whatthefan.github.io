@@ -384,6 +384,27 @@ td .destaca{color:var(--oro);font-weight:700}
 .faq details p{padding:0 0 16px;color:var(--claro-txt-2);max-width:72ch;font-size:.94rem;line-height:1.6}
 .faq details p + p{padding-top:0;margin-top:-6px}
 
+/* LA RESPUESTA SE ABRE, NO APARECE DE GOLPE.
+
+   Un <details> normal no tiene termino medio: cerrado, y al toque
+   siguiente abierto de golpe. El salto es tan seco que la vista pierde
+   el sitio y hay que volver a buscar por donde ibas.
+
+   Con esto crece en un cuarto de segundo, que es el tiempo justo para
+   que el ojo siga el movimiento sin que nadie tenga que esperar.
+
+   Los navegadores que no entiendan ::details-content lo abren de golpe,
+   como hasta ahora: no se rompe nada, solo se pierde el detalle. Y a
+   quien haya pedido menos animaciones en su sistema no se le anima
+   nada, que para eso lo ha pedido (la regla general esta arriba). */
+:root{interpolate-size:allow-keywords}
+.faq details::details-content{
+  block-size:0;overflow:hidden;opacity:0;
+  transition:block-size .26s cubic-bezier(.2,.8,.3,1),
+             opacity .2s ease,
+             content-visibility .26s allow-discrete}
+.faq details[open]::details-content{block-size:auto;opacity:1}
+
 /* pedido */
 .form-rej{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(32px,3.6vw,44px)}
 @media (max-width:720px){.form-rej{grid-template-columns:1fr}}
@@ -423,30 +444,42 @@ td .destaca{color:var(--oro);font-weight:700}
    La misma idea del pie, repartida: estrellas grandes casi invisibles
    detrás de cada sección para que el fondo negro no se sienta vacío.
 
-   Van como ::before, dentro de la caja de la sección y sin salirse, para
-   no tener que poner overflow:hidden en ningún sitio: el resumen del
-   pedido es position:sticky y overflow oculto en un padre lo mata.
-
-   La opacidad es deliberadamente ridícula (.04). Si se nota, sobra. */
-.astro{position:relative}
+   Son grandes y se salen por el borde a propósito: una estrella entera y
+   centrada se lee como un icono, y una cortada se lee como diseño. Aun
+   así la opacidad es baja: tiene que verse, no leerse. */
+/* 'clip' y no 'hidden' a propósito: las estrellas se salen por los lados
+   y hay que recortarlas, pero 'hidden' convertiría la sección en un
+   contenedor de scroll y el resumen del pedido (position:sticky) dejaría
+   de pegarse. 'clip' recorta sin crear ese contenedor. */
+.astro{position:relative;overflow:clip}
 .astro > .env{position:relative;z-index:1}
 /* van en ::after y no en ::before porque el pedido y el "cómo funciona"
    ya usaban ::before para su brillo ambiental, y se pisaban */
 .astro::after{content:"";position:absolute;pointer-events:none;z-index:0;
-  aspect-ratio:1;background:var(--oro);opacity:.04;
+  aspect-ratio:1;background:var(--oro);opacity:.07;
   -webkit-mask:var(--estrella) center/contain no-repeat;
           mask:var(--estrella) center/contain no-repeat}
 :root{--estrella:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4l14.1 29.3L96 37.9 72.9 60.1l5.6 31.6L50 76.8 21.5 91.7l5.6-31.6L4 37.9l31.9-4.6z' fill='%23000'/%3E%3C/svg%3E")}
 /* cada una en un sitio distinto y con un tamaño distinto: si estuvieran
    todas iguales y centradas se leería como un patrón, y eso sí canta */
-#productos::after{width:min(46%,380px);right:-6%;top:8%}
-#pedido::after  {width:min(40%,320px);left:-8%;bottom:6%}
-#demo::after    {width:min(50%,400px);right:-4%;bottom:10%}
-#como::after    {width:min(38%,300px);left:-5%;top:12%}
-#ayuda::after   {width:min(44%,340px);right:-7%;top:20%}
+#productos::after{width:min(72%,620px);right:-16%;top:-4%;transform:rotate(14deg)}
+#pedido::after  {width:min(64%,540px);left:-18%;bottom:-6%;transform:rotate(-11deg)}
+#demo::after    {width:min(78%,660px);right:-14%;bottom:-8%;transform:rotate(9deg)}
+#como::after    {width:min(60%,500px);left:-15%;top:-2%;transform:rotate(-16deg)}
+#ayuda::after   {width:min(70%,580px);right:-17%;top:10%;transform:rotate(12deg)}
 /* en la sección clara el dorado se pierde: ahí va un pelín más marcada */
-.sec-claro.astro::after{opacity:.05}
-@media (max-width:640px){.astro::after{opacity:.03}}
+.sec-claro.astro::after{opacity:.09}
+@media (max-width:640px){.astro::after{opacity:.05}}
+/* Safari viejo (menos de la 16) no entiende 'clip'. Ahí no se recorta
+   nada, así que las estrellas se meten dentro: mejor una estrella entera
+   que una barra de scroll horizontal en toda la página. */
+@supports not (overflow:clip){
+  #productos::after{right:0;top:4%}
+  #pedido::after  {left:0;bottom:4%}
+  #demo::after    {right:0;bottom:4%}
+  #como::after    {left:0;top:4%}
+  #ayuda::after   {right:0;top:10%}
+}
 .pie-rej{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:clamp(22px,3vw,44px)}
 @media (max-width:860px){.pie-rej{grid-template-columns:1fr 1fr}.pie-marca{grid-column:1/-1}}
 @media (max-width:480px){.pie-rej{grid-template-columns:1fr;gap:26px}}
@@ -615,7 +648,10 @@ td .destaca{color:var(--oro);font-weight:700}
 .pasos-fila p{font-size:.89rem;color:var(--txt-2)}
 
 /* ---- ejemplos compactos ---- */
-.sec-corta{padding:clamp(34px,4vw,52px) 0}
+/* Poco aire arriba y abajo a propósito: entre dos secciones se suman los
+   dos, así que 26 aquí son 52 reales en el corte. Con más, la página se
+   siente rota en trozos sueltos en vez de seguida. */
+.sec-corta{padding:clamp(26px,2.8vw,36px) 0}
 /* un brillo ambiental muy suave en un par de secciones, para que no se
    sientan planas; sin overflow:hidden en la sección para no romper el
    position:sticky del resumen del pedido */
@@ -651,7 +687,7 @@ td .destaca{color:var(--oro);font-weight:700}
      Los márgenes de dentro de cada sección no se tocan, que ahí el aire
      sí hace falta para que se lea. */
   .sec{padding:40px 0}
-  .sec-corta{padding:30px 0}
+  .sec-corta{padding:22px 0}
   .portada{padding:26px 0 18px}
   .enc h2{margin-top:11px}
   .enc > p{margin-top:11px}
@@ -943,9 +979,14 @@ html.sin-oferta .cinta{display:none}
   background:rgba(233,188,70,.15);color:var(--oro);font-size:.78rem;font-weight:700}
 .paso-r .pregunta{font-weight:600;font-size:.95rem;flex:none;min-width:150px}
 .opciones{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+/* Las tres propiedades escritas una a una, no 'all'. Con 'all' el
+   navegador tiene que vigilar TODAS en cada cambio de estilo, y estos
+   botones cambian de estado en cada toque. */
 .op{border:1px solid var(--borde-claro);background:transparent;color:var(--txt-2);
   border-radius:999px;padding:9px 16px;font-size:.85rem;font-weight:600;cursor:pointer;
-  transition:all .16s}
+  transition:background .16s,border-color .16s,color .16s;
+  /* que el toque se vea al instante y no espere al doble toque del movil */
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .op:hover{color:var(--txt);border-color:var(--txt-3)}
 .op[aria-pressed="true"]{background:var(--oro);border-color:var(--oro);color:#100B00}
 
@@ -954,13 +995,25 @@ html.sin-oferta .cinta{display:none}
   display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .foto-op .op{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;
   border-radius:15px;padding:13px 8px 12px;text-align:center;line-height:1.25}
+/* LA SOMBRA NO CAMBIA AL MARCAR, Y ES A PROPOSITO.
+
+   Antes habia una sombra para el boton suelto y otra mas suave para el
+   marcado. Suena inofensivo, pero drop-shadow se calcula sobre la
+   silueta recortada de la foto: cambiar el valor obliga al navegador a
+   volver a dibujarla entera. Y como al marcar un producto cambian los
+   tres botones a la vez, eran tres siluetas por toque.
+
+   Medido en un movil normal: picos de 190 ms desde que tocas hasta que
+   se ve. Eso es exactamente la sensacion de "he tocado y no ha pasado
+   nada". Con la sombra fija se queda en 50.
+
+   El fondo dorado ya dice de sobra cual esta marcado. */
 .foto-op .op img{height:66px;width:auto;object-fit:contain;
-  filter:drop-shadow(0 6px 11px rgba(0,0,0,.5));transition:transform .18s}
+  filter:drop-shadow(0 6px 11px rgba(0,0,0,.42));transition:transform .18s}
 .foto-op .op:hover img{transform:translateY(-3px)}
 .foto-op .op .tit{font-size:.83rem;font-weight:700;display:block}
 .foto-op .op .mm{font-size:.68rem;color:var(--txt-3);letter-spacing:.02em;display:block}
 .foto-op .op[aria-pressed="true"] .mm{color:rgba(16,11,0,.6)}
-.foto-op .op[aria-pressed="true"] img{filter:drop-shadow(0 6px 11px rgba(0,0,0,.3))}
 
 /* resumen lateral con la pila de unidades */
 /* El ticket ocupaba casi una pantalla entera de móvil él solo, y el
