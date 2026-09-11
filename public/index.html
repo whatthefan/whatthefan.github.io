@@ -281,14 +281,6 @@
         },
         {
           "@type": "Question",
-          "name": "¿Lleva al mapa o directamente a escribir la reseña?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Directamente a la ventana de escribir, con las estrellas ya delante. Cuantos menos pasos hay, más reseñas se terminan."
-          }
-        },
-        {
-          "@type": "Question",
           "name": "¿Hay que pagar algo cada mes?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -297,42 +289,10 @@
         },
         {
           "@type": "Question",
-          "name": "¿Cuánto tarda en llegar?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Entre 3 y 10 días desde que apruebas el diseño: de 2 a 7 días de preparación (diseño, impresión y grabado del chip) y de 1 a 3 días de envío a península. Si te corre prisa, dínoslo al pedirlo y te decimos qué podemos hacer."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Y si un chip no lee?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Te lo reponemos sin coste, envío incluido. Cada chip se prueba con un móvil antes de salir, pero si alguno falla al llegar o deja de leer, nos mandas una foto por WhatsApp y te sale otro. La misma garantía vale si la pieza llega rota o mal impresa."
-          }
-        },
-        {
-          "@type": "Question",
           "name": "¿Cuánto hay que pagar por adelantado?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "El 30 % del pedido, con un mínimo de 15 €. Es una fianza para ponernos a diseñar, y no es dinero de más: va dentro del precio y se descuenta del total. El resto se paga cuando el diseño te gusta, justo antes de imprimir."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Por qué cuesta 25 €?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Porque no es una pegatina impresa. Dentro lleva un chip programable, grabado con tu ficha de Google, y el diseño se dibuja de cero con tu marca, no sale de una plantilla. Se paga una vez y no hay cuota que renovar: a partir de ahí, las reseñas que traiga no te cuestan nada."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿De verdad lo hacéis todo a medida?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí. Colores, tipografía, logo, formato y hasta el texto. Si quieres el expositor en negro con tu logo dorado, se hace. Si lo quieres cuadrado en vez de rectangular, se hace. Y si necesitas un formato que no está en la web, nos lo dices y te decimos si podemos."
           }
         },
         {
@@ -633,6 +593,59 @@
   </div>
 </section>
 
+<!-- ============ el seguimiento, que es aparte ============
+
+     VA AQUÍ, PEGADO AL PRODUCTO, y no más abajo: quien acaba de ver las
+     tres placas es quien puede querer esto. Veinte pantallas después ya
+     no se acuerda de qué va.
+
+     Y VA CORTO A PROPÓSITO. Es un extra opcional, no el producto. Si
+     ocupa lo mismo que el catálogo, parece que lo importante es la
+     cuota, y lo importante son las placas.
+
+     OJO: es lo único de toda la web que se cobra cada mes, y el resto de
+     la página promete lo contrario. Si cambias el precio, cámbialo
+     también en la pregunta "¿Hay que pagar algo cada mes?" y en el
+     bloque de datos para Google, o la web se contradice sola.
+
+     Y una cosa que NO se puede prometer aquí: cuántas reseñas se
+     escriben. Se cuenta cuánta gente acerca el móvil, que no es lo
+     mismo. Google no dice quién escribió.                             -->
+<section class="sec-corta astro" id="seguimiento">
+  <div class="env">
+    <div class="serv-cab">
+      <div class="enc sube">
+        <span class="etq">Opcional</span>
+        <h2>Y si quieres, te lo llevamos nosotros</h2>
+      </div>
+      <div class="serv-precio sube">
+        <p class="serv-num"><b>35 €</b><span>al mes<br>sin permanencia</span></p>
+        <a class="btn btn-oro btn-sm" href="https://wa.me/34661403219?text=Hola%20PLEA5E%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20seguimiento%20mensual." target="_blank" rel="noopener">Pregúntanos</a>
+      </div>
+    </div>
+
+    <ul class="serv-lista sube">
+      <li>
+        <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg></span>
+        <h3>Cuánta gente las usa</h3>
+        <p>Un correo al mes con los toques de cada placa. Sabes si la de la barra tira más que la de la terraza.</p>
+      </li>
+      <li>
+        <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.6 13.4a4.5 4.5 0 0 0 6.4 0l2.8-2.8a4.5 4.5 0 0 0-6.4-6.4l-1.6 1.6"/><path d="M13.4 10.6a4.5 4.5 0 0 0-6.4 0l-2.8 2.8a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6"/></svg></span>
+        <h3>Cambiamos a dónde lleva</h3>
+        <p>Cambias de ficha en Google o abres otro local: se arregla en un minuto y la placa <b>no se toca</b>.</p>
+      </li>
+      <li>
+        <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.4l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span>
+        <h3>Cambio de imagen a mitad de precio</h3>
+        <p>Si cambias de nombre o de colores el primer año, rehacemos tus placas <b>por la mitad</b>.</p>
+      </li>
+    </ul>
+
+    <p class="serv-pie sube">Las placas <b>no lo necesitan</b>: sin esto funcionan igual. Y se cuentan los toques, no las reseñas, porque Google no dice quién escribió.</p>
+  </div>
+</section>
+
 <!-- ============ pedido ============ -->
 <section class="sec-corta astro" id="pedido">
   <div class="env">
@@ -840,67 +853,6 @@
   </div>
 </section>
 
-<!-- ============ el seguimiento, que es aparte ============
-
-     OJO CON ESTA SECCIÓN. Es lo único de toda la web que se cobra cada
-     mes, y el resto de la página promete justo lo contrario. Si alguna
-     vez cambias el precio, cámbialo también en la pregunta "¿Hay que
-     pagar algo cada mes?" de más abajo, o la web se contradice sola y
-     eso se nota más que cualquier otra cosa.
-
-     Y una cosa que NO se puede prometer aquí: cuántas reseñas se
-     escriben. Se cuenta cuánta gente acerca el móvil, que no es lo
-     mismo. Google no dice quién escribió. Está redactado a propósito
-     para no prometer lo que no se puede cumplir.                      -->
-<section class="sec-corta astro" id="seguimiento">
-  <div class="env">
-    <div class="enc sube">
-      <span class="etq">Opcional</span>
-      <h2>Y si quieres,<br>te lo llevamos nosotros</h2>
-      <p>Las placas funcionan solas y esto no les hace falta. Pero si quieres saber cuánta gente las usa, o cambiar a dónde llevan sin levantarlas de la mesa, eso lo hacemos desde aquí.</p>
-    </div>
-
-    <div class="serv">
-      <ul class="serv-lista">
-        <li class="sube">
-          <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg></span>
-          <div>
-            <h3>Cuánta gente las usa</h3>
-            <p>Un correo al mes con los toques de cada placa y cómo van por días. Sabes si la de la barra tira más que la de la terraza, y dónde poner la siguiente.</p>
-            <p class="serv-ojo">Se cuentan los toques, no las reseñas: Google no dice quién escribió.</p>
-          </div>
-        </li>
-        <li class="sube">
-          <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.6 13.4a4.5 4.5 0 0 0 6.4 0l2.8-2.8a4.5 4.5 0 0 0-6.4-6.4l-1.6 1.6"/><path d="M13.4 10.6a4.5 4.5 0 0 0-6.4 0l-2.8 2.8a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6"/></svg></span>
-          <div>
-            <h3>Cambiamos a dónde lleva</h3>
-            <p>El QR de tus placas apunta a una dirección nuestra, y desde ahí decidimos a dónde salta. Cambias de ficha en Google, abres otro local o te equivocas de enlace: se arregla en un minuto y la placa <b>no se toca</b>.</p>
-          </div>
-        </li>
-        <li class="sube">
-          <span class="serv-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.4l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.4l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span>
-          <div>
-            <h3>Cambio de imagen a mitad de precio</h3>
-            <p>Si cambias de nombre o de colores durante el primer año, te rehacemos las placas que ya tienes <b>por la mitad</b>. El diseño nuevo, gratis como siempre.</p>
-          </div>
-        </li>
-      </ul>
-
-      <aside class="serv-precio sube">
-        <p class="serv-eti">Seguimiento PLEA5E</p>
-        <p class="serv-num"><b>35 €</b><span>al mes</span></p>
-        <ul class="serv-mini">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Sin permanencia</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Se cancela cuando quieras</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Todas tus placas, no una</li>
-        </ul>
-        <a class="btn btn-oro" href="https://wa.me/34661403219?text=Hola%20PLEA5E%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20seguimiento%20mensual." target="_blank" rel="noopener">Pregúntanos por él</a>
-        <p class="serv-pie">Las placas <b>no lo necesitan</b>. Si no lo contratas nunca, funcionan exactamente igual.</p>
-      </aside>
-    </div>
-  </div>
-</section>
-
 <!-- ============ preguntas ============ -->
 <section class="sec-corta sec-claro astro" id="ayuda">
   <div class="env">
@@ -912,18 +864,11 @@
       <details class="sube" open><summary>¿El cliente tiene que descargarse algo?</summary>
         <p>No. Los Android e iPhone de los últimos años leen NFC de fábrica: acercan el móvil y se les abre solo el formulario de reseña. Y si alguien lleva un móvil viejo o el NFC apagado, ahí tiene el QR.</p>
         <p>Va <b>directo a la ventana de escribir</b>, con las estrellas ya delante, no al mapa. Cuantos menos pasos hay, más reseñas se terminan.</p></details>
-      <details class="sube"><summary>¿Cuánto tarda en llegar?</summary>
-        <p>Entre <b>3 y 10 días</b> desde que apruebas el diseño: de 2 a 7 días de preparación —diseño, impresión y grabado del chip— y de 1 a 3 días de envío a península. Si te corre prisa, dínoslo al hacer el pedido y te decimos qué podemos hacer.</p></details>
       <details class="sube"><summary>¿Hay que pagar algo cada mes?</summary>
         <p>Las placas no. Pagas una vez y son tuyas: el enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p>
         <p>Aparte tenemos un <a href="#seguimiento">seguimiento mensual</a> de 35 € para saber cuánta gente las usa y poder cambiar a dónde llevan. Es <b>opcional</b>: si no lo contratas nunca, las placas funcionan exactamente igual.</p></details>
       <details class="sube"><summary>¿Cuánto hay que pagar por adelantado?</summary>
         <p>Una fianza: <b data-fianza-regla>el 30 % del pedido, con un mínimo de 15 €</b>. No es dinero de más, va dentro del precio y se descuenta del total. Si tu pedido son 100 €, pagas 30 € ahora y 70 € cuando el diseño te guste. Si es una sola pieza, son 15 € y punto: lo demás, al aprobarlo.</p></details>
-      <details class="sube"><summary>¿Y si un chip no lee?</summary>
-        <p><b>Te lo reponemos sin coste, envío incluido.</b> Cada chip se prueba con un móvil antes de salir de aquí, pero si alguno llega fallando o deja de leer, nos mandas una foto por WhatsApp y te sale otro. Lo mismo si la pieza llega rota o mal impresa.</p></details>
-      <details class="sube"><summary>¿Por qué cuesta 25 € y qué me llevo por ese dinero?</summary>
-        <p>Porque no es un papel plastificado: es una pieza rígida con un chip programable dentro, grabado con tu ficha de Google. Se paga una vez y no hay cuota que renovar, así que a partir de ahí las reseñas que traiga no cuestan nada.</p>
-        <p>Y el diseño va incluido y se dibuja de cero: colores, tipografía, logo, formato y hasta el texto. Si lo quieres en negro con tu logo dorado, se hace. Si necesitas un formato que no está en la web, nos lo dices y te decimos si podemos.</p></details>
       <details class="sube"><summary>¿Se despega? ¿Estropea la mesa?</summary>
         <p>La placa lleva adhesivo de montaje 3M, el mismo que se usa para fijar rótulos. Aguanta el trapo del día a día y sale con un poco de calor de secador sin dejar marca. El expositor de pie no se pega a nada.</p></details>
       <details class="sube"><summary>¿Esto no es comprar reseñas?</summary>
@@ -949,7 +894,7 @@
         <a class="marca marca-pie" href="#arriba" aria-label="PLEA5E — inicio">
           <svg class="logotipo" viewBox="-4200 -1290 8400 1680" role="img" aria-label="PLEA5E"><g fill="#E9BC46">  <rect x="-4200.0" y="-760.0" width="998.2" height="100.5"/><rect x="3201.8" y="-760.0" width="998.2" height="100.5"/>  <path d="M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z"/>  <path d="M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z"/>  <path d="M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z"/></g><g fill="#FFFFFF">  <path d="M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9"/>  <path d="M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5"/></g><path fill="#0A0E16" d="M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2"/></svg>
         </a>
-        <p>Placas, expositores de pie y tarjetas con chip NFC y código QR para que tus clientes te dejen la reseña en Google sin buscarte. Diseñadas de cero con tu marca, fabricadas y enviadas desde España.</p>
+        <p>Placas, expositores y tarjetas con chip NFC y QR para que tus clientes te dejen la reseña sin buscarte. Diseñadas con tu marca y enviadas desde España.</p>
         <span class="est5" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg></span>
       </div>
 
@@ -966,7 +911,7 @@
         <a id="pieWa" href="https://wa.me/34661403219" target="_blank" rel="noopener">WhatsApp</a>
         <a href="tel:+34661403219">661 40 32 19</a>
         <a href="mailto:hello.plea5e.es@gmail.com">hello.plea5e.es@gmail.com</a>
-        <p class="pie-nota">De lunes a sábado. Solemos contestar en minutos.</p>
+        <p class="pie-nota">De lunes a sábado.</p>
       </div>
 
       <div class="pie-col">

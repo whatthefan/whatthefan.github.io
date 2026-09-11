@@ -854,9 +854,14 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
 
 EL SEGUIMIENTO DE 35 EUR AL MES
 --------------------------------------------------------------------
-Es la seccion "Y si quieres, te lo llevamos nosotros", entre "Como
-funciona" y las preguntas. Es lo UNICO de toda la web que se cobra cada
-mes.
+Es la seccion "Y si quieres, te lo llevamos nosotros", justo DEBAJO de
+las tres placas. Va ahi y no mas abajo porque quien acaba de ver los
+productos es quien puede querer esto; veinte pantallas despues ya no se
+acuerda de que va. Y va corta a proposito: es un extra, no el producto.
+Si ocupara lo mismo que el catalogo pareceria que lo importante es la
+cuota.
+
+Es lo UNICO de toda la web que se cobra cada mes.
 
 QUE INCLUYE, Y POR QUE ESAS TRES COSAS Y NO OTRAS:
 
