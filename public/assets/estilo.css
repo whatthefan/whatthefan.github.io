@@ -384,6 +384,27 @@ td .destaca{color:var(--oro);font-weight:700}
 .faq details p{padding:0 0 16px;color:var(--claro-txt-2);max-width:72ch;font-size:.94rem;line-height:1.6}
 .faq details p + p{padding-top:0;margin-top:-6px}
 
+/* LA RESPUESTA SE ABRE, NO APARECE DE GOLPE.
+
+   Un <details> normal no tiene termino medio: cerrado, y al toque
+   siguiente abierto de golpe. El salto es tan seco que la vista pierde
+   el sitio y hay que volver a buscar por donde ibas.
+
+   Con esto crece en un cuarto de segundo, que es el tiempo justo para
+   que el ojo siga el movimiento sin que nadie tenga que esperar.
+
+   Los navegadores que no entiendan ::details-content lo abren de golpe,
+   como hasta ahora: no se rompe nada, solo se pierde el detalle. Y a
+   quien haya pedido menos animaciones en su sistema no se le anima
+   nada, que para eso lo ha pedido (la regla general esta arriba). */
+:root{interpolate-size:allow-keywords}
+.faq details::details-content{
+  block-size:0;overflow:hidden;opacity:0;
+  transition:block-size .26s cubic-bezier(.2,.8,.3,1),
+             opacity .2s ease,
+             content-visibility .26s allow-discrete}
+.faq details[open]::details-content{block-size:auto;opacity:1}
+
 /* pedido */
 .form-rej{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(32px,3.6vw,44px)}
 @media (max-width:720px){.form-rej{grid-template-columns:1fr}}
