@@ -220,11 +220,18 @@
         if (r.status === 500) {
           return r.json().catch(function () { return {}; }).then(function (d) {
             if (/PANEL_CLAVE/.test(d.error || '')) {
-              throw new Error('Falta poner PANEL_CLAVE en las variables de Netlify.');
+              /* El mensaje dice EXACTAMENTE donde se pone, porque este es
+                 el error que sale la primera vez y quien lo lee no tiene
+                 por que saber donde vive la web. Antes decia Netlify, que
+                 es de donde se mudo hace dos mudanzas: quien lo leyera se
+                 iba a buscar la variable a un sitio donde no esta. */
+              throw new Error('Falta poner PANEL_CLAVE. Se pone en Cloudflare: ' +
+                              'Workers & Pages → whatthefan-github-io → Settings → ' +
+                              'Variables and Secrets → Add, de tipo Secret.');
             }
             /* El detalle que manda el servidor, tal cual. Decir solo "el
                servidor ha fallado" obliga a ir a buscar los registros de
-               Netlify, y eso desde el móvil es una odisea. */
+               Cloudflare, y eso desde el móvil es una odisea. */
             throw new Error(d.error || 'El servidor ha fallado y no ha dicho por qué.');
           });
         }
