@@ -852,6 +852,55 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
    como ejemplo y para enlazar sus resenas.
 
 
+EL SEGUIMIENTO DE 35 EUR AL MES
+--------------------------------------------------------------------
+Es la seccion "Y si quieres, te lo llevamos nosotros", justo DEBAJO de
+las tres placas. Va ahi y no mas abajo porque quien acaba de ver los
+productos es quien puede querer esto; veinte pantallas despues ya no se
+acuerda de que va. Y va corta a proposito: es un extra, no el producto.
+Si ocupara lo mismo que el catalogo pareceria que lo importante es la
+cuota.
+
+Es lo UNICO de toda la web que se cobra cada mes.
+
+QUE INCLUYE, Y POR QUE ESAS TRES COSAS Y NO OTRAS:
+
+  1. Cuanta gente las usa. Un correo al mes con los toques de cada
+     placa. Esto YA lo cuenta el sistema de direcciones cortas: el
+     numero esta, solo hay que mandarlo.
+
+  2. Cambiar a donde llevan. El panel de /taller/enlaces.html. Esto YA
+     esta hecho y funciona.
+
+  3. Cambio de imagen a mitad de precio el primer ano. Esto no es
+     codigo, es un compromiso tuyo.
+
+O sea que dos de las tres ya funcionan hoy. No prometas la tercera a
+nadie sin tener claro que la vas a cumplir.
+
+LO QUE NO SE PUEDE PROMETER AHI, NUNCA: cuantas resenas se escriben.
+Se cuenta cuanta gente ACERCA EL MOVIL. Google no dice quien escribio.
+El texto de la web esta redactado a proposito para no prometerlo, y en
+la propia seccion hay una linea que lo aclara. No la quites.
+
+SI CAMBIAS EL PRECIO hay que tocarlo en TRES sitios, o la web se
+contradice sola:
+  - la seccion, en el numero grande (busca "serv-num")
+  - la pregunta "Hay que pagar algo cada mes"
+  - la misma pregunta dentro del bloque de datos para Google
+    (busca "cada mes" y saldran los dos)
+
+Y OJO CON UNA COSA: el distintivo de arriba decia "Sin cuotas ni apps".
+Con un servicio mensual en la pagina eso ya no era verdad, asi que
+ahora dice "Pago unico, sin apps", que si lo es: las placas se pagan una
+vez. Si algun dia quitas el servicio, puedes devolverlo a como estaba.
+
+DE MOMENTO NO SE PUEDE COBRAR SOLO. El boton abre WhatsApp y ya. Para
+cobrarlo de verdad cada mes hace falta el alta de autonomo y las
+suscripciones de Stripe, que es otra cosa distinta del pago suelto que
+ya tienes montado.
+
+
 LAS DIRECCIONES CORTAS (plea5e.es/r/...)
 --------------------------------------------------------------------
 ESTO ES LO MAS IMPORTANTE DE TODO EL ARCHIVO SI VAS A IMPRIMIR.

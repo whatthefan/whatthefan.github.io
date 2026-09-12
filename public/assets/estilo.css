@@ -383,28 +383,6 @@ td .destaca{color:var(--oro);font-weight:700}
 .faq details[open] summary::after{transform:translateY(-28%) rotate(225deg)}
 .faq details p{padding:0 0 16px;color:var(--claro-txt-2);max-width:72ch;font-size:.94rem;line-height:1.6}
 .faq details p + p{padding-top:0;margin-top:-6px}
-
-/* LA RESPUESTA SE ABRE, NO APARECE DE GOLPE.
-
-   Un <details> normal no tiene termino medio: cerrado, y al toque
-   siguiente abierto de golpe. El salto es tan seco que la vista pierde
-   el sitio y hay que volver a buscar por donde ibas.
-
-   Con esto crece en un cuarto de segundo, que es el tiempo justo para
-   que el ojo siga el movimiento sin que nadie tenga que esperar.
-
-   Los navegadores que no entiendan ::details-content lo abren de golpe,
-   como hasta ahora: no se rompe nada, solo se pierde el detalle. Y a
-   quien haya pedido menos animaciones en su sistema no se le anima
-   nada, que para eso lo ha pedido (la regla general esta arriba). */
-:root{interpolate-size:allow-keywords}
-.faq details::details-content{
-  block-size:0;overflow:hidden;opacity:0;
-  transition:block-size .26s cubic-bezier(.2,.8,.3,1),
-             opacity .2s ease,
-             content-visibility .26s allow-discrete}
-.faq details[open]::details-content{block-size:auto;opacity:1}
-
 /* pedido */
 .form-rej{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(32px,3.6vw,44px)}
 @media (max-width:720px){.form-rej{grid-template-columns:1fr}}
@@ -431,12 +409,15 @@ td .destaca{color:var(--oro);font-weight:700}
 .cierre h3{font-size:clamp(1.4rem,2.4vw,1.9rem)}
 .cierre p{color:var(--txt-2);font-size:.92rem;margin-top:6px}
 .pie{position:relative;overflow:hidden;border-top:1px solid var(--borde);
-  padding:clamp(34px,4vw,52px) 0 26px;background:rgba(255,255,255,.015)}
-/* la estrella grande del fondo: marca de agua, centrada y detrás de todo.
+  padding:clamp(28px,3.2vw,40px) 0 20px;background:rgba(255,255,255,.015)}
+/* La estrella grande del fondo. Va DE CONTORNO, como las de las
+   secciones: rellena era una mancha, y además tener dos estrellas
+   distintas en la misma página (rellena aquí, de línea arriba) se nota
+   aunque no se sepa decir por qué.
    Sin pointer-events no roba las pulsaciones a los enlaces del pie. */
 .pie-estrella{position:absolute;left:50%;top:50%;translate:-50% -50%;
   width:min(58%,420px);height:auto;z-index:0;pointer-events:none;
-  fill:var(--oro);opacity:.062}
+  fill:none;stroke:var(--oro);stroke-width:.9;stroke-linejoin:round;opacity:.16}
 .pie .env{position:relative;z-index:1}
 
 /* ══════════ ESTRELLAS DE FONDO POR TODA LA PÁGINA ══════════
@@ -444,9 +425,20 @@ td .destaca{color:var(--oro);font-weight:700}
    La misma idea del pie, repartida: estrellas grandes casi invisibles
    detrás de cada sección para que el fondo negro no se sienta vacío.
 
-   Son grandes y se salen por el borde a propósito: una estrella entera y
-   centrada se lee como un icono, y una cortada se lee como diseño. Aun
-   así la opacidad es baja: tiene que verse, no leerse. */
+   VAN DE LÍNEA, NO RELLENAS, Y ESE ES TODO EL SECRETO.
+
+   Rellenas quedaban mal y con razón: una mancha grande, plana y de borde
+   duro no se lee como una estrella, se lee como una mancha. Y encima
+   cortada por el canto de la sección parecía un polígono puesto sin
+   querer. Subir o bajar la opacidad no lo arreglaba: el problema era el
+   relleno, no lo clara que fuera.
+
+   De línea fina y grande sí funciona: se reconoce la forma, no compite
+   con el texto porque casi no tiene superficie, y el trazo dice que está
+   puesta a mano. Es el mismo recurso de cualquier portada de revista.
+
+   Se salen un poco por un solo lado, nunca por dos: cortada por un canto
+   se lee como que sigue detrás, cortada por dos parece un error. */
 /* 'clip' y no 'hidden' a propósito: las estrellas se salen por los lados
    y hay que recortarlas, pero 'hidden' convertiría la sección en un
    contenedor de scroll y el resumen del pedido (position:sticky) dejaría
@@ -456,33 +448,100 @@ td .destaca{color:var(--oro);font-weight:700}
 /* van en ::after y no en ::before porque el pedido y el "cómo funciona"
    ya usaban ::before para su brillo ambiental, y se pisaban */
 .astro::after{content:"";position:absolute;pointer-events:none;z-index:0;
-  aspect-ratio:1;background:var(--oro);opacity:.07;
+  aspect-ratio:1;background:var(--oro);opacity:.14;
   -webkit-mask:var(--estrella) center/contain no-repeat;
           mask:var(--estrella) center/contain no-repeat}
-:root{--estrella:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4l14.1 29.3L96 37.9 72.9 60.1l5.6 31.6L50 76.8 21.5 91.7l5.6-31.6L4 37.9l31.9-4.6z' fill='%23000'/%3E%3C/svg%3E")}
-/* cada una en un sitio distinto y con un tamaño distinto: si estuvieran
-   todas iguales y centradas se leería como un patrón, y eso sí canta */
-#productos::after{width:min(72%,620px);right:-16%;top:-4%;transform:rotate(14deg)}
-#pedido::after  {width:min(64%,540px);left:-18%;bottom:-6%;transform:rotate(-11deg)}
-#demo::after    {width:min(78%,660px);right:-14%;bottom:-8%;transform:rotate(9deg)}
-#como::after    {width:min(60%,500px);left:-15%;top:-2%;transform:rotate(-16deg)}
-#ayuda::after   {width:min(70%,580px);right:-17%;top:10%;transform:rotate(12deg)}
-/* en la sección clara el dorado se pierde: ahí va un pelín más marcada */
-.sec-claro.astro::after{opacity:.09}
-@media (max-width:640px){.astro::after{opacity:.05}}
+/* El mismo dibujo del pie, pero de contorno. stroke-width va en unidades
+   del viewBox: 0,9 sobre 100 son unos 5 px cuando la estrella mide 600.
+   El 'overflow visible' y el margen del viewBox son para que el trazo no
+   se corte a sí mismo por las puntas. */
+:root{--estrella:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-3 -3 106 106'%3E%3Cpath d='M50 4l14.1 29.3L96 37.9 72.9 60.1l5.6 31.6L50 76.8 21.5 91.7l5.6-31.6L4 37.9l31.9-4.6z' fill='none' stroke='%23000' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E")}
+/* Cada una en un sitio y a un tamaño distinto: todas iguales y centradas
+   se leerían como un patrón, y eso sí canta. Los giros son pequeños, de
+   menos de diez grados: lo justo para que no parezcan calcadas. */
+#productos::after{width:min(58%,520px);right:-9%;top:6%;transform:rotate(8deg)}
+#pedido::after  {width:min(50%,430px);left:-10%;bottom:4%;transform:rotate(-7deg)}
+#demo::after    {width:min(62%,540px);right:-8%;bottom:2%;transform:rotate(5deg)}
+#como::after    {width:min(46%,390px);left:-9%;top:8%;transform:rotate(-9deg)}
+#seguimiento::after{width:min(44%,380px);left:-8%;bottom:6%;transform:rotate(11deg)}
+#ayuda::after   {width:min(54%,470px);right:-10%;top:14%;transform:rotate(6deg)}
+/* en la sección clara el dorado sobre blanco se pierde: ahí va más
+   marcada, que si no directamente no está */
+.sec-claro.astro::after{opacity:.3}
+/* En el móvil la estrella y el texto comparten el mismo palmo de
+   pantalla, así que se aparta y se aclara. */
+@media (max-width:640px){
+  .astro::after{opacity:.1}
+  .sec-claro.astro::after{opacity:.22}
+}
 /* Safari viejo (menos de la 16) no entiende 'clip'. Ahí no se recorta
    nada, así que las estrellas se meten dentro: mejor una estrella entera
    que una barra de scroll horizontal en toda la página. */
 @supports not (overflow:clip){
-  #productos::after{right:0;top:4%}
-  #pedido::after  {left:0;bottom:4%}
-  #demo::after    {right:0;bottom:4%}
-  #como::after    {left:0;top:4%}
-  #ayuda::after   {right:0;top:10%}
+  #productos::after{right:0}
+  #pedido::after  {left:0}
+  #demo::after    {right:0}
+  #como::after    {left:0}
+  #seguimiento::after{left:0}
+  #ayuda::after   {right:0}
 }
-.pie-rej{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:clamp(22px,3vw,44px)}
-@media (max-width:860px){.pie-rej{grid-template-columns:1fr 1fr}.pie-marca{grid-column:1/-1}}
-@media (max-width:480px){.pie-rej{grid-template-columns:1fr;gap:26px}}
+/* ══════════ EL SEGUIMIENTO (la sección opcional) ══════════
+
+   Va en horizontal y ocupa poco, y eso es la decisión de diseño: es un
+   extra, no el producto. Si ocupara lo mismo que el catálogo parecería
+   que lo importante es la cuota.
+
+   El titular y el precio comparten fila, y lo que incluye va en tres
+   columnas de una línea cada una. Todo junto cabe de sobra en una
+   pantalla. */
+.serv-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:20px 32px}
+.serv-cab .enc h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+
+/* El precio es lo único con caja en toda la sección, porque es lo único
+   que hay que decidir aquí. */
+.serv-precio{display:flex;align-items:center;gap:18px;flex:none;
+  border:1px solid rgba(233,188,70,.34);border-radius:var(--r);
+  background:linear-gradient(120deg,rgba(233,188,70,.1) 0%,var(--panel) 70%);
+  padding:14px 18px}
+.serv-num{margin:0;display:flex;align-items:center;gap:10px}
+.serv-num b{font-family:"Anton",sans-serif;font-size:2.1rem;line-height:1;color:var(--txt)}
+.serv-num span{font-size:.78rem;color:var(--txt-2);line-height:1.3}
+.serv-precio .btn{flex:none}
+
+.serv-lista{list-style:none;margin:clamp(22px,2.6vw,34px) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.2vw,28px)}
+@media (max-width:820px){.serv-lista{grid-template-columns:1fr}}
+.serv-lista > li{display:grid;grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;gap:2px 14px;align-items:center}
+.serv-ico{grid-row:1/3;align-self:start;flex:none;width:38px;height:38px;border-radius:11px;
+  display:grid;place-items:center;
+  background:rgba(233,188,70,.1);border:1px solid rgba(233,188,70,.26)}
+.serv-ico svg{width:18px;height:18px;fill:none;stroke:var(--oro);
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.serv-lista h3{margin:0;font-size:.96rem;align-self:end}
+.serv-lista p{margin:0;color:var(--txt-2);font-size:.88rem;line-height:1.5}
+.serv-pie{margin:clamp(18px,2vw,26px) 0 0;font-size:.83rem;color:var(--txt-3);
+  line-height:1.55;max-width:78ch}
+
+/* EL PIE SE QUEDA EN HORIZONTAL HASTA ABAJO, Y ESO ES LO IMPORTANTE.
+
+   Antes, por debajo de 480 px, las tres columnas de enlaces se ponían
+   una encima de otra: cuatro bloques en fila india que hacían el pie
+   solo más largo que media pantalla de móvil, justo cuando el que ha
+   llegado ahí ya está cansado de bajar.
+
+   Son listas de tres o cuatro enlaces cortos: caben de sobra en tres
+   columnas incluso en un móvil estrecho. Lo único que baja a ocupar
+   todo el ancho es la marca, que sí lleva texto. */
+.pie-rej{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:clamp(20px,2.6vw,40px)}
+@media (max-width:860px){
+  .pie-rej{grid-template-columns:repeat(3,1fr);gap:22px 14px}
+  .pie-marca{grid-column:1/-1}
+  /* a tres columnas estrechas el correo no cabe de una pieza; que parta
+     donde haga falta antes que salirse de la pantalla */
+  .pie-col a,.pie-col .enl{overflow-wrap:anywhere}
+}
 /* las cinco estrellas van ahora DEBAJO del párrafo, no pegadas al
    logotipo: ahí competían con él y parecía que el logo llevaba
    estrellas incrustadas */
@@ -495,10 +554,13 @@ td .destaca{color:var(--oro);font-weight:700}
   background:none;border:0;padding:0;font-family:inherit;cursor:pointer;text-align:left}
 .pie-col a:hover,.pie-col .enl:hover{color:var(--oro)}
 .pie-nota{font-size:.76rem;color:var(--txt-3);line-height:1.5;margin-top:2px;max-width:24ch}
-.pie-baja{margin-top:clamp(26px,3vw,40px);padding-top:20px;border-top:1px solid var(--borde);
-  display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;align-items:baseline}
+.pie-baja{margin-top:clamp(20px,2.2vw,30px);padding-top:16px;border-top:1px solid var(--borde);
+  display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-between;align-items:baseline}
 .pie-baja p{font-size:.78rem;color:var(--txt-3)}
-.pie-avisos{max-width:64ch;font-size:.72rem;line-height:1.55;color:var(--txt-4,var(--txt-3));opacity:.8}
+/* la letra pequeña de las marcas: obligatoria, pero no es para leerla de
+   corrido, así que va en una sola línea larga y no en un párrafo */
+.pie-avisos{flex:1 1 420px;font-size:.7rem;line-height:1.45;
+  color:var(--txt-4,var(--txt-3));opacity:.75}
 
 /* ventana de textos legales */
 .legal{border:0;padding:0;background:transparent;max-width:min(720px,92vw);width:100%}
