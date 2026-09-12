@@ -123,9 +123,15 @@ function esc(s) {
 }
 
 async function avisa(encargo, enlace, brief, ref, env) {
-  const clave = env.RESEND_API_KEY;
-  const para  = env.CORREO_AVISO;
-  const desde = env.CORREO_DE;
+  /* Se recortan los espacios de los dos lados, igual que con la clave del
+     panel. Pegando estas variables en el panel de Cloudflare es
+     facilísimo que se cuele un espacio o un salto de línea al final: la
+     dirección parece correcta a simple vista, Resend la rechaza por mal
+     formada y el aviso no llega nunca. Y como el pedido SÍ se guarda, el
+     fallo no se nota hasta que echas de menos un correo. */
+  const clave = String(env.RESEND_API_KEY || '').trim();
+  const para  = String(env.CORREO_AVISO || '').trim();
+  const desde = String(env.CORREO_DE || '').trim();
   if (!clave || !para || !desde) return false;
 
   const fila = (k, v) => (v ? `<tr><td style="padding:3px 12px 3px 0;color:#666">${k}</td><td style="padding:3px 0"><b>${esc(v)}</b></td></tr>` : '');
