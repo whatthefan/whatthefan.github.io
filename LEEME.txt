@@ -924,9 +924,13 @@ COMO SE USA, DE PRINCIPIO A FIN
      (misma contrasena que el panel de pedidos) y crea la direccion:
      el nombre corto, el negocio, y el enlace de Google.
 
-  2. En el generador, rellena "Direccion corta" con ese mismo nombre.
-     Debajo de la vista previa te dice, con todas las letras, lo que
-     va a llevar grabado el QR. Leelo ANTES de mandar a imprimir.
+  2. En el generador, el campo "Direccion corta" se rellena SOLO con el
+     nombre del negocio (Pizzeria Me Gusta -> pizzeria-me-gusta). Si en
+     el paso 1 le pusiste otro, cambialo aqui para que coincida.
+
+     Debajo de la vista previa te dice, con todas las letras, lo que va
+     a llevar grabado el QR y a donde va a saltar. Leelo ANTES de mandar
+     a imprimir.
 
   3. Imprime.
 
@@ -934,10 +938,18 @@ COMO SE USA, DE PRINCIPIO A FIN
      "Cambiar el destino" -> pegar el nuevo. Efecto inmediato, sin
      desplegar nada y sin tocar la placa.
 
-SI DEJAS LA DIRECCION CORTA VACIA, el QR lleva la direccion de Google
-grabada a fuego, como antes. Funciona igual de bien, pero pierdes el
-poder cambiarla. Solo tiene sentido si el cliente no quiere pasar por
-nosotros.
+YA NO HAY OPCION DE GRABAR GOOGLE DIRECTAMENTE. Antes, si dejabas la
+direccion corta vacia, el QR llevaba la direccion de Google a fuego.
+Eso se ha quitado: TODAS las placas llevan plea5e.es/r/... y saltan
+desde ahi. Si no hay direccion corta, no hay QR, y el generador te lo
+dice. Es a proposito: es mejor que falte el codigo y se vea, a que
+salga uno que luego no se pueda cambiar.
+
+SI TE OLVIDAS DEL PASO 1 Y LA PLACA YA ESTA IMPRESA, el cliente que
+acerque el movil ve una pagina nuestra que dice que la placa todavia no
+esta lista, con el telefono. No un error en blanco. Se arregla dando de
+alta el enlace en el panel: el siguiente toque ya salta, sin tocar la
+placa y sin esperar a nada.
 
 EL PRECIO DE ESTO: un salto de mas. El cliente pasa por plea5e.es antes
 de llegar a Google. Es un salto del servidor, ni se ve. Pero si algun

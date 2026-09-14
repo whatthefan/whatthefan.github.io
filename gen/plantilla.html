@@ -142,17 +142,17 @@ canvas{display:none}
     <div class="campo">
       <label for="fGoogle">Enlace de Google o código del sitio</label>
       <input id="fGoogle" type="text" placeholder="ChIJZca-8BbQDQ0RIByaopjYtHY" autocomplete="off">
-      <span class="pista">Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección.</span>
+      <span class="pista">Esto <b>no</b> va grabado en el QR: es el destino al que apuntará la dirección corta. Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección.</span>
     </div>
 
     <div class="campo">
-      <label for="fCorta">Dirección corta <b>(recomendado)</b></label>
+      <label for="fCorta">Dirección corta <b>(es lo que lleva el QR)</b></label>
       <div class="corta-caja">
         <span>plea5e.es/r/</span>
         <input id="fCorta" type="text" placeholder="bar-manolo" autocomplete="off"
                inputmode="url" spellcheck="false">
       </div>
-      <span class="pista">Si la pones, es <b>esto</b> lo que lleva el QR, y el destino se cambia luego desde el panel sin tocar la placa. Si la dejas vacía, el QR lleva la dirección de Google grabada para siempre. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir.</span>
+      <span class="pista">Se rellena sola con el nombre del negocio; cámbiala si quieres. El QR lleva <b>siempre</b> esta dirección, nunca la de Google, y así el destino se cambia luego desde el panel sin tocar la placa. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir.</span>
     </div>
 
     <div class="campo">
@@ -225,7 +225,7 @@ canvas{display:none}
       <button type="button" class="btn btn-fan" id="copiaEnlace">Copiar enlace</button>
       <span class="ficha" id="ficha"></span>
     </div>
-    <p class="aviso" id="avisoQR">Escribe el enlace de Google para que salga el QR. Sin él la placa se dibuja igual, pero con un hueco.</p>
+    <p class="aviso" id="avisoQR">Pon el <b>nombre del negocio</b> y saldrá el QR. La placa se dibuja igual sin él, pero con un hueco.</p>
     <p class="aviso" id="avisoDestino" hidden></p>
     <p class="aviso" id="avisoGuardar">En el móvil, si el botón de descargar no hace nada, <b>deja el dedo pulsado sobre la imagen y dale a «Guardar»</b>.</p>
   </div>
@@ -1061,28 +1061,58 @@ canvas{display:none}
      luego no se deja crear, y eso son placas a la basura. */
   var CORTA_VALIDA = /^[a-z0-9][a-z0-9-]{1,39}$/;
 
+  /* De un texto cualquiera al trozo que puede ir detrás de plea5e.es/r/.
+     NFD parte la letra acentuada en letra + tilde suelta y aquí se quedan
+     solo las letras. Se hace así y no con una lista de vocales escrita a
+     mano porque esa lista depende de que el archivo se lea en el alfabeto
+     correcto, y este archivo se abre desde el escritorio. */
+  function aCorta(txt) {
+    return String(txt || '').trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+      .slice(0, 40).replace(/-$/, '');
+  }
+
   function nombreCorto() {
-    var v = est.corta.trim().toLowerCase();
+    var v = aCorta(est.corta);
     return CORTA_VALIDA.test(v) ? v : '';
   }
 
   /* LO QUE VA GRABADO EN EL QR. Y esto es la decisión importante del
      archivo entero:
 
-     Con dirección corta, el QR lleva plea5e.es/r/loquesea y el destino se
-     cambia luego desde /taller/enlaces.html. La placa que está pegada en
-     la mesa del bar no se toca nunca.
+     EL QR LLEVA SIEMPRE UNA DIRECCIÓN NUESTRA. plea5e.es/r/loquesea, y es
+     el Worker el que manda al cliente a las reseñas del negocio. Nunca la
+     dirección de Google grabada.
 
-     Sin ella, el QR lleva la dirección de Google grabada a fuego. El día
-     que el bar cambie de nombre, de dueño o de ficha, esa placa se tira.
+     Antes, si no se ponía dirección corta, el QR llevaba Google a fuego.
+     Eso hacía una placa atada a ese bar y a esa ficha para siempre: si el
+     bar cambia de dueño, de nombre o de ficha, la placa se tira. Y no era
+     un caso raro, era lo que salía por defecto si se te olvidaba rellenar
+     un campo marcado como "recomendado".
 
-     Por eso la corta gana siempre que esté puesta. */
+     Ahora, sin dirección corta no hay QR. Es a propósito: es mejor que
+     falte el código y se vea, a que salga uno que no se va a poder
+     cambiar. El aviso de abajo dice qué hacer.
+
+     El enlace de Google sigue haciendo falta, pero para otra cosa: es el
+     destino que hay que apuntar en /taller/enlaces.html. */
   function enlaceQR() {
     var c = nombreCorto();
-    if (c) return 'https://plea5e.es/r/' + c;
+    return c ? 'https://plea5e.es/r/' + c : '';
+  }
 
-    /* Aceptamos las tres formas de dar el sitio: el código a secas, el
-       enlace de "pedir reseñas" o cualquier dirección pegada. */
+  /* Para el aviso. Corta por el final y lo dice con puntos suspensivos:
+     cortar a pelo un código de Google deja a la vista uno que parece
+     otro, y eso es peor que no enseñarlo. */
+  function recorta(txt, tope) {
+    return txt.length > tope ? txt.slice(0, tope - 1) + '…' : txt;
+  }
+
+  /* El destino al que tiene que apuntar la dirección corta en el panel.
+     Aceptamos las tres formas de dar el sitio: el código a secas, el
+     enlace de "pedir reseñas" o cualquier dirección pegada. */
+  function destinoGoogle() {
     var v = est.google.trim();
     if (!v) return '';
     if (/^https?:\/\//i.test(v)) return v;
@@ -1111,11 +1141,14 @@ canvas{display:none}
       var av = $('avisoDestino');
       av.hidden = !qr;
       if (qr) {
-        av.innerHTML = nombreCorto()
-          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>. Dala de alta en ' +
-            '<b>/taller/enlaces.html</b> antes de imprimir, o el QR no llevará a ningún sitio.'
-          : 'El QR lleva la dirección de Google grabada. <b>No se podrá cambiar</b> ' +
-            'cuando esté impresa: si quieres poder, pon una dirección corta arriba.';
+        var dest = destinoGoogle();
+        av.innerHTML =
+          'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>' +
+          (dest
+            ? ', y desde ahí va a <b>' + recorta(dest.replace(/^https?:\/\//, ''), 96) + '</b>.'
+            : '. Falta decir a dónde tiene que ir: rellena el enlace de Google.') +
+          ' Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir, ' +
+          'o el QR no llevará a ningún sitio.';
       }
     });
   }
@@ -1136,10 +1169,34 @@ canvas{display:none}
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
 
+  /* LA DIRECCIÓN CORTA SE RELLENA SOLA, pero no a escondidas.
+
+     Ahora el QR lleva siempre plea5e.es/r/algo, así que sin dirección
+     corta no hay QR. Dejar que se olvide y salga la placa sin código
+     sería peor que lo de antes. Así que se propone a partir del nombre
+     del negocio y se ESCRIBE EN EL CAMPO, para que se lea y se pueda
+     cambiar antes de imprimir. Nada de calcularla por detrás: lo que va
+     grabado en una placa que se imprime tiene que estar a la vista.
+
+     En cuanto se toca el campo a mano deja de proponerse, y si se vacía
+     vuelve a proponerse: así no se queda uno atrapado con una que ya no
+     quiere. */
+  var cortaAMano = false;
+
+  function proponCorta() {
+    if (cortaAMano) return;
+    var v = aCorta(est.negocio);
+    if (v === est.corta) return;
+    est.corta = v;
+    $('fCorta').value = v;
+  }
+
   ['fNegocio','fLema','fGoogle','fCorta','fTitulo'].forEach(function (id) {
     $(id).addEventListener('input', function () {
       est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
            fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
+      if (id === 'fCorta')   cortaAMano = this.value.trim() !== '';
+      if (id === 'fNegocio') proponCorta();
       refresca();
     });
   });
@@ -1148,14 +1205,8 @@ canvas{display:none}
      escribe: corregirle las letras a alguien con el cursor en medio de la
      palabra es de las cosas que más molestan de un formulario. */
   $('fCorta').addEventListener('blur', function () {
-    /* NFD parte la letra acentuada en letra + tilde suelta y aquí se
-       quedan solo las letras. Se hace así y no con una lista de vocales
-       escrita a mano porque esa lista depende de que el archivo se lea en
-       el alfabeto correcto, y este archivo se abre desde el escritorio. */
-    var v = this.value.trim().toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-      .slice(0, 40).replace(/-$/, '');
+    var v = aCorta(this.value);
+    if (!v) { cortaAMano = false; proponCorta(); refresca(); return; }
     if (v === this.value) return;
     this.value = v;
     est.corta = v;
@@ -1350,9 +1401,16 @@ canvas{display:none}
         var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle',
                       corta:'fCorta', titulo:'fTitulo' }[k];
         if (campo) $(campo).value = v;
+        /* La corta que venga en el enlace es la que se acordó con el
+           cliente: cuenta como puesta a mano, para que no se la pise
+           luego la que se propone del nombre del negocio. */
+        if (k === 'corta' && v.trim()) cortaAMano = true;
       }
       puesto = true;
     });
+    /* Si el encargo trae nombre pero no corta (los de antes de esto),
+       se propone una, que si no se quedaría sin QR. */
+    proponCorta();
     return puesto;
   }
 
