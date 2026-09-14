@@ -568,16 +568,24 @@ canvas{display:none}
   /* La cabecera: dos rayas de lado a lado y las cinco estrellas encima,
      que es como está montada la plantilla buena. Las rayas van a sangre,
      no se cortan: se cortan solas con el redondeo de la placa. */
-  function rayasYEstrellas(bx, bw, y1, y2, grueso, r, color) {
-    /* Ampliado el original: es UNA raya a cada lado, no dos, y gruesa.
-       Va del 20% al 32% del ancho por la izquierda y del 68% al 80% por
-       la derecha, a la altura del centro de las estrellas. Las cinco
-       estrellas van juntas, casi tocándose (el paso es 3,6 veces el
-       radio). */
+  function rayasYEstrellas(bx, by, bw, bh, radio, y1, y2, grueso, r, color) {
+    /* LAS RAYAS VAN DE CANTO A CANTO, y esto es lo que se arregló.
+
+       Iban del 17,5 % al 30 % por la izquierda y del 70 % al 82,5 % por
+       la derecha, o sea que se quedaban dos palmos cortas por los dos
+       lados y parecían dos guiones sueltos puestos ahí sin motivo. En la
+       plantilla buena la raya cruza la banda entera y las estrellas se
+       le montan encima.
+
+       Se dibujan un pelín pasadas del borde (de -2 % a 102 %) y se
+       recortan con la silueta de la placa: así llegan al canto de verdad
+       y el redondeo de las esquinas las corta solo, sin que haya que
+       calcular dónde empieza la curva. */
     var cy = (y1 + y2) / 2, hueco = r * 3.6, total = hueco * 4;
     cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
     cx.strokeStyle = color; cx.lineWidth = grueso; cx.lineCap = 'butt';
-    [[0.175, 0.300], [0.700, 0.825]].forEach(function (t) {
+    [[-0.02, 0.300], [0.700, 1.02]].forEach(function (t) {
       cx.beginPath();
       cx.moveTo(bx + bw*t[0], cy); cx.lineTo(bx + bw*t[1], cy);
       cx.stroke();
@@ -620,56 +628,61 @@ canvas{display:none}
   /* El icono de acercar el móvil. Está calcado del original: se amplió
      el de la placa del Morro Fino y se midió pieza a pieza.
 
-     Todo va en unidades de U, el ANCHO de tinta del icono. La altura
-     sale sola a 0,611·U, que es la proporción medida. El origen del
-     dibujo es la esquina de arriba a la izquierda de la tinta.
+     Todo va en unidades de U. Las coordenadas de abajo son las del
+     dibujo medido, con su origen arriba a la izquierda; lo que de verdad
+     se ve se recorta y se recoloca con CAJA, dentro de la función.
 
      Las piezas, y en qué se diferencian de lo que había antes:
-       · el óvalo ocupa solo los primeros 0,79 de ancho, no todo;
-       · las ondas son CUATRO y se abren hacia la derecha, con el centro
-         de los arcos metido dentro del óvalo;
-       · el teléfono va casi recto y pegado al borde derecho del óvalo,
-         no tumbado en medio;
+       · las ondas son CUATRO y se abren hacia la derecha;
+       · el teléfono va casi recto, a la derecha de las ondas, no
+         tumbado en medio;
        · la mano no es un pegote blanco por delante: son cuatro dedos
-         asomando a la izquierda del móvil y el pulgar rodeándolo por la
-         derecha, y va por DETRÁS;
+         asomando a la izquierda del móvil, y van por DETRÁS;
        · lo que rellena el teléfono es el color del cuerpo de la placa,
          no blanco: sobre un fondo crema, un teléfono blanco canta. */
   function dibujaNfc(x, y, U, color, fondo) {
-    var alto = U * 0.611;
+    /* FUERA EL ÓVALO, Y ESTE ES EL CAMBIO GORDO.
+
+       El icono llevaba un óvalo enorme alrededor de las ondas. En el
+       original de papel se entendía que era "el campo de lectura", pero
+       impreso y en pequeño no se lee como un campo: se lee como un huevo
+       negro con un móvil pegado al lado. Es lo primero que mira el
+       cliente y lo que peor queda de toda la placa.
+
+       Quitado el óvalo queda lo que todo el mundo reconoce de un vistazo:
+       una mano con un móvil y las ondas saliendo. Es el mismo dibujo de
+       cualquier datáfono.
+
+       Al quitarlo, el dibujo se queda apiñado a la derecha, porque el
+       óvalo era lo que ocupaba toda la izquierda. Así que hay que
+       recolocarlo: CAJA es lo que ocupa de verdad lo que queda (las
+       ondas, los dedos y el móvil, con el grosor del trazo incluido),
+       medido sobre las coordenadas de aquí abajo. Con eso se centra y se
+       escala. Si algún día se mueve alguna pieza hay que volver a medir
+       CAJA, o el icono se sale del marco por un lado y deja un hueco por
+       el otro. */
+    var CAJA = { x0: 0.465, x1: 0.845, y0: 0.060, y1: 0.545 };
+    var anchoC = CAJA.x1 - CAJA.x0, altoC = CAJA.y1 - CAJA.y0;
+
+    /* El marco de esquinas que lo envuelve mide U*1,15 de ancho por
+       U*0,855 de alto (se monta en la función de la placa). El icono se
+       queda en el 85 % de eso: llenarlo entero deja las ondas pegadas a
+       las esquinas del marco y se ve apretado.
+
+       La misma escala en los dos ejes, que si no el móvil sale panzudo. */
+    var k = Math.min(1.15 * 0.85 / anchoC, 0.855 * 0.85 / altoC);
+
     cx.save();
-    cx.translate(x - U/2, y - alto/2);      /* centrado en (x, y) */
+    cx.translate(x, y);                     /* centrado en (x, y) */
+    cx.scale(k, k);
+    cx.translate(-U * (CAJA.x0 + anchoC / 2), -U * (CAJA.y0 + altoC / 2));
     cx.strokeStyle = color; cx.lineCap = 'round'; cx.lineJoin = 'round';
     var relleno = fondo || '#FFFFFF';
 
-    /* ---- 1. la mano, por detrás de todo ---- */
-    cx.save();
-    cx.fillStyle = relleno; cx.lineWidth = U * 0.020;
-
-    /* El pulgar y la palma, de una sola pieza. Iban en dos trozos y se
-       veía la juntura: parecían un dedo y una albóndiga al lado. En el
-       original es una sola mano que rodea el móvil por la derecha y baja
-       hasta asomar por debajo. */
-    cx.beginPath();
-    cx.moveTo(U * 0.840, U * 0.220);
-    cx.bezierCurveTo(U * 0.955, U * 0.245, U * 1.000, U * 0.355, U * 0.972, U * 0.462);
-    cx.bezierCurveTo(U * 1.010, U * 0.492, U * 1.012, U * 0.556, U * 0.975, U * 0.592);
-    cx.bezierCurveTo(U * 0.935, U * 0.630, U * 0.868, U * 0.618, U * 0.842, U * 0.576);
-    cx.bezierCurveTo(U * 0.818, U * 0.536, U * 0.836, U * 0.492, U * 0.874, U * 0.470);
-    cx.bezierCurveTo(U * 0.906, U * 0.398, U * 0.902, U * 0.300, U * 0.840, U * 0.286);
-    cx.closePath(); cx.fill(); cx.stroke();
-    cx.restore();
-
-    /* ---- 2. el óvalo del campo de lectura ---- */
-    cx.lineWidth = U * 0.026;
-    cx.beginPath();
-    cx.ellipse(U * 0.397, U * 0.302, U * 0.397, U * 0.302, 0, 0, Math.PI * 2);
-    cx.stroke();
-
-    /* ---- 3. las cuatro ondas ---- */
-    /* Todas salen del mismo centro, dentro del óvalo, y barren 45° a cada
-       lado. Los radios van parejos, que es lo que les da el aire de señal
-       que se expande. */
+    /* ---- 1. las cuatro ondas ---- */
+    /* Todas salen del mismo centro, el que tenía el óvalo, y barren 45° a
+       cada lado. Los radios van parejos, que es lo que les da el aire de
+       señal que se expande. */
     cx.lineWidth = U * 0.038;
     var cxO = U * 0.261, cyO = U * 0.302;
     [0.100, 0.172, 0.244, 0.315].forEach(function (r) {
@@ -678,7 +691,7 @@ canvas{display:none}
       cx.stroke();
     });
 
-    /* ---- 4. los cuatro dedos, a la izquierda del móvil ---- */
+    /* ---- 2. los cuatro dedos, a la izquierda del móvil ---- */
     cx.save();
     cx.fillStyle = relleno; cx.lineWidth = U * 0.018;
     for (var d = 0; d < 4; d++) {
@@ -688,7 +701,7 @@ canvas{display:none}
     }
     cx.restore();
 
-    /* ---- 5. el móvil, por delante ---- */
+    /* ---- 3. el móvil, por delante ---- */
     var px = U * 0.685, py = U * 0.163, pw = U * 0.141, ph = U * 0.315;
     cx.save();
     cx.fillStyle = relleno; cx.lineWidth = U * 0.020;
@@ -874,7 +887,7 @@ canvas{display:none}
     banda(bx, by, bw, bh, radio, altoBanda, arco, bh * C.sombra);
 
     /* 2. las dos rayas y las cinco estrellas */
-    rayasYEstrellas(bx, bw,
+    rayasYEstrellas(bx, by, bw, bh, radio,
                     by + bh*(C.oroY - C.oroSep/2), by + bh*(C.oroY + C.oroSep/2),
                     Math.max(1, bw*0.0063), bw*0.022, acento);
 
@@ -905,24 +918,68 @@ canvas{display:none}
     var filaY = by + bh*R.fila;
     var ladoQR = Math.min(bh*C.qr, bw*0.42);
     if (est.conNfc) {
-      var sep = bh * C.separacion;
-      var icoX = centro - sep/2, qrX = centro + sep/2;
-      /* Medido en el original: el icono es 1,09 veces el lado del QR de
-         ancho, y su alto sale solo. El marco lo envuelve con holgura. */
+      /* LA PAREJA SE COLOCA POR SU ANCHO, NO POR UNA SEPARACIÓN FIJA.
+
+         Iba separada 0,31 del ALTO, y ese número está medido en la placa,
+         que es cuadrada. En el expositor y en la tarjeta el alto es vez y
+         media el ancho, así que 0,31 del alto es muchísimo ancho: el
+         marco del icono se salía por el canto izquierdo de la placa (se
+         veía media esquina cortada) y su esquina derecha se quedaba
+         escondida por debajo del QR.
+
+         Así que se hace al revés: se mide lo que ocupa cada pieza, se
+         deja el mismo hueco entre las dos que había en la placa, y el
+         grupo entero se centra. En la placa sale prácticamente lo mismo
+         que antes; en los otros dos formatos deja de salirse. */
       var U = ladoQR * 1.15;
+      var mw = U * 1.15, mh = U * 0.611 * 1.40;
+      var hueco = bw * 0.020;
+
+      /* Y si aun así no cabe, manda el ancho de la placa: se recorta el
+         QR. Con marco, el icono ocupa 1,3225 veces el lado del QR, de ahí
+         el 2,3225 de la suma. Solo entra en juego en la tarjeta. */
       if (est.conMarco) {
-        var mw = U * 1.15, mh = U * 0.611 * 1.40;
+        ladoQR = Math.min(ladoQR, (bw*0.90 - hueco) / 2.3225);
+        U = ladoQR * 1.15; mw = U * 1.15; mh = U * 0.611 * 1.40;
+      }
+
+      /* Lo que ocupa de ancho la pieza de la izquierda: el marco si lo
+         lleva, que es más ancho que el dibujo, o el dibujo pelado. */
+      var anchoIco = est.conMarco ? mw : U * 0.60;
+      var anchoPar = anchoIco + hueco + ladoQR;
+      var izq = centro - anchoPar/2;
+      var icoX = izq + anchoIco/2;
+      var qrX  = izq + anchoIco + hueco + ladoQR/2;
+
+      if (est.conMarco) {
         esquinas(icoX - mw/2, filaY - mh/2, mw, mh,
                  bh*0.026, Math.max(1, bh*0.0038), 'rgba(0,0,0,.32)');
       }
       dibujaNfc(icoX, filaY, U, tinta, est.fondo);
       dibujaQR(enlaceQR(), qrX, filaY, ladoQR, tinta);
     } else {
+      /* SIN ICONO. Al quedarse el QR solo en la fila entra la tentación
+         de agrandarlo, y es lo que había: iba a 1,15 y el marco a 1,56.
+         Sobra sitio a los lados, pero de alto no cabe, que es lo que
+         manda aquí: arriba está la G colgando de la banda y abajo la
+         instrucción a dos líneas. A ese tamaño el QR se metía por debajo
+         de la G y por encima del texto, y el marco cruzaba el código.
+
+         Se queda del mismo tamaño que cuando va acompañado, que es el
+         que está medido para esta fila, solo que centrado.
+
+         Y el marco no es cuadrado, es más ancho que alto, por lo mismo:
+         a los lados sobra sitio y de alto no hay. Cuadrado, las esquinas
+         de abajo se metían dentro de la primera línea de la
+         instrucción. El caso que menos perdona es la placa, que es
+         cuadrada y tiene el QR más grande en proporción; en el
+         expositor y en la tarjeta sobra de largo. */
       if (est.conMarco) {
-        esquinas(centro - ladoQR*0.78, filaY - ladoQR*0.78, ladoQR*1.56, ladoQR*1.56,
+        var marcoW = ladoQR * 1.42, marcoH = ladoQR * 1.12;
+        esquinas(centro - marcoW/2, filaY - marcoH/2, marcoW, marcoH,
                  bh*0.028, Math.max(1, bh*0.0040), 'rgba(0,0,0,.32)');
       }
-      dibujaQR(enlaceQR(), centro, filaY, ladoQR*1.15, tinta);
+      dibujaQR(enlaceQR(), centro, filaY, ladoQR, tinta);
     }
 
     /* 6. la instrucción, a dos líneas como el original: cabría en una,
@@ -1021,13 +1078,19 @@ canvas{display:none}
 
   /* Las estrellas grandes que asoman por el borde de abajo, cortadas por
      el propio canto de la placa. Van muy claras: son un adorno, no tienen
-     que competir con nada. */
+     que competir con nada.
+
+     DOS MEDIANAS, NO TRES PEQUEÑAS. Eran tres chicas repartidas a lo
+     ancho y se leían como un puntito, un puntito y un puntito: no se
+     entendía que fueran estrellas. Dos más grandes y más juntas se
+     reconocen aunque estén cortadas por la mitad, que es de lo que se
+     trata. */
   function adornoAbajo(bx, by, bw, bh, radio, acento) {
     cx.save();
     redondo(bx, by, bw, bh, radio); cx.clip();
     cx.globalAlpha = 0.28;
-    var r = bh * 0.052, y = by + bh * 1.005;
-    [0.16, 0.50, 0.84].forEach(function (f) {
+    var r = bh * 0.082, y = by + bh * 1.0;
+    [0.32, 0.68].forEach(function (f) {
       estrella(bx + bw * f, y, r, acento);
     });
     cx.restore();
