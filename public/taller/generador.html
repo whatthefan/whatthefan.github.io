@@ -3109,18 +3109,27 @@ var qrcode = function() {
      En el expositor y en la tarjeta el alto es vez y media el ancho: ahí
      la banda ya es de sobra alta, el título ya caía en tres, y los
      números se quedan como estaban. */
-  /* LA FIRMA DE PLEA5E (raya + logo, estrellitas y teléfono) VA MÁS
-     ABAJO que antes, y sobre todo en el expositor y la tarjeta: ahí la
-     firma se quedaba a 0,892 del alto y por debajo sobraban casi dos
-     dedos de crema vacío, mientras que arriba el nombre del negocio se
-     le echaba encima. Bajando el bloque, el aire se reparte.
+  /* LA FIRMA DE PLEA5E (raya + logo, estrellitas y teléfono) BAJA EN EL
+     EXPOSITOR Y LA TARJETA, Y EN LA PLACA CUADRADA NO.
 
-     Los números salen de las dos placas buenas: en ambas la raya cae
-     sobre 0,89 del alto, las estrellitas sobre 0,92 y el teléfono sobre
-     0,95, y por debajo queda un dedo de margen para el corte. */
+     En el expositor se quedaba a 0,892 del alto y por debajo sobraban
+     casi dos dedos de crema vacío, mientras arriba el nombre del negocio
+     se le echaba encima. En la placa buena de ese formato la raya cae en
+     0,889, así que se baja hasta ahí y el aire se reparte.
+
+     En la cuadrada se probó a bajarla igual, a 0,914, y sale mal: por
+     debajo de la raya es donde asoman las estrellas del canto, y con la
+     raya ahí abajo ya no les queda sitio y acaban cruzándola. En la
+     placa cuadrada buena la raya está en 0,891, o sea MÁS ARRIBA de
+     donde estaba aquí (0,902). Bajarla y tener estrellas grandes debajo
+     son cosas que no caben a la vez, y en el original lo resuelven así.
+
+     (El margen de corte del teléfono cambia poco con esto: queda a
+     1,8 mm de tinta al canto en vez de a 1,6. Sigue siendo justo en los
+     90 x 90 mm, y eso viene de antes, no de este cambio.) */
   var REJA = {
     cuadrada: { fila: 0.520, instruccion: 0.702, cliente: 0.768, clienteAlto: 0.082,
-                lema: 0.856, pie: 0.914, estrellas: 0.946, tel: 0.974,
+                lema: 0.856, pie: 0.902, estrellas: 0.940, tel: 0.972,
                 oroY: 0.052,  tituloAncho: 0.46 },
     alta:     { fila: 0.467, instruccion: 0.661, cliente: 0.700, clienteAlto: 0.078,
                 lema: 0.784, pie: 0.880, estrellas: 0.914, tel: 0.944,
@@ -3272,7 +3281,7 @@ var qrcode = function() {
     }
 
     /* 9. las estrellas grandes asomando por abajo */
-    adornoAbajo(bx, by, bw, bh, radio, acento);
+    adornoAbajo(bx, by, bw, bh, radio, acento, by + bh*R.pie);
   }
 
   function instruccion() {
@@ -3357,19 +3366,47 @@ var qrcode = function() {
      buenas son dos, grandes, una en cada esquina de abajo, y asoman algo
      más de la mitad. Así se reconocen aunque estén cortadas, que es de
      lo que se trata, y no se meten por medio del teléfono. */
-  function adornoAbajo(bx, by, bw, bh, radio, acento) {
+  function adornoAbajo(bx, by, bw, bh, radio, acento, yRaya) {
     cx.save();
     redondo(bx, by, bw, bh, radio); cx.clip();
     cx.globalAlpha = 0.28;
-    /* Más grandes y un pelín más abajo. El centro cae justo en el canto,
-       así que se ve la mitad de arriba de cada una, que es la que tiene
-       las tres puntas y se reconoce.
+    /* NO SE DICE DÓNDE VA EL CENTRO, SE DICE DÓNDE VA LA PUNTA.
 
-       El radio sale del alto, pero en el expositor y en la tarjeta el
-       alto es vez y media el ancho y la estrella de la derecha se salía
-       por el canto. Así que manda el ancho cuando toca. */
-    var r = Math.min(bh * 0.120, bw * 0.140), y = by + bh * 1.0;
-    [0.15, 0.85].forEach(function (f) {
+       Antes se colocaban por el centro, y el centro caía justo en el
+       canto de abajo. Al agrandarlas, la punta de arriba subía hasta
+       0,880 del alto y la raya del pie está en 0,914: la estrella se
+       montaba encima de la raya y se veía la raya partida por dentro.
+       Y cada vez que se moviera el pie, a empezar otra vez.
+
+       Medido en la placa buena, la estrella es GRANDE (un quinto largo
+       del ancho de radio) y su centro cae bastante POR DEBAJO del canto,
+       así que solo asoma la punta y el arranque de los dos brazos de
+       arriba. Eso es lo que hace que se lea como estrella y no como un
+       triángulo. Y arranca justo debajo de la raya, sin tocarla.
+
+       MEDIDO EN LAS DOS PLACAS BUENAS, y coinciden entre ellas, que es
+       lo que da confianza en el número:
+
+         placa cuadrada   radio 0,084 del alto, centro en 1,002
+         expositor        radio 0,085 del alto, centro en 1,014
+
+       En ancho salen distintas (0,084 y 0,133) porque el expositor es
+       más estrecho; en ALTO son la misma. Así que el radio se saca del
+       alto y el centro se pone prácticamente en el canto: asoma la punta
+       y los dos brazos de arriba, que es lo que se reconoce.
+
+       El tope por ancho no llega a entrar en juego en los tres formatos
+       de ahora; está para que dos estrellas no se junten en el medio si
+       algún día aparece uno mucho más estrecho.
+
+       Y por si acaso, la red de seguridad: si la punta llegara a tocar
+       la raya del pie, se recorta el radio. Hoy no pasa en ninguno de
+       los tres, pero el día que alguien mueva el pie, no se rompe. */
+    var y = by + bh * 1.005;
+    var r = Math.min(bh * 0.085, bw * 0.16);
+    var tope = y - (yRaya + bh * 0.012);
+    if (r > tope) r = tope;
+    [0.115, 0.885].forEach(function (f) {
       estrella(bx + bw * f, y, r, acento);
     });
     cx.restore();
