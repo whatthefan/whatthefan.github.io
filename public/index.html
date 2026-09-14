@@ -1191,7 +1191,21 @@
     enlace:  'https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00',
     importe: 25,     // lo que cobra ESE enlace, tal y como está en Stripe
     // el de 1 € por unidad: cobra el importe exacto, sea cual sea
-    porEuro: 'https://buy.stripe.com/cNieVd3YDfEZeLxbdw5Rm01'
+    porEuro: 'https://buy.stripe.com/cNieVd3YDfEZeLxbdw5Rm01',
+    /* EL SUELO Y EL TECHO DEL ENLACE DE 1 €, TAL Y COMO ESTÁN EN STRIPE.
+       Ese enlace lleva "cantidad ajustable" con un mínimo y un máximo, y
+       si le pides una cantidad fuera de ese rango la pantalla de pago
+       protesta o cobra otra cosa. O sea que estos dos números TIENEN que
+       ser los mismos que hay puestos en Stripe. Si los cambias ahí,
+       cámbialos aquí.
+
+       Estaban en 15 y 500. El mínimo cuadra con la fianza mínima, pero
+       el techo de 500 se quedaba corto: un pedido de 100 placas son
+       1.550 € y la fianza 775, o sea que ese cliente no habría podido
+       pagar. Subido a 5.000, que cubre hasta el pedido cerrado más
+       grande que la web sabe montar. */
+    minUnidades: 15,
+    maxUnidades: 5000
   };
 
   /* El enlace que cobra EXACTAMENTE esa fianza, o cadena vacía si no hay
@@ -1199,7 +1213,13 @@
      de pago por un importe distinto del que le hemos dicho. */
   function enlaceDePago(fianza){
     var euro = String(PAGO.porEuro || '').trim();
-    if (euro) return euro + (euro.indexOf('?') > -1 ? '&' : '?') + 'quantity=' + fianza;
+    /* Fuera del rango del enlace NO se manda a nadie a pagar: se
+       devuelve vacío y el paso de la fianza se cae al Bizum a mano, que
+       no tiene tope. Mejor pedir un Bizum que mandar a un cliente a una
+       pantalla que le va a dar error justo cuando iba a pagarte. */
+    if (euro && fianza >= PAGO.minUnidades && fianza <= PAGO.maxUnidades) {
+      return euro + (euro.indexOf('?') > -1 ? '&' : '?') + 'quantity=' + fianza;
+    }
     var fijo = String(PAGO.enlace || '').trim();
     if (fijo && fianza === PAGO.importe) return fijo;
     return '';
