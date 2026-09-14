@@ -810,12 +810,21 @@ canvas{display:none}
      En el expositor y en la tarjeta el alto es vez y media el ancho: ahí
      la banda ya es de sobra alta, el título ya caía en tres, y los
      números se quedan como estaban. */
+  /* LA FIRMA DE PLEA5E (raya + logo, estrellitas y teléfono) VA MÁS
+     ABAJO que antes, y sobre todo en el expositor y la tarjeta: ahí la
+     firma se quedaba a 0,892 del alto y por debajo sobraban casi dos
+     dedos de crema vacío, mientras que arriba el nombre del negocio se
+     le echaba encima. Bajando el bloque, el aire se reparte.
+
+     Los números salen de las dos placas buenas: en ambas la raya cae
+     sobre 0,89 del alto, las estrellitas sobre 0,92 y el teléfono sobre
+     0,95, y por debajo queda un dedo de margen para el corte. */
   var REJA = {
     cuadrada: { fila: 0.520, instruccion: 0.702, cliente: 0.768, clienteAlto: 0.082,
-                lema: 0.856, pie: 0.902, estrellas: 0.940, tel: 0.972,
+                lema: 0.856, pie: 0.914, estrellas: 0.946, tel: 0.974,
                 oroY: 0.052,  tituloAncho: 0.46 },
     alta:     { fila: 0.467, instruccion: 0.661, cliente: 0.700, clienteAlto: 0.078,
-                lema: 0.784, pie: 0.822, estrellas: 0.858, tel: 0.892,
+                lema: 0.784, pie: 0.880, estrellas: 0.914, tel: 0.944,
                 oroY: 0.0755, tituloAncho: 0.54 }
   };
   var COMUN = {
@@ -956,7 +965,7 @@ canvas{display:none}
     }
 
     /* 8. la firma de PLEA5E, las estrellitas y el teléfono */
-    pie(bx, by + bh*R.pie, bw, bh, anchoUtil, acento);
+    pie(bx, by, bw, bh, radio, by + bh*R.pie, anchoUtil, acento);
     minisEstrellas(centro, by + bh*R.estrellas, bw*0.0105, acento);
     if (est.conTel && TELEFONO) {
       espaciado(TELEFONO, centro, by + bh*R.tel, bh*0.0155, bh*0.0060,
@@ -997,7 +1006,7 @@ canvas{display:none}
   /* El pie: la firma de PLEA5E. La raya no cruza el logotipo por detrás:
      se corta justo donde empiezan los brazos de la estrella y sigue al
      otro lado, que es como está montado en la cabecera de la web. */
-  function pie(bx, y, bw, bh, anchoUtil, acento) {
+  function pie(bx, by, bw, bh, radio, y, anchoUtil, acento) {
     var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
     var RAYA = aclara(ORO, .18);
     var centro = bx + bw * 0.5;
@@ -1008,16 +1017,23 @@ canvas{display:none}
       var tope = anchoUtil * 0.46;
       if (ancho > tope) { ancho = tope; alto = ancho / LOGO_PROP; }
     }
+    /* LA RAYA VA DE CANTO A CANTO, igual que las dos de la cabecera.
+       Llegaba solo hasta el ancho útil (0,86 del ancho) y se quedaba dos
+       dedos corta por los dos lados: al lado de las de arriba, que sí
+       cruzan enteras, cantaba. Se dibuja un pelín pasada del borde y se
+       recorta con la silueta de la placa, que es como se hace arriba. */
     cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
     cx.strokeStyle = RAYA;
     cx.lineWidth = Math.max(1, bh * 0.0032);
     cx.lineCap = 'butt';
+    var izq = bx - bw*0.02, der = bx + bw*1.02;
     cx.beginPath();
     if (ancho) {
-      cx.moveTo(centro - anchoUtil/2, y); cx.lineTo(centro - ancho/2, y);
-      cx.moveTo(centro + ancho/2, y);     cx.lineTo(centro + anchoUtil/2, y);
+      cx.moveTo(izq, y);              cx.lineTo(centro - ancho/2, y);
+      cx.moveTo(centro + ancho/2, y); cx.lineTo(der, y);
     } else {
-      cx.moveTo(centro - anchoUtil/2, y); cx.lineTo(centro + anchoUtil/2, y);
+      cx.moveTo(izq, y); cx.lineTo(der, y);
     }
     cx.stroke();
     cx.restore();
@@ -1046,10 +1062,14 @@ canvas{display:none}
     cx.save();
     redondo(bx, by, bw, bh, radio); cx.clip();
     cx.globalAlpha = 0.28;
-    /* El radio sale del alto, pero en el expositor y en la tarjeta el
+    /* Más grandes y un pelín más abajo. El centro cae justo en el canto,
+       así que se ve la mitad de arriba de cada una, que es la que tiene
+       las tres puntas y se reconoce.
+
+       El radio sale del alto, pero en el expositor y en la tarjeta el
        alto es vez y media el ancho y la estrella de la derecha se salía
        por el canto. Así que manda el ancho cuando toca. */
-    var r = Math.min(bh * 0.100, bw * 0.115), y = by + bh * 0.985;
+    var r = Math.min(bh * 0.120, bw * 0.140), y = by + bh * 1.0;
     [0.15, 0.85].forEach(function (f) {
       estrella(bx + bw * f, y, r, acento);
     });
