@@ -665,14 +665,26 @@ canvas{display:none}
 
   function dibujaQR(txt, x, y, lado, oscuro) {
     if (!txt) {
+      /* EL HUECO DICE QUÉ FALTA, no pone "QR" y ya.
+
+         Ponía solo "QR" dentro de un cuadro de rayas, y al abrir el
+         generador en blanco eso se lee como "aquí el QR no funciona"
+         cuando lo que pasa es que aún no se ha escrito el nombre del
+         negocio. El aviso estaba, pero debajo de la vista previa, y hay
+         que bajar a buscarlo: la respuesta tiene que estar donde se está
+         mirando, que es el hueco. */
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.22)'; cx.lineWidth = Math.max(2, lado*0.012);
       cx.setLineDash([lado*0.05, lado*0.04]);
       cx.strokeRect(x - lado/2, y - lado/2, lado, lado);
       cx.setLineDash([]);
-      cx.fillStyle = 'rgba(0,0,0,.35)';
-      cx.font = '600 ' + (lado*0.085) + 'px Montse, system-ui, sans-serif';
-      cx.fillText('QR', x, y);
+      cx.fillStyle = 'rgba(0,0,0,.40)';
+      cx.font = '700 ' + (lado*0.085) + 'px Montse, system-ui, sans-serif';
+      cx.fillText('Escribe el nombre', x, y - lado*0.055);
+      cx.fillText('del negocio', x, y + lado*0.055);
+      cx.fillStyle = 'rgba(0,0,0,.28)';
+      cx.font = '600 ' + (lado*0.062) + 'px Montse, system-ui, sans-serif';
+      cx.fillText('y aquí sale el QR', x, y + lado*0.175);
       cx.restore();
       return;
     }
@@ -873,16 +885,25 @@ canvas{display:none}
     cx.font = '800 ' + t.tam + 'px Montse, system-ui, sans-serif';
     bloque(t, centro, huecoY0 + huecoAlto/2, sobreBanda, false);
 
-    /* 4. la G, a caballo sobre la curva. El disco mide 0,14 del ancho
-          en los tres originales; dibujaG lo pinta a 0,86 del tamaño que
-          se le pasa, de ahí el 0,081. */
-    /* El disco NO va centrado en la curva: va colgando de ella. En los
-       tres originales el borde de arriba del disco toca la curva y el
-       resto cae sobre el crema. Centrado, la mitad del disco se come la
-       banda y el título se le echa encima. */
+    /* 4. LA G VA A CABALLO DE VERDAD: partida entre la banda y el crema.
+
+          Antes colgaba de la curva: el borde de arriba del disco tocaba
+          la línea y el disco entero caía sobre el crema. Queda como si
+          se le hubiera escurrido. Puesta a caballo, el disco pisa las dos
+          mitades y el blanco resalta contra el verde, que es donde se ve.
+
+          No va al 50 % exacto: eso le come banda al título, y a 0,30 de
+          hundimiento el disco rozaba la admiración de "¡EN GOOGLE!". Se
+          hunde 0,42 de su radio por debajo de la línea: queda como una
+          cuarta parte del disco sobre el verde y el resto sobre el
+          crema, que es de sobra para que se lea "está entre los dos
+          colores", y el título respira.
+
+          Y un pelín más pequeña: el disco pasa de 0,081 a 0,072 del
+          ancho (dibujaG lo pinta a 0,86 de lo que se le pasa). */
     var bordeCentro = by + altoBanda - arco;
-    var rG = bw*0.081;
-    if (est.conG) dibujaG(centro, bordeCentro + rG*0.86, rG, true, '#FFFFFF');
+    var rG = bw*0.072;
+    if (est.conG) dibujaG(centro, bordeCentro + rG*0.42, rG, true, '#FFFFFF');
 
     /* 5. la fila del medio: el icono a la izquierda y el QR a la
           derecha, separados 0,31 del alto y centrados como pareja. */
