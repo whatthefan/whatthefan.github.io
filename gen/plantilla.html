@@ -1127,7 +1127,7 @@ canvas{display:none}
     oroY:  0.235, oroSep: 0.030, /* la raya y las estrellas, dentro del panel */
     titulo: 0.455, tituloAncho: 0.82,   /* del panel */
     cliente: 0.690, clienteAlto: 0.185,
-    redX: 0.738, redY: 0.225, redTam: 0.050,
+    redX: 0.738, redY: 0.235, redTam: 0.050,   /* redY = oroY: va montado en la raya */
     icoX: 0.605, icoY: 0.485, icoAncho: 0.175,
     qrX: 0.850, qrY: 0.495, qrLado: 0.340,
     instr: 0.775,
@@ -1166,9 +1166,41 @@ canvas{display:none}
           PANEL. Es la misma función que en los otros formatos: se le
           pasa la caja del panel en vez de la de la placa, y sola se
           recorta ahí. */
+    var grueso = Math.max(1, bw*0.0040);
     rayasYEstrellas(bx, by, anchoPanel, bh, radio,
                     by + bh*(T.oroY - T.oroSep/2), by + bh*(T.oroY + T.oroSep/2),
-                    Math.max(1, bw*0.0040), bw*0.0135, acento);
+                    grueso, bw*0.0135, acento);
+
+    /* Y LA RAYA SIGUE POR EL LADO CLARO, hasta el canto.
+
+       Se cortaba en la juntura, y por encima del logotipo quedaba una
+       esquina de blanco sin nada. No era que faltara un adorno: era que
+       la raya de oro es lo que cose las dos mitades. Cortada ahi, la
+       tarjeta se lee como dos trozos pegados uno al lado del otro en vez
+       de como una pieza.
+
+       En la placa y en el expositor esta misma raya cruza la pieza
+       entera de canto a canto. Aqui hacia lo mismo pero solo en media
+       tarjeta. Ahora cruza del todo, y se abre dos veces: por las cinco
+       estrellas en el lado de color y por el logotipo de la red en el
+       claro, que se apoya encima de ella igual que el de PLEA5E se apoya
+       en la raya de abajo. La tarjeta queda cosida por dos rayas con
+       algo montado en cada una, arriba y abajo. */
+    var yOro = by + bh*T.oroY, xRed = bx + bw*T.redX;
+    var hueco = bw * 0.058;
+    cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
+    cx.strokeStyle = aclara(acento, .10);
+    cx.lineWidth = grueso; cx.lineCap = 'butt';
+    cx.beginPath();
+    if (est.conG) {
+      cx.moveTo(bx + anchoPanel, yOro); cx.lineTo(xRed - hueco, yOro);
+      cx.moveTo(xRed + hueco,    yOro); cx.lineTo(bx + bw*1.02, yOro);
+    } else {
+      cx.moveTo(bx + anchoPanel, yOro); cx.lineTo(bx + bw*1.02, yOro);
+    }
+    cx.stroke();
+    cx.restore();
 
     /* 3. el título y el nombre del negocio, en el lado de color */
     var cIzq = bx + anchoPanel/2;
