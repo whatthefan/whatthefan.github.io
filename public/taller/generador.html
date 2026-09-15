@@ -146,13 +146,13 @@ canvas{display:none}
     </div>
 
     <div class="campo">
-      <label for="fCorta">Dirección corta <b>(recomendado)</b></label>
+      <label for="fCorta">Dirección corta <b>(la del QR)</b></label>
       <div class="corta-caja">
         <span>plea5e.es/r/</span>
         <input id="fCorta" type="text" placeholder="bar-manolo" autocomplete="off"
                inputmode="url" spellcheck="false">
       </div>
-      <span class="pista">Si la pones, es <b>esto</b> lo que lleva el QR, y el destino se cambia luego desde el panel sin tocar la placa. Si la dejas vacía, el QR lleva la dirección de Google grabada para siempre. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir.</span>
+      <span class="pista"><b>Esto es lo que lleva grabado el QR</b>, y se rellena solo con el nombre del negocio. El QR pasa por nuestra página y de ahí sale a la ficha de Google del cliente, así que el destino se cambia luego desde el panel sin tocar la pieza. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir. Si la borras, el QR lleva la dirección de Google grabada y ya no se podrá cambiar.</span>
     </div>
 
     <div class="campo">
@@ -2541,17 +2541,39 @@ var qrcode = function() {
   var LOGO_SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1281\" height=\"288\" viewBox=\"-3202 -1259 6404 1438\">\n<title>PLEA5E</title>\n\n<g fill=\"#E9BC46\">\n  \n  <path d=\"M677.5 -1259.0L892.4 -759.9L2686.2 -760.0L2686.2 -659.4L1025.3 -351.1L1144.7 179.0L677.5 -98.4L210.2 179.0L329.7 -351.1L-2686.2 -659.4L-2686.2 -760.0L462.6 -759.9Z\"/>\n  <path d=\"M-2944.0 -967.5L-2889.3 -764.4L-2686.2 -709.7L-2889.3 -655.0L-2944.0 -451.9L-2998.7 -655.0L-3201.8 -709.7L-2998.7 -764.4Z\"/>\n  <path d=\"M2944.0 -967.5L2998.7 -764.4L3201.8 -709.7L2998.7 -655.0L2944.0 -451.9L2889.3 -655.0L2686.2 -709.7L2889.3 -764.4Z\"/>\n</g>\n<g fill=\"#0A0E16\">\n  <path d=\"M-1129.2 0L-1298.1 0L-1298.1-859.4L-1071-859.4Q-999.8-859.4-958-827.6Q-916.3-795.9-898.2-737.3Q-880.1-678.7-880.1-597.7Q-880.1-519.5-895.3-461.7Q-910.4-403.8-949.2-372.1Q-988-340.3-1059.3-340.3L-1129.2-340.3L-1129.2 0M-1129.2-702.6L-1129.2-494.6L-1119.4-494.6Q-1071.5-494.6-1060.8-521.5Q-1050-548.3-1050-600.6Q-1050-649.4-1060.5-676Q-1071-702.6-1110.1-702.6L-1129.2-702.6M-477.3 0L-825.9 0L-825.9-859.4L-654.1-859.4L-654.1-146.5L-477.3-146.5L-477.3 0M-73.5 0L-428.5 0L-428.5-859.4L-84.7-859.4L-84.7-693.4L-253.7-693.4L-253.7-525.9L-91.6-525.9L-91.6-364.3L-253.7-364.3L-253.7-167.5L-73.5-167.5L-73.5 0M126.7 0L-40.3 0L42.7-859.4L334.2-859.4L415.8 0L253.2 0L241-138.7L137.5-138.7L126.7 0M182.4-712.9L149.7-275.9L227.8-275.9L190.2-712.9\"/>\n  <path d=\"M1317.6 0L962.6 0L962.6-859.4L1306.4-859.4L1306.4-693.4L1137.5-693.4L1137.5-525.9L1299.6-525.9L1299.6-364.3L1137.5-364.3L1137.5-167.5L1317.6-167.5\"/>\n</g>\n<path fill=\"#0A0E16\" d=\"M677.5 12.2Q578.4 12.2 515.6-36.9Q452.9-85.9 452.9-187.5L452.9-315.4L631.6-315.4L631.6-241.7Q631.6-218.7 634.3-197.3Q637-175.8 646.7-162.1Q656.5-148.4 677.5-148.4Q705.3-148.4 714.1-167.2Q722.9-186 722.9-215.3L722.9-384.3Q722.9-405.3 720.2-425.8Q717.5-446.3 708.3-460Q699-473.6 678.5-473.6Q629.6-473.6 629.6-402.8L471.9-402.8L471.9-859.9L881.6-859.9L881.6-698.7L635-698.7L635-577.6Q647.7-593.3 669.4-605.2Q691.2-617.2 720.5-617.2Q779.1-617.2 815.9-594.7Q852.8-572.3 872.6-532.2Q892.3-492.2 899.9-439.5Q907.5-386.7 907.5-326.2Q907.5-248.5 899.4-186.3Q891.4-124 867.7-79.6Q844-35.2 798.3-11.5Q752.7 12.2 677.5 12.2\"/>\n</svg>";
 
   /* ══════════ los tres formatos ══════════ */
-  /* Los tres salen de la MISMA plantilla: cambia el tamano, no el
-     dibujo. Las proporciones estan medidas sobre los originales:
-     la placa es cuadrada y el expositor va a 2:3, que es exactamente
-     lo que da el diseno del Morro Fino (1114x1670). La tarjeta se
-     dibuja de pie, no tumbada: tumbada no cabe esta composicion y
-     salia otra cosa distinta, que es justo lo que no queremos. */
+  /* La placa y el expositor salen de la MISMA plantilla: cambia el
+     tamano, no el dibujo. Las proporciones estan medidas sobre los
+     originales: la placa es cuadrada y el expositor va a 2:3, que es
+     exactamente lo que da el diseno del Morro Fino (1114x1670).
+
+     La TARJETA es otra cosa. Va tumbada, 85x54 mm —la medida de una
+     tarjeta de credito, que es la que se anuncia en la web— y NO lleva
+     esta composicion en columna: lleva la partida en dos, con el lado
+     de color a la izquierda y el blanco a la derecha. Es el modelo que
+     sale fotografiado en la pagina, y la que se le ensena al cliente
+     tiene que ser la misma que ha visto. Se dibuja en pintaTumbada. */
   var FORMATOS = {
-    placa:   { nombre: 'Placa de mesa',    mm: [90, 90],  reja: 'cuadrada' },
+    placa:   { nombre: 'Placa de mesa',    mm: [90, 90],   reja: 'cuadrada' },
     stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
-    tarjeta: { nombre: 'Tarjeta de mano',  mm: [55, 85],  reja: 'alta' }
+    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],   plano: 'tumbado', radio: 3 }
   };
+
+  /* El titulo no es el mismo en los tres. En la placa y en el expositor
+     hay sitio para la frase entera; en la tarjeta, con la mitad del
+     ancho, el original va corto: "¡TU RESEÑA / EN GOOGLE!". Si se deja
+     la frase larga cae en tres renglones diminutos y ya no es el modelo
+     de la foto. Se cambia sola al cambiar de formato, pero solo si el
+     texto que hay puesto es el de por defecto del otro: lo que haya
+     escrito a mano no se toca nunca. */
+  var TITULOS = {
+    placa:   '¡Nos encantaría tu reseña en Google!',
+    stand:   '¡Nos encantaría tu reseña en Google!',
+    tarjeta: '¡Tu reseña en Google!'
+  };
+  function esTituloPorDefecto(txt) {
+    var t = String(txt || '').trim();
+    return Object.keys(TITULOS).some(function (k) { return TITULOS[k] === t; });
+  }
 
   /* La G de Google, en sus cuatro colores. Son los trazos oficiales sobre
      una caja de 48×48; se escalan como cualquier otra cosa. */
@@ -2569,10 +2591,12 @@ var qrcode = function() {
     lema: '',
     google: '',
     corta: '',           /* el trozo final de plea5e.es/r/... */
+    cortaAuto: true,     /* se saca del nombre mientras no se escriba a mano */
     logo: null,          /* Image ya cargada */
     queSeVe: 'ambos',
     banda:  '#192E26',   /* el verde de la plantilla buena */
     fondo:  '#ECE2D3',   /* el crema, no blanco: es lo que le da el aire */
+    fondoAuto: true,     /* lo pone el formato mientras no se elija a mano */
     acento: '#E8C46A',
     acentoAuto: true,
     titulo: '¡Nos encantaría tu reseña en Google!',
@@ -3030,14 +3054,26 @@ var qrcode = function() {
     var qr = qrcode(0, 'H');
     qr.addData(txt);
     qr.make();
-    var n = qr.getModuleCount(), paso = lado / n;
+    var n = qr.getModuleCount();
+    /* MÓDULOS ENTEROS. Antes el módulo medía lado/n, casi siempre con
+       decimales, y cada cuadradito caía entre dos píxeles: el navegador
+       los repartía como podía y el código salía con los bordes sucios,
+       unos módulos un píxel más gordos que otros. Se tapaba con medio
+       píxel de solape, que es peor remedio que la enfermedad.
+
+       Ahora el módulo se redondea a un número entero de píxeles y el
+       código se centra con lo que sobra. Sale con el canto limpio, que
+       es lo que hace que un lector lo pille a la primera y lo que se
+       nota al imprimir en grande. Pierde como mucho medio módulo de
+       tamaño, que a simple vista no existe. */
+    var paso = Math.max(1, Math.round(lado / n));
+    var ladoReal = paso * n;
+    var x0 = Math.round(x - ladoReal / 2), y0 = Math.round(y - ladoReal / 2);
     cx.save();
     cx.fillStyle = oscuro;
     for (var f = 0; f < n; f++) for (var c = 0; c < n; c++) {
       if (!qr.isDark(f, c)) continue;
-      /* +0.5 px de solape: sin eso el navegador deja rayas blancas entre
-         módulos al escalar, y algunos lectores se atragantan */
-      cx.fillRect(x - lado/2 + c*paso, y - lado/2 + f*paso, paso + 0.5, paso + 0.5);
+      cx.fillRect(x0 + c * paso, y0 + f * paso, paso, paso);
     }
     cx.restore();
   }
@@ -3056,19 +3092,35 @@ var qrcode = function() {
     var sang = est.sangrado ? 3 : 0;
     var totW = mmW + sang*2, totH = mmH + sang*2;
 
-    /* 2000 px en el lado largo: para 90 mm son unos 565 puntos por
-       pulgada, de sobra para imprimir */
-    var px = 2000 / Math.max(totW, totH);
+    /* 3600 px en el lado largo. Antes eran 2000, que para imprimir
+       llegaban de sobra (unos 565 puntos por pulgada), pero el archivo
+       se ve tambien EN PANTALLA —la vista previa, el que se manda por
+       WhatsApp, el que se mira ampliado— y ahi 2000 px de una tarjeta
+       que se enseña a pantalla completa se quedaban cortos: la letra
+       pequeña y el QR salian blandos. Con 3600 px la tarjeta va a unos
+       1075 puntos por pulgada y aguanta cualquier ampliacion.
+
+       Lo que cuesta: el PNG pesa unas tres veces mas y dibujarlo tarda
+       unas decimas. Nada que se note en un generador que se usa una vez
+       por cliente. */
+    var px = 3600 / Math.max(totW, totH);
     var W = Math.round(totW * px), H = Math.round(totH * px);
     lienzo.width = W; lienzo.height = H;
 
     var bx = sang * px, by = sang * px;
     var bw = mmW * px, bh = mmH * px;
-    /* Sin esquinas redondeadas. Los originales son rectangulos a
-       sangre; el redondeo lo pone luego el troquel, no el archivo. Si
-       lo dibujamos aqui, la imprenta corta sobre una esquina que ya
-       venia curvada y queda un borde raro. */
-    var radio = 0;
+    /* El troquel. La placa y el expositor son rectangulos a sangre: el
+       redondeo lo pone luego la maquina, y dibujarlo aqui haria que la
+       imprenta cortara sobre una esquina ya curvada. La TARJETA si lo
+       lleva, porque es una tarjeta de PVC troquelada de serie con 3 mm
+       de radio —se midio en la foto: unos 2,4 mm— y una tarjeta con las
+       esquinas en pico no es lo que se le entrega al cliente.
+
+       Con sangrado se dibuja cuadrada igualmente: el archivo para la
+       imprenta va a sangre entera y el troquel se marca con la linea
+       de corte, que sale mas abajo ya redondeada. */
+    var radioTroquel = (F.radio || 0) * px;
+    var radio = sang ? 0 : radioTroquel;
 
     cx.clearRect(0, 0, W, H);
     cx.fillStyle = est.fondo;
@@ -3077,13 +3129,16 @@ var qrcode = function() {
 
     cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-    pintaDePie(bx, by, bw, bh, radio);
+    if (F.plano === 'tumbado') pintaTumbada(bx, by, bw, bh, radio);
+    else                       pintaDePie(bx, by, bw, bh, radio);
 
     if (sang) {
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
       cx.setLineDash([px*1.6, px*1.6]);
-      cx.strokeRect(bx, by, bw, bh);
+      /* la linea de corte lleva el redondeo del troquel: es por donde
+         va a pasar la cuchilla de verdad */
+      redondo(bx, by, bw, bh, radioTroquel); cx.stroke();
       cx.restore();
     }
     return { W: W, H: H, mm: [totW, totH], dpi: Math.round(px * 25.4) };
@@ -3253,7 +3308,232 @@ var qrcode = function() {
     adornoAbajo(bx, by, bw, bh, radio, acento);
   }
 
+  /* ══════════ la tarjeta tumbada, partida en dos ══════════
+
+     Este es el modelo que sale fotografiado en la web, y NO esta puesto
+     a ojo: la foto (assets/img/caa45407153b.jpg) se rectifico —esta
+     girada— y se midio pieza a pieza sobre ella. Cada numero de aqui
+     abajo es una medida de esa foto, en fraccion del ANCHO (las X y los
+     anchos) o del ALTO (las Y, los altos y los tamanos de letra).
+
+     Lo que se aprendio midiendo, y que a ojo estaba mal:
+       · la raya dorada va ARRIBA del todo (0,228 del alto), no a un
+         tercio;
+       · la raya NO cruza al lado blanco: muere en la juntura;
+       · las estrellas van SEPARADAS (radio 0,020 del ancho, paso 0,056)
+         y la raya no les pasa por detras: se corta antes de la primera
+         y vuelve despues de la ultima;
+       · los dos renglones del titulo van muy sueltos, a 0,157 del alto
+         uno de otro, que es mas del doble del cuerpo de la letra;
+       · en el lado blanco cada pieza tiene su sitio propio: la G, la
+         instruccion y la firma caen en 0,73 del ancho, pero el icono y
+         el QR no estan repartidos a los lados de ese eje. */
+  var TUMBADA = {
+    corte: 0.430,                       /* la juntura de las dos mitades */
+
+    oroY: 0.228, oroGrueso: 0.009,      /* la raya de arriba */
+    estrellaX: 0.2159, estrellaR: 0.0215, estrellaPaso: 0.0559,
+    estrellaHueco: 0.0125,              /* aire entre la raya y las estrellas */
+
+    tituloY: 0.533, tituloSep: 0.157,   /* centro del bloque y salto de linea */
+    tituloCaja: 0.0519, tituloAncho: 0.2547,  /* alto de las mayusculas y ancho */
+    clienteY: 0.8351, clienteTam: 0.0570, clienteAncho: 0.300,
+    lemaY: 0.905,
+
+    gX: 0.7312, gY: 0.1491, gTam: 0.1225,
+    nfcX: 0.6074, nfcY: 0.4764, nfcU: 0.2265,
+    qrX: 0.8659, qrY: 0.4778, qrLado: 0.2153,
+    insX: 0.7265, insY: 0.7855, insTam: 0.0439, insSep: 0.00093,
+
+    pieY: 0.906, pieGrueso: 0.0037,     /* la raya del pie, mas fina */
+    pieDesde: 0.4735, pieHasta: 0.8982,
+    pieLogoX: 0.7262, pieLogoAlto: 0.0794
+  };
+
+  function pintaTumbada(bx, by, bw, bh, radio) {
+    var T = TUMBADA;
+    /* Dos decisiones de color que aquí NO se toman como en la placa:
+
+       · el acento se queda en el oro de la marca aunque el lado de color
+         sea un naranja donde no destaca mucho. En el original es así, y
+         unas estrellas marrones sobre naranja ya no son este modelo.
+         Solo se cae al tono calculado si el color es tan dorado que las
+         estrellas desaparecerían del todo.
+       · el texto de ese lado va en BLANCO salvo que el color sea claro.
+         La cuenta de contraste, sobre un naranja medio, da tinta oscura,
+         y en la tarjeta de la web va blanco. */
+    var acento = est.acentoAuto
+      ? (contraste(est.banda, ORO_PLACA) >= 1.6 ? ORO_PLACA : acentoDe(est.banda))
+      : est.acento;
+    var sobreBanda = contraste(est.banda, '#FFFFFF') >= 2.2 ? '#FFFFFF' : '#101216';
+    var tinta = tintaDe(est.fondo);
+    var corte = bx + bw * T.corte;
+    var centroI = bx + bw * T.corte / 2;          /* eje del lado de color */
+
+    /* 1. el lado de color. En la foto no es plano: aclara hacia arriba y
+          se apaga hacia abajo (255,140,85 arriba contra 215,112,77
+          abajo, o sea un 16 % arriba y un 14 % abajo). El degradado es
+          vertical, y contra el fondo se corta en seco: la juntura es una
+          línea recta, sin transición. */
+    cx.save();
+    if (radio) { redondo(bx, by, bw, bh, radio); cx.clip(); }
+    var grad = cx.createLinearGradient(0, by, 0, by + bh);
+    grad.addColorStop(0, aclara(est.banda, .16));
+    grad.addColorStop(0.5, est.banda);
+    grad.addColorStop(1, oscurece(est.banda, .14));
+    cx.fillStyle = grad;
+    /* Arranca en el canto del papel, no en el de la tarjeta: con
+       sangrado el color tiene que pasarse del corte por arriba, por
+       abajo y por la izquierda. Si se pinta solo dentro de la tarjeta,
+       la imprenta corta un pelo torcido y aparece una pestaña blanca. */
+    cx.fillRect(0, 0, corte, lienzo.height);
+    cx.restore();
+
+    /* 2. la raya dorada y las cinco estrellas. La raya cruza el lado de
+          color de canto a canto y se para en la juntura; las estrellas
+          van encima de ella, separadas, centradas en 0,216 del ancho. */
+    var oroY = by + bh * T.oroY;
+    var r = bw * T.estrellaR, paso = bw * T.estrellaPaso;
+    var x0est = bx + bw * T.estrellaX - paso * 2;   /* la primera estrella */
+    var x4est = x0est + paso * 4;                   /* la última */
+    var aire = r + bw * T.estrellaHueco;
+    cx.save();
+    cx.strokeStyle = acento;
+    cx.lineWidth = Math.max(1, bh * T.oroGrueso);
+    cx.lineCap = 'butt';
+    /* La raya NO pasa por detrás de las estrellas: se corta antes de la
+       primera y vuelve después de la última, como en la foto. Medido
+       ahí: el trozo de la izquierda muere en 0,066 del ancho y el de la
+       derecha arranca en 0,351 y llega hasta la juntura. */
+    cx.beginPath();
+    cx.moveTo(0, oroY);          cx.lineTo(x0est - aire, oroY);
+    cx.moveTo(x4est + aire, oroY); cx.lineTo(corte, oroY);
+    cx.stroke();
+    cx.restore();
+    for (var i = 0; i < 5; i++) estrella(x0est + i * paso, oroY, r, acento);
+
+    /* 3. el título. Dos renglones muy separados —0,157 del alto, medido
+          en la foto— y por eso no se puede usar el bloque normal, que
+          los junta a 1,16 del cuerpo. A dos líneas como mucho: en tres,
+          "¡TU RESEÑA EN GOOGLE!" parte por "¡TU / RESEÑA EN / GOOGLE!" y
+          deja de ser el modelo. */
+    tituloTumbada(centroI, by + bh * T.tituloY, bw * T.tituloAncho,
+                  bh * T.tituloCaja, bh * T.tituloSep, sobreBanda);
+
+    /* 4. el cliente, abajo del lado de color: su nombre, su logo, o los
+          dos. Aquí va sobre el color, así que la tinta es la que
+          contrasta con la banda, no con el fondo. */
+    var conLema = !!est.lema.trim();
+    /* zonaCliente mide desde el borde de ARRIBA del bloque, y lo que
+       está medido en la foto es el centro: de ahí el medio alto. */
+    var altoCli = bh * T.clienteTam * 1.45;
+    var cliY = by + bh * T.clienteY - altoCli / 2;
+    zonaCliente(bx, cliY, bw * T.corte, altoCli, bw * T.clienteAncho, sobreBanda);
+    if (conLema) {
+      espaciado(est.lema.trim(), centroI, by + bh * T.lemaY, bh * 0.028, bh * 0.011,
+                sobreBanda, '600');
+    }
+
+    /* 5. la G, arriba del lado limpio. Sin disco blanco debajo: aquí el
+          papel ya es el fondo y un disco se vería como un parche. */
+    if (est.conG) dibujaG(bx + bw * T.gX, by + bh * T.gY, bh * T.gTam, false);
+
+    /* 6. el icono y el QR. Cada uno en su sitio medido: no están
+          repartidos a los lados de un eje, el QR cae más a la derecha de
+          lo que le tocaría. */
+    var ladoQR = bw * T.qrLado;
+    if (est.conNfc) {
+      dibujaNfc(bx + bw * T.nfcX, by + bh * T.nfcY, bw * T.nfcU, tinta, est.fondo);
+      dibujaQR(enlaceQR(), bx + bw * T.qrX, by + bh * T.qrY, ladoQR, tinta);
+    } else {
+      dibujaQR(enlaceQR(), bx + bw * T.insX, by + bh * T.qrY, ladoQR * 1.15, tinta);
+    }
+
+    /* 7. la instrucción, en una línea: en la tarjeta va corta */
+    /* va con las letras algo separadas, como en la foto: ahí ocupa
+       0,2706 del ancho con unas mayúsculas de 0,0315 del alto, y eso
+       solo sale con espaciado */
+    espaciado(instruccion(), bx + bw * T.insX, by + bh * T.insY,
+              bh * T.insTam, bw * T.insSep, tinta, '700');
+
+    /* 8. la firma de PLEA5E al pie, con la raya partida a los lados */
+    pieTumbado(bx, by + bh * T.pieY, bw, bh, acento);
+  }
+
+  /* El título de la tarjeta, que no se dibuja como los demás.
+
+     En la foto las mayúsculas miden 0,0519 del alto y el renglón más
+     largo ocupa 0,2547 del ancho. Con Montserrat esas dos medidas no se
+     dan a la vez: la letra del original es más estrecha, y puesta al
+     alto que toca se sale de ancho. Así que se pone al ALTO de la foto y
+     se estrecha lo justo para caber en el ANCHO de la foto, que es un 8 %
+     y no se nota. Al revés —dejarla caber sola— salía un título un 12 %
+     más bajo que el del modelo, y eso sí se ve al ponerlos al lado.
+
+     Un título escrito a mano y muy largo no se estrecha sin fin: por
+     debajo del 0,85 se encoge la letra, que es más honrado que aplastar
+     las palabras. */
+  function tituloTumbada(x, cy, ancho, caja, sep, color) {
+    var CAJA = 0.626;        /* alto de las mayúsculas de Montserrat, por em */
+    var SUELO = 0.85;        /* hasta aquí se estrecha, no más */
+    var tam = caja / CAJA;
+    /* el reparto en renglones se calcula con el ancho de verdad */
+    var t = reparte(est.titulo, ancho, tam, '800', 2, bh_infinito(), true);
+    cx.font = '800 ' + tam + 'px Montse, system-ui, sans-serif';
+    var k = 1, natural = anchoDe(t.lineas);
+    if (natural > ancho) k = ancho / natural;
+    if (k < SUELO) {
+      tam *= k / SUELO; k = SUELO;
+      cx.font = '800 ' + tam + 'px Montse, system-ui, sans-serif';
+    }
+    cx.save();
+    cx.fillStyle = color;
+    cx.translate(x, cy - (t.lineas.length - 1) * sep / 2);
+    cx.scale(k, 1);
+    t.lineas.forEach(function (l, i) { cx.fillText(l, 0, i * sep); });
+    cx.restore();
+  }
+  /* un alto que nunca limita: el título de la tarjeta manda por ancho */
+  function bh_infinito() { return 1e9; }
+
+  /* El pie de la tarjeta. La raya es más fina que la de arriba (0,0037
+     del alto contra 0,011), no llega a los cantos —va de 0,474 a 0,898
+     del ancho— y no cruza el logotipo por detrás: se corta donde
+     empiezan los brazos de la estrella y sigue al otro lado. */
+  function pieTumbado(bx, y, bw, bh, acento) {
+    var T = TUMBADA;
+    var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
+    var izq = bx + bw * T.pieDesde, der = bx + bw * T.pieHasta;
+    var centro = bx + bw * T.pieLogoX;
+    var alto = 0, ancho = 0;
+    if (logoPlea) {
+      alto = bh * T.pieLogoAlto;
+      ancho = alto * LOGO_PROP;
+      var tope = (der - izq) * 0.92;
+      if (ancho > tope) { ancho = tope; alto = ancho / LOGO_PROP; }
+    }
+    cx.save();
+    cx.strokeStyle = aclara(ORO, .18);
+    cx.lineWidth = Math.max(1, bh * T.pieGrueso);
+    cx.lineCap = 'butt';
+    cx.beginPath();
+    if (ancho) {
+      cx.moveTo(izq, y); cx.lineTo(centro - ancho / 2, y);
+      cx.moveTo(centro + ancho / 2, y); cx.lineTo(der, y);
+    } else {
+      cx.moveTo(izq, y); cx.lineTo(der, y);
+    }
+    cx.stroke();
+    cx.restore();
+    if (logoPlea) {
+      cx.drawImage(logoPlea, centro - ancho / 2, y - alto * LOGO_LINEA, ancho, alto);
+    }
+  }
+
+  /* En la tarjeta la instruccion va corta: el lado limpio tiene la mitad
+     del ancho y "para valorarnos" empuja la letra hasta que no se lee. */
   function instruccion() {
+    if (est.formato === 'tarjeta') return est.conNfc ? 'Toca o escanea' : 'Escanea el código';
     return est.conNfc ? 'Toca o escanea para valorarnos' : 'Escanea para valorarnos';
   }
 
@@ -3388,10 +3668,13 @@ var qrcode = function() {
       av.hidden = !qr;
       if (qr) {
         av.innerHTML = nombreCorto()
-          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>. Dala de alta en ' +
-            '<b>/taller/enlaces.html</b> antes de imprimir, o el QR no llevará a ningún sitio.'
-          : 'El QR lleva la dirección de Google grabada. <b>No se podrá cambiar</b> ' +
-            'cuando esté impresa: si quieres poder, pon una dirección corta arriba.';
+          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>, que es nuestra ' +
+            'página, y desde ahí sale a la ficha de Google del cliente. ' +
+            '<b>Dala de alta en /taller/enlaces.html antes de imprimir</b>, o el QR no ' +
+            'llevará a ningún sitio.'
+          : 'El QR lleva la dirección de Google <b>grabada a fuego</b>: cuando esté ' +
+            'impresa no se podrá cambiar. Escribe arriba una dirección corta —o el ' +
+            'nombre del negocio, que la pone sola— para que pase por nuestra página.';
       }
     });
   }
@@ -3405,9 +3688,37 @@ var qrcode = function() {
       alCambiar(b.dataset.v);
     });
   }
+  /* Todo lo que cambia solo al cambiar de formato, en un sitio: la
+     medida que se anuncia, el titulo de por defecto, el color del fondo
+     y los mandos que ese formato no usa. */
+  function ajustaPorFormato(v) {
+    var F = FORMATOS[v];
+    $('medidaTxt').textContent = F.mm[0] + ' × ' + F.mm[1] + ' mm · ' + F.nombre;
+
+    /* el titulo, solo si el que hay puesto es el de por defecto de otro
+       formato: lo escrito a mano no se toca */
+    if (esTituloPorDefecto(est.titulo) && est.titulo.trim() !== TITULOS[v]) {
+      est.titulo = TITULOS[v];
+      $('fTitulo').value = est.titulo;
+    }
+
+    /* el fondo: crema en la placa y el expositor, blanco en la tarjeta,
+       que es como sale en la web. Solo mientras no se haya elegido un
+       color a mano. */
+    if (est.fondoAuto) ponFondo(v === 'tarjeta' ? '#FFFFFF' : '#ECE2D3', true);
+
+    /* la tarjeta no lleva esquinas de encuadre: en el original no están
+       y metidas ahí aprietan el icono contra el QR */
+    var m = $('fMarco');
+    m.disabled = (v === 'tarjeta');
+    var etiqueta = m.parentNode;
+    etiqueta.style.opacity = m.disabled ? '.45' : '';
+    etiqueta.title = m.disabled ? 'La tarjeta no las lleva' : '';
+  }
+
   grupo('fFormato', function (v) {
     est.formato = v;
-    $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
+    ajustaPorFormato(v);
     refresca();
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
@@ -3416,9 +3727,38 @@ var qrcode = function() {
     $(id).addEventListener('input', function () {
       est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
            fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
+      /* Escribir a mano en la dirección corta la saca del automático;
+         vaciarla del todo lo devuelve, que es la forma natural de decir
+         "ponme otra vez la que salga del nombre". */
+      if (id === 'fCorta') est.cortaAuto = !this.value.trim();
+      if (id === 'fNegocio' || (id === 'fCorta' && est.cortaAuto)) proponCorta();
       refresca();
     });
   });
+
+  /* LA DIRECCIÓN CORTA SE PONE SOLA, y esto no es una comodidad: es lo
+     que decide a dónde apunta el QR que se va a imprimir.
+
+     Con dirección corta, el QR lleva plea5e.es/r/loquesea, que es NUESTRA
+     página, y es ella la que manda al cliente a la ficha de Google. El
+     día que el bar cambie de ficha, de dueño o de nombre, se cambia el
+     destino en /taller/enlaces.html y las piezas que están pegadas en las
+     mesas siguen valiendo.
+
+     Sin ella, el QR lleva la dirección de Google grabada a fuego y esa
+     pieza se tira. Por eso ahora se rellena sola en cuanto hay nombre:
+     antes había que acordarse de escribirla, y la que se olvidaba salía
+     impresa sin remedio. */
+  function proponCorta() {
+    if (!est.cortaAuto) return;
+    var v = String(est.negocio || '').trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+      .slice(0, 40).replace(/-$/, '');
+    if (v === est.corta) return;
+    est.corta = v;
+    $('fCorta').value = v;
+  }
 
   /* Lo que se escriba ahí se limpia al salir del campo, no mientras se
      escribe: corregirle las letras a alguien con el cursor en medio de la
@@ -3435,6 +3775,8 @@ var qrcode = function() {
     if (v === this.value) return;
     this.value = v;
     est.corta = v;
+    est.cortaAuto = !v;
+    proponCorta();
     refresca();
   });
   ['fSangrado','fGoogleLogo','fNfc','fMarco'].forEach(function (id) {
@@ -3444,15 +3786,17 @@ var qrcode = function() {
     });
   });
 
-  /* el color del fondo */
-  function ponFondo(hex) {
+  /* el color del fondo. 'auto' es el que pone el propio formato; en
+     cuanto se elige uno a mano deja de cambiarse solo. */
+  function ponFondo(hex, auto) {
     est.fondo = hex.toUpperCase();
+    est.fondoAuto = !!auto;
     $('fFondo').value = est.fondo; $('fondoHex').textContent = est.fondo;
     refresca();
   }
-  $('fFondo').addEventListener('input', function () { ponFondo(this.value); });
-  $('fondoCrema').addEventListener('click',  function () { ponFondo('#ECE2D3'); });
-  $('fondoBlanco').addEventListener('click', function () { ponFondo('#FFFFFF'); });
+  $('fFondo').addEventListener('input', function () { ponFondo(this.value, false); });
+  $('fondoCrema').addEventListener('click',  function () { ponFondo('#ECE2D3', false); });
+  $('fondoBlanco').addEventListener('click', function () { ponFondo('#FFFFFF', false); });
 
   $('fBanda').addEventListener('input', function () {
     est.banda = this.value.toUpperCase();
@@ -3612,7 +3956,10 @@ var qrcode = function() {
         [].forEach.call($('fFormato').children, function (o) {
           o.setAttribute('aria-pressed', o.dataset.v === v ? 'true' : 'false');
         });
-        $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
+        /* lo mismo que al pulsar el botón: medida, título y fondo del
+           formato. Si el enlace trae además título o fondo propios,
+           vienen detrás en el mismo enlace y mandan ellos. */
+        ajustaPorFormato(v);
       } else if (k === 'banda' || k === 'fondo' || k === 'acento') {
         if (!/^#?[0-9A-Fa-f]{6}$/.test(v)) return;
         var hex = (v.charAt(0) === '#' ? v : '#' + v).toUpperCase();
@@ -3621,8 +3968,10 @@ var qrcode = function() {
         var eco  = { banda:'bandaHex', fondo:'fondoHex', acento:'acentoHex' }[k];
         $(caja).value = hex; $(eco).textContent = hex;
         if (k === 'acento') est.acentoAuto = false;
+        if (k === 'fondo')  est.fondoAuto = false;   /* viene elegido, no se toca */
       } else {
         est[k] = v;
+        if (k === 'corta') est.cortaAuto = false;   /* viene dada, manda ella */
         var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle',
                       corta:'fCorta', titulo:'fTitulo' }[k];
         if (campo) $(campo).value = v;
@@ -3675,13 +4024,18 @@ var qrcode = function() {
   }
 
   Promise.all([cargaLogoPlea(), esperaLetra()]).then(function () {
-    $('medidaTxt').textContent = '90 × 90 mm · Placa de mesa';
+    ajustaPorFormato(est.formato);
     if (leeEncargo() && est.acentoAuto) ponAcento(acentoDe(est.banda), true);
+    proponCorta();
     refresca();
   });
   /* si pega otro enlace encima sin recargar, que también lo coja */
   window.addEventListener('hashchange', function () {
-    if (leeEncargo()) { if (est.acentoAuto) ponAcento(acentoDe(est.banda), true); refresca(); }
+    if (leeEncargo()) {
+      if (est.acentoAuto) ponAcento(acentoDe(est.banda), true);
+      proponCorta();
+      refresca();
+    }
   });
 })();
 </script>

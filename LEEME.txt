@@ -220,6 +220,31 @@ asomando por el canto.
 Todo eso sale de una sola cosa que puedes tocar: los tres colores
 (banda, fondo y acento). El resto lo coloca solo.
 
+LA TARJETA VA APARTE
+La placa y el expositor comparten esa plantilla en columna. La tarjeta
+no: va tumbada (85x54, la medida de una tarjeta de credito) y lleva el
+modelo partido en dos que sale fotografiado en la web. A la izquierda,
+el lado de color con la raya dorada, las cinco estrellas, el titulo y
+el nombre del negocio; a la derecha, el lado blanco con la G, el icono
+de acercar el movil, el QR, "TOCA O ESCANEA" y la firma de PLEA5E al
+pie. Se dibuja asi a proposito: la tarjeta que se le ensena al cliente
+tiene que ser la misma que ha visto en la pagina.
+
+Y no esta puesto a ojo. La foto del producto (assets/img/caa45407153b
+.jpg) esta girada, asi que se rectifico y se midio encima: donde cae la
+raya (0,228 del alto), donde empiezan y acaban sus dos trozos, el radio
+y el paso de las estrellas, el salto entre los dos renglones del
+titulo, y el sitio de la G, del icono, del QR, de la instruccion y de
+la firma. Esos numeros son los que estan escritos en la reja TUMBADA
+del generador, uno a uno. Si algun dia cambia el modelo, se vuelve a
+medir la foto nueva y se cambian ahi; no hay nada repartido a ojo.
+
+Al cambiar a tarjeta, el generador acorta el titulo ("¡Tu reseña en
+Google!", que es el del modelo) y pone el fondo en blanco. Las dos
+cosas solo si no las has tocado tu: lo que escribas o elijas a mano no
+se cambia nunca. Las esquinas de encuadre no se usan en la tarjeta, asi
+que esa casilla se queda apagada mientras ese formato este elegido.
+
 LO QUE HACE SOLO
   - Saca los colores del logo que subas y te los pone como botones.
     Elige de entrada el mas oscuro con color, que es donde el texto
@@ -229,7 +254,12 @@ LO QUE HACE SOLO
   - Encoge el texto hasta que quepa, a lo ancho y a lo alto. Da igual
     que el bar se llame "El Rincon de Manolo y sus Hijos": cabe.
   - Monta el QR con correccion de errores alta, la que aguanta que la
-    placa se raye o se ensucie y siga leyendo.
+    placa se raye o se ensucie y siga leyendo, y con los modulos a
+    pixeles enteros para que el canto salga limpio.
+  - RELLENA SOLA LA DIRECCION CORTA con el nombre del negocio, para que
+    el QR pase por plea5e.es/r/... y no lleve Google grabado. Si
+    escribes otra a mano, manda la tuya; si la vacias, vuelve a salir
+    la del nombre.
 
 EL ENLACE DE GOOGLE
 Vale de las tres maneras:
@@ -240,9 +270,16 @@ Si le das el codigo a secas, el te monta el enlace de escribir resena.
 
 PARA LA IMPRENTA
 Marca "Sangrado de 3 mm" y el fondo se sale por los cuatro lados, con
-la linea de corte marcada. Es lo que te va a pedir la imprenta. El PNG
-sale a 2000 px de lado largo: para 90 mm son unos 565 puntos por
-pulgada, de sobra.
+la linea de corte marcada (en la tarjeta, ya con el redondeo del
+troquel). Es lo que te va a pedir la imprenta. El PNG sale a 3600 px de
+lado largo: para 90 mm son unos 1016 puntos por pulgada, y la tarjeta
+pasa de 1000. Antes eran 2000 px, que para imprimir llegaban, pero se
+quedaban blandos al mirar el archivo ampliado en pantalla.
+
+Sin sangrado, la tarjeta sale ya troquelada: esquinas redondeadas de
+3 mm y las cuatro puntas transparentes, para poder montarla encima de
+una foto. La placa y el expositor salen cuadrados, que es como los
+quiere la maquina que los recorta.
 
 PARA ENSENARSELO AL CLIENTE
 Sin sangrado. El boton "Descargar PNG" te lo baja; "Copiar imagen" lo
@@ -924,9 +961,11 @@ COMO SE USA, DE PRINCIPIO A FIN
      (misma contrasena que el panel de pedidos) y crea la direccion:
      el nombre corto, el negocio, y el enlace de Google.
 
-  2. En el generador, rellena "Direccion corta" con ese mismo nombre.
-     Debajo de la vista previa te dice, con todas las letras, lo que
-     va a llevar grabado el QR. Leelo ANTES de mandar a imprimir.
+  2. En el generador, la "Direccion corta" ya viene puesta: sale del
+     nombre del negocio. Comprueba que es la MISMA que diste de alta en
+     el paso 1 (si no, cambiala ahi mismo). Debajo de la vista previa te
+     dice, con todas las letras, lo que va a llevar grabado el QR.
+     Leelo ANTES de mandar a imprimir.
 
   3. Imprime.
 
@@ -934,7 +973,7 @@ COMO SE USA, DE PRINCIPIO A FIN
      "Cambiar el destino" -> pegar el nuevo. Efecto inmediato, sin
      desplegar nada y sin tocar la placa.
 
-SI DEJAS LA DIRECCION CORTA VACIA, el QR lleva la direccion de Google
+SI BORRAS LA DIRECCION CORTA A MANO, el QR lleva la direccion de Google
 grabada a fuego, como antes. Funciona igual de bien, pero pierdes el
 poder cambiarla. Solo tiene sentido si el cliente no quiere pasar por
 nosotros.
