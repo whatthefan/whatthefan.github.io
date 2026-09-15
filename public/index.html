@@ -74,7 +74,7 @@
       "@type": "Product",
       "@id": "https://plea5e.es/#placa-de-mesa",
       "name": "Placa de mesa NFC para reseñas de Google",
-      "description": "Placa de 100 × 100 mm en metacrilato de 3 mm con chip NFC programado y código QR impreso. Se pega a la mesa o a la barra con adhesivo de montaje 3M.",
+      "description": "Placa de 100 × 100 mm en metacrilato de 4 mm con chip NFC programado y código QR impreso. Se pega a la mesa o a la barra con adhesivo de montaje 3M.",
       "brand": {
         "@type": "Brand",
         "name": "PLEA5E"
@@ -550,7 +550,7 @@
         <div class="cuerpo">
           <h3>Placa de mesa</h3>
           <p class="paraquien">Para bar, restaurante o cafetería <b>con mesas</b></p>
-          <p class="medida">100 × 100 mm · metacrilato 3 mm · <b>chip NFC</b></p>
+          <p class="medida">100 × 100 mm · metacrilato 4 mm · <b>chip NFC</b></p>
           <p class="desc">Se pega a la mesa o a la barra con adhesivo de montaje <b>3M</b>. Está delante del cliente todo el rato, por eso es la que más reseñas trae.</p>
           <p class="pvp"><span class="n">25 €</span><span class="antes">33,50 €</span><span class="ahorro" aria-label="25 por ciento de descuento">-25%</span><small>por unidad</small></p>
           <a class="btn btn-oro" href="#pedido" data-pide="placa">Pedir esta</a>
@@ -2577,13 +2577,15 @@
        la ve como una linea tachandolo, no como un adorno- y el menu, sea
        en escritorio (los enlaces) o el boton de abrirlo en movil: aunque
        ese boton no lleva fondo solido, su borde deja la linea cruzando
-       por dentro de la caja y se ve como si la partiera. El resto de la
-       fila -"Respondemos en minutos", que ya lleva su propio fondo
-       opaco por delante- se queda encima de la linea sin cortarle hueco
-       aparte. */
+       por dentro de la caja y se ve como si la partiera.
+
+       Y "Respondemos en minutos" tambien. Aqui ponia que ese no hacia
+       falta porque "ya lleva su propio fondo opaco por delante", y es
+       mentira: la pastilla es semitransparente, la linea se ve a traves
+       y en un monitor queda como si tachara el texto. */
     var MARGEN = 9;
     var huecos = [];
-    ['.marca', '.est5', '.menu', '.abrir', '.lema'].forEach(function (sel) {
+    ['.marca', '.est5', '.menu', '.abrir', '.lema', '.enlinea'].forEach(function (sel) {
       var h = fila.querySelector(sel);
       if (!h) return;
       var c = h.getBoundingClientRect();
@@ -2606,7 +2608,21 @@
       partes.push(ORO + ' ' + x + 'px ' + a + 'px', 'transparent ' + a + 'px ' + b + 'px');
       x = b;
     });
-    partes.push(ORO + ' ' + x + 'px 100%');
+
+    /* DESPUES DEL ULTIMO HUECO NO SE PINTA MAS.
+
+       Antes seguia hasta el borde derecho de la pantalla. En el movil eso
+       no se notaba, porque el boton del menu casi toca el borde y el
+       rabo que quedaba era de cuatro pixeles. En un monitor el menu
+       termina bastante antes del canto, y lo que salia era un palito de
+       oro suelto a la derecha del boton amarillo, empezando de la nada y
+       muriendo en el canto. No parecia un adorno, parecia un fallo.
+
+       Por la izquierda si sale de fuera de la pantalla, que es de donde
+       tiene que venir. Por la derecha la banda termina en lo ultimo que
+       cruza y ya esta. */
+    if (!tramos.length) partes.push(ORO + ' 0px 100%');   /* nada en medio: entera */
+    else if (x < innerWidth) partes.push('transparent ' + x + 'px 100%');
     tira.style.background = 'linear-gradient(to right,' + partes.join(',') + ')';
   }
 
