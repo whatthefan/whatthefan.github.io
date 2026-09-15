@@ -55,6 +55,8 @@ textarea{resize:vertical;min-height:56px}
 
 /* el "plea5e.es/r/" pegado a la izquierda del hueco, para que se vea de un
    golpe que ahi solo va el trozo final y no la direccion entera */
+.segm-red{flex-wrap:wrap}
+.segm-red button{flex:1 0 auto}
 .corta-caja{display:flex;align-items:stretch}
 .corta-caja span{display:flex;align-items:center;white-space:nowrap;font-size:.86rem;
   color:var(--txt-3);background:var(--panel);border:1px solid var(--borde-claro);
@@ -140,7 +142,26 @@ canvas{display:none}
     </div>
 
     <div class="campo">
-      <label for="fGoogle">Enlace de Google o código del sitio</label>
+      <label for="fRed">¿Dónde quieres que vaya?</label>
+      <div class="segm segm-red" id="fRed" role="group">
+        <button type="button" data-v="google" aria-pressed="true">Google</button>
+        <button type="button" data-v="tripadvisor" aria-pressed="false">Tripadvisor</button>
+        <button type="button" data-v="facebook" aria-pressed="false">Facebook</button>
+        <button type="button" data-v="instagram" aria-pressed="false">Instagram</button>
+        <button type="button" data-v="x" aria-pressed="false">X</button>
+        <button type="button" data-v="otra" aria-pressed="false">Otra</button>
+      </div>
+      <span class="pista" id="pistaRed"></span>
+      <div class="subir" id="cajaLogoRed" hidden>
+        <img class="mini" id="miniRed" alt="" hidden>
+        <label class="btn btn-fan" for="fLogoRed">Subir el logotipo</label>
+        <input id="fLogoRed" type="file" accept="image/*">
+        <button type="button" class="btn btn-fan" id="quitaRed" hidden>Quitar</button>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="fGoogle" id="etiqEnlace">Enlace de Google o código del sitio</label>
       <input id="fGoogle" type="text" placeholder="ChIJZca-8BbQDQ0RIByaopjYtHY" autocomplete="off">
       <span class="pista">Esto <b>no</b> va grabado en el QR: es el destino al que apuntará la dirección corta. Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección.</span>
     </div>
@@ -2550,8 +2571,96 @@ var qrcode = function() {
   var FORMATOS = {
     placa:   { nombre: 'Placa de mesa',    mm: [90, 90],  reja: 'cuadrada' },
     stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
-    tarjeta: { nombre: 'Tarjeta de mano',  mm: [55, 85],  reja: 'alta' }
+    /* LA TARJETA VA TUMBADA, 85 × 54, que es la que se vende.
+
+       Estaba como 55 × 85 de pie, y eso no es lo que pone la web ni lo
+       que se manda a imprimir: la ficha del producto y el formulario de
+       pedido dicen los dos "85 × 54 mm", el tamaño de una tarjeta de
+       visita. Se dibujaba una cosa y se vendía otra.
+
+       El comentario de aquí decía que tumbada "no cabe esta composición
+       y sale otra cosa distinta". Es verdad que no cabe: la composición
+       de pie son seis pisos (banda, G, icono y QR, instrucción, nombre,
+       firma) y en 54 mm de alto tocan a 9 mm cada uno. Pero la respuesta
+       no era dibujarla de pie, era darle su propia composición: en la
+       tarjeta el icono y el texto van a la izquierda y el QR a la
+       derecha. Eso es pintaApaisada(). */
+    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],  reja: 'apaisada' }
   };
+
+  /* ══════════ a dónde va la reseña ══════════ */
+
+  /* La placa no siempre es para Google, y el texto NO puede ser el mismo
+     para todas: en Instagram y en X no se deja una reseña, se sigue una
+     cuenta; en Facebook se recomienda. Poner "tu reseña en Instagram" es
+     pedirle al cliente algo que ahí no existe.
+
+     · marca:  si tenemos el dibujo oficial. Solo Google, que son sus
+               cuatro trazos exactos. Los demás se suben como imagen
+               desde la página de recursos de marca de cada plataforma:
+               dibujarlos yo "de memoria" es poner un logotipo torcido en
+               algo que se imprime por cientos y lleva la marca de otro.
+     · aviso:  lo que hay que saber antes de venderla.
+
+     AIRBNB NO ESTÁ, y no es un olvido. En Airbnb solo puede valorar
+     quien ha reservado y se ha alojado, y la valoración la pide Airbnb
+     por su cuenta cuando termina la estancia: no hay enlace público al
+     que mandar a nadie. Una placa en el salón del piso no puede generar
+     una reseña de Airbnb, y encima pedirla por fuera va contra sus
+     normas. Vender eso es vender algo que no funciona. Para un piso
+     turístico lo que sí vale es Google. */
+  var REDES = {
+    google: {
+      nombre: 'Google', marca: 'google',
+      titulo: '¡Nos encantaría tu reseña en Google!',
+      accion: 'valorarnos',
+      etiqueta: 'Enlace de Google o código del sitio',
+      ejemplo: 'ChIJZca-8BbQDQ0RIByaopjYtHY',
+      aviso: 'El de siempre. Vale el código del sitio a secas, el enlace de «Pedir reseñas» o cualquier dirección.'
+    },
+    tripadvisor: {
+      nombre: 'Tripadvisor', marca: null,
+      titulo: '¡Nos encantaría tu reseña en Tripadvisor!',
+      accion: 'valorarnos',
+      etiqueta: 'Enlace de la ficha de Tripadvisor',
+      ejemplo: 'https://www.tripadvisor.es/...',
+      aviso: 'Pega el enlace de «Escribir una opinión» de su ficha. El logotipo súbelo abajo desde la página de recursos de marca de Tripadvisor.'
+    },
+    facebook: {
+      nombre: 'Facebook', marca: null,
+      titulo: '¡Recomiéndanos en Facebook!',
+      accion: 'recomendarnos',
+      etiqueta: 'Enlace de la página de Facebook',
+      ejemplo: 'https://facebook.com/elnegocio',
+      aviso: 'En Facebook no son reseñas, son recomendaciones, y por eso cambia el texto. El logotipo súbelo abajo desde los recursos de marca de Meta.'
+    },
+    instagram: {
+      nombre: 'Instagram', marca: null,
+      titulo: '¡Síguenos en Instagram!',
+      accion: 'seguirnos',
+      etiqueta: 'Enlace del perfil de Instagram',
+      ejemplo: 'https://instagram.com/elnegocio',
+      aviso: 'En Instagram no hay reseñas: esta placa sirve para ganar seguidores, no valoraciones. El logotipo súbelo abajo desde los recursos de marca de Meta.'
+    },
+    x: {
+      nombre: 'X', marca: null,
+      titulo: '¡Síguenos en X!',
+      accion: 'seguirnos',
+      etiqueta: 'Enlace del perfil de X',
+      ejemplo: 'https://x.com/elnegocio',
+      aviso: 'Igual que Instagram: se gana seguidores, no reseñas. El logotipo súbelo abajo desde los recursos de marca de X.'
+    },
+    otra: {
+      nombre: 'Otra', marca: null,
+      titulo: '¡Nos encantaría tu opinión!',
+      accion: 'valorarnos',
+      etiqueta: 'Enlace al que tiene que llevar',
+      ejemplo: 'https://...',
+      aviso: 'Cualquier dirección. El texto de la banda y el logotipo los pones tú.'
+    }
+  };
+
+  function red() { return REDES[est.red] || REDES.google; }
 
   /* La G de Google, en sus cuatro colores. Son los trazos oficiales sobre
      una caja de 48×48; se escalan como cualquier otra cosa. */
@@ -2571,6 +2680,8 @@ var qrcode = function() {
     corta: '',           /* el trozo final de plea5e.es/r/... */
     logo: null,          /* Image ya cargada */
     queSeVe: 'ambos',
+    red: 'google',       /* a donde va la resena: ver REDES */
+    logoRed: null,       /* la marca de la plataforma, si se sube */
     banda:  '#192E26',   /* el verde de la plantilla buena */
     fondo:  '#ECE2D3',   /* el crema, no blanco: es lo que le da el aire */
     acento: '#E8C46A',
@@ -2907,6 +3018,22 @@ var qrcode = function() {
     cx.restore();
   }
 
+  /* EL DISCO DE LA PLATAFORMA. Con Google se pinta la G, que son sus
+     trazos exactos. Con las demas, la imagen que se haya subido, metida
+     dentro del mismo circulo blanco para que la placa no cambie de
+     forma segun la red. Si no hay ninguna, no se pinta el disco: mejor
+     un hueco limpio que un circulo blanco vacio en medio de la banda. */
+  function insignia(x, y, tam) {
+    if (red().marca === 'google') { dibujaG(x, y, tam, true, '#FFFFFF'); return; }
+    if (!est.logoRed) return;
+    cx.save();
+    cx.fillStyle = '#FFFFFF';
+    cx.beginPath(); cx.arc(x, y, tam * 0.86, 0, Math.PI * 2); cx.fill();
+    cx.clip();
+    meteImagen(est.logoRed, x, y, tam * 1.16, tam * 1.16);
+    cx.restore();
+  }
+
   /* Las cuatro esquinas de encuadre alrededor del icono, como el visor de
      una cámara. Salen en la plantilla buena y son lo que le dice al
      cliente "esto de aquí es lo que tienes que tocar". */
@@ -3039,7 +3166,8 @@ var qrcode = function() {
 
     cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-    pintaDePie(bx, by, bw, bh, radio);
+    if (FORMATOS[est.formato].reja === 'apaisada') pintaApaisada(bx, by, bw, bh, radio);
+    else                                           pintaDePie(bx, by, bw, bh, radio);
 
     if (sang) {
       cx.save();
@@ -3153,6 +3281,108 @@ var qrcode = function() {
     qr: 0.250, separacion: 0.310
   };
 
+  /* ══════════ la tarjeta, que va tumbada ══════════ */
+
+  /* 85 × 54 mm. Es el unico formato mas ancho que alto, y por eso tiene
+     composicion propia en vez de otra fila de numeros en REJA.
+
+     De pie, todo va en una columna: banda, G, icono y QR juntos,
+     instruccion, nombre y firma. Seis pisos. En 54 mm de alto tocarian a
+     9 mm por piso y no se lee nada.
+
+     Tumbada se reparte a lo ancho, que es lo que sobra: la banda con el
+     titulo cruza arriba, y debajo el QR se va a la derecha mientras el
+     icono, la instruccion y el nombre del negocio se apilan a la
+     izquierda. Son tres pisos en vez de seis.
+
+     Lo que NO cambia: las mismas piezas, los mismos colores, la misma
+     banda curvada, la misma G a caballo, el mismo icono y las mismas
+     estrellas del canto. Es la misma placa, no otra cosa. */
+  var TARJ = {
+    banda: 0.315, arco: 0.032, oroY: 0.088, oroSep: 0.019,
+    tituloAncho: 0.56,           /* del ancho */
+    qrLado: 0.470,               /* del alto */
+    qrX: 0.760,                  /* centro del QR, del ancho */
+    qrY: 0.610,                  /* centro del QR, del alto */
+    /* La columna izquierda son tres piezas (icono, instrucción y nombre)
+       en los 0,59 del alto que quedan entre la banda y la raya del pie.
+       A 0,330 de ancho el icono medía 0,32 del alto él solo y el texto
+       se le montaba encima: no cabían los tres. A 0,290 sí, con un dedo
+       de aire entre cada uno. */
+    icoX: 0.290, icoY: 0.465, icoAncho: 0.290,
+    instr: 0.700, cliente: 0.800, clienteAlto: 0.115,
+    pie: 0.930
+  };
+
+  function pintaApaisada(bx, by, bw, bh, radio) {
+    var T = TARJ;
+    var centro = bx + bw/2;
+    var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
+    var sobreBanda = encima(est.banda);
+    var tinta = tintaDe(est.fondo);
+    var anchoUtil = bw * 0.86;
+
+    /* 1. la banda y su curva */
+    var altoBanda = bh * T.banda, arco = bh * T.arco;
+    banda(bx, by, bw, bh, radio, altoBanda, arco, bh * COMUN.sombra);
+
+    /* 2. las dos rayas y las cinco estrellas */
+    rayasYEstrellas(bx, by, bw, bh, radio,
+                    by + bh*(T.oroY - T.oroSep/2), by + bh*(T.oroY + T.oroSep/2),
+                    Math.max(1, bw*0.0045), bw*0.0155, acento);
+
+    /* 3. el titulo, en el hueco que queda de banda */
+    var huecoY0 = by + bh*(T.oroY + 0.045);
+    var huecoAlto = altoBanda - arco - bh*(T.oroY + 0.075);
+    var t = reparte(est.titulo, bw*T.tituloAncho, bh*0.072, '800', 2, huecoAlto, true);
+    cx.font = '800 ' + t.tam + 'px Montse, system-ui, sans-serif';
+    bloque(t, centro, huecoY0 + huecoAlto/2, sobreBanda, false);
+
+    /* 4. la G, a caballo de la curva igual que en los otros formatos */
+    var bordeCentro = by + altoBanda - arco;
+    var rG = bw*0.046;
+    if (est.conG) insignia(centro, bordeCentro + rG*0.42, rG);
+
+    /* 5. el QR, a la derecha */
+    var ladoQR = bh * T.qrLado;
+    var qrX = bx + bw*T.qrX, qrY = by + bh*T.qrY;
+    if (est.conMarco) {
+      var m = ladoQR * 1.24;
+      esquinas(qrX - m/2, qrY - m/2, m, m,
+               bh*0.040, Math.max(1, bh*0.0055), 'rgba(0,0,0,.32)');
+    }
+    dibujaQR(enlaceQR(), qrX, qrY, ladoQR, tinta);
+
+    /* 6. el icono, arriba de la columna izquierda. Si no lleva NFC no se
+          deja el hueco: la columna entera sube y el QR se centra, que es
+          lo que pide una tarjeta que solo se escanea. */
+    var icoX = bx + bw*T.icoX;
+    if (est.conNfc) {
+      dibujaNfc(icoX, by + bh*T.icoY, bw*T.icoAncho, tinta);
+    }
+
+    /* 7. la instruccion y el nombre del negocio, debajo del icono */
+    var yInstr   = by + bh*(est.conNfc ? T.instr : 0.560);
+    var yCliente = by + bh*(est.conNfc ? T.cliente : 0.660);
+    var tIns = reparte(instruccion(), bw*0.40, bh*0.062, '800', 2, bh*0.16, true);
+    cx.font = '800 ' + tIns.tam + 'px Montse, system-ui, sans-serif';
+    bloque(tIns, icoX, yInstr, tinta, false);
+
+    var conLema = !!est.lema.trim();
+    zonaCliente(bx, yCliente, bw*0.56, bh*T.clienteAlto*(conLema ? 1 : 1.25),
+                bw*0.50, tinta);
+
+    /* 8. la firma. En la tarjeta no caben las cinco estrellitas ni el
+          telefono debajo: quedarian a menos de un milimetro del corte.
+          Se queda la raya con el logotipo, que es lo que dice de quien
+          es la tarjeta, y el telefono va a la derecha, en el hueco que
+          deja el QR por encima de la raya. */
+    pie(bx, by, bw, bh, radio, by + bh*T.pie, anchoUtil, acento);
+
+    /* 9. las estrellas del canto, con la misma regla que en los demas */
+    adornoAbajo(bx, by, bw, bh, radio, acento, by + bh*T.pie);
+  }
+
   /* ---- los tres formatos, todos en columna ---- */
   function pintaDePie(bx, by, bw, bh, radio) {
     var F = FORMATOS[est.formato];
@@ -3198,11 +3428,13 @@ var qrcode = function() {
           crema, que es de sobra para que se lea "está entre los dos
           colores", y el título respira.
 
-          Y un pelín más pequeña: el disco pasa de 0,081 a 0,072 del
-          ancho (dibujaG lo pinta a 0,86 de lo que se le pasa). */
+          Y más pequeña: el disco ha ido de 0,081 a 0,072 y de ahí a
+          0,064 del ancho (dibujaG lo pinta a 0,86 de lo que se le
+          pasa). A este tamaño marca de quién es la reseña sin hacerse
+          el protagonista, que es lo que tiene que hacer. */
     var bordeCentro = by + altoBanda - arco;
-    var rG = bw*0.072;
-    if (est.conG) dibujaG(centro, bordeCentro + rG*0.42, rG, true, '#FFFFFF');
+    var rG = bw*0.064;
+    if (est.conG) insignia(centro, bordeCentro + rG*0.42, rG);
 
     /* 5. la fila del medio: el icono a la izquierda y el QR a la
           derecha, separados 0,31 del alto y centrados como pareja. */
@@ -3305,8 +3537,11 @@ var qrcode = function() {
     adornoAbajo(bx, by, bw, bh, radio, acento, by + bh*R.pie);
   }
 
+  /* "para valorarnos" solo vale si de verdad se valora algo. En
+     Instagram y en X se sigue, en Facebook se recomienda. */
   function instruccion() {
-    return est.conNfc ? 'Toca o escanea para valorarnos' : 'Escanea para valorarnos';
+    var acc = red().accion;
+    return (est.conNfc ? 'Toca o escanea para ' : 'Escanea para ') + acc;
   }
 
   /* el bloque del cliente: logo, nombre, o los dos */
@@ -3546,6 +3781,48 @@ var qrcode = function() {
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
 
+  /* EL TEXTO DE LA BANDA SE CAMBIA SOLO AL CAMBIAR DE RED, salvo que ya
+     se haya escrito uno a mano. Mismo trato que la dirección corta: se
+     propone, se escribe en el campo para que se lea, y en cuanto se toca
+     deja de proponerse. Si se vacía, vuelve. */
+  var tituloAMano = false;
+
+  function ponRed(v) {
+    est.red = v;
+    var r = red();
+    $('pistaRed').textContent = r.aviso;
+    $('etiqEnlace').textContent = r.etiqueta;
+    $('fGoogle').placeholder = r.ejemplo;
+    /* el disco solo se sube cuando no tenemos el dibujo oficial */
+    $('cajaLogoRed').hidden = (r.marca === 'google');
+    if (!tituloAMano) { est.titulo = r.titulo; $('fTitulo').value = r.titulo; }
+    refresca();
+  }
+  grupo('fRed', ponRed);
+
+  $('fLogoRed').addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var lector = new FileReader();
+    lector.onload = function () {
+      var im = new Image();
+      im.onload = function () {
+        est.logoRed = im;
+        $('miniRed').src = im.src; $('miniRed').hidden = false;
+        $('quitaRed').hidden = false;
+        refresca();
+      };
+      im.onerror = function () { alert('Ese archivo no se ha podido abrir como imagen.'); };
+      im.src = lector.result;
+    };
+    lector.readAsDataURL(f);
+  });
+  $('quitaRed').addEventListener('click', function () {
+    est.logoRed = null;
+    $('fLogoRed').value = '';
+    $('miniRed').hidden = true; $('quitaRed').hidden = true;
+    refresca();
+  });
+
   /* LA DIRECCIÓN CORTA SE RELLENA SOLA, pero no a escondidas.
 
      Ahora el QR lleva siempre plea5e.es/r/algo, así que sin dirección
@@ -3572,7 +3849,8 @@ var qrcode = function() {
     $(id).addEventListener('input', function () {
       est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
            fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
-      if (id === 'fCorta')   cortaAMano = this.value.trim() !== '';
+      if (id === 'fCorta')   cortaAMano  = this.value.trim() !== '';
+      if (id === 'fTitulo')  tituloAMano = this.value.trim() !== '';
       if (id === 'fNegocio') proponCorta();
       refresca();
     });

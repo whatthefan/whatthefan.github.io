@@ -206,8 +206,35 @@ dos maneras:
 QUE HACE
 Le metes el nombre del negocio, el enlace de Google y el logo, y te
 dibuja la placa terminada, lista para ensenarsela al cliente o para
-mandarla a imprimir. Los tres formatos: placa 90x90, expositor 76x118
+mandarla a imprimir. Los tres formatos: placa 90x90, expositor 100x150
 y tarjeta 85x54.
+
+(Aqui ponia "expositor 76x118", que no es lo que dibuja el generador ni
+lo que pone la web. Y la tarjeta, que aqui ya decia 85x54 desde el
+principio, el generador la dibujaba de pie a 55x85: se dibujaba una cosa
+y se vendia otra. Arreglado: la tarjeta va tumbada y tiene composicion
+propia, con el icono y el texto a la izquierda y el QR a la derecha,
+porque la de pie son seis pisos y en 54 mm de alto no caben.)
+
+A DONDE VA LA RESENA
+Arriba del todo se elige: Google, Tripadvisor, Facebook, Instagram, X u
+otra. No es solo cambiar el logotipo: cambia el TEXTO, porque en
+Instagram y en X no se deja una resena, se sigue una cuenta, y en
+Facebook se recomienda. El texto de la banda se propone solo al cambiar
+de red y se puede reescribir.
+
+El dibujo de la marca solo lo llevamos puesto para Google, que son sus
+trazos exactos. Para las demas hay que subir el logotipo, y se baja de
+la pagina de recursos de marca de cada plataforma. No los dibujo yo de
+memoria: un logotipo torcido en algo que se imprime por cientos y lleva
+la marca de otro es un problema, no un detalle.
+
+AIRBNB NO ESTA, y no es un olvido. En Airbnb solo valora quien ha
+reservado y se ha alojado, y la valoracion la pide Airbnb por su cuenta
+al terminar la estancia: no hay enlace publico al que mandar a nadie.
+Una placa en el salon del piso no puede generar una resena de Airbnb, y
+ademas pedirla por fuera va contra sus normas. Para un piso turistico lo
+que si vale es Google.
 
 LA PLANTILLA
 Es la buena: banda verde oscuro con el borde de abajo curvado, fondo
