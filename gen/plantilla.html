@@ -256,7 +256,7 @@ canvas{display:none}
   var FORMATOS = {
     placa:   { nombre: 'Placa de mesa',    mm: [90, 90],   reja: 'cuadrada' },
     stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
-    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],   plano: 'tumbado' }
+    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],   plano: 'tumbado', radio: 3 }
   };
 
   /* El titulo no es el mismo en los tres. En la placa y en el expositor
@@ -754,14 +754,26 @@ canvas{display:none}
     var qr = qrcode(0, 'H');
     qr.addData(txt);
     qr.make();
-    var n = qr.getModuleCount(), paso = lado / n;
+    var n = qr.getModuleCount();
+    /* MÓDULOS ENTEROS. Antes el módulo medía lado/n, casi siempre con
+       decimales, y cada cuadradito caía entre dos píxeles: el navegador
+       los repartía como podía y el código salía con los bordes sucios,
+       unos módulos un píxel más gordos que otros. Se tapaba con medio
+       píxel de solape, que es peor remedio que la enfermedad.
+
+       Ahora el módulo se redondea a un número entero de píxeles y el
+       código se centra con lo que sobra. Sale con el canto limpio, que
+       es lo que hace que un lector lo pille a la primera y lo que se
+       nota al imprimir en grande. Pierde como mucho medio módulo de
+       tamaño, que a simple vista no existe. */
+    var paso = Math.max(1, Math.round(lado / n));
+    var ladoReal = paso * n;
+    var x0 = Math.round(x - ladoReal / 2), y0 = Math.round(y - ladoReal / 2);
     cx.save();
     cx.fillStyle = oscuro;
     for (var f = 0; f < n; f++) for (var c = 0; c < n; c++) {
       if (!qr.isDark(f, c)) continue;
-      /* +0.5 px de solape: sin eso el navegador deja rayas blancas entre
-         módulos al escalar, y algunos lectores se atragantan */
-      cx.fillRect(x - lado/2 + c*paso, y - lado/2 + f*paso, paso + 0.5, paso + 0.5);
+      cx.fillRect(x0 + c * paso, y0 + f * paso, paso, paso);
     }
     cx.restore();
   }
@@ -788,11 +800,18 @@ canvas{display:none}
 
     var bx = sang * px, by = sang * px;
     var bw = mmW * px, bh = mmH * px;
-    /* Sin esquinas redondeadas. Los originales son rectangulos a
-       sangre; el redondeo lo pone luego el troquel, no el archivo. Si
-       lo dibujamos aqui, la imprenta corta sobre una esquina que ya
-       venia curvada y queda un borde raro. */
-    var radio = 0;
+    /* El troquel. La placa y el expositor son rectangulos a sangre: el
+       redondeo lo pone luego la maquina, y dibujarlo aqui haria que la
+       imprenta cortara sobre una esquina ya curvada. La TARJETA si lo
+       lleva, porque es una tarjeta de PVC troquelada de serie con 3 mm
+       de radio —se midio en la foto: unos 2,4 mm— y una tarjeta con las
+       esquinas en pico no es lo que se le entrega al cliente.
+
+       Con sangrado se dibuja cuadrada igualmente: el archivo para la
+       imprenta va a sangre entera y el troquel se marca con la linea
+       de corte, que sale mas abajo ya redondeada. */
+    var radioTroquel = (F.radio || 0) * px;
+    var radio = sang ? 0 : radioTroquel;
 
     cx.clearRect(0, 0, W, H);
     cx.fillStyle = est.fondo;
@@ -808,7 +827,9 @@ canvas{display:none}
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
       cx.setLineDash([px*1.6, px*1.6]);
-      cx.strokeRect(bx, by, bw, bh);
+      /* la linea de corte lleva el redondeo del troquel: es por donde
+         va a pasar la cuchilla de verdad */
+      redondo(bx, by, bw, bh, radioTroquel); cx.stroke();
       cx.restore();
     }
     return { W: W, H: H, mm: [totW, totH], dpi: Math.round(px * 25.4) };
