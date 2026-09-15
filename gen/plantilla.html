@@ -1085,8 +1085,8 @@ canvas{display:none}
   var TARJ = {
     panel: 0.460,                /* lo que ocupa el lado de color, del ancho */
     oroY:  0.235, oroSep: 0.030, /* la raya y las estrellas, dentro del panel */
-    titulo: 0.520, tituloAncho: 0.82,   /* del panel */
-    cliente: 0.745, clienteAlto: 0.105,
+    titulo: 0.455, tituloAncho: 0.82,   /* del panel */
+    cliente: 0.690, clienteAlto: 0.185,
     redX: 0.738, redY: 0.225, redTam: 0.050,
     icoX: 0.605, icoY: 0.485, icoAncho: 0.175,
     qrX: 0.850, qrY: 0.495, qrLado: 0.340,
@@ -1127,7 +1127,7 @@ canvas{display:none}
     bloque(t, cIzq, by + bh*T.titulo, sobreBanda, false);
 
     zonaCliente(bx, by + bh*T.cliente, anchoPanel, bh*T.clienteAlto,
-                anchoPanel*0.80, sobreBanda);
+                anchoPanel*0.80, sobreBanda, est.logo ? est.fondo : null);
 
     /* 4. el logotipo de la red. Aquí va SIN el disco blanco: el lado
           claro ya es claro, y un círculo encima se vería como una
@@ -1309,16 +1309,41 @@ canvas{display:none}
   }
 
   /* el bloque del cliente: logo, nombre, o los dos */
-  function zonaCliente(x, y, ancho, alto, anchoUtil, tinta) {
+  /* El parametro "placa" es para la tarjeta, y resuelve un problema que
+     en los otros dos formatos no existe.
+
+     En la placa y el expositor el nombre del cliente va sobre el crema,
+     asi que su logotipo se ve tal cual. En la tarjeta va sobre el panel
+     de color, que es oscuro, y casi todos los logotipos vienen en tinta
+     oscura sobre transparente: el logotipo SE DIBUJABA, pero negro sobre
+     granate. Desde fuera parece que no se pone.
+
+     Tenerlo lo unico que se podia hacer era pintarlo en blanco a la
+     fuerza, y eso destroza cualquier logotipo que tenga mas de un color.
+     Asi que va sobre una plaquita clara del color del cuerpo, que es lo
+     que se hace cuando una marca tiene que ir sobre un fondo oscuro. Se
+     dibuja SOLO cuando hay logotipo: si es el nombre a secas, va en
+     blanco encima del color y ya esta. */
+  function plaquita(x, y, ancho, alto, color) {
+    cx.save();
+    cx.fillStyle = color;
+    redondo(x - ancho/2, y - alto/2, ancho, alto, Math.min(alto*0.28, ancho*0.10));
+    cx.fill();
+    cx.restore();
+  }
+
+  function zonaCliente(x, y, ancho, alto, anchoUtil, tinta, placa) {
     var ver = est.logo ? est.queSeVe : 'nombre';
     var nombre = est.negocio.trim();
     if (!nombre && ver === 'nombre') return;
 
     if (ver === 'logo' || (ver === 'ambos' && !nombre)) {
+      if (placa) plaquita(x + ancho/2, y + alto/2, anchoUtil*0.86, alto, placa);
       meteImagen(est.logo, x + ancho/2, y + alto/2, anchoUtil*0.70, alto*0.98);
       return;
     }
     if (ver === 'ambos') {
+      if (placa) plaquita(x + ancho/2, y + alto*0.30, anchoUtil*0.78, alto*0.62, placa);
       meteImagen(est.logo, x + ancho/2, y + alto*0.30, anchoUtil*0.62, alto*0.58);
       var t1 = reparte(nombre, anchoUtil*0.92, alto*0.34, '700', 1, alto*0.34);
       cx.fillStyle = tinta;
