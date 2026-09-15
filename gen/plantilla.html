@@ -1051,7 +1051,41 @@ canvas{display:none}
     if (FORMATOS[est.formato].reja === 'apaisada') pintaApaisada(bx, by, bw, bh, radio);
     else                                           pintaDePie(bx, by, bw, bh, radio);
 
+    /* LA SANGRE DE VERDAD. Hasta aquí el dibujo está metido entero
+       dentro de la línea de corte y los 3 mm de alrededor son fondo
+       llano. Eso NO es sangrado: es un margen.
+
+       La diferencia se ve en la placa impresa. La banda verde llega
+       justo al canto de arriba. Si la cuchilla se va medio milímetro
+       hacia fuera —y se va, ninguna corta al pelo—, aparece una raya
+       de crema por encima del verde. Con el vinilo pegado en la mesa
+       del bar eso no parece una tolerancia de corte: parece un fallo
+       de imprenta.
+
+       Lo que se hace aquí es estirar hacia fuera la fila y la columna
+       de píxeles que hay JUSTO en la línea de corte, en los cuatro
+       lados. El verde de arriba, las rayas de oro que llegan al canto
+       y las estrellas de las esquinas siguen hacia fuera y se pierden
+       en la zona que se tira. Corte donde corte la máquina, dentro de
+       su margen, no hay canto en blanco.
+
+       Primero arriba y abajo, y luego los lados a lo alto del lienzo
+       entero: así las cuatro esquinas se rellenan solas y no hay que
+       tratarlas aparte. */
     if (sang) {
+      cx.save();
+      /* estirando un solo píxel no hay nada que suavizar, y suavizándolo
+         el canto sale lavado */
+      cx.imageSmoothingEnabled = false;
+      var dx = bx + bw, dy = by + bh;
+      cx.drawImage(lienzo, bx, by,      bw, 1, bx, 0,  bw, by);       /* arriba */
+      cx.drawImage(lienzo, bx, dy - 1,  bw, 1, bx, dy, bw, H - dy);   /* abajo  */
+      cx.drawImage(lienzo, bx,     0, 1, H,  0,  0, bx,     H);       /* izq    */
+      cx.drawImage(lienzo, dx - 1, 0, 1, H,  dx, 0, W - dx, H);       /* der    */
+      cx.restore();
+
+      /* La línea de corte va la ÚLTIMA: si se pintara antes, el estirón
+         de arriba se llevaría los guiones hacia fuera. */
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
       cx.setLineDash([px*1.6, px*1.6]);
