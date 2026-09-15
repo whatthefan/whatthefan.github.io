@@ -131,7 +131,9 @@ canvas{display:none}
         <button type="button" data-v="stand" aria-pressed="false">Expositor</button>
         <button type="button" data-v="tarjeta" aria-pressed="false">Tarjeta</button>
       </div>
-      <span class="pista" id="medidaTxt">90 × 90 mm</span>
+      <!-- lo pisa ponMedida() en cuanto carga; esto es solo lo que se ve
+           durante el parpadeo de antes -->
+      <span class="pista" id="medidaTxt">100 × 100 mm</span>
     </div>
 
     <div class="campo">
@@ -2574,7 +2576,18 @@ var qrcode = function() {
      dibuja de pie, no tumbada: tumbada no cabe esta composicion y
      salia otra cosa distinta, que es justo lo que no queremos. */
   var FORMATOS = {
-    placa:   { nombre: 'Placa de mesa',    mm: [90, 90],  reja: 'cuadrada' },
+    /* LA PLACA ES DE 100 × 100, NO DE 90 × 90.
+
+       Estaba a 90 × 90 y eso es lo que se vendía, pero la copistería no
+       baja de 10 cm ni de ancho ni de alto: una placa de 90 mm no la
+       pueden sacar. Como la placa se pide ahí, la medida la manda la
+       máquina, no nosotros.
+
+       Subirla no descoloca nada: el cuadrado sigue siendo cuadrado y
+       toda la composición va en fracciones del lado (ver REJA), así que
+       el dibujo es el mismo, más grande. El QR también crece, que para
+       leerlo solo es bueno. */
+    placa:   { nombre: 'Placa de mesa',    mm: [100, 100], reja: 'cuadrada' },
     stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
     /* LA TARJETA VA TUMBADA, 85 × 54, que es la que se vende.
 
@@ -3480,8 +3493,9 @@ var qrcode = function() {
      son cosas que no caben a la vez, y en el original lo resuelven así.
 
      (El margen de corte del teléfono cambia poco con esto: queda a
-     1,8 mm de tinta al canto en vez de a 1,6. Sigue siendo justo en los
-     90 x 90 mm, y eso viene de antes, no de este cambio.) */
+     1,8 mm de tinta al canto en vez de a 1,6. Es justo, y viene de
+     antes, no de este cambio. Con la placa a 100 x 100 en vez de a
+     90 x 90 se queda en unos 2 mm, que ya respira algo más.) */
   var REJA = {
     cuadrada: { fila: 0.520, instruccion: 0.702, cliente: 0.768, clienteAlto: 0.082,
                 lema: 0.856, pie: 0.902, estrellas: 0.940, tel: 0.972,
@@ -4052,9 +4066,18 @@ var qrcode = function() {
       alCambiar(b.dataset.v);
     });
   }
+  /* La medida que se lee debajo de los tres botones. Sale de FORMATOS y
+     de ningún otro sitio: estaba escrita a mano en tres trozos de
+     código, y asi es como un dia la placa pasa a 100 mm y la pantalla
+     se queda diciendo 90. */
+  function ponMedida(v) {
+    var F = FORMATOS[v];
+    $('medidaTxt').textContent = F.mm[0] + ' × ' + F.mm[1] + ' mm · ' + F.nombre;
+  }
+
   grupo('fFormato', function (v) {
     est.formato = v;
-    $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
+    ponMedida(v);
     refresca();
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
@@ -4325,7 +4348,7 @@ var qrcode = function() {
         [].forEach.call($('fFormato').children, function (o) {
           o.setAttribute('aria-pressed', o.dataset.v === v ? 'true' : 'false');
         });
-        $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
+        ponMedida(v);
       } else if (k === 'banda' || k === 'fondo' || k === 'acento') {
         if (!/^#?[0-9A-Fa-f]{6}$/.test(v)) return;
         var hex = (v.charAt(0) === '#' ? v : '#' + v).toUpperCase();
@@ -4395,7 +4418,7 @@ var qrcode = function() {
   }
 
   Promise.all([cargaLogoPlea(), esperaLetra()]).then(function () {
-    $('medidaTxt').textContent = '90 × 90 mm · Placa de mesa';
+    ponMedida(est.formato);
     if (leeEncargo() && est.acentoAuto) ponAcento(acentoDe(est.banda), true);
     refresca();
   });

@@ -206,8 +206,16 @@ dos maneras:
 QUE HACE
 Le metes el nombre del negocio, el enlace de Google y el logo, y te
 dibuja la placa terminada, lista para ensenarsela al cliente o para
-mandarla a imprimir. Los tres formatos: placa 90x90, expositor 100x150
+mandarla a imprimir. Los tres formatos: placa 100x100, expositor 100x150
 y tarjeta 85x54 (esta, troquelada con 3 mm de radio).
+
+LA MEDIDA MINIMA ES 10 CM, Y NO LA PONEMOS NOSOTROS
+La placa y el expositor se piden en la copisteria, y alli no bajan de
+10 cm ni de ancho ni de alto. Por eso la placa es de 100x100 y no de
+90x90, que es como estaba: una placa de 90 mm no la pueden sacar. Si
+algun dia se cambia de sitio de impresion, esto se puede revisar; hasta
+entonces, ningun formato de los que se piden alli baja de 100 mm.
+(La tarjeta no entra en esto: es PVC y no sale de la copisteria.)
 
 (Aqui ponia "expositor 76x118". Eso SI era lo que ponia la web, en los
 cuatro sitios donde sale el expositor, pero no lo que dibujaba el
