@@ -43,14 +43,22 @@ main,header,footer{position:relative;z-index:2}
 @media (max-width:640px){.env{width:min(1180px,100% - 28px)}}
 
 h1,h2,h3{font-family:"Anton",system-ui,sans-serif;font-weight:400;letter-spacing:-.004em;
-         line-height:1.03;text-transform:uppercase;text-wrap:balance;margin:0}
+         line-height:1.14;text-transform:uppercase;text-wrap:balance;margin:0}
 h1{font-size:clamp(2.6rem,5.6vw,4.5rem);padding-top:.06em}
 h2{font-size:clamp(1.95rem,4vw,3.1rem)}
 /* Anton dibuja las tildes y la eñe por encima de la caja de la linea, y
    el navegador las recorta en cuanto el titular va dentro de algo con
    transform, que son todos (llevan .sube). Con este hueco arriba caben
    enteras. Sin el, "Móntalo aquí" se lee "MONTALO AQUI" y "La fianza"
-   se lee "LA SENAL". El h1 ya tenia su propio hueco de antes. */
+   se lee "LA SENAL". El h1 ya tenia su propio hueco de antes.
+
+   OJO: este hueco SOLO salva la primera linea. La de arriba, la altura
+   de linea, es la que salva las demas, y por eso es 1,14 y no 1,03 como
+   estaba: con 1,03 el titular de una linea salia bien y el de dos salia
+   con la segunda decapitada. "Mas resenas en Google" se leia con la
+   tilde de la N cortada a ras y el acento de la A hecho un muñon,
+   porque chocaban con la linea de arriba. Medido en pantalla: a 1,03 se
+   cortan, a 1,10 se tocan, a 1,14 caben con un pelo de aire. */
 h2,h3{padding-top:.14em}
 /* el titular sube como un telón al cargar la página, detrás de las
    estrellas que ya se van encendiendo una a una */
@@ -67,7 +75,10 @@ p{margin:0}
   top:50%;height:2px;margin-top:-1px;background:var(--oro);opacity:.55;
   transform-origin:right center;transform:scaleX(0);
   transition:transform .8s cubic-bezier(.16,1,.3,1) .1s}
-.enc.ver .etq::before{transform:scaleX(1)}
+/* Cualquier bloque que ya haya entrado, no solo los .enc: la etiqueta de
+   «Así lo ve tu cliente» vive dentro de un .demo-txt y se quedaba sin su
+   raya de oro, con el texto flotando y desalineado con las otras cinco. */
+.ver .etq::before{transform:scaleX(1)}
 @media (prefers-reduced-motion:reduce){.etq::before{transform:none;transition:none}}
 
 /* logotipo: el mismo dibujo de la tarjeta, en vector y con las letras ya
