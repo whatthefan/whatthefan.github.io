@@ -209,8 +209,11 @@ dibuja la placa terminada, lista para ensenarsela al cliente o para
 mandarla a imprimir. Los tres formatos: placa 90x90, expositor 100x150
 y tarjeta 85x54 (esta, troquelada con 3 mm de radio).
 
-(Aqui ponia "expositor 76x118", que no es lo que dibuja el generador ni
-lo que pone la web. Y la tarjeta, que aqui ya decia 85x54 desde el
+(Aqui ponia "expositor 76x118". Eso SI era lo que ponia la web, en los
+cuatro sitios donde sale el expositor, pero no lo que dibujaba el
+generador, que iba a 100x150: otra vez una cosa dibujada y otra
+vendida. Manda 100x150, porque la copisteria no baja de 10 cm de lado y
+76 mm no se puede hacer. La web ya esta cambiada. Y la tarjeta, que aqui ya decia 85x54 desde el
 principio, el generador la dibujaba de pie a 55x85: se dibujaba una cosa
 y se vendia otra. Arreglado: la tarjeta va tumbada y tiene composicion
 propia, con el icono y el texto a la izquierda y el QR a la derecha,
