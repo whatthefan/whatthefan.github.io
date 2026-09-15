@@ -3093,12 +3093,30 @@ var qrcode = function() {
        y el redondeo de las esquinas las corta solo, sin que haya que
        calcular dónde empieza la curva. */
     var cy = (y1 + y2) / 2, hueco = r * 3.6, total = hueco * 4;
+
+    /* EL HUECO DE LA RAYA SALE DE LAS ESTRELLAS, no de un 30 % puesto a
+       ojo. Antes la raya iba del -2 % al 30 % y del 70 % al 102 % del
+       ancho, y eso solo cuadra si las estrellas ocupan justo ese trozo.
+
+       En la placa cuadraba de milagro. En la tarjeta no: alli la caja
+       que se le pasa es el panel de color, que es estrecho, pero el
+       radio de las estrellas sale del ancho de la TARJETA, asi que las
+       cinco ocupaban mas trozo de panel del que el 30 % dejaba libre y
+       la raya se les metia por debajo. Pegadas, sin aire.
+
+       Ahora se mide donde acaba la tinta de la primera y la ultima
+       estrella y se deja un aire de 1,2 radios a cada lado. En la placa
+       sale practicamente lo mismo que habia (0,293 en vez de 0,300); en
+       la tarjeta, el aire que faltaba. */
+    var medio = bx + bw/2, aire = r * 1.2;
+    var topeIzq = medio - total/2 - r - aire;
+    var topeDer = medio + total/2 + r + aire;
     cx.save();
     redondo(bx, by, bw, bh, radio); cx.clip();
     cx.strokeStyle = color; cx.lineWidth = grueso; cx.lineCap = 'butt';
-    [[-0.02, 0.300], [0.700, 1.02]].forEach(function (t) {
+    [[bx - bw*0.02, topeIzq], [topeDer, bx + bw*1.02]].forEach(function (t) {
       cx.beginPath();
-      cx.moveTo(bx + bw*t[0], cy); cx.lineTo(bx + bw*t[1], cy);
+      cx.moveTo(t[0], cy); cx.lineTo(t[1], cy);
       cx.stroke();
     });
     cx.restore();
@@ -3525,21 +3543,15 @@ var qrcode = function() {
     cx.font = '700 ' + tIns.tam + 'px Montse, system-ui, sans-serif';
     bloque(tIns, cDer, by + bh*T.instr, tinta, false);
 
-    /* 7. LA FIRMA, Y LA RAYA DE ABAJO TAMBIÉN CRUZA ENTERA.
+    /* 7. LA FIRMA, SOLO EN EL LADO CLARO.
 
-          Iba solo por el lado claro, cortada en la juntura, que es lo
-          mismo que le pasaba a la de arriba: la tarjeta se partía en dos
-          trozos. Ahora las dos rayas cruzan la pieza de canto a canto y
-          cada una lleva algo montado en el lado claro, el logotipo de la
-          red arriba y el de PLEA5E abajo.
-
-          Se le pasa la caja de la tarjeta ENTERA, pero el ancho útil del
-          lado claro: así la raya va de canto a canto y el hueco del
-          logotipo se abre donde está el logotipo, que sigue centrado en
-          su lado. */
+          La de arriba cruza la tarjeta entera, y probe a hacer lo mismo
+          con esta. No: la firma es NUESTRA, no del negocio, y cruzando
+          el lado de color se mete en el sitio del cliente, justo debajo
+          de su nombre. La de arriba cruza porque es la raya de las cinco
+          estrellas, que es del diseño; esta se queda en su lado. */
     var xDer = bx + anchoPanel, anchoDer = bw - anchoPanel;
-    pie(bx, by, bw, bh, radio, by + bh*T.pie, anchoDer*0.92, acento,
-        xDer + anchoDer/2);
+    pie(xDer, by, anchoDer, bh, radio, by + bh*T.pie, anchoDer*0.92, acento);
 
     /* 8. las cinco estrellitas debajo de la firma, como en los otros dos
           formatos. Las habia quitado por sitio, y sitio hay: lo que no
@@ -3761,13 +3773,10 @@ var qrcode = function() {
   /* El pie: la firma de PLEA5E. La raya no cruza el logotipo por detrás:
      se corta justo donde empiezan los brazos de la estrella y sigue al
      otro lado, que es como está montado en la cabecera de la web. */
-  /* xLogo: donde va el logotipo, si no es el centro de la caja. Hace
-     falta en la tarjeta: alli la raya cruza la pieza entera pero el
-     logotipo va centrado en el lado claro, no en la tarjeta. */
-  function pie(bx, by, bw, bh, radio, y, anchoUtil, acento, xLogo) {
+  function pie(bx, by, bw, bh, radio, y, anchoUtil, acento) {
     var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
     var RAYA = aclara(ORO, .18);
-    var centro = (xLogo === undefined) ? bx + bw * 0.5 : xLogo;
+    var centro = bx + bw * 0.5;
     var alto = 0, ancho = 0;
     if (logoPlea) {
       alto = bh * 0.042;
