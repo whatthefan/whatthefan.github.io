@@ -1126,12 +1126,12 @@ canvas{display:none}
     panel: 0.460,                /* lo que ocupa el lado de color, del ancho */
     oroY:  0.235, oroSep: 0.030, /* la raya y las estrellas, dentro del panel */
     titulo: 0.455, tituloAncho: 0.82,   /* del panel */
-    cliente: 0.690, clienteAlto: 0.185,
+    cliente: 0.655, clienteAlto: 0.175,
     redX: 0.738, redY: 0.235, redTam: 0.050,   /* redY = oroY: va montado en la raya */
     icoX: 0.605, icoY: 0.485, icoAncho: 0.175,
     qrX: 0.850, qrY: 0.495, qrLado: 0.340,
     instr: 0.775,
-    pie: 0.888
+    pie: 0.875, estrellas: 0.935
   };
 
   /* Ver mideLogo(): solo el logotipo transparente y de tinta oscura
@@ -1226,10 +1226,31 @@ canvas{display:none}
     cx.font = '700 ' + tIns.tam + 'px Montse, system-ui, sans-serif';
     bloque(tIns, cDer, by + bh*T.instr, tinta, false);
 
-    /* 7. la firma, solo en el lado claro: misma función, con la caja del
-          lado derecho en vez de la de la placa entera. */
+    /* 7. LA FIRMA, Y LA RAYA DE ABAJO TAMBIÉN CRUZA ENTERA.
+
+          Iba solo por el lado claro, cortada en la juntura, que es lo
+          mismo que le pasaba a la de arriba: la tarjeta se partía en dos
+          trozos. Ahora las dos rayas cruzan la pieza de canto a canto y
+          cada una lleva algo montado en el lado claro, el logotipo de la
+          red arriba y el de PLEA5E abajo.
+
+          Se le pasa la caja de la tarjeta ENTERA, pero el ancho útil del
+          lado claro: así la raya va de canto a canto y el hueco del
+          logotipo se abre donde está el logotipo, que sigue centrado en
+          su lado. */
     var xDer = bx + anchoPanel, anchoDer = bw - anchoPanel;
-    pie(xDer, by, anchoDer, bh, radio, by + bh*T.pie, anchoDer*0.92, acento);
+    pie(bx, by, bw, bh, radio, by + bh*T.pie, anchoDer*0.92, acento,
+        xDer + anchoDer/2);
+
+    /* 8. las cinco estrellitas debajo de la firma, como en los otros dos
+          formatos. Las habia quitado por sitio, y sitio hay: lo que no
+          cabe en la tarjeta es el telefono, que se queda fuera. */
+    minisEstrellas(xDer + anchoDer/2, by + bh*T.estrellas, bw*0.0075, acento);
+
+    /* 9. y las estrellas grandes asomando por el canto de abajo, que
+          tambien faltaban. Misma regla que en los otros: la punta por
+          debajo de la raya del pie, y se recorta sola si no cupiera. */
+    adornoAbajo(bx, by, bw, bh, radio, acento, by + bh*T.pie);
   }
 
   /* ---- los tres formatos, todos en columna ---- */
@@ -1441,10 +1462,13 @@ canvas{display:none}
   /* El pie: la firma de PLEA5E. La raya no cruza el logotipo por detrás:
      se corta justo donde empiezan los brazos de la estrella y sigue al
      otro lado, que es como está montado en la cabecera de la web. */
-  function pie(bx, by, bw, bh, radio, y, anchoUtil, acento) {
+  /* xLogo: donde va el logotipo, si no es el centro de la caja. Hace
+     falta en la tarjeta: alli la raya cruza la pieza entera pero el
+     logotipo va centrado en el lado claro, no en la tarjeta. */
+  function pie(bx, by, bw, bh, radio, y, anchoUtil, acento, xLogo) {
     var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
     var RAYA = aclara(ORO, .18);
-    var centro = bx + bw * 0.5;
+    var centro = (xLogo === undefined) ? bx + bw * 0.5 : xLogo;
     var alto = 0, ancho = 0;
     if (logoPlea) {
       alto = bh * 0.042;
