@@ -74,6 +74,50 @@ async function suma(env, nombre) {
   ]);
 }
 
+/* La página de "esta placa todavía no está lista". La ve el cliente de un
+   bar, de pie y con el móvil en la mano, así que es corta y no habla de
+   enlaces, ni de paneles, ni de nada nuestro: eso no es asunto suyo. Va
+   escrita aquí y no en un archivo de public/ porque tiene que contestar
+   el propio Worker, sin depender de que exista ningún archivo. */
+function sinDestino() {
+  const html = `<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Esta placa todavía no está lista</title>
+<style>
+  :root{color-scheme:light}
+  body{margin:0;min-height:100dvh;display:grid;place-items:center;
+       padding:24px;background:#ECE2D3;color:#1C1B19;
+       font:400 1rem/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+  main{max-width:26rem;text-align:center}
+  h1{margin:0 0 .6rem;font-size:1.35rem;line-height:1.25}
+  p{margin:0 0 1rem;color:#4A453C}
+  a{color:#1C1B19;font-weight:700}
+  .tel{display:inline-block;margin-top:.4rem;padding:.7rem 1.1rem;
+       border-radius:99px;background:#1C1B19;color:#ECE2D3;text-decoration:none}
+</style>
+<main>
+  <h1>Esta placa todavía no está lista</h1>
+  <p>Perdona el viaje. El negocio la ha puesto antes de que la
+     activáramos por nuestra parte, y lo estamos arreglando.</p>
+  <p>Si quieres dejar tu opinión, búscalos en Google y déjasela ahí:
+     les hace el mismo bien.</p>
+  <p>¿Eres el del negocio? Llámanos y lo dejamos andando hoy mismo.</p>
+  <a class="tel" href="tel:+34661403219">661 40 32 19</a>
+</main>`;
+  return new Response(html, {
+    status: 404,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      /* Sin esto, el móvil se guardaría el error y seguiría enseñándolo
+         durante días aunque el enlace ya esté dado de alta. */
+      'Cache-Control': 'no-store, no-cache, must-revalidate'
+    }
+  });
+}
+
 export async function onRequest(context) {
   const { request, env, ctx } = context;
   const url = new URL(request.url);
@@ -94,8 +138,25 @@ export async function onRequest(context) {
     console.error('enlace ilegible: ' + nombre);
   }
 
-  /* No está en el almacén: puede ser una de las carpetas antiguas. */
-  if (!guardado || !guardado.destino) return env.ASSETS.fetch(request);
+  /* No está en el almacén. Puede ser una de las carpetas antiguas de
+     public/r/, así que primero se pregunta por el archivo estático.
+
+     Y si tampoco hay archivo, NO se deja salir el 404 pelado de
+     Cloudflare. Antes daba casi igual, porque una placa sin dirección
+     corta llevaba Google grabado y funcionaba igual. Ahora el QR de
+     TODAS las placas pasa por aquí: si a alguien se le olvida dar de
+     alta el enlace antes de imprimir, el cliente del bar acerca el móvil
+     y se encuentra una página de error en blanco. Queda como si el
+     negocio tuviera la web rota, y el que llama enfadado es el dueño.
+
+     Así que se contesta una página que se entiende, con el teléfono. El
+     código sigue siendo 404, que es la verdad, y sin guardar en caché:
+     en cuanto se da de alta el enlace, el siguiente toque ya salta. */
+  if (!guardado || !guardado.destino) {
+    const estatico = await env.ASSETS.fetch(request);
+    if (estatico.status !== 404) return estatico;
+    return sinDestino();
+  }
 
   /* El toque se apunta DESPUÉS de mandar al cliente a Google. waitUntil
      deja el Worker terminando la tarea con la respuesta ya enviada: el

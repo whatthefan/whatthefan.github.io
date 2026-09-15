@@ -55,6 +55,8 @@ textarea{resize:vertical;min-height:56px}
 
 /* el "plea5e.es/r/" pegado a la izquierda del hueco, para que se vea de un
    golpe que ahi solo va el trozo final y no la direccion entera */
+.segm-red{flex-wrap:wrap}
+.segm-red button{flex:1 0 auto}
 .corta-caja{display:flex;align-items:stretch}
 .corta-caja span{display:flex;align-items:center;white-space:nowrap;font-size:.86rem;
   color:var(--txt-3);background:var(--panel);border:1px solid var(--borde-claro);
@@ -140,19 +142,39 @@ canvas{display:none}
     </div>
 
     <div class="campo">
-      <label for="fGoogle">Enlace de Google o código del sitio</label>
-      <input id="fGoogle" type="text" placeholder="ChIJZca-8BbQDQ0RIByaopjYtHY" autocomplete="off">
-      <span class="pista">Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección.</span>
+      <label for="fRed">¿Dónde quieres que vaya?</label>
+      <div class="segm segm-red" id="fRed" role="group">
+        <button type="button" data-v="google" aria-pressed="true">Google</button>
+        <button type="button" data-v="tripadvisor" aria-pressed="false">Tripadvisor</button>
+        <button type="button" data-v="facebook" aria-pressed="false">Facebook</button>
+        <button type="button" data-v="instagram" aria-pressed="false">Instagram</button>
+        <button type="button" data-v="x" aria-pressed="false">X</button>
+        <button type="button" data-v="airbnb" aria-pressed="false">Airbnb</button>
+        <button type="button" data-v="otra" aria-pressed="false">Otra</button>
+      </div>
+      <span class="pista" id="pistaRed"></span>
+      <div class="subir" id="cajaLogoRed" hidden>
+        <img class="mini" id="miniRed" alt="" hidden>
+        <label class="btn btn-fan" for="fLogoRed">Subir el logotipo</label>
+        <input id="fLogoRed" type="file" accept="image/*">
+        <button type="button" class="btn btn-fan" id="quitaRed" hidden>Quitar</button>
+      </div>
     </div>
 
     <div class="campo">
-      <label for="fCorta">Dirección corta <b>(la del QR)</b></label>
+      <label for="fGoogle" id="etiqEnlace">Enlace de Google o código del sitio</label>
+      <input id="fGoogle" type="text" placeholder="ChIJZca-8BbQDQ0RIByaopjYtHY" autocomplete="off">
+      <span class="pista">Esto <b>no</b> va grabado en el QR: es el destino al que apuntará la dirección corta. Vale el código a secas, el enlace de «Pedir reseñas» o cualquier dirección.</span>
+    </div>
+
+    <div class="campo">
+      <label for="fCorta">Dirección corta <b>(es lo que lleva el QR)</b></label>
       <div class="corta-caja">
         <span>plea5e.es/r/</span>
         <input id="fCorta" type="text" placeholder="bar-manolo" autocomplete="off"
                inputmode="url" spellcheck="false">
       </div>
-      <span class="pista"><b>Esto es lo que lleva grabado el QR</b>, y se rellena solo con el nombre del negocio. El QR pasa por nuestra página y de ahí sale a la ficha de Google del cliente, así que el destino se cambia luego desde el panel sin tocar la pieza. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir. Si la borras, el QR lleva la dirección de Google grabada y ya no se podrá cambiar.</span>
+      <span class="pista">Se rellena sola con el nombre del negocio; cámbiala si quieres. El QR lleva <b>siempre</b> esta dirección, nunca la de Google, y así el destino se cambia luego desde el panel sin tocar la placa. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir.</span>
     </div>
 
     <div class="campo">
@@ -225,7 +247,7 @@ canvas{display:none}
       <button type="button" class="btn btn-fan" id="copiaEnlace">Copiar enlace</button>
       <span class="ficha" id="ficha"></span>
     </div>
-    <p class="aviso" id="avisoQR">Escribe el enlace de Google para que salga el QR. Sin él la placa se dibuja igual, pero con un hueco.</p>
+    <p class="aviso" id="avisoQR">Pon el <b>nombre del negocio</b> y saldrá el QR. La placa se dibuja igual sin él, pero con un hueco.</p>
     <p class="aviso" id="avisoDestino" hidden></p>
     <p class="aviso" id="avisoGuardar">En el móvil, si el botón de descargar no hace nada, <b>deja el dedo pulsado sobre la imagen y dale a «Guardar»</b>.</p>
   </div>
@@ -242,38 +264,164 @@ canvas{display:none}
   var LOGO_SVG = '__LOGO__';
 
   /* ══════════ los tres formatos ══════════ */
-  /* La placa y el expositor salen de la MISMA plantilla: cambia el
-     tamano, no el dibujo. Las proporciones estan medidas sobre los
-     originales: la placa es cuadrada y el expositor va a 2:3, que es
-     exactamente lo que da el diseno del Morro Fino (1114x1670).
-
-     La TARJETA es otra cosa. Va tumbada, 85x54 mm —la medida de una
-     tarjeta de credito, que es la que se anuncia en la web— y NO lleva
-     esta composicion en columna: lleva la partida en dos, con el lado
-     de color a la izquierda y el blanco a la derecha. Es el modelo que
-     sale fotografiado en la pagina, y la que se le ensena al cliente
-     tiene que ser la misma que ha visto. Se dibuja en pintaTumbada. */
+  /* Los tres salen de la MISMA plantilla: cambia el tamano, no el
+     dibujo. Las proporciones estan medidas sobre los originales:
+     la placa es cuadrada y el expositor va a 2:3, que es exactamente
+     lo que da el diseno del Morro Fino (1114x1670). La tarjeta se
+     dibuja de pie, no tumbada: tumbada no cabe esta composicion y
+     salia otra cosa distinta, que es justo lo que no queremos. */
   var FORMATOS = {
-    placa:   { nombre: 'Placa de mesa',    mm: [90, 90],   reja: 'cuadrada' },
+    placa:   { nombre: 'Placa de mesa',    mm: [90, 90],  reja: 'cuadrada' },
     stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
-    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],   plano: 'tumbado', radio: 3 }
+    /* LA TARJETA VA TUMBADA, 85 × 54, que es la que se vende.
+
+       Estaba como 55 × 85 de pie, y eso no es lo que pone la web ni lo
+       que se manda a imprimir: la ficha del producto y el formulario de
+       pedido dicen los dos "85 × 54 mm", el tamaño de una tarjeta de
+       visita. Se dibujaba una cosa y se vendía otra.
+
+       El comentario de aquí decía que tumbada "no cabe esta composición
+       y sale otra cosa distinta". Es verdad que no cabe: la composición
+       de pie son seis pisos (banda, G, icono y QR, instrucción, nombre,
+       firma) y en 54 mm de alto tocan a 9 mm cada uno. Pero la respuesta
+       no era dibujarla de pie, era darle su propia composición: en la
+       tarjeta el icono y el texto van a la izquierda y el QR a la
+       derecha. Eso es pintaApaisada(). */
+    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],  reja: 'apaisada', radio: 3 }
   };
 
-  /* El titulo no es el mismo en los tres. En la placa y en el expositor
-     hay sitio para la frase entera; en la tarjeta, con la mitad del
-     ancho, el original va corto: "¡TU RESEÑA / EN GOOGLE!". Si se deja
-     la frase larga cae en tres renglones diminutos y ya no es el modelo
-     de la foto. Se cambia sola al cambiar de formato, pero solo si el
-     texto que hay puesto es el de por defecto del otro: lo que haya
-     escrito a mano no se toca nunca. */
-  var TITULOS = {
-    placa:   '¡Nos encantaría tu reseña en Google!',
-    stand:   '¡Nos encantaría tu reseña en Google!',
-    tarjeta: '¡Tu reseña en Google!'
+  /* ══════════ a dónde va la reseña ══════════ */
+
+  /* Lo unico que cambia entre una red y otra es EL LOGO y el nombre que
+     sale en el texto de la banda. La frase es la misma.
+
+     Lo intente al reves: que cada red trajera su propia frase, porque en
+     Instagram y en X no se deja una resena, se sigue una cuenta. Salia
+     "Siguenos en Instagram" y eso ya no es la placa de Juan, es otra
+     cosa. La placa es la que es y la frase es la suya; si algun dia
+     quiere cambiarla para una red, el campo "Texto de la banda" esta
+     ahi para escribirla a mano.
+
+     · marca:  si llevamos el dibujo oficial incrustado. Solo Google, que
+               son sus trazos exactos. Los demas se suben como imagen
+               desde la pagina de recursos de marca de cada plataforma.
+               No los dibujo de memoria: un logotipo torcido en algo que
+               se imprime por cientos y lleva la marca de otro no es un
+               detalle, es un problema.
+
+     AIRBNB NO ESTA, y no es un olvido. En Airbnb solo puede valorar
+     quien ha reservado y se ha alojado, y la valoracion la pide Airbnb
+     por su cuenta cuando termina la estancia: no hay enlace publico al
+     que mandar a nadie. Una placa en el salon del piso no puede generar
+     una resena de Airbnb, y pedirla por fuera va contra sus normas. Para
+     un piso turistico lo que si vale es Google. */
+  var REDES = {
+    google: {
+      nombre: 'Google', marca: 'google',
+      etiqueta: 'Enlace de Google o código del sitio',
+      ejemplo: 'ChIJZca-8BbQDQ0RIByaopjYtHY',
+      aviso: 'Vale el código del sitio a secas, el enlace de «Pedir reseñas» o cualquier dirección.'
+    },
+    tripadvisor: {
+      nombre: 'Tripadvisor', marca: 'tripadvisor',
+      etiqueta: 'Enlace de la ficha de Tripadvisor',
+      ejemplo: 'https://www.tripadvisor.es/...',
+      aviso: 'Pega el enlace de «Escribir una opinión» de su ficha.'
+    },
+    facebook: {
+      nombre: 'Facebook', marca: 'facebook',
+      etiqueta: 'Enlace de la página de Facebook',
+      ejemplo: 'https://facebook.com/elnegocio',
+      aviso: 'El enlace de la página, tal cual.'
+    },
+    instagram: {
+      nombre: 'Instagram', marca: 'instagram',
+      etiqueta: 'Enlace del perfil de Instagram',
+      ejemplo: 'https://instagram.com/elnegocio',
+      aviso: 'El enlace de la página, tal cual. Ojo: en Instagram no hay reseñas, así que el texto de la banda igual te interesa cambiarlo a mano.'
+    },
+    x: {
+      nombre: 'X', marca: 'x',
+      etiqueta: 'Enlace del perfil de X',
+      ejemplo: 'https://x.com/elnegocio',
+      aviso: 'Ojo: en X tampoco hay reseñas. Si quieres, cambia a mano el texto de la banda.'
+    },
+    airbnb: {
+      nombre: 'Airbnb', marca: 'airbnb',
+      etiqueta: 'Enlace del anuncio de Airbnb',
+      ejemplo: 'https://airbnb.es/rooms/...',
+      aviso: 'OJO: en Airbnb solo valora quien ha reservado y se ha alojado, y la valoración la pide Airbnb al acabar la estancia. Este QR lleva al anuncio, no a dejar una reseña.'
+    },
+    otra: {
+      nombre: 'Otra', marca: null,
+      etiqueta: 'Enlace al que tiene que llevar',
+      ejemplo: 'https://...',
+      aviso: 'Cualquier dirección. El texto de la banda y el logotipo los pones tú.'
+    }
   };
-  function esTituloPorDefecto(txt) {
-    var t = String(txt || '').trim();
-    return Object.keys(TITULOS).some(function (k) { return TITULOS[k] === t; });
+
+  function red() { return REDES[est.red] || REDES.google; }
+
+  /* El texto de la banda con el nombre de la red cambiado, y nada mas.
+     Solo se toca si la frase sigue siendo la de siempre: en cuanto se
+     escribe una a mano, no se le cambia nada. */
+  function tituloDeRed(nombre) {
+    return '¡Nos encantaría tu reseña en ' + nombre + '!';
+  }
+
+  /* ══════════ los logotipos de las plataformas ══════════ */
+
+  /* Igual que el icono NFC: NO estan dibujados a mano, estan SACADOS de
+     los logotipos oficiales que paso Juan y vectorizados con potrace.
+
+     Las imagenes venian con el fondo pegado (Tripadvisor sobre verde, la
+     X sobre negro, Instagram sobre blanco) y con el ruido tipico del
+     jpg. Lo primero se quita con la mascara; lo segundo hay que
+     limpiarlo ANTES de trazar, porque si no potrace sigue cada pixel
+     sucio del borde y sale un logotipo de cincuenta mil caracteres de
+     curvas con el canto dentado. Con una mediana antes de vectorizar,
+     los cinco juntos ocupan 13 KB.
+
+     La X tenia una costura oscura por dentro, cosa del jpg, y salia
+     hueca: se queda solo el contorno de fuera, que es el logotipo de
+     verdad.
+
+     Cada uno va en una caja de 1000 de ancho por su alto, y se encaja
+     centrado en el hueco de la insignia. Si algun dia cambia alguno, se
+     vuelve a vectorizar del oficial y se sustituye la cadena: no se
+     retoca a mano. */
+  var MARCAS = {
+    facebook: { alto: 995, color: '#0866FF', d: 'M564,992C561,989 561,988 560,985C560,983 559,980 559,978C558,977 558,975 557,973C556,967 557,674 558,670C559,668 560,665 560,663C561,659 565,654 569,653C571,652 592,652 629,652C687,652 687,652 689,650C694,647 696,643 696,639C696,636 696,633 697,631C698,629 699,625 699,623C699,621 699,617 700,615C701,613 702,610 702,609C702,607 703,604 703,602C705,600 705,597 705,590C705,583 705,580 706,578C707,576 708,573 708,572C708,569 710,561 713,557C713,555 714,550 714,542C715,531 715,529 717,523C721,513 721,510 716,505C713,502 713,502 651,501C590,501 588,501 585,503C572,508 559,501 559,489C560,424 560,412 562,409C562,408 563,406 563,404C563,403 563,400 564,398C565,397 566,393 566,391C567,382 576,366 585,358C592,350 615,338 622,338C623,338 626,337 628,337C641,331 638,332 682,332C727,332 726,332 728,327C729,325 729,302 729,265C729,206 729,206 727,202C725,199 720,197 717,197C716,197 713,196 711,195C708,194 705,194 703,194C701,194 696,193 692,192C687,191 680,190 666,190C650,190 645,190 643,189C638,186 596,187 591,189C588,190 585,190 580,190C575,190 572,191 569,192C566,193 563,194 555,194C548,194 545,194 542,195C540,196 536,197 534,197C530,197 513,202 503,207C500,208 498,209 497,209C494,209 469,223 464,227C462,230 458,233 456,234C448,239 433,255 427,263C424,268 421,273 419,275C418,277 415,281 414,284C413,286 411,290 410,291C407,294 401,307 401,310C401,311 399,315 398,319C396,322 395,327 394,329C394,331 392,336 391,341C388,348 388,349 388,357C388,363 388,366 386,369C385,371 385,374 385,378C385,382 385,385 384,387C382,389 382,394 382,441C381,493 381,493 378,497C374,501 374,501 332,501C308,501 289,502 288,502C277,507 278,503 278,577C278,660 271,651 333,652C376,652 376,652 379,655C382,659 384,971 380,977C376,984 375,984 359,978C352,976 345,974 344,974C343,974 339,973 337,972C334,970 328,968 323,967C319,965 312,963 309,961C305,959 300,957 297,956C292,954 266,941 262,938C260,936 255,934 251,932C244,928 238,924 230,919C228,918 226,916 225,916C224,915 222,914 220,912C218,911 214,908 211,907C208,905 204,902 202,900C199,898 196,895 194,894C193,894 188,890 185,887C181,883 177,880 175,879C171,876 123,828 121,824C120,823 117,819 113,815C110,812 107,808 106,806C105,805 103,802 101,799C99,797 96,793 95,791C94,790 92,786 90,784C88,781 86,778 85,777C85,775 83,772 81,770C74,760 72,756 68,749C66,745 64,740 62,738C59,733 46,707 44,702C44,701 42,696 40,693C37,687 31,671 29,663C29,662 26,655 24,648C22,641 20,635 20,634C20,633 18,628 16,623C15,617 13,612 13,610C13,608 13,605 12,603C11,601 10,598 10,595C10,592 10,589 9,587C8,585 7,582 7,578C7,574 7,571 6,568C4,565 4,562 4,556C4,548 4,547 2,546C0,543 0,456 2,454C4,452 4,451 4,445C4,440 4,437 6,434C7,431 7,428 7,423C7,417 7,415 9,412C10,410 10,407 10,404C10,402 11,398 12,396C13,394 13,391 13,389C13,387 14,383 15,381C16,379 16,376 16,375C16,374 19,367 21,359C24,351 26,344 26,343C26,343 27,339 28,336C30,332 32,326 34,321C36,317 38,310 40,307C42,303 44,299 44,297C46,292 59,266 62,261C64,259 66,254 68,250C72,243 74,239 81,229C83,227 85,224 85,223C86,221 88,218 90,215C92,213 94,210 95,208C96,206 99,202 101,200C103,197 105,194 106,193C107,191 110,187 113,184C117,180 120,176 121,175C123,171 171,123 175,120C177,119 181,116 185,112C188,109 193,106 194,105C196,104 199,101 202,99C204,97 208,94 211,92C214,91 218,88 220,87C222,86 224,84 225,84C226,83 228,82 230,80C238,75 244,71 251,67C255,65 260,63 262,61C266,58 292,45 297,43C300,43 305,40 309,39C315,35 363,19 366,19C367,19 372,17 377,16C383,14 388,12 390,12C392,12 395,12 397,11C400,10 403,9 405,9C407,9 411,9 413,8C416,7 419,6 422,6C426,6 429,6 432,5C435,3 438,3 444,3C452,3 453,3 454,2C456,0 457,0 500,0C544,0 545,0 546,2C548,3 549,3 555,3C560,3 563,4 566,5C569,6 572,6 577,6C582,6 585,7 588,8C590,9 594,9 596,9C598,9 601,10 603,11C606,12 609,12 611,12C613,12 617,13 619,14C621,15 624,16 625,16C626,16 633,18 641,20C649,23 656,25 657,25C658,25 662,26 664,27C667,29 673,31 677,32C682,34 688,37 692,39C696,40 701,43 703,43C709,45 735,58 739,61C741,63 746,65 750,67C757,71 763,75 771,80C773,82 775,83 776,84C777,84 779,86 781,87C783,88 787,91 790,92C792,94 797,97 799,99C802,101 805,104 807,105C808,106 813,109 816,112C820,116 824,119 826,120C830,123 878,171 880,175C881,176 884,180 888,184C891,187 894,191 895,193C896,194 898,197 900,200C902,202 905,206 906,208C907,210 909,213 911,215C912,218 915,221 915,223C916,224 918,227 920,229C927,239 929,243 933,250C935,254 937,259 939,261C942,266 955,292 957,297C957,299 959,303 961,307C964,312 970,328 972,336C972,337 975,344 977,351C979,358 981,364 981,365C981,366 983,371 984,376C986,382 988,387 988,389C988,391 988,395 989,396C990,398 991,402 991,404C991,407 991,410 992,412C993,414 994,417 994,421C994,425 994,428 995,431C997,434 997,437 997,443C997,451 997,452 998,454C1000,455 1000,456 1000,500C1000,543 1000,544 998,546C997,547 997,548 997,554C997,559 996,562 995,565C994,568 994,571 994,576C994,582 993,584 992,587C991,589 991,592 991,595C991,598 990,601 989,603C988,605 988,608 988,610C988,612 987,616 986,618C985,620 984,623 984,624C984,625 982,634 978,644C975,653 972,662 972,663C970,671 964,687 961,693C959,696 957,701 957,702C955,707 942,733 939,738C937,740 935,745 933,749C929,756 927,760 920,770C918,772 916,775 915,777C915,778 912,781 911,784C909,786 907,790 906,791C905,793 902,797 900,799C898,802 896,805 895,806C894,808 891,812 888,815C884,819 881,823 880,825C877,829 829,877 825,879C824,880 820,883 816,887C813,890 808,894 807,894C805,895 802,898 799,900C797,902 792,905 790,907C787,908 783,911 781,912C779,914 777,915 776,916C775,916 773,918 771,919C763,924 757,928 750,932C746,934 741,936 739,938C735,941 709,954 703,956C701,957 696,959 692,961C685,964 638,980 635,980C634,980 629,982 624,984C618,985 613,987 611,987C609,987 606,987 603,988C601,989 598,990 596,990C593,990 590,990 589,991C587,992 582,993 578,993C574,993 570,994 569,994C567,995 566,994 564,992Z' },
+    instagram: { alto: 1043, color: '#C13584', d: 'M210,1040C209,1039 205,1037 202,1036C198,1035 190,1032 184,1030C179,1027 166,1022 157,1018C126,1006 125,1006 105,986C88,970 73,952 59,932C56,928 52,922 49,918C30,893 13,852 5,813C0,786 0,212 5,183C24,85 96,17 195,4C222,1 772,0 801,3C910,16 980,85 998,194C1000,209 1000,238 1000,506C999,827 1000,803 991,835C988,847 972,885 967,894C964,898 959,908 955,915C950,925 945,932 940,937C931,946 917,963 910,974C899,991 838,1027 815,1031C806,1032 784,1039 783,1041C781,1043 212,1043 210,1040ZM630,864C741,860 805,828 841,758C867,707 869,684 869,496C869,346 867,303 858,277C856,274 854,268 853,263C833,196 770,147 687,135C644,128 372,128 317,134C218,146 149,212 135,310C128,363 128,621 135,683C147,780 215,846 318,861C344,865 552,866 630,864ZM344,798C259,794 212,754 199,675C192,627 193,355 201,312C209,265 232,233 270,214C290,204 302,201 341,196C367,192 643,194 669,197C749,208 793,250 800,320C807,385 807,631 800,679C789,752 742,791 660,798C640,800 376,800 344,798ZM550,678C601,664 645,627 669,581C680,558 687,535 687,520C687,516 688,510 689,505C691,494 687,459 680,439C628,286 425,263 339,399C275,501 324,635 440,675C469,685 521,687 550,678ZM472,618C377,597 344,480 413,410C490,333 620,384 623,493C625,576 553,636 472,618ZM713,339C749,321 748,279 712,261C689,250 655,272 655,300C655,329 689,352 713,339Z' },
+    x: { alto: 1047, color: '#0F1419', d: 'M15,1040C0,1036 6,1021 33,994C37,990 43,982 47,977C58,963 83,934 93,923C98,918 105,910 108,907C111,903 117,895 122,889C139,870 150,858 157,849C160,845 167,837 172,832C177,827 183,819 187,815C190,810 198,801 205,794C235,759 241,752 248,744C251,739 258,732 262,727C266,723 272,716 275,713C278,709 284,702 288,698C292,693 299,685 303,680C307,675 318,662 327,651C337,640 350,625 356,618C362,611 370,601 373,598C385,584 385,575 373,559C367,549 353,530 330,496C323,485 310,466 302,455C287,432 217,331 210,321C207,317 195,300 183,282C142,222 107,172 80,132C0,17 0,17 8,9C13,4 14,4 153,4C311,5 291,0 323,46C329,55 341,73 350,85C359,98 371,117 378,126C384,136 396,153 405,166C413,178 430,203 442,221C454,238 466,256 469,259C471,262 484,280 496,299C557,389 557,388 580,357C584,353 591,344 596,339C601,333 609,324 614,319C625,305 636,292 647,280C653,274 660,265 665,259C669,254 677,245 683,238C688,232 700,219 708,209C717,199 729,185 734,179C739,173 747,164 751,159C755,154 761,147 765,143C773,134 789,115 803,99C808,93 815,84 819,80C823,77 828,70 832,65C835,61 843,51 850,44C857,37 865,27 869,22C883,7 888,5 915,4C954,4 967,10 956,23C941,42 930,56 922,64C917,69 911,77 907,82C903,87 899,92 897,93C896,95 890,101 886,107C881,113 874,121 869,125C865,130 858,138 853,144C843,156 830,171 812,192C805,200 793,214 785,224C776,233 765,247 758,254C752,262 744,271 741,275C738,278 732,286 727,291C722,296 715,304 712,309C708,313 703,319 700,322C698,324 693,330 689,335C685,340 678,348 675,352C671,355 664,363 660,369C649,382 622,414 613,423C595,442 596,445 636,501C640,508 648,519 653,527C659,535 667,547 671,554C676,560 687,576 696,589C717,620 749,667 758,679C761,684 769,695 775,704C781,713 789,725 794,732C799,738 813,760 827,780C840,799 858,825 867,838C876,851 900,886 922,918C1000,1031 996,1025 994,1032C992,1041 999,1041 850,1041C686,1041 708,1047 673,995C660,975 639,945 592,877C561,831 507,754 494,734C488,725 477,710 470,700C463,689 454,676 450,670C431,642 425,641 405,665C383,691 374,701 366,710C362,714 355,722 351,727C343,738 325,759 314,771C309,776 301,785 296,792C290,798 282,808 277,814C265,826 252,842 240,857C235,863 228,871 224,875C220,879 215,885 212,889C209,893 203,900 199,904C195,909 187,918 182,924C168,940 154,956 140,972C134,979 126,989 123,993C119,997 113,1005 108,1009C104,1014 98,1021 95,1025C83,1039 78,1041 46,1041C31,1041 17,1041 15,1040Z' },
+    tripadvisor: { alto: 659, color: '#000000', d: 'M487,610C481,603 471,592 465,586C428,544 429,544 407,561C273,659 80,599 28,442C0,356 19,266 79,199C95,181 97,185 49,134C25,107 25,108 26,103C26,95 21,95 112,95C204,94 192,96 217,80C268,49 334,23 389,12C412,7 415,7 430,5C463,0 470,0 505,0C540,0 552,1 575,4C580,5 587,6 590,6C652,14 730,42 792,79C802,85 812,91 814,92C818,94 819,94 898,95C985,95 982,95 985,101C987,105 984,109 933,164C918,181 918,185 929,197C956,224 979,268 987,303C989,309 990,316 991,320C992,323 993,333 994,341C994,350 995,357 995,357C1000,365 988,429 978,455C915,607 733,656 599,557C582,545 585,543 536,596C511,623 512,623 505,623C500,623 500,623 487,610ZM291,526C423,499 471,338 374,245C324,197 249,186 186,217C151,235 121,268 106,306C94,336 93,384 104,415C130,493 212,541 291,526ZM783,525C839,514 888,470 907,415C937,323 881,225 786,203C766,198 731,199 712,203C664,216 626,246 604,288C540,411 646,552 783,525ZM239,449C175,431 152,352 197,305C252,247 348,285 347,364C347,404 325,433 286,447C277,450 248,451 239,449ZM732,449C687,442 654,390 664,345C684,265 791,252 827,325C860,391 806,461 732,449ZM509,307C510,306 512,301 514,295C538,221 588,165 661,129C683,117 680,112 645,102C557,76 476,74 391,95C330,110 324,116 353,131C424,167 475,226 497,295C500,307 506,312 509,307Z' },
+    airbnb: { alto: 1092, color: '#FF5A5F', d: 'M199,1069C155,1061 135,1053 99,1029C52,998 6,926 6,882C5,878 4,873 3,870C0,861 0,826 3,817C5,813 6,808 6,804C6,789 23,737 41,703C44,695 48,687 49,685C50,683 55,670 62,656C68,643 75,628 77,623C80,618 87,601 95,587C102,572 110,555 113,549C115,542 126,519 138,496C149,473 160,451 161,447C166,435 282,204 288,194C291,190 301,171 310,153C352,68 376,41 429,16C445,9 458,5 467,5C470,5 475,4 479,3C488,0 519,0 530,3C534,4 541,6 547,8C610,22 646,60 705,177C719,205 733,232 736,237C742,246 809,380 814,392C815,396 830,427 847,459C863,492 877,521 878,524C879,527 889,547 899,568C925,623 944,664 944,665C944,665 950,677 956,691C994,772 1000,794 999,847C998,914 980,958 933,1003C854,1081 745,1092 638,1034C624,1027 611,1019 607,1016C604,1013 596,1008 590,1004C584,1000 577,995 575,992C573,990 567,985 563,982C559,979 546,968 535,957C499,922 502,921 459,964C447,976 435,986 434,987C432,988 427,992 422,996C393,1021 333,1053 300,1061C291,1064 287,1064 260,1069C244,1072 215,1072 199,1069ZM265,1003C305,992 319,986 345,969C359,960 365,957 389,938C405,925 444,886 446,880C448,874 447,864 444,859C442,857 438,851 433,845C387,784 341,702 332,663C331,658 328,647 326,639C324,630 322,621 322,618C322,615 321,609 319,604C308,557 332,481 368,445C394,420 442,397 469,397C472,397 478,396 481,395C490,392 511,392 520,395C525,396 532,397 536,397C545,397 571,405 586,412C635,437 664,474 681,533C684,544 684,611 681,623C680,626 677,638 674,649C662,698 602,809 567,848C560,855 555,866 554,872C554,881 573,904 590,917C595,920 602,927 606,931C629,955 680,986 714,996C743,1006 743,1006 769,1006C820,1006 867,985 893,952C944,886 947,833 905,744C901,737 893,719 887,705C880,691 874,678 873,676C872,674 868,665 864,656C860,647 853,632 848,622C843,612 836,598 833,591C822,563 667,251 653,226C648,218 637,197 628,180C587,98 554,70 497,72C448,73 415,100 383,163C379,171 373,182 370,187C363,198 216,491 212,503C210,507 200,528 189,549C179,569 169,591 167,596C165,602 156,620 148,636C139,653 132,669 131,672C130,675 123,690 116,704C92,755 77,794 73,810C72,815 71,822 70,826C56,880 99,960 157,988C192,1005 236,1011 265,1003ZM517,797C528,785 538,770 569,718C630,617 629,523 569,483C504,440 416,468 393,539C388,553 389,602 394,624C399,650 417,691 434,719C487,808 497,817 517,797Z' },
+  };
+
+  /* El degradado de Instagram, de abajo-izquierda a arriba-derecha. */
+  function tintaInstagram(x, y, lado) {
+    var g = cx.createLinearGradient(x - lado/2, y + lado/2, x + lado/2, y - lado/2);
+    [[0,'#FEDA75'],[0.28,'#FA7E1E'],[0.58,'#D62976'],[0.80,'#962FBF'],[1,'#4F5BD5']]
+      .forEach(function (p) { g.addColorStop(p[0], p[1]); });
+    return g;
+  }
+
+  /* Pinta una marca encajada dentro de un cuadrado de lado "lado",
+     centrada y sin deformarla. Los cinco tienen proporciones distintas
+     (el buho de Tripadvisor es mucho mas ancho que alto), asi que se
+     encaja por el lado que sobre. */
+  function dibujaMarca(clave, x, y, lado) {
+    var m = MARCAS[clave]; if (!m) return;
+    if (!m.p2d) m.p2d = new Path2D(m.d);
+    var k = Math.min(lado / 1000, lado / m.alto);
+    cx.save();
+    cx.translate(x - 1000*k/2, y - m.alto*k/2);
+    cx.scale(k, k);
+    cx.fillStyle = (clave === 'instagram')
+      ? tintaInstagram(500, m.alto/2, Math.max(1000, m.alto))
+      : m.color;
+    cx.fill(m.p2d);
+    cx.restore();
   }
 
   /* La G de Google, en sus cuatro colores. Son los trazos oficiales sobre
@@ -292,12 +440,13 @@ canvas{display:none}
     lema: '',
     google: '',
     corta: '',           /* el trozo final de plea5e.es/r/... */
-    cortaAuto: true,     /* se saca del nombre mientras no se escriba a mano */
     logo: null,          /* Image ya cargada */
+    logoInfo: null,      /* si es opaco y cuanta luz tiene: ver mideLogo */
     queSeVe: 'ambos',
+    red: 'google',       /* a donde va la resena: ver REDES */
+    logoRed: null,       /* la marca de la plataforma, si se sube */
     banda:  '#192E26',   /* el verde de la plantilla buena */
     fondo:  '#ECE2D3',   /* el crema, no blanco: es lo que le da el aire */
-    fondoAuto: true,     /* lo pone el formato mientras no se elija a mano */
     acento: '#E8C46A',
     acentoAuto: true,
     titulo: '¡Nos encantaría tu reseña en Google!',
@@ -376,6 +525,45 @@ canvas{display:none}
   }
 
   /* ══════════ los colores que trae el logo ══════════ */
+  /* CUANDO UN LOGOTIPO NECESITA PLAQUITA Y CUANDO NO.
+
+     La plaquita clara existe para que un logotipo de tinta oscura no
+     desaparezca sobre el panel de color de la tarjeta. Pero si el
+     logotipo ya trae SU PROPIO fondo pegado (un jpg, un png sin
+     transparencia), la plaquita no arregla nada: lo unico que hace es
+     ponerle un marco crema alrededor de su rectangulo. Queda peor que el
+     problema que venia a resolver.
+
+     Asi que se mira el archivo al subirlo:
+       · opaco     -> trae su fondo puesto, no hace falta plaquita
+       · claro     -> su tinta ya resalta sobre el color, tampoco
+
+     Solo lleva plaquita el caso de verdad: transparente y oscuro. */
+  function mideLogo(img) {
+    var n = 120, c = document.createElement('canvas');
+    var esc = Math.min(n / img.width, n / img.height, 1);
+    c.width = Math.max(1, Math.round(img.width * esc));
+    c.height = Math.max(1, Math.round(img.height * esc));
+    var x = c.getContext('2d', { willReadFrequently: true });
+    x.drawImage(img, 0, 0, c.width, c.height);
+    var d;
+    try { d = x.getImageData(0, 0, c.width, c.height).data; }
+    catch (e) { return { opaco: true, luz: 1 }; }
+
+    var total = 0, transp = 0, suma = 0, vistos = 0;
+    for (var i = 0; i < d.length; i += 4) {
+      total++;
+      if (d[i+3] < 128) { transp++; continue; }
+      /* luminancia de toda la vida */
+      suma += (0.2126*d[i] + 0.7152*d[i+1] + 0.0722*d[i+2]) / 255;
+      vistos++;
+    }
+    return {
+      opaco: (transp / Math.max(1, total)) < 0.04,
+      luz: vistos ? suma / vistos : 1
+    };
+  }
+
   function coloresDe(img) {
     var n = 160, c = document.createElement('canvas');
     var esc = Math.min(n / img.width, n / img.height, 1);
@@ -592,18 +780,44 @@ canvas{display:none}
   /* La cabecera: dos rayas de lado a lado y las cinco estrellas encima,
      que es como está montada la plantilla buena. Las rayas van a sangre,
      no se cortan: se cortan solas con el redondeo de la placa. */
-  function rayasYEstrellas(bx, bw, y1, y2, grueso, r, color) {
-    /* Ampliado el original: es UNA raya a cada lado, no dos, y gruesa.
-       Va del 20% al 32% del ancho por la izquierda y del 68% al 80% por
-       la derecha, a la altura del centro de las estrellas. Las cinco
-       estrellas van juntas, casi tocándose (el paso es 3,6 veces el
-       radio). */
+  function rayasYEstrellas(bx, by, bw, bh, radio, y1, y2, grueso, r, color) {
+    /* LAS RAYAS VAN DE CANTO A CANTO, y esto es lo que se arregló.
+
+       Iban del 17,5 % al 30 % por la izquierda y del 70 % al 82,5 % por
+       la derecha, o sea que se quedaban dos palmos cortas por los dos
+       lados y parecían dos guiones sueltos puestos ahí sin motivo. En la
+       plantilla buena la raya cruza la banda entera y las estrellas se
+       le montan encima.
+
+       Se dibujan un pelín pasadas del borde (de -2 % a 102 %) y se
+       recortan con la silueta de la placa: así llegan al canto de verdad
+       y el redondeo de las esquinas las corta solo, sin que haya que
+       calcular dónde empieza la curva. */
     var cy = (y1 + y2) / 2, hueco = r * 3.6, total = hueco * 4;
+
+    /* EL HUECO DE LA RAYA SALE DE LAS ESTRELLAS, no de un 30 % puesto a
+       ojo. Antes la raya iba del -2 % al 30 % y del 70 % al 102 % del
+       ancho, y eso solo cuadra si las estrellas ocupan justo ese trozo.
+
+       En la placa cuadraba de milagro. En la tarjeta no: alli la caja
+       que se le pasa es el panel de color, que es estrecho, pero el
+       radio de las estrellas sale del ancho de la TARJETA, asi que las
+       cinco ocupaban mas trozo de panel del que el 30 % dejaba libre y
+       la raya se les metia por debajo. Pegadas, sin aire.
+
+       Ahora se mide donde acaba la tinta de la primera y la ultima
+       estrella y se deja un aire de 1,2 radios a cada lado. En la placa
+       sale practicamente lo mismo que habia (0,293 en vez de 0,300); en
+       la tarjeta, el aire que faltaba. */
+    var medio = bx + bw/2, aire = r * 1.2;
+    var topeIzq = medio - total/2 - r - aire;
+    var topeDer = medio + total/2 + r + aire;
     cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
     cx.strokeStyle = color; cx.lineWidth = grueso; cx.lineCap = 'butt';
-    [[0.175, 0.300], [0.700, 0.825]].forEach(function (t) {
+    [[bx - bw*0.02, topeIzq], [topeDer, bx + bw*1.02]].forEach(function (t) {
       cx.beginPath();
-      cx.moveTo(bx + bw*t[0], cy); cx.lineTo(bx + bw*t[1], cy);
+      cx.moveTo(t[0], cy); cx.lineTo(t[1], cy);
       cx.stroke();
     });
     cx.restore();
@@ -624,6 +838,43 @@ canvas{display:none}
     cx.restore();
   }
 
+  /* EL DISCO DE LA PLATAFORMA. Con Google se pinta la G, que son sus
+     trazos exactos. Con las demas, la imagen que se haya subido, metida
+     dentro del mismo circulo blanco para que la placa no cambie de
+     forma segun la red. Si no hay ninguna, no se pinta el disco: mejor
+     un hueco limpio que un circulo blanco vacio en medio de la banda. */
+  function insignia(x, y, tam, conDisco) {
+    var disco = conDisco !== false;
+    var m = red().marca;
+    if (m === 'google') { dibujaG(x, y, tam, disco, '#FFFFFF'); return; }
+
+    /* Con disco, la marca se encaja dentro del circulo con el mismo aire
+       que tiene la G ahi dentro. Sin disco (la tarjeta), va suelta y algo
+       mas grande, porque no hay circulo que la sostenga. */
+    if (m) {
+      if (disco) {
+        cx.save();
+        cx.fillStyle = '#FFFFFF';
+        cx.beginPath(); cx.arc(x, y, tam * 0.86, 0, Math.PI * 2); cx.fill();
+        cx.restore();
+        dibujaMarca(m, x, y, tam * 1.10);
+      } else {
+        dibujaMarca(m, x, y, tam * 1.70);
+      }
+      return;
+    }
+
+    /* "Otra": lo que se haya subido */
+    if (!est.logoRed) return;
+    if (!disco) { meteImagen(est.logoRed, x, y, tam * 1.7, tam * 1.7); return; }
+    cx.save();
+    cx.fillStyle = '#FFFFFF';
+    cx.beginPath(); cx.arc(x, y, tam * 0.86, 0, Math.PI * 2); cx.fill();
+    cx.clip();
+    meteImagen(est.logoRed, x, y, tam * 1.16, tam * 1.16);
+    cx.restore();
+  }
+
   /* Las cuatro esquinas de encuadre alrededor del icono, como el visor de
      una cámara. Salen en la plantilla buena y son lo que le dice al
      cliente "esto de aquí es lo que tienes que tocar". */
@@ -641,112 +892,66 @@ canvas{display:none}
     cx.restore();
   }
 
-  /* El icono de acercar el móvil. Está calcado del original: se amplió
-     el de la placa del Morro Fino y se midió pieza a pieza.
+  /* ══════════ el icono de acercar el móvil ══════════ */
 
-     Todo va en unidades de U, el ANCHO de tinta del icono. La altura
-     sale sola a 0,611·U, que es la proporción medida. El origen del
-     dibujo es la esquina de arriba a la izquierda de la tinta.
+  /* Esto NO está dibujado a mano: está SACADO de la placa buena.
 
-     Las piezas, y en qué se diferencian de lo que había antes:
-       · el óvalo ocupa solo los primeros 0,79 de ancho, no todo;
-       · las ondas son CUATRO y se abren hacia la derecha, con el centro
-         de los arcos metido dentro del óvalo;
-       · el teléfono va casi recto y pegado al borde derecho del óvalo,
-         no tumbado en medio;
-       · la mano no es un pegote blanco por delante: son cuatro dedos
-         asomando a la izquierda del móvil y el pulgar rodeándolo por la
-         derecha, y va por DETRÁS;
-       · lo que rellena el teléfono es el color del cuerpo de la placa,
-         no blanco: sobre un fondo crema, un teléfono blanco canta. */
-  function dibujaNfc(x, y, U, color, fondo) {
-    var alto = U * 0.611;
+     Estuvo hecho a base de elipses y curvas de Bézier puestas a ojo, y
+     por mucho que se retocara la mano nunca llegó a parecer una mano.
+     Se veía un globo, o una farola. Un dibujo así no se acierta a
+     tientas: o es el bueno o no lo es.
+
+     Así que se ha cogido la placa de Me Gusta, se ha recortado el icono,
+     se ha vectorizado (potrace) y el contorno que salió es lo que hay
+     aquí debajo. Es el icono de contacto de siempre, el mismo de los
+     datáfonos, con su óvalo, sus cuatro ondas y la mano sujetando el
+     móvil con los dedos y el pulgar.
+
+     Va en una caja de 1000 de ancho por NFC_ALTO de alto, y se escala
+     desde ahí. Es UNA sola silueta: los huecos (el interior del óvalo,
+     la pantalla del móvil) son agujeros del propio trazado, así que por
+     ellos se ve el color del cuerpo de la placa, que es justo lo que
+     tiene que verse. Por eso se rellena y no se perfila.
+
+     Si algún día hay que cambiar el dibujo, no se retoca a mano: se
+     vuelve a vectorizar del original y se sustituye esta cadena. */
+  var NFC_TRAZO = 'M406,615C374,614 356,612 334,609C330,608 325,607 324,607C323,607 319,606 316,606C312,605 308,604 306,604C300,603 282,599 272,596C269,595 262,593 258,592C241,587 214,577 191,566C188,565 185,563 185,563C185,563 182,562 179,560C163,551 163,552 151,544C148,543 134,533 129,530C118,523 107,514 92,500C79,488 74,483 61,468C53,459 44,446 35,432C31,424 21,405 18,398C18,397 16,393 15,390C11,380 9,374 6,360C2,345 0,325 0,308C0,297 1,290 2,277C4,264 5,262 6,255C10,239 14,228 20,214C21,213 22,210 23,208C28,196 40,176 50,162C61,147 81,126 94,114C97,111 101,108 103,106C109,101 111,99 124,89C130,85 130,85 148,73C156,69 162,65 171,60C182,54 203,44 211,41C215,39 220,37 222,36C234,31 266,21 281,17C284,17 289,16 292,15C296,14 300,13 300,13C301,13 304,12 307,12C315,10 321,9 329,7C333,7 337,6 338,6C339,6 344,5 350,5C355,4 361,3 364,3C369,2 376,2 402,0C411,0 440,0 449,1C475,2 483,3 508,7C526,10 555,16 572,21C585,25 607,33 615,36C618,37 622,39 624,40C630,42 659,56 666,60C683,70 702,83 715,93C726,102 742,116 752,127C762,137 767,143 777,156C778,158 780,160 781,161C782,164 783,164 789,164C795,164 802,165 805,166C810,168 818,173 821,177C825,182 828,188 830,193C830,197 831,204 831,213C831,217 831,217 832,218C833,219 834,219 837,219C838,218 846,219 849,220C856,221 863,226 868,232C874,239 882,254 886,266C888,271 893,284 894,287C894,289 895,291 896,293C897,298 899,304 901,313C903,317 904,324 905,328C908,339 911,352 913,358C914,366 917,380 917,384C918,386 918,387 918,388C919,389 921,390 927,390C934,391 942,394 948,399C957,405 963,414 974,433C976,437 979,441 981,444C984,449 985,451 991,461C997,470 998,474 999,483C1000,488 1000,491 999,495C998,505 995,513 989,520C986,524 976,532 969,536C962,541 957,543 955,545C947,550 945,551 942,553C932,558 921,560 911,558C905,557 900,556 895,553C890,551 887,549 883,545C879,542 878,540 873,531C868,523 867,522 863,514C858,506 857,505 856,503C853,500 852,500 847,499C841,499 830,498 825,497C823,497 818,496 814,496C809,495 805,495 804,495C803,494 799,494 795,494C792,494 787,493 785,493C777,492 774,490 771,484C769,480 769,479 770,475C771,471 771,471 770,470C768,469 767,470 763,475C752,488 727,512 710,524C706,527 703,529 702,530C697,533 681,544 674,548C658,558 640,567 629,572C627,573 623,574 619,576C616,578 612,579 611,580C610,580 607,581 605,582C598,585 593,586 578,591C564,596 565,596 552,599C533,604 524,606 506,609C491,611 491,611 478,612C453,615 430,616 406,615ZM441,595C445,595 451,594 455,594C465,594 476,593 480,592C482,592 484,592 486,591C496,591 507,589 521,586C525,585 529,584 531,584C534,584 544,581 557,577C565,575 582,570 589,567C590,567 594,566 597,565C613,559 642,545 655,537C656,536 657,535 658,535C658,535 674,525 680,522C687,517 705,503 711,498C724,488 740,473 740,471C740,469 739,469 728,469C722,469 715,469 712,469C706,469 705,468 702,467C693,464 686,458 681,451C678,446 676,438 675,431C674,426 674,426 670,424C663,423 658,418 655,410C653,405 653,401 656,395C658,391 659,389 662,387C665,386 665,385 660,382C655,379 650,371 650,363C650,356 653,350 659,346C661,344 660,343 657,341C651,337 646,328 646,321C646,318 647,312 649,310C649,308 651,306 652,305C654,302 655,301 654,300C654,300 652,300 650,300C646,299 643,297 639,294C634,290 632,285 632,278C632,269 635,261 643,256C648,253 648,253 662,253C673,253 673,253 674,252L675,251L675,228C675,197 675,197 676,193C678,188 680,183 682,180C685,177 690,172 693,170C697,168 699,167 704,166C710,164 711,164 737,164C754,164 756,164 757,163C757,162 756,161 754,158C753,157 749,153 747,150C734,135 723,124 707,111C703,108 698,104 696,103C694,102 691,99 688,97C678,90 669,84 659,79C656,77 653,76 651,75C644,71 626,62 620,60C610,55 603,53 597,51C594,50 590,48 588,47C585,46 580,44 577,44C574,43 569,41 567,40C558,38 537,32 532,31C531,31 526,30 522,29C505,26 500,25 495,25C492,25 488,24 486,24C482,23 472,22 457,21C454,21 450,21 447,21C438,20 396,20 384,21C378,22 373,22 372,22C371,22 368,23 365,23C356,24 340,25 337,26C335,27 332,27 330,27C327,28 324,28 323,29C322,29 318,30 314,30C293,34 261,43 243,50C239,51 234,53 232,54C220,58 197,68 192,71C192,71 189,73 187,74C173,81 154,92 146,98C133,107 129,110 123,115C120,117 117,120 116,120C114,122 101,133 95,139C80,155 72,164 59,184C53,192 49,199 46,207C42,214 37,225 35,228C35,230 34,233 33,235C27,250 23,270 21,291C19,311 20,333 26,356C29,372 34,385 40,399C48,415 54,426 62,436C64,439 66,442 67,444C73,453 80,460 91,472C101,482 108,489 118,497C132,508 150,521 167,531C184,541 212,554 233,562C257,571 291,581 310,584C312,584 315,585 318,586C320,586 325,587 328,588C332,588 337,589 338,589C347,591 358,592 366,593C378,594 378,594 389,594C394,595 399,595 399,595C404,595 435,595 441,595ZM924,538C928,537 932,536 936,533C939,531 943,528 947,526C963,517 968,513 972,509C976,505 979,499 979,493C980,485 978,478 972,468C971,466 970,464 969,463C968,461 966,458 964,455C960,449 959,447 953,437C945,424 941,419 937,416C932,412 924,409 922,411C921,411 920,413 921,416C921,419 920,427 920,431C919,435 917,442 915,445C911,454 902,461 892,464C886,465 880,465 874,463C870,462 865,459 863,458C861,455 859,455 858,457C858,457 858,458 858,462C859,470 860,474 866,482C868,484 870,487 871,488C872,490 878,500 882,507C891,523 895,529 900,532C903,535 909,538 912,538C916,539 922,539 924,538ZM492,532C489,532 486,531 484,529C481,527 481,527 479,524C477,521 476,517 476,512C476,507 476,507 486,491C490,486 493,479 494,477C497,473 508,450 510,445C511,444 512,441 513,439C516,431 522,414 524,406C524,405 525,402 526,400C530,389 535,360 537,338C538,336 538,333 538,331C538,329 539,320 539,312C539,298 539,289 538,280C538,279 537,275 537,272C536,263 535,254 533,243C532,235 529,222 527,216C526,214 525,210 524,207C521,197 515,180 511,171C507,162 494,137 492,133C487,126 485,122 483,119C479,113 477,110 476,107C475,101 476,97 479,92C482,86 488,82 495,82C500,82 506,85 510,88C511,90 512,91 524,110C530,121 535,130 543,147C547,156 550,164 550,164C550,164 552,168 553,172C555,177 557,181 557,181C557,182 557,183 558,185C559,186 560,192 564,205C570,223 574,247 576,267C576,272 576,276 577,277C577,277 577,282 577,288C578,301 578,320 577,327C577,329 577,333 577,337C576,343 576,348 575,355C574,357 574,361 573,364C573,368 572,371 572,373C572,374 571,377 571,379C570,384 565,405 564,408C564,409 563,412 562,414C559,425 558,430 553,441C552,444 551,447 550,449C543,468 536,485 527,499C526,501 524,503 523,505C522,507 520,511 518,514C517,516 515,520 514,521C511,526 508,528 505,530C500,533 497,533 492,532ZM416,493C411,491 406,487 404,483C402,479 401,476 401,472C402,467 403,465 409,456C411,451 414,447 415,446C415,446 417,443 418,440C427,427 438,402 442,389C442,387 443,383 444,382C446,373 449,362 450,355C451,352 451,349 452,347C453,337 454,320 454,305C454,289 453,275 451,263C450,260 450,257 450,256C449,253 444,233 443,230C442,229 442,226 441,225C441,223 440,221 440,219C439,218 438,215 437,212C434,203 430,195 425,184C421,178 413,164 409,159C403,151 402,148 402,142C402,136 403,132 407,128C410,125 414,123 418,122C422,122 425,122 430,124C434,126 436,129 441,136C442,139 445,143 446,145C450,151 453,156 456,161C457,163 459,167 461,170C464,176 471,191 471,191C471,191 472,194 474,198C475,201 477,207 478,211C480,215 481,219 481,221C483,225 486,240 487,244C487,246 488,249 489,251C490,256 491,267 492,273C492,276 492,279 492,280C493,287 494,304 494,311C494,320 493,331 492,338C492,340 491,345 491,348C490,352 490,356 489,358C489,360 488,364 488,366C488,368 487,370 487,372C487,373 486,376 486,378C485,380 484,383 484,385C483,386 483,389 482,391C481,396 477,408 474,415C470,425 470,426 468,430C464,438 459,449 453,459C452,461 450,464 449,466C444,475 437,484 434,487C429,492 422,494 416,493ZM838,471C838,470 839,470 838,468C838,467 838,463 838,459C838,450 839,446 843,438C844,437 845,435 845,434C845,433 844,431 842,423C840,417 838,410 837,405C835,397 834,395 833,395C831,395 831,397 831,411C832,428 831,435 830,440C828,446 826,450 823,454C820,458 815,462 811,464C809,465 808,466 807,467C806,468 806,468 807,468C808,469 810,470 815,470C824,471 830,471 832,471C836,472 837,472 838,471ZM797,448C800,448 803,446 805,444C807,442 810,436 810,433C811,432 811,401 811,340C811,290 811,240 811,228C811,217 811,206 811,203C811,199 810,199 809,196C806,189 801,185 794,185C791,184 777,184 751,184C715,184 712,184 710,185C704,187 700,191 697,198L696,200L695,248C695,281 695,295 695,296C696,297 698,298 700,298C703,298 709,301 713,304C717,308 719,313 719,321C719,325 718,328 716,332C715,335 711,339 709,340C706,342 706,344 709,346C715,350 718,358 718,365C717,374 713,380 705,383C701,385 701,386 704,389C706,391 708,395 709,398C710,400 710,401 710,405C710,410 709,412 706,416C704,419 703,421 699,423C697,424 696,425 696,425C695,428 696,436 699,440C702,444 707,448 711,449C712,449 732,449 754,449C790,449 796,449 797,448ZM331,447C326,445 322,441 320,437C318,433 318,432 318,428C318,424 318,424 320,420C321,418 323,416 324,414C332,404 342,388 347,374C351,366 352,364 354,358C358,345 361,331 361,315C362,303 361,294 359,278C357,264 353,253 346,238C344,232 340,225 339,223C338,222 338,221 338,221C338,220 330,208 325,202C319,195 318,192 318,186C318,181 320,177 323,173C325,171 326,170 329,169C333,167 336,166 339,166C343,167 346,168 349,170C352,172 354,174 360,183C361,185 364,188 365,190C370,197 377,210 380,216C380,217 382,220 383,222C384,226 385,228 388,236C393,249 396,258 397,267C399,278 399,281 400,288C400,299 400,319 400,325C399,335 398,338 397,345C394,363 387,385 378,403C373,413 366,424 359,432C357,435 355,438 353,440C349,445 344,448 337,448C334,448 333,447 331,447ZM890,442C893,441 895,438 897,434C899,430 900,427 900,415C900,406 900,406 899,398C899,394 898,390 898,390C898,388 895,375 894,369C893,366 893,362 892,360C891,354 890,351 888,344C885,332 884,327 883,323C881,315 879,309 878,305C877,302 876,298 875,295C874,292 873,289 873,288C872,282 866,268 862,261C858,252 856,249 851,245C848,241 844,239 840,239C837,238 835,240 833,244L832,246L832,258C832,274 833,286 835,297C835,299 836,302 836,305C837,311 840,327 843,342C844,346 845,352 846,357C847,361 849,367 849,370C850,372 851,376 851,378C851,381 852,383 852,384C853,385 854,389 855,393C857,401 865,425 867,429C869,433 870,436 873,439C877,443 880,444 884,443C887,443 888,443 890,442ZM688,416C693,415 695,415 697,413C699,411 700,407 701,404C701,402 701,401 700,399C699,398 698,396 697,395C695,393 693,393 683,393C678,393 673,393 672,393C670,393 669,394 667,396C663,400 662,405 664,409C666,413 667,414 671,415C673,416 680,416 688,416ZM243,400C239,399 238,398 235,396C233,394 232,393 231,390C226,380 228,372 238,364C242,361 248,353 251,349C257,340 261,333 262,326C264,318 265,314 265,306C265,299 265,298 264,293C263,289 262,285 261,284C260,278 255,271 251,265C247,259 240,252 237,250C232,245 231,243 229,238C228,236 228,231 229,228C230,223 233,220 237,217C240,214 243,213 246,213C253,213 257,214 266,222C270,227 279,236 282,240C283,241 285,244 287,247C299,267 305,289 304,312C304,323 302,332 298,345C296,351 295,353 292,358C287,369 281,377 275,383C268,389 259,398 257,399C254,401 248,401 243,400ZM701,375C703,375 706,371 708,368C710,364 709,361 706,357C704,354 702,352 700,351C697,351 694,350 681,351C670,351 669,351 667,352C665,353 662,356 661,358C660,360 660,360 660,364C660,367 660,368 661,369C664,374 666,375 670,376C671,376 678,376 686,376C698,376 700,376 701,375ZM698,334C701,334 703,333 705,331C708,328 709,325 709,321C710,318 709,317 707,314C705,311 703,309 701,308C700,307 699,307 683,307C663,307 664,307 660,311C656,315 655,318 656,323C657,328 662,333 666,334C669,335 693,335 698,334ZM677,290C680,289 684,285 685,281C685,280 686,278 686,277C686,274 685,274 684,272C683,269 680,265 678,264L676,263L663,263L651,263L649,264C647,266 644,268 643,271C642,272 642,273 642,276C642,280 642,281 643,283C645,285 647,288 650,290C651,290 652,290 656,291C662,291 675,291 677,290ZM780,262C776,260 773,258 772,253C771,251 771,250 771,246C771,241 771,240 772,238C773,235 775,233 778,232C781,231 781,230 785,230C789,230 791,231 794,234C797,237 796,240 792,240C791,240 789,239 788,238C788,237 786,236 784,236C781,236 778,239 777,242C777,243 777,245 777,247C777,252 779,255 783,256C785,257 786,256 789,253C790,251 791,251 792,251C795,251 797,255 794,257C791,261 785,263 780,262ZM737,261C735,260 734,259 730,252C728,248 727,247 727,246C725,246 725,246 725,253C725,260 724,262 722,262C720,262 719,261 719,260C719,259 718,253 718,245L718,232L720,231C721,230 722,230 724,231C726,232 728,234 731,240C733,245 734,247 735,246C736,246 737,244 736,239C736,233 736,233 737,232C738,231 739,230 741,231C743,232 743,233 742,246C742,260 742,261 740,262C739,262 739,262 737,261ZM748,261C748,261 748,260 747,260C747,258 747,234 747,233C748,230 749,230 757,231C761,231 765,231 766,231C768,232 768,234 766,236C765,237 764,237 760,237C755,237 755,237 754,238C753,239 753,241 754,242C755,243 756,243 759,243C761,243 763,244 763,244C765,245 765,247 763,248C763,249 762,249 759,249C754,249 754,249 754,256C753,260 753,260 752,261C751,262 750,262 748,261ZM730,212C725,212 723,209 722,205C722,202 724,198 727,197C729,197 776,196 778,196C780,197 783,199 784,201C785,203 785,203 785,205C785,208 783,210 780,211L778,212L756,212C743,213 732,212 730,212Z';
+  var NFC_ALTO = 616;                  /* el alto, con el ancho a 1000 */
+  var nfcPath = null;                 /* el Path2D, una vez y ya */
+
+  function dibujaNfc(x, y, U, color) {
+    if (!nfcPath) nfcPath = new Path2D(NFC_TRAZO);
+    var k = U / 1000;
     cx.save();
-    cx.translate(x - U/2, y - alto/2);      /* centrado en (x, y) */
-    cx.strokeStyle = color; cx.lineCap = 'round'; cx.lineJoin = 'round';
-    var relleno = fondo || '#FFFFFF';
-
-    /* ---- 1. la mano, por detrás de todo ---- */
-    cx.save();
-    cx.fillStyle = relleno; cx.lineWidth = U * 0.020;
-
-    /* El pulgar y la palma, de una sola pieza. Iban en dos trozos y se
-       veía la juntura: parecían un dedo y una albóndiga al lado. En el
-       original es una sola mano que rodea el móvil por la derecha y baja
-       hasta asomar por debajo. */
-    cx.beginPath();
-    cx.moveTo(U * 0.840, U * 0.220);
-    cx.bezierCurveTo(U * 0.955, U * 0.245, U * 1.000, U * 0.355, U * 0.972, U * 0.462);
-    cx.bezierCurveTo(U * 1.010, U * 0.492, U * 1.012, U * 0.556, U * 0.975, U * 0.592);
-    cx.bezierCurveTo(U * 0.935, U * 0.630, U * 0.868, U * 0.618, U * 0.842, U * 0.576);
-    cx.bezierCurveTo(U * 0.818, U * 0.536, U * 0.836, U * 0.492, U * 0.874, U * 0.470);
-    cx.bezierCurveTo(U * 0.906, U * 0.398, U * 0.902, U * 0.300, U * 0.840, U * 0.286);
-    cx.closePath(); cx.fill(); cx.stroke();
-    cx.restore();
-
-    /* ---- 2. el óvalo del campo de lectura ---- */
-    cx.lineWidth = U * 0.026;
-    cx.beginPath();
-    cx.ellipse(U * 0.397, U * 0.302, U * 0.397, U * 0.302, 0, 0, Math.PI * 2);
-    cx.stroke();
-
-    /* ---- 3. las cuatro ondas ---- */
-    /* Todas salen del mismo centro, dentro del óvalo, y barren 45° a cada
-       lado. Los radios van parejos, que es lo que les da el aire de señal
-       que se expande. */
-    cx.lineWidth = U * 0.038;
-    var cxO = U * 0.261, cyO = U * 0.302;
-    [0.100, 0.172, 0.244, 0.315].forEach(function (r) {
-      cx.beginPath();
-      cx.arc(cxO, cyO, U * r, -Math.PI * 0.25, Math.PI * 0.25);
-      cx.stroke();
-    });
-
-    /* ---- 4. los cuatro dedos, a la izquierda del móvil ---- */
-    cx.save();
-    cx.fillStyle = relleno; cx.lineWidth = U * 0.018;
-    for (var d = 0; d < 4; d++) {
-      var fy = U * (0.248 + d * 0.049);
-      redondo(U * 0.636, fy, U * 0.072, U * 0.046, U * 0.023);
-      cx.fill(); cx.stroke();
-    }
-    cx.restore();
-
-    /* ---- 5. el móvil, por delante ---- */
-    var px = U * 0.685, py = U * 0.163, pw = U * 0.141, ph = U * 0.315;
-    cx.save();
-    cx.fillStyle = relleno; cx.lineWidth = U * 0.020;
-    redondo(px, py, pw, ph, U * 0.030);
-    cx.fill(); cx.stroke();
-
-    /* el altavoz */
-    cx.lineWidth = U * 0.016;
-    cx.beginPath();
-    cx.moveTo(px + pw * 0.28, py + U * 0.038);
-    cx.lineTo(px + pw * 0.72, py + U * 0.038);
-    cx.stroke();
-
-    /* y el NFC en la pantalla */
+    cx.translate(x - U/2, y - (NFC_ALTO * k)/2);   /* centrado en (x, y) */
+    cx.scale(k, k);
     cx.fillStyle = color;
-    cx.font = '700 ' + (U * 0.052) + 'px Montse, system-ui, sans-serif';
-    cx.textAlign = 'center'; cx.textBaseline = 'middle';
-    cx.fillText('NFC', px + pw/2, py + U * 0.098);
+    cx.fill(nfcPath);
     cx.restore();
-
-    cx.restore();
-    cx.textAlign = 'center'; cx.textBaseline = 'middle';
   }
 
   function dibujaQR(txt, x, y, lado, oscuro) {
     if (!txt) {
+      /* EL HUECO DICE QUÉ FALTA, no pone "QR" y ya.
+
+         Ponía solo "QR" dentro de un cuadro de rayas, y al abrir el
+         generador en blanco eso se lee como "aquí el QR no funciona"
+         cuando lo que pasa es que aún no se ha escrito el nombre del
+         negocio. El aviso estaba, pero debajo de la vista previa, y hay
+         que bajar a buscarlo: la respuesta tiene que estar donde se está
+         mirando, que es el hueco. */
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.22)'; cx.lineWidth = Math.max(2, lado*0.012);
       cx.setLineDash([lado*0.05, lado*0.04]);
       cx.strokeRect(x - lado/2, y - lado/2, lado, lado);
       cx.setLineDash([]);
-      cx.fillStyle = 'rgba(0,0,0,.35)';
-      cx.font = '600 ' + (lado*0.085) + 'px Montse, system-ui, sans-serif';
-      cx.fillText('QR', x, y);
+      cx.fillStyle = 'rgba(0,0,0,.40)';
+      cx.font = '700 ' + (lado*0.085) + 'px Montse, system-ui, sans-serif';
+      cx.fillText('Escribe el nombre', x, y - lado*0.055);
+      cx.fillText('del negocio', x, y + lado*0.055);
+      cx.fillStyle = 'rgba(0,0,0,.28)';
+      cx.font = '600 ' + (lado*0.062) + 'px Montse, system-ui, sans-serif';
+      cx.fillText('y aquí sale el QR', x, y + lado*0.175);
       cx.restore();
       return;
     }
@@ -755,26 +960,26 @@ canvas{display:none}
     var qr = qrcode(0, 'H');
     qr.addData(txt);
     qr.make();
-    var n = qr.getModuleCount();
-    /* MÓDULOS ENTEROS. Antes el módulo medía lado/n, casi siempre con
-       decimales, y cada cuadradito caía entre dos píxeles: el navegador
-       los repartía como podía y el código salía con los bordes sucios,
-       unos módulos un píxel más gordos que otros. Se tapaba con medio
-       píxel de solape, que es peor remedio que la enfermedad.
+    /* CADA MODULO, UN NUMERO ENTERO DE PIXELES.
 
-       Ahora el módulo se redondea a un número entero de píxeles y el
-       código se centra con lo que sobra. Sale con el canto limpio, que
-       es lo que hace que un lector lo pille a la primera y lo que se
-       nota al imprimir en grande. Pierde como mucho medio módulo de
-       tamaño, que a simple vista no existe. */
+       Antes el modulo medía lado/n, que casi nunca es entero, y para
+       tapar las rayas blancas que deja el navegador al redondear se le
+       sumaba medio pixel de solape a cada cuadrito. Eso engorda unos
+       modulos y no otros, segun donde caigan: el codigo sale con los
+       cuadros desiguales y un lector con prisa se atraganta.
+
+       Redondeando el paso a pixeles enteros no hay nada que tapar. El QR
+       queda unos pixeles mas chico o mas grande que el hueco pedido, asi
+       que se recentra con lo que sobra. */
+    var n = qr.getModuleCount();
     var paso = Math.max(1, Math.round(lado / n));
     var ladoReal = paso * n;
-    var x0 = Math.round(x - ladoReal / 2), y0 = Math.round(y - ladoReal / 2);
+    var x0 = Math.round(x - ladoReal/2), y0 = Math.round(y - ladoReal/2);
     cx.save();
     cx.fillStyle = oscuro;
     for (var f = 0; f < n; f++) for (var c = 0; c < n; c++) {
       if (!qr.isDark(f, c)) continue;
-      cx.fillRect(x0 + c * paso, y0 + f * paso, paso, paso);
+      cx.fillRect(x0 + c*paso, y0 + f*paso, paso, paso);
     }
     cx.restore();
   }
@@ -797,9 +1002,9 @@ canvas{display:none}
        llegaban de sobra (unos 565 puntos por pulgada), pero el archivo
        se ve tambien EN PANTALLA —la vista previa, el que se manda por
        WhatsApp, el que se mira ampliado— y ahi 2000 px de una tarjeta
-       que se enseña a pantalla completa se quedaban cortos: la letra
-       pequeña y el QR salian blandos. Con 3600 px la tarjeta va a unos
-       1075 puntos por pulgada y aguanta cualquier ampliacion.
+       que se ensena a pantalla completa se quedaban cortos: la letra
+       pequena y el QR salian blandos. Con 3600 px va a unos 1075 puntos
+       por pulgada y aguanta cualquier ampliacion.
 
        Lo que cuesta: el PNG pesa unas tres veces mas y dibujarlo tarda
        unas decimas. Nada que se note en un generador que se usa una vez
@@ -810,18 +1015,17 @@ canvas{display:none}
 
     var bx = sang * px, by = sang * px;
     var bw = mmW * px, bh = mmH * px;
-    /* El troquel. La placa y el expositor son rectangulos a sangre: el
+    /* EL TROQUEL. La placa y el expositor son rectangulos a sangre: el
        redondeo lo pone luego la maquina, y dibujarlo aqui haria que la
        imprenta cortara sobre una esquina ya curvada. La TARJETA si lo
-       lleva, porque es una tarjeta de PVC troquelada de serie con 3 mm
-       de radio —se midio en la foto: unos 2,4 mm— y una tarjeta con las
-       esquinas en pico no es lo que se le entrega al cliente.
+       lleva, porque es una tarjeta de PVC troquelada de serie con unos
+       3 mm de radio, y una tarjeta con las esquinas en pico no es lo
+       que se le entrega al cliente.
 
        Con sangrado se dibuja cuadrada igualmente: el archivo para la
-       imprenta va a sangre entera y el troquel se marca con la linea
-       de corte, que sale mas abajo ya redondeada. */
-    var radioTroquel = (F.radio || 0) * px;
-    var radio = sang ? 0 : radioTroquel;
+       imprenta va a sangre entera y el troquel se marca con la linea de
+       corte. */
+    var radio = sang ? 0 : (F.radio || 0) * px;
 
     cx.clearRect(0, 0, W, H);
     cx.fillStyle = est.fondo;
@@ -830,16 +1034,14 @@ canvas{display:none}
 
     cx.textAlign = 'center'; cx.textBaseline = 'middle';
 
-    if (F.plano === 'tumbado') pintaTumbada(bx, by, bw, bh, radio);
-    else                       pintaDePie(bx, by, bw, bh, radio);
+    if (FORMATOS[est.formato].reja === 'apaisada') pintaApaisada(bx, by, bw, bh, radio);
+    else                                           pintaDePie(bx, by, bw, bh, radio);
 
     if (sang) {
       cx.save();
       cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
       cx.setLineDash([px*1.6, px*1.6]);
-      /* la linea de corte lleva el redondeo del troquel: es por donde
-         va a pasar la cuchilla de verdad */
-      redondo(bx, by, bw, bh, radioTroquel); cx.stroke();
+      cx.strokeRect(bx, by, bw, bh);
       cx.restore();
     }
     return { W: W, H: H, mm: [totW, totH], dpi: Math.round(px * 25.4) };
@@ -901,17 +1103,194 @@ canvas{display:none}
      Lo que NO cambia entre rejas, porque en los originales tampoco:
      la banda ocupa 0,278 del alto, su curva sube 0,027 en el centro, el
      QR mide 0,24 del alto y va separado del icono 0,31 del alto. */
+  /* oroY (la altura de la fila de rayas y estrellas) y tituloAncho van
+     por reja, y no por capricho.
+
+     En la placa cuadrada el alto es el mismo que el ancho, así que la
+     banda, que mide 0,278 del ALTO, se queda corta para lo ancha que es:
+     con la fila de estrellas a 0,0755 no le sobraba sitio al título y
+     "¡Nos encantaría tu reseña en Google!" caía en DOS líneas de lado a
+     lado, cuando en las placas buenas cae en tres. Subiendo la fila y
+     midiendo el título más estrecho, caben las tres y además más
+     grandes.
+
+     En el expositor y en la tarjeta el alto es vez y media el ancho: ahí
+     la banda ya es de sobra alta, el título ya caía en tres, y los
+     números se quedan como estaban. */
+  /* LA FIRMA DE PLEA5E (raya + logo, estrellitas y teléfono) BAJA EN EL
+     EXPOSITOR Y LA TARJETA, Y EN LA PLACA CUADRADA NO.
+
+     En el expositor se quedaba a 0,892 del alto y por debajo sobraban
+     casi dos dedos de crema vacío, mientras arriba el nombre del negocio
+     se le echaba encima. En la placa buena de ese formato la raya cae en
+     0,889, así que se baja hasta ahí y el aire se reparte.
+
+     En la cuadrada se probó a bajarla igual, a 0,914, y sale mal: por
+     debajo de la raya es donde asoman las estrellas del canto, y con la
+     raya ahí abajo ya no les queda sitio y acaban cruzándola. En la
+     placa cuadrada buena la raya está en 0,891, o sea MÁS ARRIBA de
+     donde estaba aquí (0,902). Bajarla y tener estrellas grandes debajo
+     son cosas que no caben a la vez, y en el original lo resuelven así.
+
+     (El margen de corte del teléfono cambia poco con esto: queda a
+     1,8 mm de tinta al canto en vez de a 1,6. Sigue siendo justo en los
+     90 x 90 mm, y eso viene de antes, no de este cambio.) */
   var REJA = {
     cuadrada: { fila: 0.520, instruccion: 0.702, cliente: 0.768, clienteAlto: 0.082,
-                lema: 0.856, pie: 0.902, estrellas: 0.940, tel: 0.972 },
+                lema: 0.856, pie: 0.902, estrellas: 0.940, tel: 0.972,
+                oroY: 0.052,  tituloAncho: 0.46 },
     alta:     { fila: 0.467, instruccion: 0.661, cliente: 0.700, clienteAlto: 0.078,
-                lema: 0.784, pie: 0.822, estrellas: 0.858, tel: 0.892 }
+                lema: 0.784, pie: 0.880, estrellas: 0.914, tel: 0.944,
+                oroY: 0.0755, tituloAncho: 0.54 }
   };
   var COMUN = {
     banda: 0.278, arco: 0.027, sombra: 0.0145,
-    oroY: 0.0755, oroSep: 0.0135,   /* la fila de rayas y estrellas */
+    oroSep: 0.0135,                 /* el hueco entre las dos rayas */
     qr: 0.250, separacion: 0.310
   };
+
+  /* ══════════ la tarjeta, que va partida en dos ══════════ */
+
+  /* 85 × 54 mm, y NO es la placa tumbada: es el diseño que ya está en la
+     web, en la ficha del producto (assets/img/caa45407153b.jpg).
+
+     Los otros dos formatos llevan la banda cruzada arriba. La tarjeta
+     no: va partida por la mitad a lo largo. En el lado de color van la
+     raya de oro con las cinco estrellas, el título y el nombre del
+     negocio; en el lado claro, el logotipo de la red, el icono con el QR
+     al lado, la instrucción y la firma de PLEA5E.
+
+     Primero la hice con la banda arriba, como las otras. Cabía y no
+     quedaba mal, pero no era la tarjeta que se vende: quien la ve en la
+     web y luego la recibe tiene que reconocerla. Así que manda la web.
+
+     Aquí no hay esquinas de encuadre ni estrellas asomando por el canto:
+     en la de la web no están, y en 54 mm de alto lo único que harían es
+     quitarle sitio al QR. */
+  var TARJ = {
+    panel: 0.460,                /* lo que ocupa el lado de color, del ancho */
+    oroY:  0.235, oroSep: 0.030, /* la raya y las estrellas, dentro del panel */
+    titulo: 0.455, tituloAncho: 0.82,   /* del panel */
+    cliente: 0.655, clienteAlto: 0.175,
+    redX: 0.738, redY: 0.235, redTam: 0.050,   /* redY = oroY: va montado en la raya */
+    icoX: 0.605, icoY: 0.485, icoAncho: 0.175,
+    qrX: 0.850, qrY: 0.495, qrLado: 0.340,
+    instr: 0.775,
+    pie: 0.875, estrellas: 0.935
+  };
+
+  /* Ver mideLogo(): solo el logotipo transparente y de tinta oscura
+     necesita la plaquita, y solo si el panel es oscuro. */
+  function plaquitaHace() {
+    if (!est.logo) return false;
+    var i = est.logoInfo;
+    if (!i || i.opaco) return false;
+    if (i.luz > 0.62) return false;                 /* ya es claro */
+    return luz(est.banda) < 0.55;                   /* y el panel, oscuro */
+  }
+
+  function pintaApaisada(bx, by, bw, bh, radio) {
+    var T = TARJ;
+    var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
+    var sobreBanda = encima(est.banda);
+    var tinta = tintaDe(est.fondo);
+    var anchoPanel = bw * T.panel;
+
+    /* 1. el lado de color. Degradado en diagonal, más claro arriba a la
+          izquierda, como en la tarjeta de la web. */
+    cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
+    var g = cx.createLinearGradient(bx, by, bx + anchoPanel, by + bh);
+    g.addColorStop(0, aclara(est.banda, .20));
+    g.addColorStop(1, oscurece(est.banda, .12));
+    cx.fillStyle = g;
+    cx.fillRect(bx, by, anchoPanel, bh);
+    cx.restore();
+
+    /* 2. la raya de oro y las cinco estrellas, de canto a canto DEL
+          PANEL. Es la misma función que en los otros formatos: se le
+          pasa la caja del panel en vez de la de la placa, y sola se
+          recorta ahí. */
+    var grueso = Math.max(1, bw*0.0040);
+    rayasYEstrellas(bx, by, anchoPanel, bh, radio,
+                    by + bh*(T.oroY - T.oroSep/2), by + bh*(T.oroY + T.oroSep/2),
+                    grueso, bw*0.0135, acento);
+
+    /* Y LA RAYA SIGUE POR EL LADO CLARO, hasta el canto.
+
+       Se cortaba en la juntura, y por encima del logotipo quedaba una
+       esquina de blanco sin nada. No era que faltara un adorno: era que
+       la raya de oro es lo que cose las dos mitades. Cortada ahi, la
+       tarjeta se lee como dos trozos pegados uno al lado del otro en vez
+       de como una pieza.
+
+       En la placa y en el expositor esta misma raya cruza la pieza
+       entera de canto a canto. Aqui hacia lo mismo pero solo en media
+       tarjeta. Ahora cruza del todo, y se abre dos veces: por las cinco
+       estrellas en el lado de color y por el logotipo de la red en el
+       claro, que se apoya encima de ella igual que el de PLEA5E se apoya
+       en la raya de abajo. La tarjeta queda cosida por dos rayas con
+       algo montado en cada una, arriba y abajo. */
+    var yOro = by + bh*T.oroY, xRed = bx + bw*T.redX;
+    var hueco = bw * 0.058;
+    cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
+    cx.strokeStyle = aclara(acento, .10);
+    cx.lineWidth = grueso; cx.lineCap = 'butt';
+    cx.beginPath();
+    if (est.conG) {
+      cx.moveTo(bx + anchoPanel, yOro); cx.lineTo(xRed - hueco, yOro);
+      cx.moveTo(xRed + hueco,    yOro); cx.lineTo(bx + bw*1.02, yOro);
+    } else {
+      cx.moveTo(bx + anchoPanel, yOro); cx.lineTo(bx + bw*1.02, yOro);
+    }
+    cx.stroke();
+    cx.restore();
+
+    /* 3. el título y el nombre del negocio, en el lado de color */
+    var cIzq = bx + anchoPanel/2;
+    var t = reparte(est.titulo, anchoPanel*T.tituloAncho, bh*0.078, '800', 3, bh*0.30, true);
+    cx.font = '800 ' + t.tam + 'px Montse, system-ui, sans-serif';
+    bloque(t, cIzq, by + bh*T.titulo, sobreBanda, false);
+
+    zonaCliente(bx, by + bh*T.cliente, anchoPanel, bh*T.clienteAlto,
+                anchoPanel*0.80, sobreBanda, plaquitaHace() ? est.fondo : null);
+
+    /* 4. el logotipo de la red. Aquí va SIN el disco blanco: el lado
+          claro ya es claro, y un círculo encima se vería como una
+          pegatina puesta a posteriori. */
+    if (est.conG) insignia(bx + bw*T.redX, by + bh*T.redY, bw*T.redTam, false);
+
+    /* 5. el icono y el QR, uno al lado del otro */
+    if (est.conNfc) dibujaNfc(bx + bw*T.icoX, by + bh*T.icoY, bw*T.icoAncho, tinta);
+    dibujaQR(enlaceQR(), bx + bw*T.qrX, by + bh*T.qrY, bh*T.qrLado, tinta);
+
+    /* 6. la instrucción, centrada bajo la pareja */
+    var cDer = bx + bw*0.738;
+    var tIns = reparte(instruccion(), bw*0.44, bh*0.046, '700', 2, bh*0.12, true);
+    cx.font = '700 ' + tIns.tam + 'px Montse, system-ui, sans-serif';
+    bloque(tIns, cDer, by + bh*T.instr, tinta, false);
+
+    /* 7. LA FIRMA, SOLO EN EL LADO CLARO.
+
+          La de arriba cruza la tarjeta entera, y probe a hacer lo mismo
+          con esta. No: la firma es NUESTRA, no del negocio, y cruzando
+          el lado de color se mete en el sitio del cliente, justo debajo
+          de su nombre. La de arriba cruza porque es la raya de las cinco
+          estrellas, que es del diseño; esta se queda en su lado. */
+    var xDer = bx + anchoPanel, anchoDer = bw - anchoPanel;
+    pie(xDer, by, anchoDer, bh, radio, by + bh*T.pie, anchoDer*0.92, acento);
+
+    /* 8. las cinco estrellitas debajo de la firma, como en los otros dos
+          formatos. Las habia quitado por sitio, y sitio hay: lo que no
+          cabe en la tarjeta es el telefono, que se queda fuera. */
+    minisEstrellas(xDer + anchoDer/2, by + bh*T.estrellas, bw*0.0075, acento);
+
+    /* 9. y las estrellas grandes asomando por el canto de abajo, que
+          tambien faltaban. Misma regla que en los otros: la punta por
+          debajo de la raya del pie, y se recorta sola si no cupiera. */
+    adornoAbajo(bx, by, bw, bh, radio, acento, by + bh*T.pie);
+  }
 
   /* ---- los tres formatos, todos en columna ---- */
   function pintaDePie(bx, by, bw, bh, radio) {
@@ -929,55 +1308,113 @@ canvas{display:none}
     banda(bx, by, bw, bh, radio, altoBanda, arco, bh * C.sombra);
 
     /* 2. las dos rayas y las cinco estrellas */
-    rayasYEstrellas(bx, bw,
-                    by + bh*(C.oroY - C.oroSep/2), by + bh*(C.oroY + C.oroSep/2),
+    rayasYEstrellas(bx, by, bw, bh, radio,
+                    by + bh*(R.oroY - C.oroSep/2), by + bh*(R.oroY + C.oroSep/2),
                     Math.max(1, bw*0.0063), bw*0.022, acento);
 
     /* 3. el título, centrado en lo que queda de banda entre la fila
           dorada y el punto más alto de la curva */
-    var huecoY0 = by + bh*(C.oroY + 0.032);
-    var huecoAlto = altoBanda - arco - bh*(C.oroY + 0.062);
+    var huecoY0 = by + bh*(R.oroY + 0.032);
+    var huecoAlto = altoBanda - arco - bh*(R.oroY + 0.062);
     /* El ancho corto (0,62 del ancho de la placa) no es capricho: es lo
        que hace que "¡Nos encantaría tu reseña en Google!" caiga en tres
        líneas como en el original y no en dos de lado a lado. */
-    var t = reparte(est.titulo, bw*0.54, bh*0.042, '800', 3, huecoAlto, true);
+    var t = reparte(est.titulo, bw*R.tituloAncho, bh*0.042, '800', 3, huecoAlto, true);
     cx.font = '800 ' + t.tam + 'px Montse, system-ui, sans-serif';
     bloque(t, centro, huecoY0 + huecoAlto/2, sobreBanda, false);
 
-    /* 4. la G, a caballo sobre la curva. El disco mide 0,14 del ancho
-          en los tres originales; dibujaG lo pinta a 0,86 del tamaño que
-          se le pasa, de ahí el 0,081. */
-    /* El disco NO va centrado en la curva: va colgando de ella. En los
-       tres originales el borde de arriba del disco toca la curva y el
-       resto cae sobre el crema. Centrado, la mitad del disco se come la
-       banda y el título se le echa encima. */
+    /* 4. LA G VA A CABALLO DE VERDAD: partida entre la banda y el crema.
+
+          Antes colgaba de la curva: el borde de arriba del disco tocaba
+          la línea y el disco entero caía sobre el crema. Queda como si
+          se le hubiera escurrido. Puesta a caballo, el disco pisa las dos
+          mitades y el blanco resalta contra el verde, que es donde se ve.
+
+          No va al 50 % exacto: eso le come banda al título, y a 0,30 de
+          hundimiento el disco rozaba la admiración de "¡EN GOOGLE!". Se
+          hunde 0,42 de su radio por debajo de la línea: queda como una
+          cuarta parte del disco sobre el verde y el resto sobre el
+          crema, que es de sobra para que se lea "está entre los dos
+          colores", y el título respira.
+
+          Y más pequeña: el disco ha ido de 0,081 a 0,072 y de ahí a
+          0,064 del ancho (dibujaG lo pinta a 0,86 de lo que se le
+          pasa). A este tamaño marca de quién es la reseña sin hacerse
+          el protagonista, que es lo que tiene que hacer. */
     var bordeCentro = by + altoBanda - arco;
-    var rG = bw*0.081;
-    if (est.conG) dibujaG(centro, bordeCentro + rG*0.86, rG, true, '#FFFFFF');
+    var rG = bw*0.064;
+    if (est.conG) insignia(centro, bordeCentro + rG*0.42, rG);
 
     /* 5. la fila del medio: el icono a la izquierda y el QR a la
           derecha, separados 0,31 del alto y centrados como pareja. */
     var filaY = by + bh*R.fila;
     var ladoQR = Math.min(bh*C.qr, bw*0.42);
     if (est.conNfc) {
-      var sep = bh * C.separacion;
-      var icoX = centro - sep/2, qrX = centro + sep/2;
-      /* Medido en el original: el icono es 1,09 veces el lado del QR de
-         ancho, y su alto sale solo. El marco lo envuelve con holgura. */
+      /* LA PAREJA SE COLOCA POR SU ANCHO, NO POR UNA SEPARACIÓN FIJA.
+
+         Iba separada 0,31 del ALTO, y ese número está medido en la placa,
+         que es cuadrada. En el expositor y en la tarjeta el alto es vez y
+         media el ancho, así que 0,31 del alto es muchísimo ancho: el
+         marco del icono se salía por el canto izquierdo de la placa (se
+         veía media esquina cortada) y su esquina derecha se quedaba
+         escondida por debajo del QR.
+
+         Así que se hace al revés: se mide lo que ocupa cada pieza, se
+         deja el mismo hueco entre las dos que había en la placa, y el
+         grupo entero se centra. En la placa sale prácticamente lo mismo
+         que antes; en los otros dos formatos deja de salirse. */
       var U = ladoQR * 1.15;
+      var mw = U * 1.15, mh = U * (NFC_ALTO/1000) * 1.40;
+      /* El hueco entre el icono y el QR, medido en la placa de Me Gusta:
+         ahí van sueltos, no pegados. */
+      var hueco = bw * 0.045;
+
+      /* Y si aun así no cabe, manda el ancho de la placa: se recorta el
+         QR. Con marco, el icono ocupa 1,3225 veces el lado del QR (1,15
+         de U y U 1,15 del QR), de ahí el 2,3225 de la suma; sin marco,
+         ocupa justo U, o sea 1,15. */
+      var factor = est.conMarco ? 2.3225 : 2.15;
+      ladoQR = Math.min(ladoQR, (bw*0.90 - hueco) / factor);
+      U = ladoQR * 1.15; mw = U * 1.15; mh = U * (NFC_ALTO/1000) * 1.40;
+
+      /* Lo que ocupa de ancho la pieza de la izquierda. El dibujo pelado
+         mide exactamente U: el trazado va normalizado a 1000 de ancho y
+         se escala a U, sin margen por dentro. */
+      var anchoIco = est.conMarco ? mw : U;
+      var anchoPar = anchoIco + hueco + ladoQR;
+      var izq = centro - anchoPar/2;
+      var icoX = izq + anchoIco/2;
+      var qrX  = izq + anchoIco + hueco + ladoQR/2;
+
       if (est.conMarco) {
-        var mw = U * 1.15, mh = U * 0.611 * 1.40;
         esquinas(icoX - mw/2, filaY - mh/2, mw, mh,
                  bh*0.026, Math.max(1, bh*0.0038), 'rgba(0,0,0,.32)');
       }
-      dibujaNfc(icoX, filaY, U, tinta, est.fondo);
+      dibujaNfc(icoX, filaY, U, tinta);
       dibujaQR(enlaceQR(), qrX, filaY, ladoQR, tinta);
     } else {
+      /* SIN ICONO. Al quedarse el QR solo en la fila entra la tentación
+         de agrandarlo, y es lo que había: iba a 1,15 y el marco a 1,56.
+         Sobra sitio a los lados, pero de alto no cabe, que es lo que
+         manda aquí: arriba está la G colgando de la banda y abajo la
+         instrucción a dos líneas. A ese tamaño el QR se metía por debajo
+         de la G y por encima del texto, y el marco cruzaba el código.
+
+         Se queda del mismo tamaño que cuando va acompañado, que es el
+         que está medido para esta fila, solo que centrado.
+
+         Y el marco no es cuadrado, es más ancho que alto, por lo mismo:
+         a los lados sobra sitio y de alto no hay. Cuadrado, las esquinas
+         de abajo se metían dentro de la primera línea de la
+         instrucción. El caso que menos perdona es la placa, que es
+         cuadrada y tiene el QR más grande en proporción; en el
+         expositor y en la tarjeta sobra de largo. */
       if (est.conMarco) {
-        esquinas(centro - ladoQR*0.78, filaY - ladoQR*0.78, ladoQR*1.56, ladoQR*1.56,
+        var marcoW = ladoQR * 1.42, marcoH = ladoQR * 1.12;
+        esquinas(centro - marcoW/2, filaY - marcoH/2, marcoW, marcoH,
                  bh*0.028, Math.max(1, bh*0.0040), 'rgba(0,0,0,.32)');
       }
-      dibujaQR(enlaceQR(), centro, filaY, ladoQR*1.15, tinta);
+      dibujaQR(enlaceQR(), centro, filaY, ladoQR, tinta);
     }
 
     /* 6. la instrucción, a dos líneas como el original: cabría en una,
@@ -998,7 +1435,7 @@ canvas{display:none}
     }
 
     /* 8. la firma de PLEA5E, las estrellitas y el teléfono */
-    pie(bx, by + bh*R.pie, bw, bh, anchoUtil, acento);
+    pie(bx, by, bw, bh, radio, by + bh*R.pie, anchoUtil, acento);
     minisEstrellas(centro, by + bh*R.estrellas, bw*0.0105, acento);
     if (est.conTel && TELEFONO) {
       espaciado(TELEFONO, centro, by + bh*R.tel, bh*0.0155, bh*0.0060,
@@ -1006,249 +1443,49 @@ canvas{display:none}
     }
 
     /* 9. las estrellas grandes asomando por abajo */
-    adornoAbajo(bx, by, bw, bh, radio, acento);
+    adornoAbajo(bx, by, bw, bh, radio, acento, by + bh*R.pie);
   }
 
-  /* ══════════ la tarjeta tumbada, partida en dos ══════════
-
-     Este es el modelo que sale fotografiado en la web, y NO esta puesto
-     a ojo: la foto (assets/img/caa45407153b.jpg) se rectifico —esta
-     girada— y se midio pieza a pieza sobre ella. Cada numero de aqui
-     abajo es una medida de esa foto, en fraccion del ANCHO (las X y los
-     anchos) o del ALTO (las Y, los altos y los tamanos de letra).
-
-     Lo que se aprendio midiendo, y que a ojo estaba mal:
-       · la raya dorada va ARRIBA del todo (0,228 del alto), no a un
-         tercio;
-       · la raya NO cruza al lado blanco: muere en la juntura;
-       · las estrellas van SEPARADAS (radio 0,020 del ancho, paso 0,056)
-         y la raya no les pasa por detras: se corta antes de la primera
-         y vuelve despues de la ultima;
-       · los dos renglones del titulo van muy sueltos, a 0,157 del alto
-         uno de otro, que es mas del doble del cuerpo de la letra;
-       · en el lado blanco cada pieza tiene su sitio propio: la G, la
-         instruccion y la firma caen en 0,73 del ancho, pero el icono y
-         el QR no estan repartidos a los lados de ese eje. */
-  var TUMBADA = {
-    corte: 0.430,                       /* la juntura de las dos mitades */
-
-    oroY: 0.228, oroGrueso: 0.009,      /* la raya de arriba */
-    estrellaX: 0.2159, estrellaR: 0.0215, estrellaPaso: 0.0559,
-    estrellaHueco: 0.0125,              /* aire entre la raya y las estrellas */
-
-    tituloY: 0.533, tituloSep: 0.157,   /* centro del bloque y salto de linea */
-    tituloCaja: 0.0519, tituloAncho: 0.2547,  /* alto de las mayusculas y ancho */
-    clienteY: 0.8351, clienteTam: 0.0570, clienteAncho: 0.300,
-    lemaY: 0.905,
-
-    gX: 0.7312, gY: 0.1491, gTam: 0.1225,
-    nfcX: 0.6074, nfcY: 0.4764, nfcU: 0.2265,
-    qrX: 0.8659, qrY: 0.4778, qrLado: 0.2153,
-    insX: 0.7265, insY: 0.7855, insTam: 0.0439, insSep: 0.00093,
-
-    pieY: 0.906, pieGrueso: 0.0037,     /* la raya del pie, mas fina */
-    pieDesde: 0.4735, pieHasta: 0.8982,
-    pieLogoX: 0.7262, pieLogoAlto: 0.0794
-  };
-
-  function pintaTumbada(bx, by, bw, bh, radio) {
-    var T = TUMBADA;
-    /* Dos decisiones de color que aquí NO se toman como en la placa:
-
-       · el acento se queda en el oro de la marca aunque el lado de color
-         sea un naranja donde no destaca mucho. En el original es así, y
-         unas estrellas marrones sobre naranja ya no son este modelo.
-         Solo se cae al tono calculado si el color es tan dorado que las
-         estrellas desaparecerían del todo.
-       · el texto de ese lado va en BLANCO salvo que el color sea claro.
-         La cuenta de contraste, sobre un naranja medio, da tinta oscura,
-         y en la tarjeta de la web va blanco. */
-    var acento = est.acentoAuto
-      ? (contraste(est.banda, ORO_PLACA) >= 1.6 ? ORO_PLACA : acentoDe(est.banda))
-      : est.acento;
-    var sobreBanda = contraste(est.banda, '#FFFFFF') >= 2.2 ? '#FFFFFF' : '#101216';
-    var tinta = tintaDe(est.fondo);
-    var corte = bx + bw * T.corte;
-    var centroI = bx + bw * T.corte / 2;          /* eje del lado de color */
-
-    /* 1. el lado de color. En la foto no es plano: aclara hacia arriba y
-          se apaga hacia abajo (255,140,85 arriba contra 215,112,77
-          abajo, o sea un 16 % arriba y un 14 % abajo). El degradado es
-          vertical, y contra el fondo se corta en seco: la juntura es una
-          línea recta, sin transición. */
-    cx.save();
-    if (radio) { redondo(bx, by, bw, bh, radio); cx.clip(); }
-    var grad = cx.createLinearGradient(0, by, 0, by + bh);
-    grad.addColorStop(0, aclara(est.banda, .16));
-    grad.addColorStop(0.5, est.banda);
-    grad.addColorStop(1, oscurece(est.banda, .14));
-    cx.fillStyle = grad;
-    /* Arranca en el canto del papel, no en el de la tarjeta: con
-       sangrado el color tiene que pasarse del corte por arriba, por
-       abajo y por la izquierda. Si se pinta solo dentro de la tarjeta,
-       la imprenta corta un pelo torcido y aparece una pestaña blanca. */
-    cx.fillRect(0, 0, corte, lienzo.height);
-    cx.restore();
-
-    /* 2. la raya dorada y las cinco estrellas. La raya cruza el lado de
-          color de canto a canto y se para en la juntura; las estrellas
-          van encima de ella, separadas, centradas en 0,216 del ancho. */
-    var oroY = by + bh * T.oroY;
-    var r = bw * T.estrellaR, paso = bw * T.estrellaPaso;
-    var x0est = bx + bw * T.estrellaX - paso * 2;   /* la primera estrella */
-    var x4est = x0est + paso * 4;                   /* la última */
-    var aire = r + bw * T.estrellaHueco;
-    cx.save();
-    cx.strokeStyle = acento;
-    cx.lineWidth = Math.max(1, bh * T.oroGrueso);
-    cx.lineCap = 'butt';
-    /* La raya NO pasa por detrás de las estrellas: se corta antes de la
-       primera y vuelve después de la última, como en la foto. Medido
-       ahí: el trozo de la izquierda muere en 0,066 del ancho y el de la
-       derecha arranca en 0,351 y llega hasta la juntura. */
-    cx.beginPath();
-    cx.moveTo(0, oroY);          cx.lineTo(x0est - aire, oroY);
-    cx.moveTo(x4est + aire, oroY); cx.lineTo(corte, oroY);
-    cx.stroke();
-    cx.restore();
-    for (var i = 0; i < 5; i++) estrella(x0est + i * paso, oroY, r, acento);
-
-    /* 3. el título. Dos renglones muy separados —0,157 del alto, medido
-          en la foto— y por eso no se puede usar el bloque normal, que
-          los junta a 1,16 del cuerpo. A dos líneas como mucho: en tres,
-          "¡TU RESEÑA EN GOOGLE!" parte por "¡TU / RESEÑA EN / GOOGLE!" y
-          deja de ser el modelo. */
-    tituloTumbada(centroI, by + bh * T.tituloY, bw * T.tituloAncho,
-                  bh * T.tituloCaja, bh * T.tituloSep, sobreBanda);
-
-    /* 4. el cliente, abajo del lado de color: su nombre, su logo, o los
-          dos. Aquí va sobre el color, así que la tinta es la que
-          contrasta con la banda, no con el fondo. */
-    var conLema = !!est.lema.trim();
-    /* zonaCliente mide desde el borde de ARRIBA del bloque, y lo que
-       está medido en la foto es el centro: de ahí el medio alto. */
-    var altoCli = bh * T.clienteTam * 1.45;
-    var cliY = by + bh * T.clienteY - altoCli / 2;
-    zonaCliente(bx, cliY, bw * T.corte, altoCli, bw * T.clienteAncho, sobreBanda);
-    if (conLema) {
-      espaciado(est.lema.trim(), centroI, by + bh * T.lemaY, bh * 0.028, bh * 0.011,
-                sobreBanda, '600');
-    }
-
-    /* 5. la G, arriba del lado limpio. Sin disco blanco debajo: aquí el
-          papel ya es el fondo y un disco se vería como un parche. */
-    if (est.conG) dibujaG(bx + bw * T.gX, by + bh * T.gY, bh * T.gTam, false);
-
-    /* 6. el icono y el QR. Cada uno en su sitio medido: no están
-          repartidos a los lados de un eje, el QR cae más a la derecha de
-          lo que le tocaría. */
-    var ladoQR = bw * T.qrLado;
-    if (est.conNfc) {
-      dibujaNfc(bx + bw * T.nfcX, by + bh * T.nfcY, bw * T.nfcU, tinta, est.fondo);
-      dibujaQR(enlaceQR(), bx + bw * T.qrX, by + bh * T.qrY, ladoQR, tinta);
-    } else {
-      dibujaQR(enlaceQR(), bx + bw * T.insX, by + bh * T.qrY, ladoQR * 1.15, tinta);
-    }
-
-    /* 7. la instrucción, en una línea: en la tarjeta va corta */
-    /* va con las letras algo separadas, como en la foto: ahí ocupa
-       0,2706 del ancho con unas mayúsculas de 0,0315 del alto, y eso
-       solo sale con espaciado */
-    espaciado(instruccion(), bx + bw * T.insX, by + bh * T.insY,
-              bh * T.insTam, bw * T.insSep, tinta, '700');
-
-    /* 8. la firma de PLEA5E al pie, con la raya partida a los lados */
-    pieTumbado(bx, by + bh * T.pieY, bw, bh, acento);
-  }
-
-  /* El título de la tarjeta, que no se dibuja como los demás.
-
-     En la foto las mayúsculas miden 0,0519 del alto y el renglón más
-     largo ocupa 0,2547 del ancho. Con Montserrat esas dos medidas no se
-     dan a la vez: la letra del original es más estrecha, y puesta al
-     alto que toca se sale de ancho. Así que se pone al ALTO de la foto y
-     se estrecha lo justo para caber en el ANCHO de la foto, que es un 8 %
-     y no se nota. Al revés —dejarla caber sola— salía un título un 12 %
-     más bajo que el del modelo, y eso sí se ve al ponerlos al lado.
-
-     Un título escrito a mano y muy largo no se estrecha sin fin: por
-     debajo del 0,85 se encoge la letra, que es más honrado que aplastar
-     las palabras. */
-  function tituloTumbada(x, cy, ancho, caja, sep, color) {
-    var CAJA = 0.626;        /* alto de las mayúsculas de Montserrat, por em */
-    var SUELO = 0.85;        /* hasta aquí se estrecha, no más */
-    var tam = caja / CAJA;
-    /* el reparto en renglones se calcula con el ancho de verdad */
-    var t = reparte(est.titulo, ancho, tam, '800', 2, bh_infinito(), true);
-    cx.font = '800 ' + tam + 'px Montse, system-ui, sans-serif';
-    var k = 1, natural = anchoDe(t.lineas);
-    if (natural > ancho) k = ancho / natural;
-    if (k < SUELO) {
-      tam *= k / SUELO; k = SUELO;
-      cx.font = '800 ' + tam + 'px Montse, system-ui, sans-serif';
-    }
-    cx.save();
-    cx.fillStyle = color;
-    cx.translate(x, cy - (t.lineas.length - 1) * sep / 2);
-    cx.scale(k, 1);
-    t.lineas.forEach(function (l, i) { cx.fillText(l, 0, i * sep); });
-    cx.restore();
-  }
-  /* un alto que nunca limita: el título de la tarjeta manda por ancho */
-  function bh_infinito() { return 1e9; }
-
-  /* El pie de la tarjeta. La raya es más fina que la de arriba (0,0037
-     del alto contra 0,011), no llega a los cantos —va de 0,474 a 0,898
-     del ancho— y no cruza el logotipo por detrás: se corta donde
-     empiezan los brazos de la estrella y sigue al otro lado. */
-  function pieTumbado(bx, y, bw, bh, acento) {
-    var T = TUMBADA;
-    var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
-    var izq = bx + bw * T.pieDesde, der = bx + bw * T.pieHasta;
-    var centro = bx + bw * T.pieLogoX;
-    var alto = 0, ancho = 0;
-    if (logoPlea) {
-      alto = bh * T.pieLogoAlto;
-      ancho = alto * LOGO_PROP;
-      var tope = (der - izq) * 0.92;
-      if (ancho > tope) { ancho = tope; alto = ancho / LOGO_PROP; }
-    }
-    cx.save();
-    cx.strokeStyle = aclara(ORO, .18);
-    cx.lineWidth = Math.max(1, bh * T.pieGrueso);
-    cx.lineCap = 'butt';
-    cx.beginPath();
-    if (ancho) {
-      cx.moveTo(izq, y); cx.lineTo(centro - ancho / 2, y);
-      cx.moveTo(centro + ancho / 2, y); cx.lineTo(der, y);
-    } else {
-      cx.moveTo(izq, y); cx.lineTo(der, y);
-    }
-    cx.stroke();
-    cx.restore();
-    if (logoPlea) {
-      cx.drawImage(logoPlea, centro - ancho / 2, y - alto * LOGO_LINEA, ancho, alto);
-    }
-  }
-
-  /* En la tarjeta la instruccion va corta: el lado limpio tiene la mitad
-     del ancho y "para valorarnos" empuja la letra hasta que no se lee. */
   function instruccion() {
-    if (est.formato === 'tarjeta') return est.conNfc ? 'Toca o escanea' : 'Escanea el código';
     return est.conNfc ? 'Toca o escanea para valorarnos' : 'Escanea para valorarnos';
   }
 
   /* el bloque del cliente: logo, nombre, o los dos */
-  function zonaCliente(x, y, ancho, alto, anchoUtil, tinta) {
+  /* El parametro "placa" es para la tarjeta, y resuelve un problema que
+     en los otros dos formatos no existe.
+
+     En la placa y el expositor el nombre del cliente va sobre el crema,
+     asi que su logotipo se ve tal cual. En la tarjeta va sobre el panel
+     de color, que es oscuro, y casi todos los logotipos vienen en tinta
+     oscura sobre transparente: el logotipo SE DIBUJABA, pero negro sobre
+     granate. Desde fuera parece que no se pone.
+
+     Tenerlo lo unico que se podia hacer era pintarlo en blanco a la
+     fuerza, y eso destroza cualquier logotipo que tenga mas de un color.
+     Asi que va sobre una plaquita clara del color del cuerpo, que es lo
+     que se hace cuando una marca tiene que ir sobre un fondo oscuro. Se
+     dibuja SOLO cuando hay logotipo: si es el nombre a secas, va en
+     blanco encima del color y ya esta. */
+  function plaquita(x, y, ancho, alto, color) {
+    cx.save();
+    cx.fillStyle = color;
+    redondo(x - ancho/2, y - alto/2, ancho, alto, Math.min(alto*0.28, ancho*0.10));
+    cx.fill();
+    cx.restore();
+  }
+
+  function zonaCliente(x, y, ancho, alto, anchoUtil, tinta, placa) {
     var ver = est.logo ? est.queSeVe : 'nombre';
     var nombre = est.negocio.trim();
     if (!nombre && ver === 'nombre') return;
 
     if (ver === 'logo' || (ver === 'ambos' && !nombre)) {
+      if (placa) plaquita(x + ancho/2, y + alto/2, anchoUtil*0.86, alto, placa);
       meteImagen(est.logo, x + ancho/2, y + alto/2, anchoUtil*0.70, alto*0.98);
       return;
     }
     if (ver === 'ambos') {
+      if (placa) plaquita(x + ancho/2, y + alto*0.30, anchoUtil*0.78, alto*0.62, placa);
       meteImagen(est.logo, x + ancho/2, y + alto*0.30, anchoUtil*0.62, alto*0.58);
       var t1 = reparte(nombre, anchoUtil*0.92, alto*0.34, '700', 1, alto*0.34);
       cx.fillStyle = tinta;
@@ -1264,7 +1501,7 @@ canvas{display:none}
   /* El pie: la firma de PLEA5E. La raya no cruza el logotipo por detrás:
      se corta justo donde empiezan los brazos de la estrella y sigue al
      otro lado, que es como está montado en la cabecera de la web. */
-  function pie(bx, y, bw, bh, anchoUtil, acento) {
+  function pie(bx, by, bw, bh, radio, y, anchoUtil, acento) {
     var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
     var RAYA = aclara(ORO, .18);
     var centro = bx + bw * 0.5;
@@ -1275,16 +1512,23 @@ canvas{display:none}
       var tope = anchoUtil * 0.46;
       if (ancho > tope) { ancho = tope; alto = ancho / LOGO_PROP; }
     }
+    /* LA RAYA VA DE CANTO A CANTO, igual que las dos de la cabecera.
+       Llegaba solo hasta el ancho útil (0,86 del ancho) y se quedaba dos
+       dedos corta por los dos lados: al lado de las de arriba, que sí
+       cruzan enteras, cantaba. Se dibuja un pelín pasada del borde y se
+       recorta con la silueta de la placa, que es como se hace arriba. */
     cx.save();
+    redondo(bx, by, bw, bh, radio); cx.clip();
     cx.strokeStyle = RAYA;
     cx.lineWidth = Math.max(1, bh * 0.0032);
     cx.lineCap = 'butt';
+    var izq = bx - bw*0.02, der = bx + bw*1.02;
     cx.beginPath();
     if (ancho) {
-      cx.moveTo(centro - anchoUtil/2, y); cx.lineTo(centro - ancho/2, y);
-      cx.moveTo(centro + ancho/2, y);     cx.lineTo(centro + anchoUtil/2, y);
+      cx.moveTo(izq, y);              cx.lineTo(centro - ancho/2, y);
+      cx.moveTo(centro + ancho/2, y); cx.lineTo(der, y);
     } else {
-      cx.moveTo(centro - anchoUtil/2, y); cx.lineTo(centro + anchoUtil/2, y);
+      cx.moveTo(izq, y); cx.lineTo(der, y);
     }
     cx.stroke();
     cx.restore();
@@ -1301,13 +1545,55 @@ canvas{display:none}
 
   /* Las estrellas grandes que asoman por el borde de abajo, cortadas por
      el propio canto de la placa. Van muy claras: son un adorno, no tienen
-     que competir con nada. */
-  function adornoAbajo(bx, by, bw, bh, radio, acento) {
+     que competir con nada.
+
+     DOS GRANDES EN LAS ESQUINAS, NO TRES PEQUEÑAS EN MEDIO. Eran tres
+     chicas repartidas a lo ancho y se leían como un puntito, un puntito
+     y un puntito: no se entendía que fueran estrellas. En las placas
+     buenas son dos, grandes, una en cada esquina de abajo, y asoman algo
+     más de la mitad. Así se reconocen aunque estén cortadas, que es de
+     lo que se trata, y no se meten por medio del teléfono. */
+  function adornoAbajo(bx, by, bw, bh, radio, acento, yRaya) {
     cx.save();
     redondo(bx, by, bw, bh, radio); cx.clip();
     cx.globalAlpha = 0.28;
-    var r = bh * 0.052, y = by + bh * 1.005;
-    [0.16, 0.50, 0.84].forEach(function (f) {
+    /* NO SE DICE DÓNDE VA EL CENTRO, SE DICE DÓNDE VA LA PUNTA.
+
+       Antes se colocaban por el centro, y el centro caía justo en el
+       canto de abajo. Al agrandarlas, la punta de arriba subía hasta
+       0,880 del alto y la raya del pie está en 0,914: la estrella se
+       montaba encima de la raya y se veía la raya partida por dentro.
+       Y cada vez que se moviera el pie, a empezar otra vez.
+
+       Medido en la placa buena, la estrella es GRANDE (un quinto largo
+       del ancho de radio) y su centro cae bastante POR DEBAJO del canto,
+       así que solo asoma la punta y el arranque de los dos brazos de
+       arriba. Eso es lo que hace que se lea como estrella y no como un
+       triángulo. Y arranca justo debajo de la raya, sin tocarla.
+
+       MEDIDO EN LAS DOS PLACAS BUENAS, y coinciden entre ellas, que es
+       lo que da confianza en el número:
+
+         placa cuadrada   radio 0,084 del alto, centro en 1,002
+         expositor        radio 0,085 del alto, centro en 1,014
+
+       En ancho salen distintas (0,084 y 0,133) porque el expositor es
+       más estrecho; en ALTO son la misma. Así que el radio se saca del
+       alto y el centro se pone prácticamente en el canto: asoma la punta
+       y los dos brazos de arriba, que es lo que se reconoce.
+
+       El tope por ancho no llega a entrar en juego en los tres formatos
+       de ahora; está para que dos estrellas no se junten en el medio si
+       algún día aparece uno mucho más estrecho.
+
+       Y por si acaso, la red de seguridad: si la punta llegara a tocar
+       la raya del pie, se recorta el radio. Hoy no pasa en ninguno de
+       los tres, pero el día que alguien mueva el pie, no se rompe. */
+    var y = by + bh * 1.005;
+    var r = Math.min(bh * 0.085, bw * 0.16);
+    var tope = y - (yRaya + bh * 0.012);
+    if (r > tope) r = tope;
+    [0.115, 0.885].forEach(function (f) {
       estrella(bx + bw * f, y, r, acento);
     });
     cx.restore();
@@ -1318,28 +1604,58 @@ canvas{display:none}
      luego no se deja crear, y eso son placas a la basura. */
   var CORTA_VALIDA = /^[a-z0-9][a-z0-9-]{1,39}$/;
 
+  /* De un texto cualquiera al trozo que puede ir detrás de plea5e.es/r/.
+     NFD parte la letra acentuada en letra + tilde suelta y aquí se quedan
+     solo las letras. Se hace así y no con una lista de vocales escrita a
+     mano porque esa lista depende de que el archivo se lea en el alfabeto
+     correcto, y este archivo se abre desde el escritorio. */
+  function aCorta(txt) {
+    return String(txt || '').trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+      .slice(0, 40).replace(/-$/, '');
+  }
+
   function nombreCorto() {
-    var v = est.corta.trim().toLowerCase();
+    var v = aCorta(est.corta);
     return CORTA_VALIDA.test(v) ? v : '';
   }
 
   /* LO QUE VA GRABADO EN EL QR. Y esto es la decisión importante del
      archivo entero:
 
-     Con dirección corta, el QR lleva plea5e.es/r/loquesea y el destino se
-     cambia luego desde /taller/enlaces.html. La placa que está pegada en
-     la mesa del bar no se toca nunca.
+     EL QR LLEVA SIEMPRE UNA DIRECCIÓN NUESTRA. plea5e.es/r/loquesea, y es
+     el Worker el que manda al cliente a las reseñas del negocio. Nunca la
+     dirección de Google grabada.
 
-     Sin ella, el QR lleva la dirección de Google grabada a fuego. El día
-     que el bar cambie de nombre, de dueño o de ficha, esa placa se tira.
+     Antes, si no se ponía dirección corta, el QR llevaba Google a fuego.
+     Eso hacía una placa atada a ese bar y a esa ficha para siempre: si el
+     bar cambia de dueño, de nombre o de ficha, la placa se tira. Y no era
+     un caso raro, era lo que salía por defecto si se te olvidaba rellenar
+     un campo marcado como "recomendado".
 
-     Por eso la corta gana siempre que esté puesta. */
+     Ahora, sin dirección corta no hay QR. Es a propósito: es mejor que
+     falte el código y se vea, a que salga uno que no se va a poder
+     cambiar. El aviso de abajo dice qué hacer.
+
+     El enlace de Google sigue haciendo falta, pero para otra cosa: es el
+     destino que hay que apuntar en /taller/enlaces.html. */
   function enlaceQR() {
     var c = nombreCorto();
-    if (c) return 'https://plea5e.es/r/' + c;
+    return c ? 'https://plea5e.es/r/' + c : '';
+  }
 
-    /* Aceptamos las tres formas de dar el sitio: el código a secas, el
-       enlace de "pedir reseñas" o cualquier dirección pegada. */
+  /* Para el aviso. Corta por el final y lo dice con puntos suspensivos:
+     cortar a pelo un código de Google deja a la vista uno que parece
+     otro, y eso es peor que no enseñarlo. */
+  function recorta(txt, tope) {
+    return txt.length > tope ? txt.slice(0, tope - 1) + '…' : txt;
+  }
+
+  /* El destino al que tiene que apuntar la dirección corta en el panel.
+     Aceptamos las tres formas de dar el sitio: el código a secas, el
+     enlace de "pedir reseñas" o cualquier dirección pegada. */
+  function destinoGoogle() {
     var v = est.google.trim();
     if (!v) return '';
     if (/^https?:\/\//i.test(v)) return v;
@@ -1368,14 +1684,14 @@ canvas{display:none}
       var av = $('avisoDestino');
       av.hidden = !qr;
       if (qr) {
-        av.innerHTML = nombreCorto()
-          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>, que es nuestra ' +
-            'página, y desde ahí sale a la ficha de Google del cliente. ' +
-            '<b>Dala de alta en /taller/enlaces.html antes de imprimir</b>, o el QR no ' +
-            'llevará a ningún sitio.'
-          : 'El QR lleva la dirección de Google <b>grabada a fuego</b>: cuando esté ' +
-            'impresa no se podrá cambiar. Escribe arriba una dirección corta —o el ' +
-            'nombre del negocio, que la pone sola— para que pase por nuestra página.';
+        var dest = destinoGoogle();
+        av.innerHTML =
+          'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>' +
+          (dest
+            ? ', y desde ahí va a <b>' + recorta(dest.replace(/^https?:\/\//, ''), 96) + '</b>.'
+            : '. Falta decir a dónde tiene que ir: rellena el enlace de Google.') +
+          ' Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir, ' +
+          'o el QR no llevará a ningún sitio.';
       }
     });
   }
@@ -1389,95 +1705,101 @@ canvas{display:none}
       alCambiar(b.dataset.v);
     });
   }
-  /* Todo lo que cambia solo al cambiar de formato, en un sitio: la
-     medida que se anuncia, el titulo de por defecto, el color del fondo
-     y los mandos que ese formato no usa. */
-  function ajustaPorFormato(v) {
-    var F = FORMATOS[v];
-    $('medidaTxt').textContent = F.mm[0] + ' × ' + F.mm[1] + ' mm · ' + F.nombre;
-
-    /* el titulo, solo si el que hay puesto es el de por defecto de otro
-       formato: lo escrito a mano no se toca */
-    if (esTituloPorDefecto(est.titulo) && est.titulo.trim() !== TITULOS[v]) {
-      est.titulo = TITULOS[v];
-      $('fTitulo').value = est.titulo;
-    }
-
-    /* el fondo: crema en la placa y el expositor, blanco en la tarjeta,
-       que es como sale en la web. Solo mientras no se haya elegido un
-       color a mano. */
-    if (est.fondoAuto) ponFondo(v === 'tarjeta' ? '#FFFFFF' : '#ECE2D3', true);
-
-    /* la tarjeta no lleva esquinas de encuadre: en el original no están
-       y metidas ahí aprietan el icono contra el QR */
-    var m = $('fMarco');
-    m.disabled = (v === 'tarjeta');
-    var etiqueta = m.parentNode;
-    etiqueta.style.opacity = m.disabled ? '.45' : '';
-    etiqueta.title = m.disabled ? 'La tarjeta no las lleva' : '';
-  }
-
   grupo('fFormato', function (v) {
     est.formato = v;
-    ajustaPorFormato(v);
+    $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
     refresca();
   });
   grupo('fQueSeVe', function (v) { est.queSeVe = v; refresca(); });
 
-  ['fNegocio','fLema','fGoogle','fCorta','fTitulo'].forEach(function (id) {
-    $(id).addEventListener('input', function () {
-      est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
-           fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
-      /* Escribir a mano en la dirección corta la saca del automático;
-         vaciarla del todo lo devuelve, que es la forma natural de decir
-         "ponme otra vez la que salga del nombre". */
-      if (id === 'fCorta') est.cortaAuto = !this.value.trim();
-      if (id === 'fNegocio' || (id === 'fCorta' && est.cortaAuto)) proponCorta();
-      refresca();
-    });
+  /* EL TEXTO DE LA BANDA SE CAMBIA SOLO AL CAMBIAR DE RED, salvo que ya
+     se haya escrito uno a mano. Mismo trato que la dirección corta: se
+     propone, se escribe en el campo para que se lea, y en cuanto se toca
+     deja de proponerse. Si se vacía, vuelve. */
+  var tituloAMano = false;
+
+  function ponRed(v) {
+    est.red = v;
+    var r = red();
+    $('pistaRed').textContent = r.aviso;
+    $('etiqEnlace').textContent = r.etiqueta;
+    $('fGoogle').placeholder = r.ejemplo;
+    /* el disco solo se sube cuando no tenemos el dibujo oficial */
+    $('cajaLogoRed').hidden = !!r.marca;   /* solo hace falta en «Otra» */
+    /* la MISMA frase, con el nombre cambiado */
+    if (!tituloAMano) {
+      est.titulo = tituloDeRed(r.nombre);
+      $('fTitulo').value = est.titulo;
+    }
+    refresca();
+  }
+  grupo('fRed', ponRed);
+
+  $('fLogoRed').addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var lector = new FileReader();
+    lector.onload = function () {
+      var im = new Image();
+      im.onload = function () {
+        est.logoRed = im;
+        $('miniRed').src = im.src; $('miniRed').hidden = false;
+        $('quitaRed').hidden = false;
+        refresca();
+      };
+      im.onerror = function () { alert('Ese archivo no se ha podido abrir como imagen.'); };
+      im.src = lector.result;
+    };
+    lector.readAsDataURL(f);
+  });
+  $('quitaRed').addEventListener('click', function () {
+    est.logoRed = null;
+    $('fLogoRed').value = '';
+    $('miniRed').hidden = true; $('quitaRed').hidden = true;
+    refresca();
   });
 
-  /* LA DIRECCIÓN CORTA SE PONE SOLA, y esto no es una comodidad: es lo
-     que decide a dónde apunta el QR que se va a imprimir.
+  /* LA DIRECCIÓN CORTA SE RELLENA SOLA, pero no a escondidas.
 
-     Con dirección corta, el QR lleva plea5e.es/r/loquesea, que es NUESTRA
-     página, y es ella la que manda al cliente a la ficha de Google. El
-     día que el bar cambie de ficha, de dueño o de nombre, se cambia el
-     destino en /taller/enlaces.html y las piezas que están pegadas en las
-     mesas siguen valiendo.
+     Ahora el QR lleva siempre plea5e.es/r/algo, así que sin dirección
+     corta no hay QR. Dejar que se olvide y salga la placa sin código
+     sería peor que lo de antes. Así que se propone a partir del nombre
+     del negocio y se ESCRIBE EN EL CAMPO, para que se lea y se pueda
+     cambiar antes de imprimir. Nada de calcularla por detrás: lo que va
+     grabado en una placa que se imprime tiene que estar a la vista.
 
-     Sin ella, el QR lleva la dirección de Google grabada a fuego y esa
-     pieza se tira. Por eso ahora se rellena sola en cuanto hay nombre:
-     antes había que acordarse de escribirla, y la que se olvidaba salía
-     impresa sin remedio. */
+     En cuanto se toca el campo a mano deja de proponerse, y si se vacía
+     vuelve a proponerse: así no se queda uno atrapado con una que ya no
+     quiere. */
+  var cortaAMano = false;
+
   function proponCorta() {
-    if (!est.cortaAuto) return;
-    var v = String(est.negocio || '').trim().toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-      .slice(0, 40).replace(/-$/, '');
+    if (cortaAMano) return;
+    var v = aCorta(est.negocio);
     if (v === est.corta) return;
     est.corta = v;
     $('fCorta').value = v;
   }
 
+  ['fNegocio','fLema','fGoogle','fCorta','fTitulo'].forEach(function (id) {
+    $(id).addEventListener('input', function () {
+      est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
+           fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
+      if (id === 'fCorta')   cortaAMano  = this.value.trim() !== '';
+      if (id === 'fTitulo')  tituloAMano = this.value.trim() !== '';
+      if (id === 'fNegocio') proponCorta();
+      refresca();
+    });
+  });
+
   /* Lo que se escriba ahí se limpia al salir del campo, no mientras se
      escribe: corregirle las letras a alguien con el cursor en medio de la
      palabra es de las cosas que más molestan de un formulario. */
   $('fCorta').addEventListener('blur', function () {
-    /* NFD parte la letra acentuada en letra + tilde suelta y aquí se
-       quedan solo las letras. Se hace así y no con una lista de vocales
-       escrita a mano porque esa lista depende de que el archivo se lea en
-       el alfabeto correcto, y este archivo se abre desde el escritorio. */
-    var v = this.value.trim().toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-      .slice(0, 40).replace(/-$/, '');
+    var v = aCorta(this.value);
+    if (!v) { cortaAMano = false; proponCorta(); refresca(); return; }
     if (v === this.value) return;
     this.value = v;
     est.corta = v;
-    est.cortaAuto = !v;
-    proponCorta();
     refresca();
   });
   ['fSangrado','fGoogleLogo','fNfc','fMarco'].forEach(function (id) {
@@ -1487,17 +1809,15 @@ canvas{display:none}
     });
   });
 
-  /* el color del fondo. 'auto' es el que pone el propio formato; en
-     cuanto se elige uno a mano deja de cambiarse solo. */
-  function ponFondo(hex, auto) {
+  /* el color del fondo */
+  function ponFondo(hex) {
     est.fondo = hex.toUpperCase();
-    est.fondoAuto = !!auto;
     $('fFondo').value = est.fondo; $('fondoHex').textContent = est.fondo;
     refresca();
   }
-  $('fFondo').addEventListener('input', function () { ponFondo(this.value, false); });
-  $('fondoCrema').addEventListener('click',  function () { ponFondo('#ECE2D3', false); });
-  $('fondoBlanco').addEventListener('click', function () { ponFondo('#FFFFFF', false); });
+  $('fFondo').addEventListener('input', function () { ponFondo(this.value); });
+  $('fondoCrema').addEventListener('click',  function () { ponFondo('#ECE2D3'); });
+  $('fondoBlanco').addEventListener('click', function () { ponFondo('#FFFFFF'); });
 
   $('fBanda').addEventListener('input', function () {
     est.banda = this.value.toUpperCase();
@@ -1545,6 +1865,7 @@ canvas{display:none}
       var im = new Image();
       im.onload = function () {
         est.logo = im;
+        est.logoInfo = mideLogo(im);
         $('miniLogo').src = im.src; $('miniLogo').hidden = false;
         $('quitaLogo').hidden = false;
         $('cajaQueSeVe').hidden = false;
@@ -1564,7 +1885,7 @@ canvas{display:none}
     lector.readAsDataURL(f);
   });
   $('quitaLogo').addEventListener('click', function () {
-    est.logo = null;
+    est.logo = null; est.logoInfo = null;
     $('fLogo').value = '';
     $('miniLogo').hidden = true; $('quitaLogo').hidden = true; $('cajaQueSeVe').hidden = true;
     $('paleta').innerHTML = '<span class="pista" id="paletaVacia">Sube un logo y aquí salen sus colores.</span>';
@@ -1657,10 +1978,7 @@ canvas{display:none}
         [].forEach.call($('fFormato').children, function (o) {
           o.setAttribute('aria-pressed', o.dataset.v === v ? 'true' : 'false');
         });
-        /* lo mismo que al pulsar el botón: medida, título y fondo del
-           formato. Si el enlace trae además título o fondo propios,
-           vienen detrás en el mismo enlace y mandan ellos. */
-        ajustaPorFormato(v);
+        $('medidaTxt').textContent = FORMATOS[v].mm[0] + ' × ' + FORMATOS[v].mm[1] + ' mm · ' + FORMATOS[v].nombre;
       } else if (k === 'banda' || k === 'fondo' || k === 'acento') {
         if (!/^#?[0-9A-Fa-f]{6}$/.test(v)) return;
         var hex = (v.charAt(0) === '#' ? v : '#' + v).toUpperCase();
@@ -1669,16 +1987,21 @@ canvas{display:none}
         var eco  = { banda:'bandaHex', fondo:'fondoHex', acento:'acentoHex' }[k];
         $(caja).value = hex; $(eco).textContent = hex;
         if (k === 'acento') est.acentoAuto = false;
-        if (k === 'fondo')  est.fondoAuto = false;   /* viene elegido, no se toca */
       } else {
         est[k] = v;
-        if (k === 'corta') est.cortaAuto = false;   /* viene dada, manda ella */
         var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle',
                       corta:'fCorta', titulo:'fTitulo' }[k];
         if (campo) $(campo).value = v;
+        /* La corta que venga en el enlace es la que se acordó con el
+           cliente: cuenta como puesta a mano, para que no se la pise
+           luego la que se propone del nombre del negocio. */
+        if (k === 'corta' && v.trim()) cortaAMano = true;
       }
       puesto = true;
     });
+    /* Si el encargo trae nombre pero no corta (los de antes de esto),
+       se propone una, que si no se quedaría sin QR. */
+    proponCorta();
     return puesto;
   }
 
@@ -1725,18 +2048,13 @@ canvas{display:none}
   }
 
   Promise.all([cargaLogoPlea(), esperaLetra()]).then(function () {
-    ajustaPorFormato(est.formato);
+    $('medidaTxt').textContent = '90 × 90 mm · Placa de mesa';
     if (leeEncargo() && est.acentoAuto) ponAcento(acentoDe(est.banda), true);
-    proponCorta();
     refresca();
   });
   /* si pega otro enlace encima sin recargar, que también lo coja */
   window.addEventListener('hashchange', function () {
-    if (leeEncargo()) {
-      if (est.acentoAuto) ponAcento(acentoDe(est.banda), true);
-      proponCorta();
-      refresca();
-    }
+    if (leeEncargo()) { if (est.acentoAuto) ponAcento(acentoDe(est.banda), true); refresca(); }
   });
 })();
 </script>
