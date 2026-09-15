@@ -123,6 +123,18 @@ function esc(s) {
 }
 
 async function avisa(encargo, enlace, brief, ref, env) {
+  /* La misma direccion corta que lleva el enlace del generador. Va en el
+     correo porque darla de alta es ahora un paso OBLIGATORIO, no un
+     extra: el QR de todas las placas lleva plea5e.es/r/... grabado, asi
+     que si esa direccion no existe cuando la placa ya esta impresa, el
+     cliente que acerca el movil no llega a ningun sitio. El aviso va
+     aqui, en lo unico que se mira seguro de cada encargo.
+
+     Se saca del nombre del negocio igual que enlaceGenerador(), y el
+     panel sale del propio enlace: asi no hay que pasarle dos parametros
+     mas a esta funcion ni escribir el dominio a mano. */
+  const corta = L.nombreCorto(encargo.negocio);
+  const panel = String(enlace).split('/taller/')[0] + '/taller/enlaces.html';
   /* Se recortan los espacios de los dos lados, igual que con la clave del
      panel. Pegando estas variables en el panel de Cloudflare es
      facilísimo que se cuele un espacio o un salto de línea al final: la
@@ -171,6 +183,12 @@ async function avisa(encargo, enlace, brief, ref, env) {
       <p style="margin:16px 0 0;font-size:12px;color:#888">
         Se abre el generador con todo puesto. El logo, si lo ha mandado, va adjunto o te lo pasa por WhatsApp.
       </p>
+      ${corta ? `<p style="margin:16px 0 0;padding:10px 12px;border-radius:8px;background:#fff6e0;border-left:3px solid #E9BC46;font-size:13px">
+        <b>Antes de imprimir:</b> da de alta <b>plea5e.es/r/${esc(corta)}</b> en el
+        <a href="${esc(panel)}" style="color:#111">panel de enlaces</a>
+        y apúntala a su ficha. El QR de las placas lleva esa dirección grabada: si no existe,
+        el cliente que acerque el móvil no llega a ningún sitio.
+      </p>` : ''}
     </div>`;
 
   const r = await fetch('https://api.resend.com/emails', {
