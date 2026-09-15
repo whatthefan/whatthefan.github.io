@@ -220,6 +220,22 @@ asomando por el canto.
 Todo eso sale de una sola cosa que puedes tocar: los tres colores
 (banda, fondo y acento). El resto lo coloca solo.
 
+LA TARJETA VA APARTE
+La placa y el expositor comparten esa plantilla en columna. La tarjeta
+no: va tumbada (85x54, la medida de una tarjeta de credito) y lleva el
+modelo partido en dos que sale fotografiado en la web. A la izquierda,
+el lado de color con la raya dorada, las cinco estrellas, el titulo y
+el nombre del negocio; a la derecha, el lado blanco con la G, el icono
+de acercar el movil, el QR, "TOCA O ESCANEA" y la firma de PLEA5E al
+pie. Se dibuja asi a proposito: la tarjeta que se le ensena al cliente
+tiene que ser la misma que ha visto en la pagina.
+
+Al cambiar a tarjeta, el generador acorta el titulo ("¡Tu reseña en
+Google!", que es el del modelo) y pone el fondo en blanco. Las dos
+cosas solo si no las has tocado tu: lo que escribas o elijas a mano no
+se cambia nunca. Las esquinas de encuadre no se usan en la tarjeta, asi
+que esa casilla se queda apagada mientras ese formato este elegido.
+
 LO QUE HACE SOLO
   - Saca los colores del logo que subas y te los pone como botones.
     Elige de entrada el mas oscuro con color, que es donde el texto
