@@ -230,6 +230,15 @@ de acercar el movil, el QR, "TOCA O ESCANEA" y la firma de PLEA5E al
 pie. Se dibuja asi a proposito: la tarjeta que se le ensena al cliente
 tiene que ser la misma que ha visto en la pagina.
 
+Y no esta puesto a ojo. La foto del producto (assets/img/caa45407153b
+.jpg) esta girada, asi que se rectifico y se midio encima: donde cae la
+raya (0,228 del alto), donde empiezan y acaban sus dos trozos, el radio
+y el paso de las estrellas, el salto entre los dos renglones del
+titulo, y el sitio de la G, del icono, del QR, de la instruccion y de
+la firma. Esos numeros son los que estan escritos en la reja TUMBADA
+del generador, uno a uno. Si algun dia cambia el modelo, se vuelve a
+medir la foto nueva y se cambian ahi; no hay nada repartido a ojo.
+
 Al cambiar a tarjeta, el generador acorta el titulo ("¡Tu reseña en
 Google!", que es el del modelo) y pone el fondo en blanco. Las dos
 cosas solo si no las has tocado tu: lo que escribas o elijas a mano no

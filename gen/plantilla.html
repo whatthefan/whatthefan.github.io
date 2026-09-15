@@ -980,29 +980,44 @@ canvas{display:none}
 
   /* ══════════ la tarjeta tumbada, partida en dos ══════════
 
-     Este es el modelo de la foto de la web, medido sobre ella. No es la
-     plantilla en columna estrechada: es otra reja.
+     Este es el modelo que sale fotografiado en la web, y NO esta puesto
+     a ojo: la foto (assets/img/caa45407153b.jpg) se rectifico —esta
+     girada— y se midio pieza a pieza sobre ella. Cada numero de aqui
+     abajo es una medida de esa foto, en fraccion del ANCHO (las X y los
+     anchos) o del ALTO (las Y, los altos y los tamanos de letra).
 
-       · la izquierda es el lado de color (0,455 del ancho), con la raya
-         dorada y las cinco estrellas arriba, el titulo en medio y el
-         nombre del negocio abajo;
-       · la derecha es el lado limpio, sobre el fondo: la G, el icono de
-         acercar el movil junto al QR, la instruccion debajo y la firma
-         de PLEA5E al pie, entre dos trozos de raya dorada.
-
-     Las X van en fraccion del ANCHO y las Y en fraccion del ALTO, como
-     en la reja de los otros dos formatos. */
+     Lo que se aprendio midiendo, y que a ojo estaba mal:
+       · la raya dorada va ARRIBA del todo (0,228 del alto), no a un
+         tercio;
+       · la raya NO cruza al lado blanco: muere en la juntura;
+       · las estrellas van SEPARADAS (radio 0,020 del ancho, paso 0,056)
+         y la raya no les pasa por detras: se corta antes de la primera
+         y vuelve despues de la ultima;
+       · los dos renglones del titulo van muy sueltos, a 0,157 del alto
+         uno de otro, que es mas del doble del cuerpo de la letra;
+       · en el lado blanco cada pieza tiene su sitio propio: la G, la
+         instruccion y la firma caen en 0,73 del ancho, pero el icono y
+         el QR no estan repartidos a los lados de ese eje. */
   var TUMBADA = {
-    corte: 0.455,             /* donde acaba el color y empieza el fondo */
-    oroY: 0.325, oroHasta: 0.600,   /* la raya de arriba, que cruza el corte */
-    estrellaR: 0.0175,
-    titulo: 0.530, tituloAncho: 0.340, tituloAlto: 0.290,
-    cliente: 0.790, clienteConLema: 0.755, lema: 0.895,
-    centroD: 0.740,           /* el eje del lado limpio */
-    gY: 0.245, gTam: 0.115,   /* el alto de la G, en fracción del ALTO */
-    fila: 0.505, qr: 0.330, hueco: 0.235,
-    instruccion: 0.790,
-    pieY: 0.893, pieDesde: 0.470
+    corte: 0.430,                       /* la juntura de las dos mitades */
+
+    oroY: 0.228, oroGrueso: 0.009,      /* la raya de arriba */
+    estrellaX: 0.2159, estrellaR: 0.0215, estrellaPaso: 0.0559,
+    estrellaHueco: 0.0125,              /* aire entre la raya y las estrellas */
+
+    tituloY: 0.533, tituloSep: 0.157,   /* centro del bloque y salto de linea */
+    tituloCaja: 0.0519, tituloAncho: 0.2547,  /* alto de las mayusculas y ancho */
+    clienteY: 0.8351, clienteTam: 0.0570, clienteAncho: 0.300,
+    lemaY: 0.905,
+
+    gX: 0.7312, gY: 0.1491, gTam: 0.1225,
+    nfcX: 0.6074, nfcY: 0.4764, nfcU: 0.2265,
+    qrX: 0.8659, qrY: 0.4778, qrLado: 0.2153,
+    insX: 0.7265, insY: 0.7855, insTam: 0.0439, insSep: 0.00093,
+
+    pieY: 0.906, pieGrueso: 0.0037,     /* la raya del pie, mas fina */
+    pieDesde: 0.4735, pieHasta: 0.8982,
+    pieLogoX: 0.7262, pieLogoAlto: 0.0794
   };
 
   function pintaTumbada(bx, by, bw, bh, radio) {
@@ -1024,17 +1039,17 @@ canvas{display:none}
     var tinta = tintaDe(est.fondo);
     var corte = bx + bw * T.corte;
     var centroI = bx + bw * T.corte / 2;          /* eje del lado de color */
-    var centroD = bx + bw * T.centroD;            /* eje del lado limpio */
 
-    /* 1. el lado de color. No es un color plano: en el original aclara
-          hacia arriba y se apaga hacia abajo, que es lo que le da el
-          cuerpo. Se corta en seco contra el fondo, sin degradado entre
-          los dos: la juntura es una linea recta. */
+    /* 1. el lado de color. En la foto no es plano: aclara hacia arriba y
+          se apaga hacia abajo (255,140,85 arriba contra 215,112,77
+          abajo, o sea un 16 % arriba y un 14 % abajo). El degradado es
+          vertical, y contra el fondo se corta en seco: la juntura es una
+          línea recta, sin transición. */
     cx.save();
     if (radio) { redondo(bx, by, bw, bh, radio); cx.clip(); }
-    var grad = cx.createLinearGradient(bx, by, corte, by + bh);
+    var grad = cx.createLinearGradient(0, by, 0, by + bh);
     grad.addColorStop(0, aclara(est.banda, .16));
-    grad.addColorStop(0.55, est.banda);
+    grad.addColorStop(0.5, est.banda);
     grad.addColorStop(1, oscurece(est.banda, .14));
     cx.fillStyle = grad;
     /* Arranca en el canto del papel, no en el de la tarjeta: con
@@ -1044,88 +1059,132 @@ canvas{display:none}
     cx.fillRect(0, 0, corte, lienzo.height);
     cx.restore();
 
-    /* 2. la raya dorada y las cinco estrellas. La raya arranca en el
-          canto y se mete un poco en el lado limpio: es lo que cose las
-          dos mitades. Las estrellas van encima, centradas en el color. */
+    /* 2. la raya dorada y las cinco estrellas. La raya cruza el lado de
+          color de canto a canto y se para en la juntura; las estrellas
+          van encima de ella, separadas, centradas en 0,216 del ancho. */
     var oroY = by + bh * T.oroY;
+    var r = bw * T.estrellaR, paso = bw * T.estrellaPaso;
+    var x0est = bx + bw * T.estrellaX - paso * 2;   /* la primera estrella */
+    var x4est = x0est + paso * 4;                   /* la última */
+    var aire = r + bw * T.estrellaHueco;
     cx.save();
-    cx.strokeStyle = acento; cx.lineWidth = Math.max(1, bw * 0.0042); cx.lineCap = 'butt';
+    cx.strokeStyle = acento;
+    cx.lineWidth = Math.max(1, bh * T.oroGrueso);
+    cx.lineCap = 'butt';
+    /* La raya NO pasa por detrás de las estrellas: se corta antes de la
+       primera y vuelve después de la última, como en la foto. Medido
+       ahí: el trozo de la izquierda muere en 0,066 del ancho y el de la
+       derecha arranca en 0,351 y llega hasta la juntura. */
     cx.beginPath();
-    /* también arranca en el canto del papel: la raya va a sangre por la
-       izquierda, igual que el color */
-    cx.moveTo(0, oroY); cx.lineTo(bx + bw * T.oroHasta, oroY);
+    cx.moveTo(0, oroY);          cx.lineTo(x0est - aire, oroY);
+    cx.moveTo(x4est + aire, oroY); cx.lineTo(corte, oroY);
     cx.stroke();
     cx.restore();
-    var r = bw * T.estrellaR, hueco = r * 3.6;
-    for (var i = 0; i < 5; i++) estrella(centroI - hueco * 2 + i * hueco, oroY, r, acento);
+    for (var i = 0; i < 5; i++) estrella(x0est + i * paso, oroY, r, acento);
 
-    /* 3. el titulo, en el hueco que queda entre la raya y el nombre. A
-          DOS lineas como mucho: en tres, "¡TU RESEÑA EN GOOGLE!" parte
-          por "¡TU / RESEÑA EN / GOOGLE!" —con el primer renglon de dos
-          letras— y deja de ser el modelo de la foto. */
-    var t = reparte(est.titulo, bw * T.tituloAncho, bh * 0.135, '800', 2,
-                    bh * T.tituloAlto, true);
-    cx.font = '800 ' + t.tam + 'px Montse, system-ui, sans-serif';
-    bloque(t, centroI, by + bh * T.titulo, sobreBanda, false);
+    /* 3. el título. Dos renglones muy separados —0,157 del alto, medido
+          en la foto— y por eso no se puede usar el bloque normal, que
+          los junta a 1,16 del cuerpo. A dos líneas como mucho: en tres,
+          "¡TU RESEÑA EN GOOGLE!" parte por "¡TU / RESEÑA EN / GOOGLE!" y
+          deja de ser el modelo. */
+    tituloTumbada(centroI, by + bh * T.tituloY, bw * T.tituloAncho,
+                  bh * T.tituloCaja, bh * T.tituloSep, sobreBanda);
 
     /* 4. el cliente, abajo del lado de color: su nombre, su logo, o los
-          dos. Aqui va sobre el color, no sobre el fondo, asi que la
-          tinta es la que contraste con la banda. */
+          dos. Aquí va sobre el color, así que la tinta es la que
+          contrasta con la banda, no con el fondo. */
     var conLema = !!est.lema.trim();
-    /* zonaCliente mide desde el borde de ARRIBA del bloque, y aqui lo
-       que esta medido en la foto es el centro: de ahi el medio alto. */
-    var altoCli = bh * (conLema ? 0.090 : 0.105);
-    var cliY = bh * (conLema ? T.clienteConLema : T.cliente) - altoCli / 2;
-    zonaCliente(bx, by + cliY, bw * T.corte, altoCli, bw * T.corte * 0.80, sobreBanda);
+    /* zonaCliente mide desde el borde de ARRIBA del bloque, y lo que
+       está medido en la foto es el centro: de ahí el medio alto. */
+    var altoCli = bh * T.clienteTam * 1.45;
+    var cliY = by + bh * T.clienteY - altoCli / 2;
+    zonaCliente(bx, cliY, bw * T.corte, altoCli, bw * T.clienteAncho, sobreBanda);
     if (conLema) {
-      espaciado(est.lema.trim(), centroI, by + bh * T.lema, bh * 0.030, bh * 0.012,
+      espaciado(est.lema.trim(), centroI, by + bh * T.lemaY, bh * 0.028, bh * 0.011,
                 sobreBanda, '600');
     }
 
-    /* 5. la G, arriba del lado limpio. Sin disco blanco debajo: aqui el
-          papel ya es el fondo y un disco se veria como un parche. */
-    if (est.conG) dibujaG(centroD, by + bh * T.gY, bh * T.gTam, false);
+    /* 5. la G, arriba del lado limpio. Sin disco blanco debajo: aquí el
+          papel ya es el fondo y un disco se vería como un parche. */
+    if (est.conG) dibujaG(bx + bw * T.gX, by + bh * T.gY, bh * T.gTam, false);
 
-    /* 6. el icono y el QR, uno al lado del otro */
-    var filaY = by + bh * T.fila;
-    var ladoQR = bh * T.qr;
+    /* 6. el icono y el QR. Cada uno en su sitio medido: no están
+          repartidos a los lados de un eje, el QR cae más a la derecha de
+          lo que le tocaría. */
+    var ladoQR = bw * T.qrLado;
     if (est.conNfc) {
-      var sep = bw * T.hueco;
-      /* el icono mide casi lo mismo de ancho que el QR de lado, que es
-         como están en la foto: ni uno ni otro manda */
-      dibujaNfc(centroD - sep / 2, filaY, ladoQR * 1.06, tinta, est.fondo);
-      dibujaQR(enlaceQR(), centroD + sep / 2, filaY, ladoQR, tinta);
+      dibujaNfc(bx + bw * T.nfcX, by + bh * T.nfcY, bw * T.nfcU, tinta, est.fondo);
+      dibujaQR(enlaceQR(), bx + bw * T.qrX, by + bh * T.qrY, ladoQR, tinta);
     } else {
-      dibujaQR(enlaceQR(), centroD, filaY, ladoQR * 1.15, tinta);
+      dibujaQR(enlaceQR(), bx + bw * T.insX, by + bh * T.qrY, ladoQR * 1.15, tinta);
     }
 
-    /* 7. la instruccion, en una linea: en la tarjeta va corta */
-    var tIns = reparte(instruccion(), bw * 0.40, bh * 0.046, '700', 1, bh * 0.07, true);
-    cx.font = '700 ' + tIns.tam + 'px Montse, system-ui, sans-serif';
-    bloque(tIns, centroD, by + bh * T.instruccion, tinta, false);
+    /* 7. la instrucción, en una línea: en la tarjeta va corta */
+    /* va con las letras algo separadas, como en la foto: ahí ocupa
+       0,2706 del ancho con unas mayúsculas de 0,0315 del alto, y eso
+       solo sale con espaciado */
+    espaciado(instruccion(), bx + bw * T.insX, by + bh * T.insY,
+              bh * T.insTam, bw * T.insSep, tinta, '700');
 
     /* 8. la firma de PLEA5E al pie, con la raya partida a los lados */
     pieTumbado(bx, by + bh * T.pieY, bw, bh, acento);
   }
 
-  /* El pie de la tarjeta. Mismo criterio que el de los otros formatos —la
-     raya no cruza el logotipo por detras, se corta donde empiezan los
-     brazos de la estrella— pero solo a lo ancho del lado limpio. */
+  /* El título de la tarjeta, que no se dibuja como los demás.
+
+     En la foto las mayúsculas miden 0,0519 del alto y el renglón más
+     largo ocupa 0,2547 del ancho. Con Montserrat esas dos medidas no se
+     dan a la vez: la letra del original es más estrecha, y puesta al
+     alto que toca se sale de ancho. Así que se pone al ALTO de la foto y
+     se estrecha lo justo para caber en el ANCHO de la foto, que es un 8 %
+     y no se nota. Al revés —dejarla caber sola— salía un título un 12 %
+     más bajo que el del modelo, y eso sí se ve al ponerlos al lado.
+
+     Un título escrito a mano y muy largo no se estrecha sin fin: por
+     debajo del 0,85 se encoge la letra, que es más honrado que aplastar
+     las palabras. */
+  function tituloTumbada(x, cy, ancho, caja, sep, color) {
+    var CAJA = 0.626;        /* alto de las mayúsculas de Montserrat, por em */
+    var SUELO = 0.85;        /* hasta aquí se estrecha, no más */
+    var tam = caja / CAJA;
+    /* el reparto en renglones se calcula con el ancho de verdad */
+    var t = reparte(est.titulo, ancho, tam, '800', 2, bh_infinito(), true);
+    cx.font = '800 ' + tam + 'px Montse, system-ui, sans-serif';
+    var k = 1, natural = anchoDe(t.lineas);
+    if (natural > ancho) k = ancho / natural;
+    if (k < SUELO) {
+      tam *= k / SUELO; k = SUELO;
+      cx.font = '800 ' + tam + 'px Montse, system-ui, sans-serif';
+    }
+    cx.save();
+    cx.fillStyle = color;
+    cx.translate(x, cy - (t.lineas.length - 1) * sep / 2);
+    cx.scale(k, 1);
+    t.lineas.forEach(function (l, i) { cx.fillText(l, 0, i * sep); });
+    cx.restore();
+  }
+  /* un alto que nunca limita: el título de la tarjeta manda por ancho */
+  function bh_infinito() { return 1e9; }
+
+  /* El pie de la tarjeta. La raya es más fina que la de arriba (0,0037
+     del alto contra 0,011), no llega a los cantos —va de 0,474 a 0,898
+     del ancho— y no cruza el logotipo por detrás: se corta donde
+     empiezan los brazos de la estrella y sigue al otro lado. */
   function pieTumbado(bx, y, bw, bh, acento) {
     var T = TUMBADA;
-    var ORO = '#E9BC46';
-    var izq = bx + bw * T.pieDesde, der = bx + bw * 0.985;
-    var centro = bx + bw * T.centroD;
+    var ORO = '#E9BC46';                 /* la firma va SIEMPRE en el oro de PLEA5E */
+    var izq = bx + bw * T.pieDesde, der = bx + bw * T.pieHasta;
+    var centro = bx + bw * T.pieLogoX;
     var alto = 0, ancho = 0;
     if (logoPlea) {
-      alto = bh * 0.058;
+      alto = bh * T.pieLogoAlto;
       ancho = alto * LOGO_PROP;
-      var tope = (der - izq) * 0.46;
+      var tope = (der - izq) * 0.92;
       if (ancho > tope) { ancho = tope; alto = ancho / LOGO_PROP; }
     }
     cx.save();
     cx.strokeStyle = aclara(ORO, .18);
-    cx.lineWidth = Math.max(1, bh * 0.0055);
+    cx.lineWidth = Math.max(1, bh * T.pieGrueso);
     cx.lineCap = 'butt';
     cx.beginPath();
     if (ancho) {
