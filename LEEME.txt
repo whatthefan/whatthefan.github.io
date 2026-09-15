@@ -254,7 +254,12 @@ LO QUE HACE SOLO
   - Encoge el texto hasta que quepa, a lo ancho y a lo alto. Da igual
     que el bar se llame "El Rincon de Manolo y sus Hijos": cabe.
   - Monta el QR con correccion de errores alta, la que aguanta que la
-    placa se raye o se ensucie y siga leyendo.
+    placa se raye o se ensucie y siga leyendo, y con los modulos a
+    pixeles enteros para que el canto salga limpio.
+  - RELLENA SOLA LA DIRECCION CORTA con el nombre del negocio, para que
+    el QR pase por plea5e.es/r/... y no lleve Google grabado. Si
+    escribes otra a mano, manda la tuya; si la vacias, vuelve a salir
+    la del nombre.
 
 EL ENLACE DE GOOGLE
 Vale de las tres maneras:
@@ -265,9 +270,16 @@ Si le das el codigo a secas, el te monta el enlace de escribir resena.
 
 PARA LA IMPRENTA
 Marca "Sangrado de 3 mm" y el fondo se sale por los cuatro lados, con
-la linea de corte marcada. Es lo que te va a pedir la imprenta. El PNG
-sale a 2000 px de lado largo: para 90 mm son unos 565 puntos por
-pulgada, de sobra.
+la linea de corte marcada (en la tarjeta, ya con el redondeo del
+troquel). Es lo que te va a pedir la imprenta. El PNG sale a 3600 px de
+lado largo: para 90 mm son unos 1016 puntos por pulgada, y la tarjeta
+pasa de 1000. Antes eran 2000 px, que para imprimir llegaban, pero se
+quedaban blandos al mirar el archivo ampliado en pantalla.
+
+Sin sangrado, la tarjeta sale ya troquelada: esquinas redondeadas de
+3 mm y las cuatro puntas transparentes, para poder montarla encima de
+una foto. La placa y el expositor salen cuadrados, que es como los
+quiere la maquina que los recorta.
 
 PARA ENSENARSELO AL CLIENTE
 Sin sangrado. El boton "Descargar PNG" te lo baja; "Copiar imagen" lo
@@ -949,9 +961,11 @@ COMO SE USA, DE PRINCIPIO A FIN
      (misma contrasena que el panel de pedidos) y crea la direccion:
      el nombre corto, el negocio, y el enlace de Google.
 
-  2. En el generador, rellena "Direccion corta" con ese mismo nombre.
-     Debajo de la vista previa te dice, con todas las letras, lo que
-     va a llevar grabado el QR. Leelo ANTES de mandar a imprimir.
+  2. En el generador, la "Direccion corta" ya viene puesta: sale del
+     nombre del negocio. Comprueba que es la MISMA que diste de alta en
+     el paso 1 (si no, cambiala ahi mismo). Debajo de la vista previa te
+     dice, con todas las letras, lo que va a llevar grabado el QR.
+     Leelo ANTES de mandar a imprimir.
 
   3. Imprime.
 
@@ -959,7 +973,7 @@ COMO SE USA, DE PRINCIPIO A FIN
      "Cambiar el destino" -> pegar el nuevo. Efecto inmediato, sin
      desplegar nada y sin tocar la placa.
 
-SI DEJAS LA DIRECCION CORTA VACIA, el QR lleva la direccion de Google
+SI BORRAS LA DIRECCION CORTA A MANO, el QR lleva la direccion de Google
 grabada a fuego, como antes. Funciona igual de bien, pero pierdes el
 poder cambiarla. Solo tiene sentido si el cliente no quiere pasar por
 nosotros.

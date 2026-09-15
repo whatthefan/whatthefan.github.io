@@ -146,13 +146,13 @@ canvas{display:none}
     </div>
 
     <div class="campo">
-      <label for="fCorta">Dirección corta <b>(recomendado)</b></label>
+      <label for="fCorta">Dirección corta <b>(la del QR)</b></label>
       <div class="corta-caja">
         <span>plea5e.es/r/</span>
         <input id="fCorta" type="text" placeholder="bar-manolo" autocomplete="off"
                inputmode="url" spellcheck="false">
       </div>
-      <span class="pista">Si la pones, es <b>esto</b> lo que lleva el QR, y el destino se cambia luego desde el panel sin tocar la placa. Si la dejas vacía, el QR lleva la dirección de Google grabada para siempre. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir.</span>
+      <span class="pista"><b>Esto es lo que lleva grabado el QR</b>, y se rellena solo con el nombre del negocio. El QR pasa por nuestra página y de ahí sale a la ficha de Google del cliente, así que el destino se cambia luego desde el panel sin tocar la pieza. Hay que darla de alta en <b>/taller/enlaces.html</b> antes de imprimir. Si la borras, el QR lleva la dirección de Google grabada y ya no se podrá cambiar.</span>
     </div>
 
     <div class="campo">
@@ -2591,6 +2591,7 @@ var qrcode = function() {
     lema: '',
     google: '',
     corta: '',           /* el trozo final de plea5e.es/r/... */
+    cortaAuto: true,     /* se saca del nombre mientras no se escriba a mano */
     logo: null,          /* Image ya cargada */
     queSeVe: 'ambos',
     banda:  '#192E26',   /* el verde de la plantilla buena */
@@ -3091,9 +3092,18 @@ var qrcode = function() {
     var sang = est.sangrado ? 3 : 0;
     var totW = mmW + sang*2, totH = mmH + sang*2;
 
-    /* 2000 px en el lado largo: para 90 mm son unos 565 puntos por
-       pulgada, de sobra para imprimir */
-    var px = 2000 / Math.max(totW, totH);
+    /* 3600 px en el lado largo. Antes eran 2000, que para imprimir
+       llegaban de sobra (unos 565 puntos por pulgada), pero el archivo
+       se ve tambien EN PANTALLA —la vista previa, el que se manda por
+       WhatsApp, el que se mira ampliado— y ahi 2000 px de una tarjeta
+       que se enseña a pantalla completa se quedaban cortos: la letra
+       pequeña y el QR salian blandos. Con 3600 px la tarjeta va a unos
+       1075 puntos por pulgada y aguanta cualquier ampliacion.
+
+       Lo que cuesta: el PNG pesa unas tres veces mas y dibujarlo tarda
+       unas decimas. Nada que se note en un generador que se usa una vez
+       por cliente. */
+    var px = 3600 / Math.max(totW, totH);
     var W = Math.round(totW * px), H = Math.round(totH * px);
     lienzo.width = W; lienzo.height = H;
 
@@ -3658,10 +3668,13 @@ var qrcode = function() {
       av.hidden = !qr;
       if (qr) {
         av.innerHTML = nombreCorto()
-          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>. Dala de alta en ' +
-            '<b>/taller/enlaces.html</b> antes de imprimir, o el QR no llevará a ningún sitio.'
-          : 'El QR lleva la dirección de Google grabada. <b>No se podrá cambiar</b> ' +
-            'cuando esté impresa: si quieres poder, pon una dirección corta arriba.';
+          ? 'El QR lleva <b>' + qr.replace(/^https?:\/\//, '') + '</b>, que es nuestra ' +
+            'página, y desde ahí sale a la ficha de Google del cliente. ' +
+            '<b>Dala de alta en /taller/enlaces.html antes de imprimir</b>, o el QR no ' +
+            'llevará a ningún sitio.'
+          : 'El QR lleva la dirección de Google <b>grabada a fuego</b>: cuando esté ' +
+            'impresa no se podrá cambiar. Escribe arriba una dirección corta —o el ' +
+            'nombre del negocio, que la pone sola— para que pase por nuestra página.';
       }
     });
   }
@@ -3714,9 +3727,38 @@ var qrcode = function() {
     $(id).addEventListener('input', function () {
       est[{fNegocio:'negocio', fLema:'lema', fGoogle:'google',
            fCorta:'corta', fTitulo:'titulo'}[id]] = this.value;
+      /* Escribir a mano en la dirección corta la saca del automático;
+         vaciarla del todo lo devuelve, que es la forma natural de decir
+         "ponme otra vez la que salga del nombre". */
+      if (id === 'fCorta') est.cortaAuto = !this.value.trim();
+      if (id === 'fNegocio' || (id === 'fCorta' && est.cortaAuto)) proponCorta();
       refresca();
     });
   });
+
+  /* LA DIRECCIÓN CORTA SE PONE SOLA, y esto no es una comodidad: es lo
+     que decide a dónde apunta el QR que se va a imprimir.
+
+     Con dirección corta, el QR lleva plea5e.es/r/loquesea, que es NUESTRA
+     página, y es ella la que manda al cliente a la ficha de Google. El
+     día que el bar cambie de ficha, de dueño o de nombre, se cambia el
+     destino en /taller/enlaces.html y las piezas que están pegadas en las
+     mesas siguen valiendo.
+
+     Sin ella, el QR lleva la dirección de Google grabada a fuego y esa
+     pieza se tira. Por eso ahora se rellena sola en cuanto hay nombre:
+     antes había que acordarse de escribirla, y la que se olvidaba salía
+     impresa sin remedio. */
+  function proponCorta() {
+    if (!est.cortaAuto) return;
+    var v = String(est.negocio || '').trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+      .slice(0, 40).replace(/-$/, '');
+    if (v === est.corta) return;
+    est.corta = v;
+    $('fCorta').value = v;
+  }
 
   /* Lo que se escriba ahí se limpia al salir del campo, no mientras se
      escribe: corregirle las letras a alguien con el cursor en medio de la
@@ -3733,6 +3775,8 @@ var qrcode = function() {
     if (v === this.value) return;
     this.value = v;
     est.corta = v;
+    est.cortaAuto = !v;
+    proponCorta();
     refresca();
   });
   ['fSangrado','fGoogleLogo','fNfc','fMarco'].forEach(function (id) {
@@ -3927,6 +3971,7 @@ var qrcode = function() {
         if (k === 'fondo')  est.fondoAuto = false;   /* viene elegido, no se toca */
       } else {
         est[k] = v;
+        if (k === 'corta') est.cortaAuto = false;   /* viene dada, manda ella */
         var campo = { negocio:'fNegocio', lema:'fLema', google:'fGoogle',
                       corta:'fCorta', titulo:'fTitulo' }[k];
         if (campo) $(campo).value = v;
@@ -3981,11 +4026,16 @@ var qrcode = function() {
   Promise.all([cargaLogoPlea(), esperaLetra()]).then(function () {
     ajustaPorFormato(est.formato);
     if (leeEncargo() && est.acentoAuto) ponAcento(acentoDe(est.banda), true);
+    proponCorta();
     refresca();
   });
   /* si pega otro enlace encima sin recargar, que también lo coja */
   window.addEventListener('hashchange', function () {
-    if (leeEncargo()) { if (est.acentoAuto) ponAcento(acentoDe(est.banda), true); refresca(); }
+    if (leeEncargo()) {
+      if (est.acentoAuto) ponAcento(acentoDe(est.banda), true);
+      proponCorta();
+      refresca();
+    }
   });
 })();
 </script>
