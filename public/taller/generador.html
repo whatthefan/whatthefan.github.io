@@ -2586,7 +2586,7 @@ var qrcode = function() {
        no era dibujarla de pie, era darle su propia composición: en la
        tarjeta el icono y el texto van a la izquierda y el QR a la
        derecha. Eso es pintaApaisada(). */
-    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],  reja: 'apaisada' }
+    tarjeta: { nombre: 'Tarjeta de mano',  mm: [85, 54],  reja: 'apaisada', radio: 3 }
   };
 
   /* ══════════ a dónde va la reseña ══════════ */
@@ -3259,14 +3259,26 @@ var qrcode = function() {
     var qr = qrcode(0, 'H');
     qr.addData(txt);
     qr.make();
-    var n = qr.getModuleCount(), paso = lado / n;
+    /* CADA MODULO, UN NUMERO ENTERO DE PIXELES.
+
+       Antes el modulo medía lado/n, que casi nunca es entero, y para
+       tapar las rayas blancas que deja el navegador al redondear se le
+       sumaba medio pixel de solape a cada cuadrito. Eso engorda unos
+       modulos y no otros, segun donde caigan: el codigo sale con los
+       cuadros desiguales y un lector con prisa se atraganta.
+
+       Redondeando el paso a pixeles enteros no hay nada que tapar. El QR
+       queda unos pixeles mas chico o mas grande que el hueco pedido, asi
+       que se recentra con lo que sobra. */
+    var n = qr.getModuleCount();
+    var paso = Math.max(1, Math.round(lado / n));
+    var ladoReal = paso * n;
+    var x0 = Math.round(x - ladoReal/2), y0 = Math.round(y - ladoReal/2);
     cx.save();
     cx.fillStyle = oscuro;
     for (var f = 0; f < n; f++) for (var c = 0; c < n; c++) {
       if (!qr.isDark(f, c)) continue;
-      /* +0.5 px de solape: sin eso el navegador deja rayas blancas entre
-         módulos al escalar, y algunos lectores se atragantan */
-      cx.fillRect(x - lado/2 + c*paso, y - lado/2 + f*paso, paso + 0.5, paso + 0.5);
+      cx.fillRect(x0 + c*paso, y0 + f*paso, paso, paso);
     }
     cx.restore();
   }
@@ -3285,19 +3297,34 @@ var qrcode = function() {
     var sang = est.sangrado ? 3 : 0;
     var totW = mmW + sang*2, totH = mmH + sang*2;
 
-    /* 2000 px en el lado largo: para 90 mm son unos 565 puntos por
-       pulgada, de sobra para imprimir */
-    var px = 2000 / Math.max(totW, totH);
+    /* 3600 px en el lado largo. Antes eran 2000, que para imprimir
+       llegaban de sobra (unos 565 puntos por pulgada), pero el archivo
+       se ve tambien EN PANTALLA —la vista previa, el que se manda por
+       WhatsApp, el que se mira ampliado— y ahi 2000 px de una tarjeta
+       que se ensena a pantalla completa se quedaban cortos: la letra
+       pequena y el QR salian blandos. Con 3600 px va a unos 1075 puntos
+       por pulgada y aguanta cualquier ampliacion.
+
+       Lo que cuesta: el PNG pesa unas tres veces mas y dibujarlo tarda
+       unas decimas. Nada que se note en un generador que se usa una vez
+       por cliente. */
+    var px = 3600 / Math.max(totW, totH);
     var W = Math.round(totW * px), H = Math.round(totH * px);
     lienzo.width = W; lienzo.height = H;
 
     var bx = sang * px, by = sang * px;
     var bw = mmW * px, bh = mmH * px;
-    /* Sin esquinas redondeadas. Los originales son rectangulos a
-       sangre; el redondeo lo pone luego el troquel, no el archivo. Si
-       lo dibujamos aqui, la imprenta corta sobre una esquina que ya
-       venia curvada y queda un borde raro. */
-    var radio = 0;
+    /* EL TROQUEL. La placa y el expositor son rectangulos a sangre: el
+       redondeo lo pone luego la maquina, y dibujarlo aqui haria que la
+       imprenta cortara sobre una esquina ya curvada. La TARJETA si lo
+       lleva, porque es una tarjeta de PVC troquelada de serie con unos
+       3 mm de radio, y una tarjeta con las esquinas en pico no es lo
+       que se le entrega al cliente.
+
+       Con sangrado se dibuja cuadrada igualmente: el archivo para la
+       imprenta va a sangre entera y el troquel se marca con la linea de
+       corte. */
+    var radio = sang ? 0 : (F.radio || 0) * px;
 
     cx.clearRect(0, 0, W, H);
     cx.fillStyle = est.fondo;

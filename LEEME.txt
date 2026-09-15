@@ -207,7 +207,7 @@ QUE HACE
 Le metes el nombre del negocio, el enlace de Google y el logo, y te
 dibuja la placa terminada, lista para ensenarsela al cliente o para
 mandarla a imprimir. Los tres formatos: placa 90x90, expositor 100x150
-y tarjeta 85x54.
+y tarjeta 85x54 (esta, troquelada con 3 mm de radio).
 
 (Aqui ponia "expositor 76x118", que no es lo que dibuja el generador ni
 lo que pone la web. Y la tarjeta, que aqui ya decia 85x54 desde el
