@@ -441,6 +441,7 @@ canvas{display:none}
     google: '',
     corta: '',           /* el trozo final de plea5e.es/r/... */
     logo: null,          /* Image ya cargada */
+    logoInfo: null,      /* si es opaco y cuanta luz tiene: ver mideLogo */
     queSeVe: 'ambos',
     red: 'google',       /* a donde va la resena: ver REDES */
     logoRed: null,       /* la marca de la plataforma, si se sube */
@@ -524,6 +525,45 @@ canvas{display:none}
   }
 
   /* ══════════ los colores que trae el logo ══════════ */
+  /* CUANDO UN LOGOTIPO NECESITA PLAQUITA Y CUANDO NO.
+
+     La plaquita clara existe para que un logotipo de tinta oscura no
+     desaparezca sobre el panel de color de la tarjeta. Pero si el
+     logotipo ya trae SU PROPIO fondo pegado (un jpg, un png sin
+     transparencia), la plaquita no arregla nada: lo unico que hace es
+     ponerle un marco crema alrededor de su rectangulo. Queda peor que el
+     problema que venia a resolver.
+
+     Asi que se mira el archivo al subirlo:
+       · opaco     -> trae su fondo puesto, no hace falta plaquita
+       · claro     -> su tinta ya resalta sobre el color, tampoco
+
+     Solo lleva plaquita el caso de verdad: transparente y oscuro. */
+  function mideLogo(img) {
+    var n = 120, c = document.createElement('canvas');
+    var esc = Math.min(n / img.width, n / img.height, 1);
+    c.width = Math.max(1, Math.round(img.width * esc));
+    c.height = Math.max(1, Math.round(img.height * esc));
+    var x = c.getContext('2d', { willReadFrequently: true });
+    x.drawImage(img, 0, 0, c.width, c.height);
+    var d;
+    try { d = x.getImageData(0, 0, c.width, c.height).data; }
+    catch (e) { return { opaco: true, luz: 1 }; }
+
+    var total = 0, transp = 0, suma = 0, vistos = 0;
+    for (var i = 0; i < d.length; i += 4) {
+      total++;
+      if (d[i+3] < 128) { transp++; continue; }
+      /* luminancia de toda la vida */
+      suma += (0.2126*d[i] + 0.7152*d[i+1] + 0.0722*d[i+2]) / 255;
+      vistos++;
+    }
+    return {
+      opaco: (transp / Math.max(1, total)) < 0.04,
+      luz: vistos ? suma / vistos : 1
+    };
+  }
+
   function coloresDe(img) {
     var n = 160, c = document.createElement('canvas');
     var esc = Math.min(n / img.width, n / img.height, 1);
@@ -1094,6 +1134,16 @@ canvas{display:none}
     pie: 0.888
   };
 
+  /* Ver mideLogo(): solo el logotipo transparente y de tinta oscura
+     necesita la plaquita, y solo si el panel es oscuro. */
+  function plaquitaHace() {
+    if (!est.logo) return false;
+    var i = est.logoInfo;
+    if (!i || i.opaco) return false;
+    if (i.luz > 0.62) return false;                 /* ya es claro */
+    return luz(est.banda) < 0.55;                   /* y el panel, oscuro */
+  }
+
   function pintaApaisada(bx, by, bw, bh, radio) {
     var T = TARJ;
     var acento = est.acentoAuto ? acentoDe(est.banda) : est.acento;
@@ -1127,7 +1177,7 @@ canvas{display:none}
     bloque(t, cIzq, by + bh*T.titulo, sobreBanda, false);
 
     zonaCliente(bx, by + bh*T.cliente, anchoPanel, bh*T.clienteAlto,
-                anchoPanel*0.80, sobreBanda, est.logo ? est.fondo : null);
+                anchoPanel*0.80, sobreBanda, plaquitaHace() ? est.fondo : null);
 
     /* 4. el logotipo de la red. Aquí va SIN el disco blanco: el lado
           claro ya es claro, y un círculo encima se vería como una
@@ -1723,6 +1773,7 @@ canvas{display:none}
       var im = new Image();
       im.onload = function () {
         est.logo = im;
+        est.logoInfo = mideLogo(im);
         $('miniLogo').src = im.src; $('miniLogo').hidden = false;
         $('quitaLogo').hidden = false;
         $('cajaQueSeVe').hidden = false;
@@ -1742,7 +1793,7 @@ canvas{display:none}
     lector.readAsDataURL(f);
   });
   $('quitaLogo').addEventListener('click', function () {
-    est.logo = null;
+    est.logo = null; est.logoInfo = null;
     $('fLogo').value = '';
     $('miniLogo').hidden = true; $('quitaLogo').hidden = true; $('cajaQueSeVe').hidden = true;
     $('paleta').innerHTML = '<span class="pista" id="paletaVacia">Sube un logo y aquí salen sus colores.</span>';
