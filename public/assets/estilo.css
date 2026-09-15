@@ -986,8 +986,20 @@ td .destaca{color:var(--oro);font-weight:700}
 .medida-libre{margin-top:clamp(24px,3vw,36px);border:1px dashed rgba(150,110,20,.45);
   background:rgba(233,188,70,.1);border-radius:var(--r);padding:20px 24px;
   display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center}
-.medida-libre p{font-size:.93rem;color:var(--claro-txt-2);flex:1;min-width:250px}
-.medida-libre b{color:var(--claro-txt)}
+/* Estos dos colores eran los del tema CLARO, y esta caja solo se usa en
+   una seccion oscura: gris apagado sobre casi negro, ilegible. El unico
+   sitio donde se usaba lo tapaba escribiendo los colores a mano en el
+   propio HTML, asi que el fallo no se veia hasta que alguien metia otra
+   caja al lado, sin la tapadera, y salia en gris sobre negro. */
+.medida-libre p{font-size:.93rem;color:var(--txt-2);flex:1;min-width:250px}
+.medida-libre b{color:var(--txt)}
+
+/* La linea de "tambien puede llevar a...". Pequena y apagada a proposito:
+   es una nota al pie de las tres fichas, no un cuarto producto. */
+.tambien{margin-top:clamp(16px,2vw,22px);font-size:.88rem;color:var(--txt-3);
+  text-align:center;text-wrap:balance}
+.tambien b{color:var(--txt-2);font-weight:600}
+.tambien a{color:var(--oro);text-underline-offset:3px}
 .prod .btn-fan{color:var(--claro-txt);border-color:var(--claro-borde)}
 .prod .btn-fan:hover{border-color:var(--claro-txt-2);background:rgba(10,14,22,.04)}
 
