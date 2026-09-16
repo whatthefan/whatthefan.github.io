@@ -1274,9 +1274,13 @@ body::after{
 }
 
 /* ============ v15 ============ */
-/* que el botón flotante no tape el pie */
-.pie{padding-bottom:96px}
-@media (min-width:561px){.pie{padding-bottom:80px}}
+/* Aquí había 96 px de aire para que el botón flotante de WhatsApp no
+   tapara la última línea del pie. Se veía como un agujero al final de
+   la página, y encima sobraba: ahora el botón se esconde cuando el pie
+   entra en pantalla (el pie ya lleva su enlace de WhatsApp y el
+   teléfono, o sea que no se pierde nada). Sin botón encima, el pie
+   termina donde termina su texto. */
+.pie{padding-bottom:26px}
 
 /* a quien le va bien cada formato, resumido en la propia tarjeta */
 .paraquien{display:block;margin-top:9px;font-size:.82rem;color:var(--claro-txt-2);line-height:1.4;

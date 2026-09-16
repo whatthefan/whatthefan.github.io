@@ -1436,11 +1436,28 @@
   ponerWhats(flota, saludo);
   ponerWhats(document.getElementById('pieWa'), saludo);
 
-  /* mientras se ve el pedido el botón flotante sobra y encima tapa el resumen */
-  if (flota && window.IntersectionObserver) {
-    new IntersectionObserver(function(ent){
-      flota.classList.toggle('oculta', ent[0].isIntersecting);
-    }, { threshold: 0 }).observe(document.getElementById('pedido'));
+  /* EL BOTÓN FLOTANTE SE ESCONDE EN DOS SITIOS, por el mismo motivo:
+     donde ya hay otra forma de escribirnos, sobra.
+
+       · en el pedido, porque tapa el resumen y el formulario ya lleva
+         su botón de WhatsApp;
+       · en el pie, que tiene el enlace de WhatsApp y el teléfono.
+
+     Lo del pie no es solo estética. Para que el botón no tapara la
+     última línea del pie había 96 px de aire ahí abajo, y se veía como
+     un agujero al final de la página. Escondiéndolo, ese aire ya no
+     hace falta y el pie termina donde termina el texto. */
+  var zonasSinFlota = [document.getElementById('pedido'), document.querySelector('.pie')]
+                        .filter(Boolean);
+  if (flota && window.IntersectionObserver && zonasSinFlota.length) {
+    var dentro = new Set();
+    var vigia = new IntersectionObserver(function (ent) {
+      ent.forEach(function (e) {
+        if (e.isIntersecting) dentro.add(e.target); else dentro.delete(e.target);
+      });
+      flota.classList.toggle('oculta', dentro.size > 0);
+    }, { threshold: 0 });
+    zonasSinFlota.forEach(function (z) { vigia.observe(z); });
   }
 
   document.addEventListener('click', function(e){
