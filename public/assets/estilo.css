@@ -575,16 +575,13 @@ td .destaca{color:var(--oro);font-weight:700}
 .pie-baja{margin-top:clamp(20px,2.2vw,30px);padding-top:16px;border-top:1px solid var(--borde);
   display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-between;align-items:baseline}
 .pie-baja p{font-size:.78rem;color:var(--txt-3)}
-/* La linea de como se lee la marca: ancho entero y por encima del
-   copyright, no apretada a su lado, que es lo unico del pie que alguien
-   lee por gusto.
+/* Como se lee la marca. Va en la columna del logotipo del pie, entre el
+   texto y la fila de cinco estrellas que la propia frase explica.
 
-   Se llama .pie-lee y NO .pie-marca porque ese nombre ya estaba cogido
-   arriba, por la columna del logotipo del pie. Con el mismo nombre, las
-   dos reglas se pisaban. */
-.pie-lee{flex:1 1 100%;order:-1;font-size:.82rem;color:var(--txt-2);
-  margin-bottom:2px;max-width:62ch}
-.pie-lee b{color:var(--oro-cl);font-weight:600}
+   Se llama .pie-lee y NO .pie-marca porque ese nombre ya esta cogido por
+   la columna entera; con el mismo nombre las dos reglas se pisaban. */
+.pie-marca .pie-lee{margin-top:10px;font-size:.8rem;line-height:1.5;color:var(--txt-2)}
+.pie-marca .pie-lee b{color:var(--oro-cl);font-weight:600}
 /* la letra pequeña de las marcas: obligatoria, pero no es para leerla de
    corrido, así que va en una sola línea larga y no en un párrafo */
 .pie-avisos{flex:1 1 420px;font-size:.7rem;line-height:1.45;
