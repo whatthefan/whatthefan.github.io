@@ -247,10 +247,6 @@ section[id]{scroll-margin-top:74px}
 @keyframes brilloCarga{0%{background-position:160% 0}100%{background-position:-60% 0}}
 @media (prefers-reduced-motion:reduce){.hueco::before{animation:none}}
 #lienzo{position:relative;z-index:1;width:100%;aspect-ratio:1/1;max-height:min(46vh,410px);display:block;cursor:grab;touch-action:pan-y}
-/* La imagen ocupa el mismo sitio que ocupara el lienzo, para que al
-   cambiar uno por otro no se mueva nada. */
-#placaFoto{position:relative;z-index:1;width:100%;height:auto;aspect-ratio:1/1;
-  max-height:min(46vh,410px);object-fit:contain;display:block;cursor:pointer}
 .mandos{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:6px}
 .mando{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.045);
   border:1px solid var(--borde-claro);color:var(--txt-2);border-radius:999px;

@@ -478,15 +478,7 @@
       </div>
 
       <div class="hero-b">
-        <!-- La imagen va en el HTML, no la pone el JavaScript: asi esta
-             pintada en cuanto llega la pagina, sin esperar a nada. El
-             lienzo del 3D vive al final del documento y se mete aqui, y
-             la tapa, cuando el 3D esta montado (ver el script del final). -->
-        <div class="hueco" id="hueco3d">
-          <img id="placaFoto" src="assets/img/placa-portada.webp"
-               width="900" height="900" fetchpriority="high" decoding="async"
-               alt="Placa de mesa PLEA5E con chip NFC y código QR para dejar reseña en Google">
-        </div>
+        <div class="hueco" id="hueco3d"></div>
       </div>
 
       <div class="hero-c">
@@ -972,63 +964,16 @@
 
 <canvas id="lienzo" aria-label="Placa PLEA5E en 3D. Arrástrala para girarla."></canvas>
 
+<script src="assets/tres.js" defer></script>
 <script>
 (function(){
-  /* ══════════ LA PLACA DE LA PORTADA ══════════
-
-     EL 3D NO SE CARGA SOLO, Y ESTE ES EL MOTIVO.
-
-     tres.js son 570 KB de JavaScript. Medido en un movil de gama media
-     (este ordenador frenado 4 veces), leerlo y arrancarlo bloqueaba el
-     dedo 3,8 SEGUNDOS: la pagina se pintaba, pero no respondia. Bajando
-     con el dedo se quedaba en 27 fotogramas por segundo. Eso es lo que
-     se siente como "la pagina no va fluida".
-
-     Y lo caro no era el dibujo: pintar la placa cuesta 17 ms y montar la
-     escena 209 ms. Los tres segundos y pico son el archivo.
-
-     Asi que la portada enseña PRIMERO una imagen de la placa —48 KB, el
-     mismo dibujo que pintaria el 3D, y va escrita en el HTML para que
-     este ahi sin esperar a ningun script—. La pagina queda pintada y
-     respondiendo enseguida.
-
-     Y DESPUES, sola, se trae el 3D y cambia la imagen por el. Pero no a
-     lo loco: espera a que la pagina haya terminado de cargar del todo y
-     a que el navegador este sin nada que hacer. Los tres segundos y pico
-     siguen existiendo, no desaparecen por arte de magia; lo que cambia
-     es CUANDO ocurren. Antes caian encima del primer pintado, que es
-     cuando la persona esta tocando la pantalla. Ahora caen en un rato
-     muerto, con la portada ya leible.
-
-     Y si al cabo de ese rato la portada ya no se ve porque la persona ha
-     bajado, no se trae nada: gastar 570 KB en un dibujo que ya nadie
-     esta mirando no tiene sentido.                                    */
-
+  /* El QR que se ve en las placas de ejemplo lleva a plea5e.es */
   var QR = "assets/img/ac397bd56704.png";
   var DISENO = { color: '#22406F', nombre: 'Bar Nombre', sub: 'Cocina y vinos' };
 
   var lienzo = document.getElementById('lienzo');
   var hueco  = document.getElementById('hueco3d');
-  var foto   = document.getElementById('placaFoto');
   hueco.appendChild(lienzo);
-  lienzo.hidden = true;
-
-  /* la imagen ya esta pintada: el hueco no tiene que seguir brillando */
-  if (foto.complete) hueco.classList.add('listo');
-  else foto.addEventListener('load', function(){ hueco.classList.add('listo'); }, { once:true });
-
-  /* tres.js, pedido solo cuando hace falta */
-  var pedido = null;
-  function traeEl3D(){
-    if (!pedido) pedido = new Promise(function(vale, falla){
-      var s = document.createElement('script');
-      s.src = 'assets/tres.js';
-      s.onload = vale;
-      s.onerror = falla;
-      document.head.appendChild(s);
-    });
-    return pedido;
-  }
 
   var pinta = document.createElement('canvas');
   pinta.width = pinta.height = 1024;
@@ -1049,78 +994,14 @@
     return RECURSOS;
   }
 
-  /* Se trae el 3D y se cambia la imagen por el. Si algo falla se queda la
-     imagen, que se ve igual de bien y no se entera nadie. */
-  var montando = false;
-  function monta(){
-    if (montando || api) return;
-    montando = true;
-    traeEl3D()
-      .then(recursos)
-      .then(function(){ return window.PLEA5E.pintarPlaca(pinta, DISENO); })
-      .then(function(){
-        api = window.PLEA5E.montarPlaca(lienzo, {});
-        api.usarLienzo(pinta);
-        lienzo.hidden = false;
-        foto.hidden = true;
-      })
-      .catch(function(){ montando = false; });
-  }
-
-  /* DONDE SI Y DONDE NO.
-
-     Retrasar la carga no arregla nada por si solo: los tres segundos que
-     cuesta arrancar three.js siguen ahi, caigan cuando caigan. Medido en
-     un movil de gama media, cargandolo solo: 12 fotogramas por segundo y
-     un salto de 3,1 s. Da igual esperar al hueco: el hueco no existe,
-     porque el propio trabajo es el que lo llena.
-
-     Asi que el 3D se trae SOLO DONDE NO SE NOTA. En un ordenador o en un
-     movil potente, arrancarlo cuesta unas decimas y en un rato muerto no
-     lo ve nadie. En un movil justo, cuesta segundos y deja la pagina
-     tiesa, y ahi se queda la imagen: se ve exactamente la misma placa,
-     sin poder girarla, y la pagina va suelta.
-
-     Y NO se pregunta cuantos nucleos tiene, que es lo facil y miente: hay
-     moviles de cien euros que declaran ocho. Se le pone al aparato una
-     cuenta tonta y se cronometra. Eso no se puede falsear, y ademas mide
-     lo unico que importa aqui, que es lo rapido que mastica JavaScript.
-
-     La cuenta tarda entre 2 y 17 ms segun el cacharro, asi que se hace en
-     un rato muerto y no le quita el sitio a nada. El tope de 1,5 ms sale
-     de medirlo: en esta maquina, que tarda 2,6 ms, three.js se come 2,6
-     segundos; la cosa va mas o menos a la par, asi que por debajo de 1,5
-     hablamos de menos de segundo y medio en un hueco, y eso no lo nota
-     nadie.                                                            */
-  function loQueTarda(){
-    var t = performance.now(), x = 0;
-    for (var i = 0; i < 2e6; i++) x += i % 7;
-    return performance.now() - t;
-  }
-  function aguantaEl3D(){
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-    var c = navigator.connection;
-    if (c && c.saveData) return false;                 /* ha pedido ahorrar datos */
-    loQueTarda();                                      /* la primera calienta el motor */
-    var a = loQueTarda(), b = loQueTarda();
-    return Math.min(a, b) <= 1.5;
-  }
-
-  /* Y aun aguantandolo, se espera a que la pagina haya cargado del todo y
-     a que el navegador este libre, y solo si la portada sigue a la vista:
-     traerse 570 KB para un dibujo que ya nadie mira no tiene sentido. */
-  function siTocaYSigueALaVista(){
-    var c = hueco.getBoundingClientRect();
-    if (c.bottom <= 0 || c.top >= innerHeight) return;   /* ya ha bajado */
-    if (!aguantaEl3D()) return;                          /* el cacharro no da */
-    monta();
-  }
-  function enCuantoSePueda(){
-    if (window.requestIdleCallback) requestIdleCallback(siTocaYSigueALaVista, { timeout: 3000 });
-    else setTimeout(siTocaYSigueALaVista, 1200);
-  }
-  if (document.readyState === 'complete') enCuantoSePueda();
-  else addEventListener('load', enCuantoSePueda, { once:true });
+  recursos()
+    .then(function(){ return window.PLEA5E.pintarPlaca(pinta, DISENO); })
+    .then(function(){
+      api = window.PLEA5E.montarPlaca(lienzo, {});
+      api.usarLienzo(pinta);
+      hueco.classList.add('listo');
+    })
+    .catch(function(){ lienzo.style.display = 'none'; hueco.classList.add('listo'); });
 
   /* ================= RELLENA ESTO CUANDO LO TENGAS =================
      Datos del titular para el aviso legal. Lo que dejes en blanco
