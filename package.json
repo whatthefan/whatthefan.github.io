@@ -4,7 +4,8 @@
   "description": "La web de PLEA5E. Las paginas de public/ son HTML suelto y no necesitan nada; las dependencias son para el Worker de src/ y para montar el generador de placas.",
   "scripts": {
     "deploy": "wrangler deploy",
-    "generador": "python3 gen/construye.py"
+    "generador": "python3 gen/construye.py",
+    "sitemap": "python3 gen/sitemap.py"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.70.0"

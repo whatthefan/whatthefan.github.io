@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
+<!--
+  El mapa del sitio. Es la lista de direcciones que le damos a Google
+  para que sepa que existen sin tener que descubrirlas por su cuenta.
+
+  SOLO HAY UNA DIRECCION, Y ESTA BIEN ASI. La web es una pagina unica:
+  todo (productos, demo, pedido, seguimiento, ayuda) vive dentro de
+  https://plea5e.es/ y se llega con un ancla (#pedido, #ayuda...). Las
+  anclas NO son direcciones distintas y no se ponen aqui. Lo demas que
+  hay en public/ no va en el mapa a proposito:
+    /taller/  es el panel, esta fuera del robots.txt y va con noindex
+    /r/       son los enlaces cortos de cada cliente, que redirigen
+  Si algun dia hay una pagina de verdad (un blog, una pagina por
+  producto), se anade aqui con su propio <url>.
+
+  LA FECHA (lastmod) SE ACTUALIZA A MANO, Y SOLO CUANDO CAMBIA EL
+  CONTENIDO DE LA PAGINA. No en cada despliegue. Google usa esta fecha
+  solo mientras le parece de fiar: si ve que siempre pone "hoy" pero al
+  entrar la pagina es la misma de hace meses, deja de hacerle caso para
+  todo el dominio. Para no tener que pensarlo: `npm run sitemap` la pone
+  sola a partir de la fecha del ultimo commit que toco public/index.html.
+
+  NO HAY changefreq NI priority. Google y Bing los ignoran los dos (Gary
+  Illyes, de Google, los llamo "una bolsa de ruido"). Estaban puestos y
+  no hacian nada, asi que fuera. Tampoco hay <image:title>: Google dejo
+  de usarlo en agosto de 2022. Lo unico que lee de cada imagen es su
+  direccion, y para eso esta <image:loc>.
+
+  LAS IMAGENES DE AQUI TIENEN QUE SALIR EN LA PAGINA. La lista quiere
+  decir "que imagenes hay en esta direccion", no "que imagenes tengo en
+  el servidor". Las de /marca/, /qr/ y la de la tarjeta no estan en la
+  pagina, asi que no van: ponerlas no las indexa, solo ensucia.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://plea5e.es/</loc>
     <lastmod>2026-09-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://plea5e.es/og.jpg</image:loc>
-      <image:title>Placa de mesa NFC de PLEA5E para reseñas de Google</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://plea5e.es/producto/placa-cuadrada.png</image:loc>
-      <image:title>Placa de reseñas de Google con chip NFC, recortada</image:title>
-    </image:image>
+    <image:image><image:loc>https://plea5e.es/og.jpg</image:loc></image:image>
+    <image:image><image:loc>https://plea5e.es/producto/placa-cuadrada.png</image:loc></image:image>
+    <image:image><image:loc>https://plea5e.es/producto/placa-recortada.png</image:loc></image:image>
   </url>
 </urlset>
