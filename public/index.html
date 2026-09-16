@@ -3,6 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- LA HOJA DE ESTILOS VA AQUI, Y CUANTO ANTES MEJOR.
+     Estaba DESPUES de </head>, dentro del cuerpo. Un CSS ahi no
+     frena el primer pintado: el navegador dibujaba la portada sin
+     estilos y al aplicarlos la recolocaba entera. Se veia como un
+     tiron al entrar, y Google lo mide: 0,177 de salto de maqueta
+     cuando el limite que pide son 0,1.
+     Va ademas ANTES del bloque de datos para Google, que son 300
+     lineas: si va detras, el navegador tarda esas 300 lineas en
+     enterarse de que hay un CSS que pedir. -->
+<link rel="stylesheet" href="assets/estilo.css">
 <title>Placas NFC para reseñas de Google desde 25 € | PLEA5E</title>
 <meta name="description" content="Placas NFC y QR para conseguir reseñas de Google en tu bar, restaurante o tienda. El cliente acerca el móvil y escribe. Con tu marca, desde 25 €.">
 <meta name="theme-color" content="#06080E">
@@ -331,7 +341,6 @@
 </script>
 </head>
 <body>
-<link rel="stylesheet" href="assets/estilo.css">
 
 <header class="nav">
   <div class="env con-tira"><i class="tira" aria-hidden="true"></i>
