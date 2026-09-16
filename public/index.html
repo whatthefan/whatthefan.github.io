@@ -478,7 +478,17 @@
       </div>
 
       <div class="hero-b">
-        <div class="hueco" id="hueco3d"></div>
+        <!-- La imagen va en el HTML, no la pone el JavaScript: asi esta
+             pintada en cuanto llega la pagina, sin esperar a nada. El
+             lienzo del 3D vive al final del documento y se mete aqui solo
+             si alguien pide girarla. -->
+        <div class="hueco" id="hueco3d">
+          <img id="placaFoto" src="assets/img/placa-portada.webp"
+               width="900" height="900" fetchpriority="high" decoding="async"
+               alt="Placa de mesa PLEA5E con chip NFC y código QR para dejar reseña en Google">
+        </div>
+        <!-- fuera del hueco: encima de la placa tapaba el nombre del bar -->
+        <button type="button" class="girarla" id="girarla">Tócala para girarla</button>
       </div>
 
       <div class="hero-c">
@@ -964,16 +974,53 @@
 
 <canvas id="lienzo" aria-label="Placa PLEA5E en 3D. Arrástrala para girarla."></canvas>
 
-<script src="assets/tres.js" defer></script>
 <script>
 (function(){
-  /* El QR que se ve en las placas de ejemplo lleva a plea5e.es */
+  /* ══════════ LA PLACA DE LA PORTADA ══════════
+
+     EL 3D NO SE CARGA SOLO, Y ESTE ES EL MOTIVO.
+
+     tres.js son 570 KB de JavaScript. Medido en un movil de gama media
+     (este ordenador frenado 4 veces), leerlo y arrancarlo bloqueaba el
+     dedo 3,8 SEGUNDOS: la pagina se pintaba, pero no respondia. Bajando
+     con el dedo se quedaba en 27 fotogramas por segundo. Eso es lo que
+     se siente como "la pagina no va fluida".
+
+     Y lo caro no era el dibujo: pintar la placa cuesta 17 ms y montar la
+     escena 209 ms. Los tres segundos y pico son el archivo.
+
+     Asi que la portada enseña una IMAGEN de la placa —48 KB, el mismo
+     dibujo que pintaria el 3D— y el 3D solo se carga cuando alguien
+     toca la placa para girarla. Quien no la toca no paga nada, que son
+     casi todos. Quien la toca espera un momento a proposito, y ahi ese
+     tiempo ya no molesta: lo ha pedido el.                            */
+
   var QR = "assets/img/ac397bd56704.png";
   var DISENO = { color: '#22406F', nombre: 'Bar Nombre', sub: 'Cocina y vinos' };
 
   var lienzo = document.getElementById('lienzo');
   var hueco  = document.getElementById('hueco3d');
+  var foto   = document.getElementById('placaFoto');
+  var girar  = document.getElementById('girarla');
   hueco.appendChild(lienzo);
+  lienzo.hidden = true;
+
+  /* la imagen ya esta pintada: el hueco no tiene que seguir brillando */
+  if (foto.complete) hueco.classList.add('listo');
+  else foto.addEventListener('load', function(){ hueco.classList.add('listo'); }, { once:true });
+
+  /* tres.js, pedido solo cuando hace falta */
+  var pedido = null;
+  function traeEl3D(){
+    if (!pedido) pedido = new Promise(function(vale, falla){
+      var s = document.createElement('script');
+      s.src = 'assets/tres.js';
+      s.onload = vale;
+      s.onerror = falla;
+      document.head.appendChild(s);
+    });
+    return pedido;
+  }
 
   var pinta = document.createElement('canvas');
   pinta.width = pinta.height = 1024;
@@ -994,14 +1041,33 @@
     return RECURSOS;
   }
 
-  recursos()
-    .then(function(){ return window.PLEA5E.pintarPlaca(pinta, DISENO); })
-    .then(function(){
-      api = window.PLEA5E.montarPlaca(lienzo, {});
-      api.usarLienzo(pinta);
-      hueco.classList.add('listo');
-    })
-    .catch(function(){ lienzo.style.display = 'none'; hueco.classList.add('listo'); });
+  /* Al tocar la placa: se trae tres.js, se monta la escena y se cambia la
+     imagen por el 3D. Si algo falla, se queda la imagen, que se ve igual
+     de bien y no se entera nadie. */
+  var montando = false;
+  function monta(){
+    if (montando || api) return;
+    montando = true;
+    girar.textContent = 'Cargando…';
+    girar.disabled = true;
+    traeEl3D()
+      .then(recursos)
+      .then(function(){ return window.PLEA5E.pintarPlaca(pinta, DISENO); })
+      .then(function(){
+        api = window.PLEA5E.montarPlaca(lienzo, {});
+        api.usarLienzo(pinta);
+        lienzo.hidden = false;
+        foto.hidden = true;
+        girar.hidden = true;
+      })
+      .catch(function(){
+        montando = false;
+        girar.textContent = 'No se ha podido cargar';
+        girar.disabled = true;
+      });
+  }
+  girar.addEventListener('click', monta);
+  foto.addEventListener('click', monta);
 
   /* ================= RELLENA ESTO CUANDO LO TENGAS =================
      Datos del titular para el aviso legal. Lo que dejes en blanco
