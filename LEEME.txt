@@ -165,10 +165,40 @@ La pagina lleva puesto lo que se puede poner desde el propio archivo:
   - Direccion canonica a https://plea5e.es/ para que no se dividan los
     puntos entre plea5e.es, www.plea5e.es y la de netlify.app.
   - Datos estructurados: quien eres, los tres productos con su precio, y
-    las siete preguntas del final. Es lo que hace que Google entienda que
+    las seis preguntas del final. Es lo que hace que Google entienda que
     vendes un producto de 25 EUR y no que escribes un blog.
+  - Los nombres con los que la gente te busca sin saber escribirlo
+    (alternateName): Please, Please 5, Please5, Plea5e, PLEA5E Cordoba.
+    Ahi es donde se ponen, VISIBLES para el buscador y sin texto oculto
+    en la pagina, que es de lo poco que Google castiga de verdad.
   - Texto alternativo en las fotos, que ademas las mete en Google Imagenes.
   - sitemap.xml y robots.txt apuntandose el uno al otro.
+
+EL MAPA DEL SITIO (public/sitemap.xml)
+En Search Console, el sitemap se manda escribiendo solo
+
+    sitemap.xml
+
+en la casilla, porque el dominio ya lo pone el. La direccion entera es
+https://plea5e.es/sitemap.xml y esa es la que aparece en el robots.txt.
+
+Tiene UNA SOLA DIRECCION y esta bien asi: la web es una pagina unica y
+todo vive dentro de https://plea5e.es/. Las anclas (#pedido, #ayuda) no
+son paginas distintas y no van en el mapa. El taller y los enlaces
+cortos tampoco: uno va con noindex y los otros son redirecciones.
+
+LA FECHA HAY QUE MANTENERLA HONRADA. Google usa <lastmod> solo mientras
+se fia. Si ve que siempre pone "hoy" y la pagina no ha cambiado, deja de
+hacerle caso en todo el dominio. Despues de cambiar la pagina:
+
+    npm run sitemap
+
+la pone sola, sacandola del ultimo commit que toco public/index.html. Si
+no ha cambiado nada, no toca el archivo y lo dice.
+
+Al abrirlo en el navegador ya NO sale la pagina en blanco con texto
+suelto: public/sitemap.xsl lo pinta como una tabla legible. Eso es solo
+para tus ojos; Google se salta esa linea y lee el XML de siempre.
 
 OJO: TODO ESTO DA POR HECHO QUE EL DOMINIO ES plea5e.es
 Si te quedas en la direccion de netlify.app, busca y reemplaza
