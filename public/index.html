@@ -602,7 +602,7 @@
          sepa que se puede; el porque, con lo que Instagram y X NO son,
          esta contado entero en las dudas, que es donde va a mirar quien
          de verdad lo esta pensando. -->
-    <p class="tambien sube">También puede llevar a <b>Tripadvisor, Facebook, Instagram, X o Airbnb</b> en vez de a Google. <a href="#ayuda">Te lo contamos aquí</a>.</p>
+    <p class="tambien sube">También puede llevar a <b>Tripadvisor, Facebook, Instagram, X o Airbnb</b> en vez de a Google. <a href="#otras-redes">Te lo contamos aquí</a>.</p>
 
     <!-- Aqui ponia que haciamos "llaveros, carteles, vinilo para el
          cristal". No los hacemos. Un listado de productos que no existen
@@ -906,7 +906,11 @@
         <p>Una fianza: <b data-fianza-regla>el 30 % del pedido, con un mínimo de 15 €</b>. No es dinero de más, va dentro del precio y se descuenta del total. Si tu pedido son 100 €, pagas 30 € ahora y 70 € cuando el diseño te guste. Si es una sola pieza, son 15 € y punto: lo demás, al aprobarlo.</p></details>
       <details class="sube"><summary>¿Se despega? ¿Estropea la mesa?</summary>
         <p>La placa lleva adhesivo de montaje 3M, el mismo que se usa para fijar rótulos. Aguanta el trapo del día a día y sale con un poco de calor de secador sin dejar marca. El expositor de pie no se pega a nada.</p></details>
-      <details class="sube"><summary>¿Solo sirve para reseñas de Google?</summary>
+      <!-- Con id porque la linea de debajo de los productos enlaza aqui
+           con un "te lo contamos aqui". Sin el id, el enlace dejaba al
+           visitante en las seis preguntas CERRADAS y esta es la quinta:
+           parecia que no estaba contado en ningun sitio. -->
+      <details class="sube" id="otras-redes"><summary>¿Solo sirve para reseñas de Google?</summary>
         <p>No. La placa lleva a donde tú digas: <b>Tripadvisor, Facebook, Instagram, X o el anuncio de tu Airbnb</b>. Lo eliges al pedirla y nosotros la dejamos programada apuntando ahí.</p>
         <p>Dicho eso, te lo contamos como es: <b>reseñas de verdad solo hay en Google y en Tripadvisor</b>. En Instagram y en X la gente te sigue, no te valora, y en Airbnb solo puntúa quien ha reservado y se ha alojado. Por eso, si tienes ficha de Google, es la que más te va a llenar el local.</p></details>
       <details class="sube"><summary>¿Esto no es comprar reseñas?</summary>
@@ -2148,6 +2152,33 @@
     es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('ver'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px 80px 0px' });
   document.querySelectorAll('.sube').forEach(function(e){ io.observe(e); });
+
+  /* UN ENLACE A UNA PREGUNTA LA ABRE.
+
+     Las preguntas son <details> y salen cerradas. Si algo de la pagina
+     enlaza a una —la linea de "tambien puede llevar a Tripadvisor,
+     Facebook..." apunta a #otras-redes— el navegador te deja ahi, pero
+     cerrada: se ve un monton de preguntas plegadas y parece que la
+     respuesta no existe. Que es exactamente lo que paso.
+
+     Asi que al llegar por el enlace se abre y se centra en pantalla. Va
+     tambien en hashchange porque si ya estas en la pagina el navegador
+     no recarga nada, solo cambia la direccion. */
+  function abrePregunta() {
+    var id = location.hash.slice(1);
+    if (!id) return;
+    var d;
+    try { d = document.getElementById(decodeURIComponent(id)); } catch (err) { return; }
+    if (!d || d.tagName !== 'DETAILS') return;
+    d.open = true;
+    d.classList.add('ver');                 /* si aun no habia entrado en pantalla */
+    /* despues de pintarlo abierto, que si no se centra por donde estaba */
+    requestAnimationFrame(function () {
+      d.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+  }
+  addEventListener('hashchange', abrePregunta);
+  abrePregunta();
 
   /* el precio de cada producto cuenta desde 0 al entrar en pantalla, para
      que el numero se note y no pase desapercibido entre el resto */
