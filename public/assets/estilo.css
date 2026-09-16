@@ -251,16 +251,6 @@ section[id]{scroll-margin-top:74px}
    cambiar uno por otro no se mueva nada. */
 #placaFoto{position:relative;z-index:1;width:100%;height:auto;aspect-ratio:1/1;
   max-height:min(46vh,410px);object-fit:contain;display:block;cursor:pointer}
-/* Debajo de la placa, no encima: puesto encima tapaba el nombre del bar
-   y el pie del dibujo, que es justo lo que hay que enseñar. */
-.girarla{
-  display:block;margin:9px auto 0;
-  font:600 .76rem/1 inherit;font-family:inherit;color:var(--txt-3);
-  background:transparent;border:1px solid var(--borde);
-  border-radius:99px;padding:7px 14px;cursor:pointer;white-space:nowrap;
-}
-.girarla:hover:not(:disabled){color:var(--txt);border-color:var(--txt-3)}
-.girarla:disabled{cursor:default;opacity:.7}
 .mandos{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:6px}
 .mando{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.045);
   border:1px solid var(--borde-claro);color:var(--txt-2);border-radius:999px;
