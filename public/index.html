@@ -36,6 +36,20 @@
 <meta name="twitter:description" content="Tu cliente acerca el móvil y ya está escribiendo la reseña. Diseñado con tu marca.">
 <meta name="twitter:image" content="https://plea5e.es/og.jpg">
 
+<!-- LOS DATOS QUE LEE GOOGLE.
+
+     Una cosa que se define con "@id" se define UNA sola vez, y los demás
+     la nombran con {"@id": "..."} y ya está. Es lo que se hace con el
+     vendedor desde siempre, y ahora también con el envío y con la
+     política de devoluciones.
+
+     Antes los tres productos llevaban la ficha de envío entera copiada,
+     las tres con el mismo @id. Google junta por ese identificador, se
+     encontraba "shippingRate" y "deliveryTime" tres veces y avisaba de
+     campos duplicados. Igual con las devoluciones.
+
+     O sea: si añades un cuarto producto, NO copies esos bloques.
+     Apúntalo al @id y listo. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -110,39 +124,10 @@
           "@id": "https://plea5e.es/#negocio"
         },
         "hasMerchantReturnPolicy": {
-          "@type": "MerchantReturnPolicy",
-          "@id": "https://plea5e.es/#devoluciones",
-          "applicableCountry": "ES",
-          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-          "merchantReturnLink": "https://plea5e.es/#condiciones"
+          "@id": "https://plea5e.es/#devoluciones"
         },
         "shippingDetails": {
-          "@type": "OfferShippingDetails",
-          "@id": "https://plea5e.es/#envio",
-          "shippingRate": {
-            "@type": "MonetaryAmount",
-            "value": "3.99",
-            "currency": "EUR"
-          },
-          "shippingDestination": {
-            "@type": "DefinedRegion",
-            "addressCountry": "ES"
-          },
-          "deliveryTime": {
-            "@type": "ShippingDeliveryTime",
-            "handlingTime": {
-              "@type": "QuantitativeValue",
-              "minValue": 2,
-              "maxValue": 7,
-              "unitCode": "DAY"
-            },
-            "transitTime": {
-              "@type": "QuantitativeValue",
-              "minValue": 1,
-              "maxValue": 3,
-              "unitCode": "DAY"
-            }
-          }
+          "@id": "https://plea5e.es/#envio"
         },
         "priceValidUntil": "2027-12-31"
       },
@@ -176,39 +161,10 @@
           "@id": "https://plea5e.es/#negocio"
         },
         "hasMerchantReturnPolicy": {
-          "@type": "MerchantReturnPolicy",
-          "@id": "https://plea5e.es/#devoluciones",
-          "applicableCountry": "ES",
-          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-          "merchantReturnLink": "https://plea5e.es/#condiciones"
+          "@id": "https://plea5e.es/#devoluciones"
         },
         "shippingDetails": {
-          "@type": "OfferShippingDetails",
-          "@id": "https://plea5e.es/#envio",
-          "shippingRate": {
-            "@type": "MonetaryAmount",
-            "value": "3.99",
-            "currency": "EUR"
-          },
-          "shippingDestination": {
-            "@type": "DefinedRegion",
-            "addressCountry": "ES"
-          },
-          "deliveryTime": {
-            "@type": "ShippingDeliveryTime",
-            "handlingTime": {
-              "@type": "QuantitativeValue",
-              "minValue": 2,
-              "maxValue": 7,
-              "unitCode": "DAY"
-            },
-            "transitTime": {
-              "@type": "QuantitativeValue",
-              "minValue": 1,
-              "maxValue": 3,
-              "unitCode": "DAY"
-            }
-          }
+          "@id": "https://plea5e.es/#envio"
         },
         "priceValidUntil": "2027-12-31"
       },
@@ -241,39 +197,10 @@
           "@id": "https://plea5e.es/#negocio"
         },
         "hasMerchantReturnPolicy": {
-          "@type": "MerchantReturnPolicy",
-          "@id": "https://plea5e.es/#devoluciones",
-          "applicableCountry": "ES",
-          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-          "merchantReturnLink": "https://plea5e.es/#condiciones"
+          "@id": "https://plea5e.es/#devoluciones"
         },
         "shippingDetails": {
-          "@type": "OfferShippingDetails",
-          "@id": "https://plea5e.es/#envio",
-          "shippingRate": {
-            "@type": "MonetaryAmount",
-            "value": "3.99",
-            "currency": "EUR"
-          },
-          "shippingDestination": {
-            "@type": "DefinedRegion",
-            "addressCountry": "ES"
-          },
-          "deliveryTime": {
-            "@type": "ShippingDeliveryTime",
-            "handlingTime": {
-              "@type": "QuantitativeValue",
-              "minValue": 2,
-              "maxValue": 7,
-              "unitCode": "DAY"
-            },
-            "transitTime": {
-              "@type": "QuantitativeValue",
-              "minValue": 1,
-              "maxValue": 3,
-              "unitCode": "DAY"
-            }
-          }
+          "@id": "https://plea5e.es/#envio"
         },
         "priceValidUntil": "2027-12-31"
       },
@@ -335,6 +262,41 @@
           }
         }
       ]
+    },
+    {
+      "@type": "OfferShippingDetails",
+      "@id": "https://plea5e.es/#envio",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "3.99",
+        "currency": "EUR"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "ES"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 2,
+          "maxValue": 7,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 3,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    {
+      "@type": "MerchantReturnPolicy",
+      "@id": "https://plea5e.es/#devoluciones",
+      "applicableCountry": "ES",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
+      "merchantReturnLink": "https://plea5e.es/#condiciones"
     }
   ]
 }
