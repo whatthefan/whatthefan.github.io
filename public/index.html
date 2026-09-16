@@ -37,7 +37,11 @@
       ],
       "@id": "https://plea5e.es/#negocio",
       "name": "PLEA5E",
-      "alternateName": ["Please", "Plea5e", "PLEA5E Córdoba"],
+      "alternateName": [
+        "Please",
+        "Plea5e",
+        "PLEA5E Córdoba"
+      ],
       "url": "https://plea5e.es/",
       "logo": "https://plea5e.es/marca/marca-plea5e-claro.png",
       "image": "https://plea5e.es/og.jpg",
@@ -277,7 +281,7 @@
           "name": "¿El cliente tiene que descargarse algo?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Los Android e iPhone de los últimos años leen NFC de fábrica: acercan el móvil y se les abre solo el formulario de reseña. Y si alguien lleva un móvil viejo o el NFC apagado, ahí tiene el QR."
+            "text": "No. Los móviles de los últimos años leen NFC de fábrica: lo acercan y se abre la ventana de escribir, con las estrellas ya delante. Y si alguien lleva uno viejo, ahí tiene el QR."
           }
         },
         {
@@ -285,7 +289,7 @@
           "name": "¿Hay que pagar algo cada mes?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Las placas no. Pagas una vez y son tuyas: el enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar. Aparte existe un seguimiento mensual de 35 € que es opcional, y las placas funcionan igual sin él."
+            "text": "Las placas no: pagas una vez y son tuyas. Aparte hay un seguimiento de 35 € al mes para ver cuánta gente las usa, pero es opcional y sin él funcionan igual."
           }
         },
         {
@@ -293,7 +297,7 @@
           "name": "¿Cuánto hay que pagar por adelantado?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "El 30 % del pedido, con un mínimo de 15 €. Es una fianza para ponernos a diseñar, y no es dinero de más: va dentro del precio y se descuenta del total. El resto se paga cuando el diseño te gusta, justo antes de imprimir."
+            "text": "Una fianza: el 50 % del pedido, con un mínimo de 15 €. Va dentro del precio y se descuenta del total: el resto lo pagas cuando el diseño te guste."
           }
         },
         {
@@ -301,7 +305,7 @@
           "name": "¿Se despega? ¿Estropea la mesa?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "La placa lleva adhesivo de montaje 3M, el mismo que se usa para fijar rótulos. Aguanta el trapo del día a día y sale con un poco de calor de secador sin dejar marca. El expositor de pie no se pega a nada."
+            "text": "Lleva adhesivo de montaje 3M, el de los rótulos. Aguanta el trapo del día a día y sale con calor de secador sin dejar marca. El expositor no se pega a nada."
           }
         },
         {
@@ -309,7 +313,7 @@
           "name": "¿Solo sirve para reseñas de Google?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. La placa lleva a donde tú digas: Tripadvisor, Facebook, Instagram, X o el anuncio de tu Airbnb. Lo eliges al pedirla y te la dejamos programada apuntando ahí. Dicho eso: reseñas de verdad solo hay en Google y en Tripadvisor. En Instagram y en X la gente te sigue, no te valora, y en Airbnb solo puntúa quien ha reservado y se ha alojado. Si tienes ficha de Google, es la que más te va a llenar el local."
+            "text": "No: puede llevar a Tripadvisor, Facebook, Instagram, X o tu Airbnb, lo eliges al pedirla. Pero reseñas de verdad solo hay en Google y en Tripadvisor — en Instagram y en X te siguen, y en Airbnb solo puntúa quien se ha alojado."
           }
         },
         {
@@ -317,7 +321,7 @@
           "name": "¿Esto no es comprar reseñas?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Nada que ver. No se regala nada a cambio ni se filtra a quién se le pide, que es lo que Google penaliza. Solo se le pone fácil escribirla a quien ya ha venido, con sus palabras y sus estrellas."
+            "text": "No. No se regala nada a cambio ni se elige a quién se le pide, que es lo que Google penaliza. Solo se le pone fácil a quien ya ha venido."
           }
         }
       ]
@@ -896,25 +900,30 @@
       <h2>Lo que siempre nos preguntan</h2>
     </div>
     <div class="faq">
+      <!-- LAS RESPUESTAS VAN CORTAS A PROPÓSITO: 25-40 palabras, el dato
+           primero y punto. Estaban en 60 de media, con ejemplos y
+           justificaciones que nadie lee de pie con el móvil en la mano.
+           Lo que se quitó fueron adornos; los números, las condiciones y
+           las advertencias siguen todos. Si añades una, no pases de
+           cuatro líneas, y acuérdate de cambiarla TAMBIÉN en el bloque
+           de datos para Google de arriba: si no coinciden, Google deja
+           de enseñarlas. -->
       <details class="sube" open><summary>¿El cliente tiene que descargarse algo?</summary>
-        <p>No. Los Android e iPhone de los últimos años leen NFC de fábrica: acercan el móvil y se les abre solo el formulario de reseña. Y si alguien lleva un móvil viejo o el NFC apagado, ahí tiene el QR.</p>
-        <p>Va <b>directo a la ventana de escribir</b>, con las estrellas ya delante, no al mapa. Cuantos menos pasos hay, más reseñas se terminan.</p></details>
+        <p>No. Los móviles de los últimos años leen NFC de fábrica: lo acercan y se abre la ventana de escribir, con las estrellas ya delante. Y si alguien lleva uno viejo, ahí tiene el QR.</p></details>
       <details class="sube"><summary>¿Hay que pagar algo cada mes?</summary>
-        <p>Las placas no. Pagas una vez y son tuyas: el enlace apunta a tu ficha de Google, que es gratis y es tuya, así que no hay nada que renovar.</p>
-        <p>Aparte tenemos un <a href="#seguimiento">seguimiento mensual</a> de 35 € para saber cuánta gente las usa y poder cambiar a dónde llevan. Es <b>opcional</b>: si no lo contratas nunca, las placas funcionan exactamente igual.</p></details>
+        <p>Las placas no: pagas una vez y son tuyas. Aparte hay un <a href="#seguimiento">seguimiento</a> de 35 € al mes para ver cuánta gente las usa, pero es <b>opcional</b> y sin él funcionan igual.</p></details>
       <details class="sube"><summary>¿Cuánto hay que pagar por adelantado?</summary>
-        <p>Una fianza: <b data-fianza-regla>el 30 % del pedido, con un mínimo de 15 €</b>. No es dinero de más, va dentro del precio y se descuenta del total. Si tu pedido son 100 €, pagas 30 € ahora y 70 € cuando el diseño te guste. Si es una sola pieza, son 15 € y punto: lo demás, al aprobarlo.</p></details>
+        <p>Una fianza: <b data-fianza-regla>el 50 % del pedido, con un mínimo de 15 €</b>. Va dentro del precio y se descuenta del total: el resto lo pagas cuando el diseño te guste.</p></details>
       <details class="sube"><summary>¿Se despega? ¿Estropea la mesa?</summary>
-        <p>La placa lleva adhesivo de montaje 3M, el mismo que se usa para fijar rótulos. Aguanta el trapo del día a día y sale con un poco de calor de secador sin dejar marca. El expositor de pie no se pega a nada.</p></details>
+        <p>Lleva adhesivo de montaje 3M, el de los rótulos. Aguanta el trapo del día a día y sale con calor de secador sin dejar marca. El expositor no se pega a nada.</p></details>
       <!-- Con id porque la linea de debajo de los productos enlaza aqui
            con un "te lo contamos aqui". Sin el id, el enlace dejaba al
            visitante en las seis preguntas CERRADAS y esta es la quinta:
            parecia que no estaba contado en ningun sitio. -->
       <details class="sube" id="otras-redes"><summary>¿Solo sirve para reseñas de Google?</summary>
-        <p>No. La placa lleva a donde tú digas: <b>Tripadvisor, Facebook, Instagram, X o el anuncio de tu Airbnb</b>. Lo eliges al pedirla y nosotros la dejamos programada apuntando ahí.</p>
-        <p>Dicho eso, te lo contamos como es: <b>reseñas de verdad solo hay en Google y en Tripadvisor</b>. En Instagram y en X la gente te sigue, no te valora, y en Airbnb solo puntúa quien ha reservado y se ha alojado. Por eso, si tienes ficha de Google, es la que más te va a llenar el local.</p></details>
+        <p>No: puede llevar a <b>Tripadvisor, Facebook, Instagram, X o tu Airbnb</b>, lo eliges al pedirla. Pero reseñas de verdad solo hay en Google y en Tripadvisor — en Instagram y en X te siguen, y en Airbnb solo puntúa quien se ha alojado.</p></details>
       <details class="sube"><summary>¿Esto no es comprar reseñas?</summary>
-        <p>Nada que ver. No se regala nada a cambio ni se filtra a quién se le pide, que es lo que Google penaliza. Solo se le pone fácil escribirla a quien ya ha venido, con sus palabras y sus estrellas.</p></details>
+        <p>No. No se regala nada a cambio ni se elige a quién se le pide, que es lo que Google penaliza. Solo se le pone fácil a quien ya ha venido.</p></details>
     </div>
   </div>
 </section>
@@ -1129,6 +1138,15 @@
     // De momento está puesto el mismo del WhatsApp para que el paso se
     // vea funcionando. Si tu Bizum está en otro móvil, cámbialo aquí.
     numero:  '661403219',
+    // OJO AL CAMBIAR ESTE NÚMERO: hay dos copias escritas a mano que el
+    // JavaScript NO toca, y las dos hay que cambiarlas aquí al lado:
+    //   · el <b data-fianza-regla> de la pregunta "¿Cuánto hay que pagar
+    //     por adelantado?" (lo que se ve mientras carga, y lo único que
+    //     ve quien entra sin JavaScript);
+    //   · esa misma respuesta dentro del bloque de datos para Google,
+    //     arriba del todo, que es lo que lee el buscador.
+    // Estuvieron en 30 mientras esto ya era 50: el visitante veía 50 y
+    // Google leía 30. Es el precio, así que no puede pasar otra vez.
     porcentaje: 50,  // % del pedido que se adelanta
     minimo:     15,  // euros: por debajo de esto no baja nunca
     descuenta: true  // true = la fianza va DENTRO del precio final
