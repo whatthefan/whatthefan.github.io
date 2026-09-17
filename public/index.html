@@ -2793,6 +2793,23 @@
         if (!DATOS_OK) return;
         SENAL_LLAMADA = true;
         mandaEncargo('llamada');
+        /* Y SE BORRA EL PEDIDO GUARDADO.
+
+           Ese guardado existe para una cosa: que al volver de Stripe se
+           recupere el pedido y el servidor actualice la MISMA ficha en
+           vez de abrir otra. Para eso se reutiliza su identificador.
+
+           El problema es que duraba seis horas y se aplicaba a
+           cualquier visita. O sea que, una vez hecho un pedido, todo lo
+           que se mandara en las seis horas siguientes -aunque fuera un
+           negocio distinto- caia encima del mismo, con su hora y su
+           referencia de la primera vez. En el panel parecia que no
+           llegaba nada.
+
+           Pidiendo la llamada, ese pedido se ha terminado: no va a
+           volver de ningun pago. Se borra y el siguiente empieza
+           limpio. */
+        try { localStorage.removeItem(CLAVE); } catch (e) {}
         llamada.hidden = true;
         /* la 'o' se va con el boton: sola, encima del aviso de "ya te
            llamamos", se quedaba separando dos cosas que ya no existen */
