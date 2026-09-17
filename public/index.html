@@ -802,6 +802,25 @@
           </a>
           <p class="senal-medios" id="senalMedios" hidden>Bizum, Apple&nbsp;Pay, Google&nbsp;Pay o tarjeta · pago seguro con Stripe</p>
 
+          <!-- La salida para el que no se fía todavía: va aquí, pegada al
+               pago, porque es la alternativa a pagar. Se probó a sacarla
+               abajo del todo, debajo del WhatsApp, y quedaba peor: ahí
+               parecia un tercer paso del pedido en vez de la otra opcion
+               de este. La "o" de encima dice lo que es.
+
+               Sin esto, el que llega hasta aqui y se echa atras en el
+               pago se pierde entero: ni se sabe que existio. Con esto,
+               el pedido llega igual y ya se le llama. -->
+          <p class="senal-o" id="senalO" hidden>o</p>
+          <button type="button" class="senal-llamada" id="senalLlamada">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 01-2 1.9 18.6 18.6 0 01-8.1-2.9 18.3 18.3 0 01-5.6-5.6A18.6 18.6 0 012.9 5a1.9 1.9 0 011.9-2h2.8a1.9 1.9 0 011.9 1.6c.1.9.3 1.8.7 2.6a1.9 1.9 0 01-.5 2l-1.1 1.2a15 15 0 005.6 5.6l1.2-1.1a1.9 1.9 0 012-.5c.8.4 1.7.6 2.6.7a1.9 1.9 0 011.6 2z"/></svg>
+            Que me llaméis antes de pagar
+          </button>
+          <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
+            <span>Hecho: tenemos tu pedido y te escribimos hoy mismo. Si prefieres adelantarlo tú, ahí tienes el WhatsApp.</span>
+          </p>
+
           <!-- rescate: se fue a pagar y ha vuelto sin que Stripe nos diga nada -->
           <div class="senal-vuelta" id="senalVuelta" hidden>
             <p><b>¿Ya has pagado la fianza?</b> Márcalo aquí y sigue con el pedido: lo comprobamos por nuestra parte.</p>
@@ -827,25 +846,6 @@
              que es donde se ponen los avisos. -->
         <p class="falta" id="rFalta" hidden></p>
         <small class="pie-wa">Se abre tu WhatsApp con el mensaje escrito · o llámanos al <a href="tel:+34661403219">661 40 32 19</a></small>
-
-        <!-- LA SALIDA DEL QUE NO QUIERE PAGAR HOY, Y VA ABAJO DEL TODO.
-
-             Estaba dentro de la caja de la fianza, que solo aparece
-             cuando los datos estan completos: justo al que se echaba
-             atras no se la ensenabamos nunca. Aqui abajo se ve siempre,
-             debajo de las dos formas de seguir, como lo que es: el plan
-             B. Sin esto, el que llega hasta aqui y se raja se pierde
-             entero, ni se sabe que existio. Con esto, el pedido llega
-             igual y ya se le llama. -->
-        <p class="senal-o" id="senalO">o</p>
-        <button type="button" class="senal-llamada" id="senalLlamada">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 01-2 1.9 18.6 18.6 0 01-8.1-2.9 18.3 18.3 0 01-5.6-5.6A18.6 18.6 0 012.9 5a1.9 1.9 0 011.9-2h2.8a1.9 1.9 0 011.9 1.6c.1.9.3 1.8.7 2.6a1.9 1.9 0 01-.5 2l-1.1 1.2a15 15 0 005.6 5.6l1.2-1.1a1.9 1.9 0 012-.5c.8.4 1.7.6 2.6.7a1.9 1.9 0 011.6 2z"/></svg>
-          Prefiero que me llaméis
-        </button>
-        <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
-          <span>Hecho: tenemos tu pedido y te escribimos hoy mismo. Si prefieres adelantarlo tú, ahí tienes el WhatsApp.</span>
-        </p>
         <!-- El aviso de datos va AQUÍ, pegado al botón, no solo en el pie:
              la ley pide informar en el momento de recoger los datos, y
              quien está rellenando el pedido no ve el pie. -->
@@ -2595,6 +2595,13 @@
       if (pag) { paso.hidden = false; return SENAL_MODO || 'mano'; }
       /* todavía no sabemos quiénes son: ni una palabra de pagar */
       if (faltanDatos) { paso.hidden = true; return SENAL_MODO || 'mano'; }
+
+      /* La "o" solo tiene sentido si siguen estando las dos salidas. En
+         cuanto piden la llamada, el boton se esconde y esto tambien: si
+         no, se queda una "o" suelta separando dos cosas que ya no hay. */
+      var sepO = document.getElementById('senalO');
+      var bLlam = document.getElementById('senalLlamada');
+      if (sepO) sepO.hidden = !!(bLlam && bLlam.hidden);
 
       var url = enlaceDePago(fianza);
       SENAL_MODO = url ? 'auto' : (num ? 'mano' : '');
