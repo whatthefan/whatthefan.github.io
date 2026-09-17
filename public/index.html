@@ -798,8 +798,10 @@
                llega hasta aquí y se echa atrás en el pago se pierde
                entero: ni se sabe que existió. Con esto, el pedido llega
                igual y ya se le llama. -->
+          <p class="senal-o" id="senalO" hidden>o</p>
           <button type="button" class="senal-llamada" id="senalLlamada">
-            Prefiero que me llaméis antes de pagar
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 01-2 1.9 18.6 18.6 0 01-8.1-2.9 18.3 18.3 0 01-5.6-5.6A18.6 18.6 0 012.9 5a1.9 1.9 0 011.9-2h2.8a1.9 1.9 0 011.9 1.6c.1.9.3 1.8.7 2.6a1.9 1.9 0 01-.5 2l-1.1 1.2a15 15 0 005.6 5.6l1.2-1.1a1.9 1.9 0 012-.5c.8.4 1.7.6 2.6.7a1.9 1.9 0 011.6 2z"/></svg>
+            Que me llaméis antes de pagar
           </button>
           <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
@@ -1820,9 +1822,23 @@
        después dicen quiénes son, y SOLO ENTONCES aparece la fianza. Con
        el bloque siempre a la vista, lo primero que veía el que entraba
        era un "Pagar 30 €" antes de haber escrito su nombre, y eso se lee
-       como un peaje. Basta con el nombre y el teléfono: lo mínimo para
-       poder contestarle. */
-    var faltanDatos = !v('negocio') || !v('tel');
+       como un peaje.
+
+       QUE ESTEN LOS TRES CAMPOS, NO DOS. Antes pedía nombre y teléfono, y
+       la ciudad se colaba vacía: un pedido pagado del que no sabes a qué
+       provincia mandarlo, y a preguntarlo por WhatsApp.
+
+       Y EL TELEFONO, QUE SEA UN TELEFONO. Valía cualquier cosa escrita,
+       una letra incluida. Un teléfono mal puesto en un pedido ya cobrado
+       es un cliente al que no puedes llamar. Nueve dígitos es lo que
+       tiene un número español; se cuentan los dígitos y se ignora lo
+       demás, para que un +34, unos espacios o unos guiones no molesten.
+
+       El paso 4 NO entra aquí a propósito: pone "Opcional" en el propio
+       campo, y obligar a rellenar lo que acabas de llamar opcional es la
+       forma más rápida de que alguien cierre la página. */
+    var digitos = function(id){ return v(id).replace(/\D/g, '').length; };
+    var faltanDatos = !v('negocio') || !v('ciudad') || digitos('tel') < 9;
     var pista = document.getElementById('siguiente');
 
     /* La línea de impuestos, pegada al número grande */
@@ -1948,7 +1964,18 @@
       boton.setAttribute('aria-disabled', 'true');
       boton.removeAttribute('href');
       boton.removeAttribute('target');
-      document.getElementById('rWhatsTxt').textContent = 'Completa tus datos para continuar';
+      /* Decir QUE falta, no que falta algo. "Completa tus datos" obliga a
+         mirar los tres campos a ver cual es; con el nombre delante se va
+         directo. Y si el fallo es el telefono, se dice que es el
+         telefono: el que escribio "llamame" ahi no tiene forma de
+         adivinar por que no le deja seguir. */
+      var falta = [];
+      if (!v('negocio')) falta.push('el nombre del negocio');
+      if (!v('ciudad'))  falta.push('la ciudad');
+      if (digitos('tel') < 9) falta.push(v('tel') ? 'un teléfono válido' : 'tu teléfono');
+      document.getElementById('rWhatsTxt').textContent =
+        'Falta ' + (falta.length > 2 ? falta.slice(0, -1).join(', ') + ' y ' + falta[falta.length - 1]
+                                     : falta.join(' y '));
       return;
     }
 
@@ -2512,6 +2539,13 @@
       /* todavía no sabemos quiénes son: ni una palabra de pagar */
       if (faltanDatos) { paso.hidden = true; return SENAL_MODO || 'mano'; }
 
+      /* La 'o' solo tiene sentido si siguen estando las dos salidas: la
+         de pagar y la de que te llamen. Si ya han pedido la llamada, el
+         boton se esconde y esto tambien. */
+      var sepO = document.getElementById('senalO');
+      var boton = document.getElementById('senalLlamada');
+      if (sepO) sepO.hidden = !!(boton && boton.hidden);
+
       var url = enlaceDePago(fianza);
       SENAL_MODO = url ? 'auto' : (num ? 'mano' : '');
       /* sin forma de cobrar este importe no se pide fianza: antes que
@@ -2608,6 +2642,10 @@
         SENAL_LLAMADA = true;
         mandaEncargo('llamada');
         llamada.hidden = true;
+        /* la 'o' se va con el boton: sola, encima del aviso de "ya te
+           llamamos", se quedaba separando dos cosas que ya no existen */
+        var o = document.getElementById('senalO');
+        if (o) o.hidden = true;
         if (llamadaOk) llamadaOk.hidden = false;
         refrescar();
       });

@@ -1513,12 +1513,30 @@ body::after{
 @keyframes asomaFianza{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.senal-paso{animation:none}}
 
-/* la salida del que aún no se fía: un enlace, no un botón que compita
-   con el de pagar */
-.senal-llamada{display:block;width:100%;margin-top:11px;padding:8px 4px;font:inherit;
-  font-size:.78rem;color:var(--txt-3);background:none;border:0;cursor:pointer;
-  text-decoration:underline;text-underline-offset:3px;transition:color .18s}
-.senal-llamada:hover{color:var(--txt)}
+/* LA LLAMADA ES UNA OPCION, NO LETRA PEQUENA.
+
+   Era un enlace subrayado del tamano de un aviso legal, con el color mas
+   apagado de la paleta, debajo de un boton dorado enorme. O sea: existir
+   existia, pero no se veia. Y no todo el mundo paga a un desconocido por
+   internet a la primera; al que no lo hace, esa linea es la unica puerta
+   que le queda para no irse.
+
+   Ahora es un boton de verdad, de contorno. Sigue siendo el segundo
+   -el dorado manda, que es el que cierra la venta hoy- pero se ve y se
+   pulsa. La palabra 'o' de arriba deja claro que son dos caminos para
+   lo mismo y no dos cosas que hay que hacer. */
+/* sin mayusculas y sin espaciar: una 'o' sola, en versalita y apretada,
+   deja de leerse como una palabra y parece un circulito */
+.senal-o{display:flex;align-items:center;gap:12px;margin:14px 0 10px;
+  font-size:.84rem;color:var(--txt-3)}
+.senal-o::before,.senal-o::after{content:"";height:1px;flex:1;background:var(--borde-claro)}
+.senal-llamada{display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:13px 14px;font:inherit;font-size:.9rem;font-weight:600;
+  color:var(--txt);background:transparent;border:1px solid var(--borde-claro);
+  border-radius:13px;cursor:pointer;transition:border-color .18s,color .18s,background .18s}
+.senal-llamada:hover{color:var(--oro-cl);border-color:var(--oro);background:rgba(233,188,70,.07)}
+.senal-llamada svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .senal-llamada-ok{display:flex;align-items:flex-start;gap:9px;margin:11px 0 0;padding:11px 12px;
   border-radius:12px;font-size:.79rem;line-height:1.5;text-align:left;color:var(--txt-2);
   background:rgba(233,188,70,.09);border:1px solid rgba(233,188,70,.3)}
