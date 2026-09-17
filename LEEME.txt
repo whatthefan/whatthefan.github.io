@@ -92,6 +92,31 @@ Buscar y reemplazar   661403219   por el nuevo (sale varias veces),
 guarda y vuelve a arrastrar la carpeta a Netlify.
 
 
+EL CORREO  hola@plea5e.es
+-------------------------
+Es la direccion que ve el cliente: la del pie de la web, la del aviso
+legal y la de las condiciones de venta. Antes ahi habia un @gmail.com,
+y a un hostelero al que le pides 115 EUR eso le resta.
+
+No es un buzon nuevo que haya que mirar. Esta montado con CLOUDFLARE
+EMAIL ROUTING (gratis): lo que llega a hola@plea5e.es se reenvia solo
+al gmail de siempre. Tu sigues leyendo donde leias.
+
+Donde se toca: dash.cloudflare.com -> Compute -> Email Service ->
+Email Routing. OJO, esta a nivel de CUENTA, no dentro del dominio; en
+el menu de plea5e.es solo salen DMARC y Email Security, que son otra
+cosa. Los registros DNS los pone y los vigila Cloudflare solos: salen
+como "Locked" y si los tocas a mano te los revierte.
+
+Hay un catch-all puesto: info@, contacto@ o cualquier cosa mal escrita
+tambien llega. Asi no se pierde un cliente por una letra.
+
+LO QUE ESTO NO HACE: mandar. Si respondes desde el gmail, al cliente le
+llega tu @gmail.com. Para responder como hola@plea5e.es hay que
+configurar el "Enviar como" de Gmail con el SMTP de Resend, que ya esta
+contratado. Queda pendiente.
+
+
 EL LOGOTIPO Y EL QR (carpetas marca/ y qr/)
 -------------------------------------------
 marca/  el logotipo de PLEA5E sacado de la tarjeta y pasado a vector: la
@@ -463,6 +488,13 @@ LAS CUATRO VARIABLES, UNA A UNA
 
   CORREO_AVISO     donde quieres que te lleguen los avisos.
                    Ahora mismo:  hello.plea5e.es@gmail.com
+
+                   OJO, NO LO CAMBIES a hola@plea5e.es. Esa direccion
+                   acaba en este mismo buzon, pero dando un rodeo por
+                   Cloudflare. Para un aviso que te mandas a ti mismo,
+                   cuantos menos saltos, menos cosas que se rompan.
+                   hola@plea5e.es es la direccion DE CARA AL CLIENTE;
+                   esta es la de la maquina.
 
   CORREO_DE        desde que direccion salen. Para poner una direccion
                    tuya (pedidos@plea5e.es) hay que verificar el
@@ -857,7 +889,7 @@ guardas, y vuelves a arrastrar la carpeta a Netlify.
        titular:   'Juan Fernandez Selma'
        nif:       '49891813Y'
        domicilio: 'C/ Poeta Alonso de Bonilla, 19 · 14012 Cordoba (España)'
-       email:     'hello.plea5e.es@gmail.com'
+       email:     'hola@plea5e.es'
 
    ESTO MISMO VALE PARA LAS CONDICIONES DE VENTA (el boton del pie).
    Su apartado 1, "Quien vende", sale de estos mismos datos. Lo que
