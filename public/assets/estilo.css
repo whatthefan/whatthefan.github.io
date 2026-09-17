@@ -503,6 +503,119 @@ td .destaca{color:var(--oro);font-weight:700}
   #seguimiento::after{left:0}
   #ayuda::after   {right:0}
 }
+
+/* ---- las chispas ----
+
+   Las estrellas grandes de arriba son UNA por seccion y muy tenues: dan
+   fondo, pero el ojo no tiene donde pararse entre una y otra. Estas son
+   lo que faltaba: pequenas, repartidas y un poco mas marcadas.
+
+   NO SON UNA ESTRELLA CUALQUIERA: es la chispa de tu propio logotipo, la
+   que remata cada brazo, sacada del SVG de PLEA5E y llevada a un cuadro
+   de 100x100. Por eso pegan y no parecen adorno puesto de relleno: ya
+   estaban en la marca.
+
+   Van en .env::before y no en otro ::after porque el de la seccion ya lo
+   usa la estrella grande, y #pedido y #como tienen cogido su ::before
+   para el brillo. Este estaba libre. z-index negativo para quedarse
+   detras del texto sin sacarlas de .env, que es quien las coloca.
+
+   Rellenas y no de contorno, al reves que las grandes: a este tamano un
+   contorno de menos de un pixel no se ve, y el relleno solo canta cuando
+   la forma es grande. */
+:root{
+  --chispa:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0L60.6 39.4 100 50 60.6 60.6 50 100 39.4 60.6 0 50 39.4 39.4Z'/%3E%3C/svg%3E");
+  /* el tamano va en vw para que los dos lados midan igual: con un % el
+     alto se calcularia sobre el alto de la seccion y saldrian ovaladas */
+  --ch-s:clamp(7px,1.4vw,15px);
+  --ch-m:clamp(12px,2.2vw,24px);
+  --ch-g:clamp(18px,3.2vw,36px);
+}
+/* El desbordamiento lateral es corto a proposito. Con un -13% las
+   chispas de los extremos caian fuera de la seccion y 'overflow:clip'
+   se las comia: se definian tres y se veia una. Con -6% se salen del
+   texto pero siguen dentro de la pantalla. */
+.astro > .env::before{content:"";position:absolute;inset:-4% -6%;z-index:-1;
+  pointer-events:none;background:var(--oro);opacity:.5;
+  -webkit-mask:var(--chispas);mask:var(--chispas)}
+/* Cada seccion lleva las suyas, en distinto numero y sitio. Se definen
+   como una variable para no repetir la linea entera con y sin -webkit-.
+   Los sitios estan escogidos a mano, cerca de los bordes y lejos de la
+   columna de texto: son fondo, no confeti. */
+/* LOS SITIOS NO SON A OJO. Se midieron: para cada seccion se probo una
+   rejilla de posiciones contra las cajas de todo lo que lleva texto, en
+   movil y en escritorio, y solo quedaron las que no rozan nada. Por eso
+   todas las X estan por debajo del 10 % o por encima del 90 %: en el
+   movil el texto ocupa el ancho entero y el unico aire que queda son los
+   dos costados. Si mueves una, vuelve a medir. */
+#productos > .env::before{--chispas:
+  var(--chispa) 90%  0%/var(--ch-m) var(--ch-m) no-repeat,
+  var(--chispa)  4% 90%/var(--ch-s) var(--ch-s) no-repeat}
+#demo > .env::before{--chispas:
+  var(--chispa)  4%  0%/var(--ch-m) var(--ch-m) no-repeat,
+  var(--chispa) 90% 50%/var(--ch-s) var(--ch-s) no-repeat,
+  var(--chispa)  4% 90%/var(--ch-s) var(--ch-s) no-repeat}
+#como > .env::before{--chispas:
+  var(--chispa) 90%  0%/var(--ch-m) var(--ch-m) no-repeat,
+  var(--chispa)  4% 22%/var(--ch-s) var(--ch-s) no-repeat}
+#pedido > .env::before{--chispas:
+  var(--chispa)  4%  0%/var(--ch-m) var(--ch-m) no-repeat,
+  var(--chispa) 90% 22%/var(--ch-s) var(--ch-s) no-repeat,
+  var(--chispa)  4% 64%/var(--ch-s) var(--ch-s) no-repeat}
+#seguimiento > .env::before{--chispas:
+  var(--chispa)  4% 50%/var(--ch-m) var(--ch-m) no-repeat,
+  var(--chispa)  4% 72%/var(--ch-s) var(--ch-s) no-repeat,
+  var(--chispa) 90% 96%/var(--ch-s) var(--ch-s) no-repeat}
+/* ayuda se queda con una sola: es la seccion mas llena de texto y es el
+   unico sitio que salio limpio en los tres anchos. Mejor una que no
+   moleste que tres encima de las preguntas. */
+#ayuda > .env::before{--chispas:
+  var(--chispa) 90%  0%/var(--ch-m) var(--ch-m) no-repeat}
+/* En pantalla ancha sobra sitio en los dos costados, asi que ahi caben
+   mas. Las de arriba son las que caben SIEMPRE, hasta en un movil de
+   390; estas son el extra de escritorio, medidas igual pero solo contra
+   1180, 1280 y 1440. */
+@media (min-width:1100px){
+  #productos > .env::before{--chispas:
+    var(--chispa) 90%  0%/var(--ch-m) var(--ch-m) no-repeat,
+    var(--chispa)  4%  8%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa) 90% 22%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa)  4% 64%/var(--ch-g) var(--ch-g) no-repeat,
+    var(--chispa) 90% 88%/var(--ch-m) var(--ch-m) no-repeat}
+  #demo > .env::before{--chispas:
+    var(--chispa)  4%  0%/var(--ch-m) var(--ch-m) no-repeat,
+    var(--chispa) 92% 20%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa) 90% 50%/var(--ch-g) var(--ch-g) no-repeat,
+    var(--chispa) 90% 64%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa)  4% 90%/var(--ch-m) var(--ch-m) no-repeat}
+  #como > .env::before{--chispas:
+    var(--chispa) 90%  0%/var(--ch-m) var(--ch-m) no-repeat,
+    var(--chispa)  4% 18%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa) 90% 26%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa)  4% 40%/var(--ch-g) var(--ch-g) no-repeat,
+    var(--chispa) 90% 48%/var(--ch-m) var(--ch-m) no-repeat}
+  #pedido > .env::before{--chispas:
+    var(--chispa)  4%  0%/var(--ch-m) var(--ch-m) no-repeat,
+    var(--chispa) 90%  8%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa) 90% 22%/var(--ch-g) var(--ch-g) no-repeat,
+    var(--chispa)  4% 36%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa) 92% 50%/var(--ch-m) var(--ch-m) no-repeat}
+  #seguimiento > .env::before{--chispas:
+    var(--chispa)  4% 50%/var(--ch-m) var(--ch-m) no-repeat,
+    var(--chispa)  4% 64%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa)  4% 78%/var(--ch-s) var(--ch-s) no-repeat,
+    var(--chispa) 90% 98%/var(--ch-m) var(--ch-m) no-repeat}
+  #ayuda > .env::before{--chispas:
+    var(--chispa) 90%  0%/var(--ch-m) var(--ch-m) no-repeat,
+    var(--chispa) 90% 14%/var(--ch-s) var(--ch-s) no-repeat}
+}
+/* sobre el fondo claro el dorado se pierde, igual que las grandes */
+.sec-claro.astro > .env::before{opacity:.75}
+/* en el movil el texto y el fondo comparten el mismo palmo de pantalla */
+@media (max-width:640px){
+  .astro > .env::before{opacity:.34}
+  .sec-claro.astro > .env::before{opacity:.5}
+}
 /* ══════════ EL SEGUIMIENTO (la sección opcional) ══════════
 
    Va en horizontal y ocupa poco, y eso es la decisión de diseño: es un
@@ -987,7 +1100,20 @@ td .destaca{color:var(--oro);font-weight:700}
   color:var(--txt);background:rgba(233,188,70,.13);border:1px solid rgba(233,188,70,.4)}
 /* mientras no marcan la casilla, el boton se ve apagado y no lleva a
    ningun sitio: el href se le quita desde el JS, no solo el color */
-.btn.grande.espera{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+/* El boton de WhatsApp MIENTRAS no se puede pulsar.
+
+   Antes era el mismo boton dorado al 45 % de opacidad, y quedaba justo
+   debajo del de pagar, que tambien es dorado y grande: dos botones del
+   mismo color pegados, uno de ellos apagado. Parecia que la web se
+   habia roto, o que habia que pulsar los dos.
+
+   De contorno y con el borde a rayas se lee de un vistazo lo que es:
+   el siguiente paso, todavia no. Deja de competir con el boton que si
+   hay que pulsar, que es el de pagar. */
+.btn.grande.espera{background:transparent;color:var(--txt-2);
+  border:1px dashed var(--borde-claro);opacity:1;
+  cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn.grande.espera svg{opacity:.5}
 
 /* nota de personalización */
 .medida-libre{margin-top:clamp(24px,3vw,36px);border:1px dashed rgba(150,110,20,.45);
