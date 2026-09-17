@@ -1109,11 +1109,23 @@ td .destaca{color:var(--oro);font-weight:700}
 
    De contorno y con el borde a rayas se lee de un vistazo lo que es:
    el siguiente paso, todavia no. Deja de competir con el boton que si
-   hay que pulsar, que es el de pagar. */
+   hay que pulsar, que es el de pagar.
+
+   'pointer-events:none' ademas de quitarle el href: asi no hay forma
+   humana de que un toque haga nada, ni por un enlace que se quedara
+   puesto ni por nada que se le anada manana. Un boton bloqueado que a
+   veces responde es peor que uno que nunca responde. */
 .btn.grande.espera{background:transparent;color:var(--txt-2);
-  border:1px dashed var(--borde-claro);opacity:1;
+  border:1px dashed var(--borde-claro);opacity:1;pointer-events:none;
   cursor:not-allowed;transform:none!important;box-shadow:none!important}
 .btn.grande.espera svg{opacity:.5}
+/* Lo que falta por rellenar. Va debajo del boton y en pequeno: es un
+   aviso, no el titulo del final de la pagina. */
+.falta{display:flex;align-items:flex-start;gap:7px;margin:9px 0 0;
+  font-size:.79rem;line-height:1.45;color:var(--oro-cl)}
+.falta::before{content:"!";flex:none;width:15px;height:15px;margin-top:1px;
+  border-radius:50%;background:rgba(233,188,70,.16);color:var(--oro-cl);
+  font-size:.66rem;font-weight:700;line-height:15px;text-align:center}
 
 /* nota de personalización */
 .medida-libre{margin-top:clamp(24px,3vw,36px);border:1px dashed rgba(150,110,20,.45);

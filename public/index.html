@@ -710,6 +710,14 @@
             <input id="negocio" type="text" placeholder="Nombre del negocio" autocomplete="organization">
             <input id="ciudad" type="text" placeholder="Ciudad" autocomplete="address-level2">
             <input id="tel" type="tel" placeholder="Tu teléfono" autocomplete="tel">
+            <!-- El correo es la otra forma de llegar a el. Hay quien no
+                 da el telefono a una web que acaba de conocer pero si
+                 deja el email, y hay quien lo escribe mal. Con los dos
+                 campos vale con UNO de ellos para seguir, asi que nadie
+                 se queda fuera por no querer dar el telefono.
+                 El servidor ya sabia guardar 'correo' y ponerlo en el
+                 aviso: lo unico que faltaba era este campo. -->
+            <input id="correo" type="email" placeholder="Correo (si prefieres)" autocomplete="email" inputmode="email">
           </div>
         </div>
 
@@ -794,20 +802,6 @@
           </a>
           <p class="senal-medios" id="senalMedios" hidden>Bizum, Apple&nbsp;Pay, Google&nbsp;Pay o tarjeta · pago seguro con Stripe</p>
 
-          <!-- La salida para el que no se fía todavía. Sin esto, el que
-               llega hasta aquí y se echa atrás en el pago se pierde
-               entero: ni se sabe que existió. Con esto, el pedido llega
-               igual y ya se le llama. -->
-          <p class="senal-o" id="senalO" hidden>o</p>
-          <button type="button" class="senal-llamada" id="senalLlamada">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 01-2 1.9 18.6 18.6 0 01-8.1-2.9 18.3 18.3 0 01-5.6-5.6A18.6 18.6 0 012.9 5a1.9 1.9 0 011.9-2h2.8a1.9 1.9 0 011.9 1.6c.1.9.3 1.8.7 2.6a1.9 1.9 0 01-.5 2l-1.1 1.2a15 15 0 005.6 5.6l1.2-1.1a1.9 1.9 0 012-.5c.8.4 1.7.6 2.6.7a1.9 1.9 0 011.6 2z"/></svg>
-            Que me llaméis antes de pagar
-          </button>
-          <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
-            <span>Hecho: tenemos tu pedido y te escribimos hoy mismo. Si prefieres adelantarlo tú, ahí tienes el WhatsApp.</span>
-          </p>
-
           <!-- rescate: se fue a pagar y ha vuelto sin que Stripe nos diga nada -->
           <div class="senal-vuelta" id="senalVuelta" hidden>
             <p><b>¿Ya has pagado la fianza?</b> Márcalo aquí y sigue con el pedido: lo comprobamos por nuestra parte.</p>
@@ -823,7 +817,35 @@
         </div>
 
         <a class="btn btn-oro grande" id="rWhats" href="https://wa.me/34661403219" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3.1-1.3-5.1-4.4-5.3-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .5-.1.7.5l1 2.4c.1.2.1.4 0 .6l-.4.5-.3.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.5.4 0 .1 0 .6-.2 1.3z"/></svg> <span id="rWhatsTxt">Enviar por WhatsApp</span></a>
+        <!-- LO QUE FALTA VA FUERA DEL BOTON, NO DENTRO.
+
+             Estaba dentro: el boton pasaba a decir "Falta el nombre del
+             negocio, la ciudad y tu telefono" y se comia tres lineas, de
+             modo que lo unico grande del final del ticket era un mensaje
+             de error. El boton ahora pone siempre lo mismo, "Enviar por
+             WhatsApp", y lo que falta se dice aqui debajo y en pequeno,
+             que es donde se ponen los avisos. -->
+        <p class="falta" id="rFalta" hidden></p>
         <small class="pie-wa">Se abre tu WhatsApp con el mensaje escrito · o llámanos al <a href="tel:+34661403219">661 40 32 19</a></small>
+
+        <!-- LA SALIDA DEL QUE NO QUIERE PAGAR HOY, Y VA ABAJO DEL TODO.
+
+             Estaba dentro de la caja de la fianza, que solo aparece
+             cuando los datos estan completos: justo al que se echaba
+             atras no se la ensenabamos nunca. Aqui abajo se ve siempre,
+             debajo de las dos formas de seguir, como lo que es: el plan
+             B. Sin esto, el que llega hasta aqui y se raja se pierde
+             entero, ni se sabe que existio. Con esto, el pedido llega
+             igual y ya se le llama. -->
+        <p class="senal-o" id="senalO">o</p>
+        <button type="button" class="senal-llamada" id="senalLlamada">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 01-2 1.9 18.6 18.6 0 01-8.1-2.9 18.3 18.3 0 01-5.6-5.6A18.6 18.6 0 012.9 5a1.9 1.9 0 011.9-2h2.8a1.9 1.9 0 011.9 1.6c.1.9.3 1.8.7 2.6a1.9 1.9 0 01-.5 2l-1.1 1.2a15 15 0 005.6 5.6l1.2-1.1a1.9 1.9 0 012-.5c.8.4 1.7.6 2.6.7a1.9 1.9 0 011.6 2z"/></svg>
+          Prefiero que me llaméis
+        </button>
+        <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
+          <span>Hecho: tenemos tu pedido y te escribimos hoy mismo. Si prefieres adelantarlo tú, ahí tienes el WhatsApp.</span>
+        </p>
         <!-- El aviso de datos va AQUÍ, pegado al botón, no solo en el pie:
              la ley pide informar en el momento de recoger los datos, y
              quien está rellenando el pedido no ve el pie. -->
@@ -1523,6 +1545,11 @@
   /* la enciende el bloque de la fianza si hay Bizum configurado. Mientras
      esté apagada, el pedido se envía directo como se ha hecho siempre. */
   var SENAL_ACTIVA = false;
+  /* Lo pone refrescar() en cada cambio y lo leen los dos botones del
+     final del ticket. Sin esto, cada uno comprobaria los campos por su
+     cuenta y acabarian pidiendo cosas distintas: el de WhatsApp los
+     tres, el de la llamada solo el nombre. Una sola regla, un sitio. */
+  var DATOS_OK = false;
   var SENAL_MODO   = '';    /* 'auto' = se paga aquí; 'mano' = Bizum y casilla */
   /* Euros ya pagados de fianza. Se congela en el momento del pago: si
      después amplían el pedido, lo pagado sigue siendo lo que fue y el
@@ -1834,11 +1861,23 @@
        tiene un número español; se cuentan los dígitos y se ignora lo
        demás, para que un +34, unos espacios o unos guiones no molesten.
 
+       TELEFONO O CORREO, UNO DE LOS DOS. Hay quien no le da el móvil a
+       una web que acaba de conocer pero sí deja el email. Exigir el
+       teléfono a ese le echa; con los dos campos, elige él y tú sigues
+       teniendo por dónde contestarle.
+
        El paso 4 NO entra aquí a propósito: pone "Opcional" en el propio
        campo, y obligar a rellenar lo que acabas de llamar opcional es la
        forma más rápida de que alguien cierre la página. */
     var digitos = function(id){ return v(id).replace(/\D/g, '').length; };
-    var faltanDatos = !v('negocio') || !v('ciudad') || digitos('tel') < 9;
+    /* Ni validación de laboratorio ni nada: que haya algo, una arroba en
+       medio y un punto después. Lo que pilla los errores de verdad
+       (dejarse la arroba, escribir "gmail") sin rechazar direcciones
+       raras pero válidas. */
+    var correoOk = function(){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('correo')); };
+    var hayContacto = function(){ return digitos('tel') >= 9 || correoOk(); };
+    var faltanDatos = !v('negocio') || !v('ciudad') || !hayContacto();
+    DATOS_OK = !faltanDatos;
     var pista = document.getElementById('siguiente');
 
     /* La línea de impuestos, pegada al número grande */
@@ -1964,20 +2003,33 @@
       boton.setAttribute('aria-disabled', 'true');
       boton.removeAttribute('href');
       boton.removeAttribute('target');
-      /* Decir QUE falta, no que falta algo. "Completa tus datos" obliga a
-         mirar los tres campos a ver cual es; con el nombre delante se va
-         directo. Y si el fallo es el telefono, se dice que es el
-         telefono: el que escribio "llamame" ahi no tiene forma de
-         adivinar por que no le deja seguir. */
+      /* El BOTON no cambia de texto: sigue diciendo "Enviar por
+         WhatsApp". Antes se convertia en el mensaje de error y se comia
+         tres lineas, con lo cual lo unico grande del final del ticket
+         era una pega. Lo que falta se dice debajo, en pequeno, que es
+         donde van los avisos.
+
+         Y se dice QUE falta, no que falta algo: "completa tus datos"
+         obliga a repasar los campos a ver cual es. */
+      document.getElementById('rWhatsTxt').textContent = 'Enviar por WhatsApp';
       var falta = [];
       if (!v('negocio')) falta.push('el nombre del negocio');
       if (!v('ciudad'))  falta.push('la ciudad');
-      if (digitos('tel') < 9) falta.push(v('tel') ? 'un teléfono válido' : 'tu teléfono');
-      document.getElementById('rWhatsTxt').textContent =
-        'Falta ' + (falta.length > 2 ? falta.slice(0, -1).join(', ') + ' y ' + falta[falta.length - 1]
-                                     : falta.join(' y '));
+      if (!hayContacto()) {
+        falta.push(v('tel') || v('correo') ? 'un teléfono o un correo válidos'
+                                           : 'tu teléfono o tu correo');
+      }
+      var aviso = document.getElementById('rFalta');
+      if (aviso) {
+        aviso.textContent =
+          'Falta ' + (falta.length > 2 ? falta.slice(0, -1).join(', ') + ' y ' + falta[falta.length - 1]
+                                       : falta.join(' y '));
+        aviso.hidden = false;
+      }
       return;
     }
+    var avisoOk = document.getElementById('rFalta');
+    if (avisoOk) avisoOk.hidden = true;
 
     if (pideFianza) {
       /* el concepto del Bizum es el nombre del negocio: si ya lo han
@@ -2099,6 +2151,9 @@
       negocio:  v('negocio'),
       ciudad:   v('ciudad'),
       tel:      v('tel'),
+      /* el servidor ya sabia ponerlo en el aviso y en el panel; lo que
+         no habia hasta ahora era el campo en la web para escribirlo */
+      correo:   v('correo'),
       notas:    v('notas'),
       /* el pedido entero, que ya puede llevar más de un producto */
       lineas:   sel.prods.map(function(k){ return { formato:k, cantidad: sel.cant[k] }; }),
@@ -2163,7 +2218,9 @@
     elegir(caja, sel.cant[k]);
     refrescar();
   });
-  ['negocio','ciudad','tel','notas'].forEach(function(id){
+  /* 'correo' va en la lista: sin el, escribir el email no repintaba
+     nada y el boton seguia diciendo que faltaba, aunque ya estuviera. */
+  ['negocio','ciudad','tel','correo','notas'].forEach(function(id){
     var e = document.getElementById(id); if (e) e.addEventListener('input', refrescar);
   });
   elegir(opProd, sel.prods);
@@ -2539,13 +2596,6 @@
       /* todavía no sabemos quiénes son: ni una palabra de pagar */
       if (faltanDatos) { paso.hidden = true; return SENAL_MODO || 'mano'; }
 
-      /* La 'o' solo tiene sentido si siguen estando las dos salidas: la
-         de pagar y la de que te llamen. Si ya han pedido la llamada, el
-         boton se esconde y esto tambien. */
-      var sepO = document.getElementById('senalO');
-      var boton = document.getElementById('senalLlamada');
-      if (sepO) sepO.hidden = !!(boton && boton.hidden);
-
       var url = enlaceDePago(fianza);
       SENAL_MODO = url ? 'auto' : (num ? 'mano' : '');
       /* sin forma de cobrar este importe no se pide fianza: antes que
@@ -2586,7 +2636,7 @@
           id: PEDIDO_ID,
           prods: sel.prods, cant: sel.cant, fianza: fianzaActual(),
           negocio: val('negocio'), ciudad: val('ciudad'),
-          tel: val('tel'), notas: val('notas'),
+          tel: val('tel'), correo: val('correo'), notas: val('notas'),
           cuando: Date.now()
         }));
       } catch (e) {}
@@ -2614,7 +2664,7 @@
       }
       elegir(opProd, sel.prods);
       pintarCants();
-      ['negocio','ciudad','tel','notas'].forEach(function(id){
+      ['negocio','ciudad','tel','correo','notas'].forEach(function(id){
         var e = document.getElementById(id);
         if (e && d[id]) e.value = d[id];
       });
@@ -2638,7 +2688,11 @@
     var llamadaOk = document.getElementById('senalLlamadaOk');
     if (llamada) {
       llamada.addEventListener('click', function(){
-        if (!document.getElementById('negocio').value.trim()) return;
+        /* La misma regla que el de WhatsApp. Antes bastaba con el nombre:
+           se podia pedir una llamada sin dejar telefono ni correo, o sea
+           pedir que te llamen sin decir a donde. Eso llegaba al panel
+           como un encargo imposible de atender. */
+        if (!DATOS_OK) return;
         SENAL_LLAMADA = true;
         mandaEncargo('llamada');
         llamada.hidden = true;
