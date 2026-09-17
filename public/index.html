@@ -743,7 +743,15 @@
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span><b>2-7 días</b> de preparación y <b>1-3</b> de envío</span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span>Si un chip no lee, <b>te lo reponemos</b></span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> Envío gratis a península</li>
-          <li id="incFianzaLi" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg> <span>La fianza de <b id="incFianza">15 €</b> va dentro del precio</span></li>
+          <!-- AQUI NO VA LA FIANZA. La llevaba, y era la segunda vez que
+               se decia lo mismo en la misma columna: justo encima ya lo
+               dice la linea del reparto, y justo debajo el paso 5. La
+               palabra salia SIETE veces en el ticket, cuatro de ellas
+               explicando la misma idea con otras palabras. Repetir que
+               "no es dinero de mas" cuatro veces no tranquiliza: suena a
+               que hay algo que perdonar. Se dice una vez y bien.
+               (El JS que la pintaba comprueba si existe, asi que
+               quitarla de aqui no rompe nada.) -->
         </ul>
         <!-- aquí la columna es estrecha: etiqueta corta para que no se
              parta en dos líneas -->
@@ -763,8 +771,14 @@
              entero se oculta si no hay número de Bizum en la
              configuración, y entonces el botón funciona como siempre. -->
         <div class="senal-paso" id="senalPaso" hidden>
-          <p class="senal-paso-tit"><span class="np">5</span>Antes de darle: la fianza</p>
-          <p class="senal-paso-txt">Te pedimos una fianza de <b id="senalCifra">15 €</b> <span class="senal-regla" id="senalRegla"></span>. <span id="senalDesc">Va dentro del precio: se descuenta del total.</span></p>
+          <p class="senal-paso-tit"><span class="np">5</span>La fianza</p>
+          <!-- Una linea, no un parrafo. Aqui ponia "Te pedimos una fianza
+               de 58 € (el 50 % del pedido, con un minimo de 15 €). No es
+               dinero de mas: van dentro del precio final, se te
+               descuentan del total." Tres frases para decir lo que ya
+               decia la linea del reparto dos dedos mas arriba.
+               Los tres id siguen aqui porque el JS escribe en ellos. -->
+          <p class="senal-paso-txt"><b id="senalCifra">15 €</b> <span class="senal-regla" id="senalRegla"></span> <span id="senalDesc">· dentro del total</span></p>
           <dl class="senal-datos">
             <dt>Bizum a</dt><dd class="senal-num" id="senalNum">—</dd>
             <dt>Importe</dt><dd id="senalImporte">15 €</dd>
@@ -776,7 +790,7 @@
                cuanto hay enlace de pago configurado -->
           <a class="btn btn-oro pagar" id="senalPagar" hidden rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.6" y="5" width="18.8" height="14" rx="2.6"/><path d="M2.6 9.6h18.8"/><path d="M6.4 14.6h3.4"/></svg>
-            <span id="senalPagarTxt">Pagar la fianza · 25 €</span>
+            <span id="senalPagarTxt">Pagar 25 €</span>
           </a>
           <p class="senal-medios" id="senalMedios" hidden>Bizum, Apple&nbsp;Pay, Google&nbsp;Pay o tarjeta · pago seguro con Stripe</p>
 
@@ -1170,6 +1184,11 @@
      así que el ticket, las condiciones de venta y las preguntas no
      pueden acabar diciendo cosas distintas. */
   var FIANZA_REGLA = 'el ' + BIZUM.porcentaje + ' % del pedido, con un mínimo de ' + BIZUM.minimo + ' €';
+  /* La misma regla, dicha corta. Va SOLO en el ticket, donde la columna
+     es estrecha y la frase larga ocupaba tres lineas para no decir nada
+     nuevo. La de arriba NO se toca: es la que sale en las condiciones de
+     venta y en las preguntas, y ahi tiene que estar escrita entera. */
+  var FIANZA_CORTA = '(el ' + BIZUM.porcentaje + ' %, mínimo ' + BIZUM.minimo + ' €)';
   [].forEach.call(document.querySelectorAll('[data-fianza-regla]'), function(e){
     e.textContent = FIANZA_REGLA;
   });
@@ -1874,10 +1893,15 @@
             (ya ? 'que has pagado se descuenta' : 'se descuenta') +
             ' del presupuesto que te pasemos.';
         } else if (q.cobrar > hoy + 0.01) {
+          /* ESTA es la frase que explica el trato, y por eso es la unica
+             que se queda larga. Lo que se quito fue el remate: "La fianza
+             va dentro de esos 115 €, no es dinero de más". Eso ya lo
+             dice "del total" al final, y decirlo dos veces seguidas
+             sonaba a excusa. */
           reparto.innerHTML = (ya ? 'Ya has pagado <b>' + entero(hoy) + '</b>'
-                                  : 'Hoy pagas <b>' + entero(hoy) + '</b> de fianza') +
-            ' y el resto, <b>' + eur(q.cobrar - hoy) + '</b>, cuando el diseño te guste. ' +
-            'La fianza va dentro de esos ' + eur(q.cobrar) + ', no es dinero de más.';
+                                  : 'Hoy <b>' + entero(hoy) + '</b>') +
+            ' y <b>' + eur(q.cobrar - hoy) + '</b> cuando el diseño te guste. ' +
+            'Los dos salen de los ' + eur(q.cobrar) + ' del total.';
         } else {
           reparto.innerHTML = 'Con la fianza de <b>' + entero(hoy) +
             '</b> el pedido queda pagado entero: no hay nada más que pagar.';
@@ -2451,8 +2475,8 @@
     var pagarTx = document.getElementById('senalPagarTxt');
 
     document.getElementById('senalDesc').textContent = BIZUM.descuenta
-      ? 'No es dinero de más: van dentro del precio final, se te descuentan del total.'
-      : 'Cubre el trabajo de diseño y no se descuenta del total.';
+      ? '· dentro del total'
+      : '· cubre el diseño, no se descuenta';
     document.getElementById('senalNum').textContent = num.length === 9
       ? num.slice(0,3) + ' ' + num.slice(3,5) + ' ' + num.slice(5,7) + ' ' + num.slice(7)
       : num;
@@ -2483,7 +2507,7 @@
       var mostrar = pag && SENAL_PAGADO ? SENAL_PAGADO : fianza;
       cifra.textContent = entero(mostrar);
       importe.textContent = entero(mostrar);
-      regla.textContent = pag ? '' : '(' + FIANZA_REGLA + ')';
+      regla.textContent = pag ? '' : FIANZA_CORTA;
       if (pag) { paso.hidden = false; return SENAL_MODO || 'mano'; }
       /* todavía no sabemos quiénes son: ni una palabra de pagar */
       if (faltanDatos) { paso.hidden = true; return SENAL_MODO || 'mano'; }
@@ -2499,7 +2523,7 @@
         check.hidden = true;
         botonP.hidden = false;
         medios.hidden = false;
-        pagarTx.textContent = 'Pagar la fianza · ' + entero(fianza);
+        pagarTx.textContent = 'Pagar ' + entero(fianza);
         ponerEnlace(url);
       } else if (SENAL_MODO === 'mano') {
         if (datos) datos.hidden = false;
