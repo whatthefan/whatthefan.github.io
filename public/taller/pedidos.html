@@ -303,6 +303,15 @@
            ' · ' + dos(d.getHours()) + ':' + dos(d.getMinutes());
   }
 
+  /* solo la hora: para decir cuando se movio por ultima vez, que casi
+     siempre es el mismo dia y repetir la fecha entera sobra */
+  function hora(ms) {
+    var d = new Date(ms || 0);
+    if (isNaN(d.getTime())) return '';
+    var dos = function (n) { return (n < 10 ? '0' : '') + n; };
+    return dos(d.getHours()) + ':' + dos(d.getMinutes());
+  }
+
   /* Un telefono espanol de nueve cifras necesita el 34 delante para que
      wa.me lo abra. Si ya trae prefijo, se deja como esta. */
   function whats(tel) {
@@ -396,7 +405,18 @@
             '<span class="crece"></span>' +
             '<span class="ref">' + esc(i.ref || '') + '</span>' +
           '</div>' +
-          '<p class="cuando">' + fecha(i.cuando) + '</p>' +
+          /* LA HORA DE LA ULTIMA VEZ, NO SOLO LA DE LA PRIMERA.
+
+             Un pedido se actualiza: el cliente lo monta, se va a pagar,
+             vuelve, pide que le llames... y todo eso cae en la MISMA
+             ficha, conservando su hora original. Con solo esa hora, una
+             ficha que se acaba de mover parecia de hace tres horas y
+             daba la sensacion de que no llegaba nada.
+
+             Ahora, si se ha tocado despues, se dice cuando. */
+          '<p class="cuando">' + fecha(i.cuando) +
+            (i.tocado && i.tocado - (i.cuando || 0) > 60000
+              ? ' · <b>se movio a las ' + hora(i.tocado) + '</b>' : '') + '</p>' +
           '<table class="datos">' +
             fila('Pedido', resumen(e)) +
             fila('Ciudad', e.ciudad) +
