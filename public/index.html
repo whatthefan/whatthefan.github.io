@@ -1294,6 +1294,17 @@
      AUN ASÍ, MIRA EL IMPORTE EN STRIPE antes de ponerte a diseñar: el
      WhatsApp te dice lo que TOCABA pagar, y quien manda es el cobro que
      ves en tu panel.                                                   */
+  /* ══════════ AVISO GORDO, LEE ESTO ANTES DE TOCAR NADA DE AQUÍ ══════
+     LO DE 'porEuro' CON ?quantity= NUNCA FUNCIONÓ. Los enlaces de pago
+     de Stripe NO leen 'quantity' de la dirección: se lo saltan sin
+     decir nada y cobran la cantidad por defecto del enlace, que son 15.
+     O sea que a un pedido de 115 € la web le decía "fianza 58 €", le
+     abría Stripe y Stripe le cobraba 15.
+
+     Ahora la pantalla de pago se le pide al servidor (/api/pago), que
+     habla con Stripe y le dice el importe de verdad. 'porEuro' se queda
+     aquí solo como interruptor: con algo escrito, el botón de pagar
+     existe; vacío, se usa el Bizum a mano.                            */
   var PAGO = {
     enlace:  'https://buy.stripe.com/14A5kD9iX78tfPB0yS5Rm00',
     importe: 25,     // lo que cobra ESE enlace, tal y como está en Stripe
@@ -1318,18 +1329,32 @@
   /* El enlace que cobra EXACTAMENTE esa fianza, o cadena vacía si no hay
      ninguno que sepa cobrarla. Nunca se manda a alguien a una pantalla
      de pago por un importe distinto del que le hemos dicho. */
-  function enlaceDePago(fianza){
-    var euro = String(PAGO.porEuro || '').trim();
-    /* Fuera del rango del enlace NO se manda a nadie a pagar: se
-       devuelve vacío y el paso de la fianza se cae al Bizum a mano, que
-       no tiene tope. Mejor pedir un Bizum que mandar a un cliente a una
-       pantalla que le va a dar error justo cuando iba a pagarte. */
-    if (euro && fianza >= PAGO.minUnidades && fianza <= PAGO.maxUnidades) {
-      return euro + (euro.indexOf('?') > -1 ? '&' : '?') + 'quantity=' + fianza;
-    }
-    var fijo = String(PAGO.enlace || '').trim();
-    if (fijo && fianza === PAGO.importe) return fijo;
-    return '';
+  /* ¿Se puede cobrar ESTE importe? Ya no devuelve una dirección, porque
+     la dirección la da el servidor en el momento de pulsar: aquí solo se
+     decide si sale el botón de pagar o el Bizum a mano.
+
+     API_PAGO lo pone al día una pregunta al servidor nada más hacer
+     falta: si la clave de Stripe no está puesta en Cloudflare, esto se
+     queda en false y el cliente ve el Bizum desde el principio, sin
+     llegar a darle a un botón que le iba a dar error. */
+  var API_PAGO = false;
+  function sePuedeCobrar(fianza){
+    if (!String(PAGO.porEuro || '').trim()) return false;
+    if (!API_PAGO) return false;
+    return fianza >= PAGO.minUnidades && fianza <= PAGO.maxUnidades;
+  }
+  /* Se pregunta UNA vez y se recuerda. Si el servidor no contesta, se
+     queda en false, que es el lado seguro: Bizum. */
+  var API_PREGUNTADA = false;
+  function miraSiHayPago(luego){
+    if (API_PREGUNTADA) { luego(); return; }
+    API_PREGUNTADA = true;
+    try {
+      fetch('/api/pago').then(function(r){ return r.json(); })
+        .then(function(j){ API_PAGO = !!(j && j.listo); })
+        .catch(function(){})
+        .then(function(){ luego(); });
+    } catch (e) { luego(); }
   }
 
   /* Enlaces de cada local: son los mismos códigos de Google que llevan
@@ -1922,6 +1947,12 @@
        pago está hecho. Se recalcula cada vez porque ahora depende del
        tamaño del pedido, y el pedido cambia mientras lo montan. */
     var fianza = fianzaDe(abierto ? 0 : q.cobrar);
+    /* La primera vez que hay datos completos se le pregunta al servidor
+       si puede cobrar, y se vuelve a pintar con la respuesta. Va aquí y
+       no al cargar la página por lo de siempre: nada de pedir cosas al
+       servidor por si acaso, solo cuando de verdad hace falta. */
+    if (SENAL_ACTIVA && !faltanDatos && !API_PREGUNTADA) miraSiHayPago(refrescar);
+
     var modo   = SENAL_ACTIVA && SENAL_PINTAR ? SENAL_PINTAR(fianza, faltanDatos) : '';
     var pideFianza = SENAL_ACTIVA && !!modo;
     /* Hasta que no se presenten, del dinero NO se habla en ningún sitio
@@ -2568,18 +2599,47 @@
     function val(id){ var e = document.getElementById(id); return e ? e.value : ''; }
     function pagada(){ return !!SENAL_REF || SENAL_MANUAL || (hecho && hecho.checked); }
 
-    /* El enlace del botón de pagar. Va con su href puesto, como un enlace
-       de verdad: navegar por JavaScript se lo come cualquier sitio que
-       corra la página dentro de un marco, y así además se puede pulsar
-       largo para abrirlo en otra pestaña.
-       El nombre del negocio viaja con el pago: en el panel de Stripe cada
-       cobro llega ya con el nombre de quien lo hizo. */
-    function ponerEnlace(url){
-      var quien = (val('negocio') || 'sin-nombre')
-                    .replace(/[^0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]/g, '').trim().slice(0, 60) || 'sin-nombre';
-      botonP.href = url + (url.indexOf('?') > -1 ? '&' : '?')
-                  + 'client_reference_id=' + encodeURIComponent(quien);
-    }
+    /* EL BOTÓN DE PAGAR YA NO LLEVA UN ENLACE PUESTO.
+
+       Antes lo llevaba, y era lo correcto mientras la dirección se podía
+       montar aquí. Ya no se puede: la pantalla de pago hay que pedírsela
+       a Stripe con el importe dentro, y eso lo hace el servidor. O sea
+       que al pulsar se pide la dirección y se va allí.
+
+       Se pierde el "abrir en otra pestaña" con pulsación larga, que no
+       lo usaba nadie. Lo que se gana es que cobra la cifra de verdad.
+
+       PEDIDO Y CANDADO: sin el candado, dos toques seguidos crean dos
+       sesiones de pago y dos cobros posibles. */
+    var PIDIENDO = false;
+    botonP.addEventListener('click', function(ev){
+      ev.preventDefault();
+      if (PIDIENDO) return;
+      PIDIENDO = true;
+      var antes = pagarTx.textContent;
+      pagarTx.textContent = 'Abriendo el pago…';
+      var quien = (val('negocio') || '').trim().slice(0, 100);
+      fetch('/api/pago', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fianza: fianzaActual(), negocio: quien, pedidoId: PEDIDO_ID })
+      }).then(function(r){ return r.json(); }).then(function(j){
+        /* de guardar el pedido y mandártelo se encarga el otro oyente de
+           este mismo botón, que ya salta con el clic */
+        if (j && j.url) { window.location.href = j.url; return; }
+        throw new Error(j && j.error ? j.error : 'sin url');
+      }).catch(function(){
+        /* Si Stripe no da la pantalla, NO se deja al cliente colgado ni
+           se le manda a pagar una cifra que no es: se le enseña el Bizum,
+           que es la salida que siempre ha funcionado. */
+        PIDIENDO = false;
+        pagarTx.textContent = antes;
+        API_PAGO = false;
+        SENAL_MODO = num ? 'mano' : '';
+        if (SENAL_PINTAR) SENAL_PINTAR(fianzaActual(), false);
+        refrescar();
+      });
+    });
 
     /* Deja la caja de la fianza al día para el importe de este pedido y
        dice con qué se puede cobrar: 'auto', 'mano' o nada. Lo llama
@@ -2603,8 +2663,7 @@
       var bLlam = document.getElementById('senalLlamada');
       if (sepO) sepO.hidden = !!(bLlam && bLlam.hidden);
 
-      var url = enlaceDePago(fianza);
-      SENAL_MODO = url ? 'auto' : (num ? 'mano' : '');
+      SENAL_MODO = sePuedeCobrar(fianza) ? 'auto' : (num ? 'mano' : '');
       /* sin forma de cobrar este importe no se pide fianza: antes que
          mandar a nadie a pagar una cifra que no es la suya, se deja pasar
          el pedido y ya se habla por WhatsApp */
@@ -2615,7 +2674,6 @@
         botonP.hidden = false;
         medios.hidden = false;
         pagarTx.textContent = 'Pagar ' + entero(fianza);
-        ponerEnlace(url);
       } else if (SENAL_MODO === 'mano') {
         if (datos) datos.hidden = false;
         check.hidden = false;
@@ -2681,8 +2739,11 @@
     /* Al pulsar: guardamos el pedido para cuando vuelva, y ADEMÁS te lo
        mandamos ya. Antes esto último no pasaba, y quien pagaba y no
        volvía a pulsar el WhatsApp te dejaba con el aviso de Stripe y un
-       nombre de negocio: cobrado y sin saber qué te habían pedido. De
-       navegar se encarga el enlace, aquí no se toca. */
+       nombre de negocio: cobrado y sin saber qué te habían pedido.
+
+       De navegar se encarga el otro oyente de este botón, el que le pide
+       la pantalla de pago al servidor. Este solo guarda, y salta antes,
+       así que el pedido te llega aunque Stripe falle después. */
     botonP.addEventListener('click', function(){
       guardar();
       mandaEncargo('sin-pagar');

@@ -20,13 +20,15 @@ import { onRequest as encargo }  from './api/encargo.js';
 import { onRequest as encargos } from './api/encargos.js';
 import { onRequest as enlace }   from './api/enlace.js';
 import { onRequest as enlaces }  from './api/enlaces.js';
+import { onRequest as pago }     from './api/pago.js';
 
 /* Una tabla, no una cadena de ifs: añadir una función nueva es añadir una
    línea, y no hay forma de que dos rutas se pisen sin que se vea. */
 const RUTAS = {
   '/api/encargo':  encargo,
   '/api/encargos': encargos,
-  '/api/enlaces':  enlaces
+  '/api/enlaces':  enlaces,
+  '/api/pago':     pago
 };
 
 export default {
