@@ -144,7 +144,24 @@ async function avisa(encargo, enlace, brief, ref, env) {
   const clave = String(env.RESEND_API_KEY || '').trim();
   const para  = String(env.CORREO_AVISO || '').trim();
   const desde = String(env.CORREO_DE || '').trim();
-  if (!clave || !para || !desde) return false;
+  /* SI FALTA ALGUNA, SE DICE CUAL.
+
+     Esto se iba con un 'return false' a secas. Y era el peor de los
+     fallos: el pedido se guardaba, la web contestaba que todo bien, el
+     registro del Worker no ensenaba ni un error... y el correo no
+     llegaba nunca. Un dia entero mirando a Resend, al DNS y al codigo
+     de la web para algo que se arregla escribiendo una variable.
+
+     Se escriben los NOMBRES de las que faltan, nunca su contenido: una
+     clave en un registro es una clave regalada. */
+  if (!clave || !para || !desde) {
+    console.error('AVISO NO ENVIADO: falta rellenar ' + [
+      !clave ? 'RESEND_API_KEY' : '',
+      !para  ? 'CORREO_AVISO'   : '',
+      !desde ? 'CORREO_DE'      : ''
+    ].filter(Boolean).join(' y ') + ' en las variables del Worker (Cloudflare → Settings → Variables).');
+    return false;
+  }
 
   const fila = (k, v) => (v ? `<tr><td style="padding:3px 12px 3px 0;color:#666">${k}</td><td style="padding:3px 0"><b>${esc(v)}</b></td></tr>` : '');
 
