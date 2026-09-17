@@ -787,11 +787,20 @@
                decia la linea del reparto dos dedos mas arriba.
                Los tres id siguen aqui porque el JS escribe en ellos. -->
           <p class="senal-paso-txt"><b id="senalCifra">15 €</b> <span class="senal-regla" id="senalRegla"></span> <span id="senalDesc">· dentro del total</span></p>
-          <dl class="senal-datos">
-            <dt>Bizum a</dt><dd class="senal-num" id="senalNum">—</dd>
-            <dt>Importe</dt><dd id="senalImporte">15 €</dd>
-            <dt>Concepto</dt><dd id="senalCon">El nombre de tu negocio</dd>
-          </dl>
+          <!-- UNA FRASE, NO UNA TABLA.
+
+               Esto era una lista de tres filas -BIZUM A / IMPORTE /
+               CONCEPTO- con el numero enorme en dorado. Ocupaba media
+               pantalla de movil para decir tres datos que caben en un
+               renglon, y encima con el titulo y el aviso del paso 5
+               alrededor parecia un formulario de Hacienda.
+
+               Los tres id siguen aqui porque el JS escribe en ellos. El
+               numero sigue siendo lo mas visible: es lo unico que hay
+               que copiar a mano. -->
+          <p class="senal-datos">Bizum de <b id="senalImporte">15 €</b> al
+            <b class="senal-num" id="senalNum">—</b>, concepto
+            <b id="senalCon">el nombre de tu negocio</b></p>
           <label class="senal-check" id="senalCheck"><input type="checkbox" id="senalHecho"><span>Ya he enviado la fianza</span></label>
 
           <!-- cobro automático: sustituye a la casilla de confianza en
@@ -814,7 +823,7 @@
           <p class="senal-o" id="senalO" hidden>o</p>
           <button type="button" class="senal-llamada" id="senalLlamada">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 16.9v2.8a1.9 1.9 0 01-2 1.9 18.6 18.6 0 01-8.1-2.9 18.3 18.3 0 01-5.6-5.6A18.6 18.6 0 012.9 5a1.9 1.9 0 011.9-2h2.8a1.9 1.9 0 011.9 1.6c.1.9.3 1.8.7 2.6a1.9 1.9 0 01-.5 2l-1.1 1.2a15 15 0 005.6 5.6l1.2-1.1a1.9 1.9 0 012-.5c.8.4 1.7.6 2.6.7a1.9 1.9 0 011.6 2z"/></svg>
-            Que me llaméis antes de pagar
+            Que me llaméis
           </button>
           <p class="senal-llamada-ok" id="senalLlamadaOk" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>
@@ -1212,7 +1221,15 @@
      es estrecha y la frase larga ocupaba tres lineas para no decir nada
      nuevo. La de arriba NO se toca: es la que sale en las condiciones de
      venta y en las preguntas, y ahi tiene que estar escrita entera. */
-  var FIANZA_CORTA = '(el ' + BIZUM.porcentaje + ' %, mínimo ' + BIZUM.minimo + ' €)';
+  /* Y se dice solo la mitad que hace falta: si la fianza es el
+     porcentaje, "(el 50 %)"; si ha tocado el suelo, "(mínimo)". Decir
+     las dos cosas a la vez -"el 50 %, mínimo 15 €"- partía el renglón en
+     dos en un móvil para explicar una regla que solo se aplica de una
+     manera cada vez. La regla entera sigue escrita en las condiciones de
+     venta y en las preguntas. */
+  function fianzaCorta(fianza){
+    return fianza <= BIZUM.minimo ? '(el mínimo)' : '(el ' + BIZUM.porcentaje + ' %)';
+  }
   [].forEach.call(document.querySelectorAll('[data-fianza-regla]'), function(e){
     e.textContent = FIANZA_REGLA;
   });
@@ -2651,7 +2668,7 @@
       var mostrar = pag && SENAL_PAGADO ? SENAL_PAGADO : fianza;
       cifra.textContent = entero(mostrar);
       importe.textContent = entero(mostrar);
-      regla.textContent = pag ? '' : FIANZA_CORTA;
+      regla.textContent = pag ? '' : fianzaCorta(fianza);
       if (pag) { paso.hidden = false; return SENAL_MODO || 'mano'; }
       /* todavía no sabemos quiénes son: ni una palabra de pagar */
       if (faltanDatos) { paso.hidden = true; return SENAL_MODO || 'mano'; }
@@ -2679,6 +2696,19 @@
         check.hidden = false;
         botonP.hidden = true;
         medios.hidden = true;
+        /* FUERA LA CAJA DE "¿YA HAS PAGADO?" SI ESTAMOS EN BIZUM.
+
+           Esa caja es para el que vuelve de Stripe sin que Stripe nos
+           haya avisado. Con el Bizum a mano no pinta nada: justo encima
+           ya hay una casilla de "ya he enviado la fianza", y las dos
+           juntas son la misma pregunta hecha dos veces, una debajo de
+           otra, con lo que el paso 5 se hace el doble de largo.
+
+           Se apaga aqui y no en rescate() porque rescate() corre al
+           cargar la pagina, cuando todavia no se sabe con que se va a
+           cobrar. Aqui si se sabe. */
+        var vuelta = document.getElementById('senalVuelta');
+        if (vuelta) vuelta.hidden = true;
       }
       return SENAL_MODO;
     };
