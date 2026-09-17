@@ -330,6 +330,61 @@ var POR_DEFECTO = {
   porque: 'No he sabido de qué va el negocio por lo que ha escrito, así que va con el verde y el oro de la plantilla. Cámbialo en el generador si no pega.'
 };
 
+/* ══════════ SI TE DICEN EL COLOR, SE USA EL QUE TE DICEN ══════════
+
+   La tabla de arriba adivina por el oficio. Esto es lo contrario: no
+   adivina nada, obedece. Si en "¿cómo lo quieres?" el cliente escribe
+   "en azul", la banda sale azul y se acabó la discusión.
+
+   Va ANTES que el oficio a propósito. Un color pedido no es una pista
+   sobre el negocio, es una instrucción, y no hay adivinanza que gane a
+   alguien diciéndote lo que quiere.
+
+   El fondo NO se toca nunca: la cara de la placa va clara porque encima
+   van el QR y las letras, y un QR sobre fondo oscuro no lo lee ni el
+   mejor móvil. Lo que cambia es la banda de arriba y el detalle. */
+var COLORES = [
+  { que: /\bazul(es|ado)?\b|\bmarino\b|\bceleste\b/i,            nombre: 'azul',     banda: '#17314F', acento: '#D9A441' },
+  { que: /\bverde(s)?\b|\bpistach/i,                             nombre: 'verde',    banda: '#1E3A2A', acento: '#D9A441' },
+  { que: /\brojo(s|a|as)?\b|\bencarnad/i,                        nombre: 'rojo',     banda: '#5A1420', acento: '#E8C46A' },
+  { que: /\bburdeos\b|\bgranate\b|\bvino\b/i,                    nombre: 'burdeos',  banda: '#4A1220', acento: '#C9A227' },
+  { que: /\bnegro(s|a|as)?\b/i,                                  nombre: 'negro',    banda: '#141416', acento: '#C9A227' },
+  { que: /\bnaranja(s)?\b/i,                                     nombre: 'naranja',  banda: '#3A1E08', acento: '#D97A1F' },
+  { que: /\bmorado(s|a|as)?\b|\bviolet|\blila\b|\bp[úu]rpura\b/i, nombre: 'morado',  banda: '#2C1A4A', acento: '#C9A227' },
+  { que: /\brosa(s|do|dos)?\b|\bfucsia\b/i,                       nombre: 'rosa',    banda: '#4A1430', acento: '#E7A8C4' },
+  { que: /\bmarr[óo]n(es)?\b|\bchocolate\b|\bcaf[ée]\b/i,        nombre: 'marrón',   banda: '#3A2A1C', acento: '#D9A441' },
+  { que: /\bturquesa\b|\bteal\b|\baguamarin/i,                   nombre: 'turquesa', banda: '#0F3B3A', acento: '#D9A441' },
+  { que: /\bgris(es)?\b|\bplata\b|\bplatead/i,                   nombre: 'gris',     banda: '#2A2E33', acento: '#C9C9C9' },
+  /* el dorado y el amarillo no pueden ser la banda -no hay letra blanca
+     que se lea encima- así que van de detalle sobre banda oscura */
+  { que: /\bdorado(s|a|as)?\b|\boro\b|\bamarill/i,               nombre: 'dorado',   banda: '#1A1A1C', acento: '#E8C46A' }
+];
+
+/* Lo que escribe el cliente, pero SOLO donde pide cosas: "¿cómo lo
+   quieres?" y el lema. En el nombre del negocio no se mira: "Bar Verde"
+   no significa que quiera la placa verde, significa que se llama así. */
+function colorPedido(e) {
+  var dicho = [e.notas, e.lema].filter(Boolean).join(' . ');
+  if (!dicho) return null;
+  for (var i = 0; i < COLORES.length; i++) {
+    var c = COLORES[i];
+    var m = c.que.exec(dicho);
+    if (!m) continue;
+    /* "nada de azul" o "azul no" no es pedir azul. No cubre todas las
+       formas de decir que no -ninguna lista lo hace- pero sí las dos
+       que se escriben de verdad, y el generador siempre deja cambiarlo. */
+    var antes   = dicho.slice(Math.max(0, m.index - 14), m.index).toLowerCase();
+    var despues = dicho.slice(m.index + m[0].length, m.index + m[0].length + 4).toLowerCase();
+    if (/\b(no|nada de|ni|menos|sin|excepto|salvo)\s*$/.test(antes)) continue;
+    if (/^\s*no\b/.test(despues)) continue;
+    /* se devuelve TAL Y COMO LO ESCRIBIO. Si pone "granate", el aviso
+       dice granate y no "burdeos": lo que lees tiene que ser lo que
+       leeria el cliente si abriera el correo por encima de tu hombro. */
+    return { banda: c.banda, acento: c.acento, nombre: m[0].toLowerCase() };
+  }
+  return null;
+}
+
 /* Devuelve un brief con la misma forma que el de la IA, para que el
    resto del camino no tenga que enterarse de cuál de los dos vino. */
 export function coloresPorOficio(encargo) {
@@ -337,6 +392,21 @@ export function coloresPorOficio(encargo) {
   /* ojo con el nombre: 'texto' ya es la función que limpia cadenas ahí
      arriba, y llamar así a esta variable la tapaba dentro de la función */
   var donde = [e.negocio, e.lema, e.notas, e.redes].filter(Boolean).join(' ');
+
+  /* primero, lo que haya pedido él */
+  var pedido = colorPedido(e);
+  if (pedido) {
+    return {
+      banda: pedido.banda,
+      fondo: '#F2F0EA',
+      acento: pedido.acento,
+      lema: texto(e.lema, LIMITES.lema) || '',
+      titulo: '',
+      porque: 'Lo ha pedido él: ha escrito «' + pedido.nombre + '», así que la banda va en ' +
+              pedido.nombre + '. La cara se queda clara, que encima va el QR.'
+    };
+  }
+
   var elegido = POR_DEFECTO;
   for (var i = 0; i < OFICIOS.length; i++) {
     if (OFICIOS[i].que.test(donde)) { elegido = OFICIOS[i]; break; }
