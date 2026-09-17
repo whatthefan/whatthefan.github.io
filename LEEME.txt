@@ -486,6 +486,25 @@ LAS CUATRO VARIABLES, UNA A UNA
                    correo. Te das de alta, creas una API key y la
                    copias. Es gratis para lo que tu vas a mandar.
 
+  STRIPE_SECRET_KEY  la clave SECRETA de Stripe (sk_live_...). Sin ella
+                   el boton de "Pagar" no sale y el cliente ve el Bizum
+                   a mano. Con ella, la web le pide a Stripe la pantalla
+                   de pago con el importe de verdad.
+
+                   PONLA COMO SECRETO, NO COMO VARIABLE NORMAL. En
+                   Cloudflare, al anadirla, hay un boton de "Encrypt" o
+                   un tipo "Secret": con esa clave se cobra, se devuelve
+                   dinero y se lee todo lo de tu cuenta de Stripe.
+
+                   POR QUE HIZO FALTA: antes la web mandaba al cliente a
+                   un enlace de pago con ?quantity=58 detras. Los
+                   enlaces de pago de Stripe NO leen eso: se lo saltan y
+                   cobran la cantidad por defecto del enlace, que son
+                   15. O sea que a un pedido de 115 € le decia "fianza
+                   58 €" y Stripe le cobraba 15. No se puede arreglar
+                   desde el panel de Stripe; hay que pedirle la pantalla
+                   de pago desde el servidor, y eso necesita la clave.
+
   CORREO_AVISO     donde quieres que te lleguen los avisos.
                    Ahora mismo:  hello.plea5e.es@gmail.com
 

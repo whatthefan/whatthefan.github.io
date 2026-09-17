@@ -1,3 +1,10 @@
+# LAS CLAVES DE DESARROLLO. NO SE SUBEN NUNCA.
+# wrangler lee este archivo al arrancar en local: ahi va la clave de
+# Stripe, la de Resend y la del panel para poder probar sin tocar las de
+# produccion. Si se sube, se suben las claves.
+.dev.vars
+.dev.vars.*
+
 # lo que produce el despliegue, no el codigo
 node_modules/
 .netlify/
