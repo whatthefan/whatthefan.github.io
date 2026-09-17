@@ -1070,11 +1070,14 @@ td .destaca{color:var(--oro);font-weight:700}
   display:flex;align-items:center;justify-content:center}
 .senal-paso-txt{margin:0 0 12px;font-size:.85rem;line-height:1.55;color:var(--txt-2)}
 .senal-paso-txt b{color:var(--txt)}
-.senal-datos{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 13px;align-items:baseline}
-.senal-datos dt{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-2)}
-.senal-datos dd{margin:0;font-size:.92rem;color:var(--txt)}
-.senal-datos .senal-num{font-family:'Rubik',system-ui,sans-serif;font-size:1.22rem;font-weight:700;
-  color:var(--oro);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+/* El Bizum, en un renglon. Era una tabla de tres filas con rotulos en
+   versalita; ocupaba media pantalla de movil para tres datos. */
+.senal-datos{margin:0 0 11px;font-size:.9rem;line-height:1.6;color:var(--txt-2)}
+.senal-datos b{color:var(--txt);font-weight:600}
+/* el numero sigue siendo lo mas visible del renglon: es lo unico que hay
+   que copiar a mano, y equivocarse en un digito es un Bizum perdido */
+.senal-datos .senal-num{font-family:'Rubik',system-ui,sans-serif;font-size:1.02rem;font-weight:700;
+  color:var(--oro);font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap}
 .senal-check{display:flex;align-items:center;gap:10px;cursor:pointer;
   font-size:.88rem;font-weight:600;color:var(--txt);user-select:none;-webkit-user-select:none}
 .senal-check input{width:20px;height:20px;flex:none;accent-color:var(--oro);cursor:pointer;margin:0}
