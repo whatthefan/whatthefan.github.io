@@ -1611,10 +1611,11 @@ body::after{
 .bichejo.dentro{opacity:1}
 .bichejo img{display:block;width:100%;height:100%}
 
-/* Girarse es instantáneo, como en los dibujos. Por eso el scaleX va
-   en la IMAGEN y el translate en la figura: en la misma propiedad, el
-   giro se comería el sitio. */
-.bichejo.izq img{transform:scaleX(-1)}
+/* AQUÍ ESTUVO EL scaleX(-1) QUE LA GIRABA, y era un fallo: giraba
+   también el 5 de la estrella y se leía del revés. El 5 es el sello
+   de la marca, no puede salir al revés ni medio segundo. Ahora cada
+   pose está dibujada en las dos direcciones —con el 5 bien en las
+   dos— y el guion pide el archivo que toca. */
 
 /* Y mientras está parada, respira. Va en «translate», que es una
    propiedad aparte de «transform», así que no le pisa el scaleX. */
@@ -1623,3 +1624,22 @@ body::after{
 
 @media (prefers-reduced-motion:reduce){
   .bichejo.quieta img{animation:none}}
+
+/* ── LAS PALABRAS QUE VA ENCENDIENDO ──
+   Cuando salta encima de uno de los tres pasos de la portada, ese paso
+   se queda en amarillo. No es un adorno: son las tres cosas que hace
+   el producto, están escritas en tres palabras cada una y pasaban
+   desapercibidas entre el resto. Que se enciendan de una en una,
+   según vas bajando, es lo que hace que se lean.
+
+   Y se apagan al subir, porque la clase la pone y la quita el guion
+   según DÓNDE ESTÁS, no según por dónde hayas pasado. */
+.tresp li{transition:color .3s ease}
+.tresp li.encendida b{color:var(--oro)}
+.tresp li.encendida .tresp-i{border-color:var(--oro);
+  background:rgba(233,188,70,.14);
+  box-shadow:0 0 0 4px rgba(233,188,70,.10)}
+.tresp li b,.tresp-i{transition:color .3s ease,border-color .3s ease,
+  background .3s ease,box-shadow .3s ease}
+@media (prefers-reduced-motion:reduce){
+  .tresp li,.tresp li b,.tresp-i{transition:none}}

@@ -3,7 +3,8 @@
 
 Reune lo que ya estaba suelto en tres sitios —el generador de poses, el
 de caras y el de la uve— y saca de una vez el juego entero que usa la
-pagina: ocho fotogramas de caminata y nueve poses.
+pagina: ocho fotogramas de caminata y once poses, cada una en
+las dos direcciones.
 
     python3 gen/estrellita.py
 
@@ -228,12 +229,36 @@ def brazo(hom, mano, bob):
     return f'<path class="tinta brazo" d="M{hx:.0f} {hy:.0f} Q {cx:.0f} {cy:.0f} {mx:.0f} {my:.0f}"/>'
 
 
+# El centro de la estrella. Espejar alrededor de este punto deja la
+# figura mirando al otro lado sin moverla de sitio.
+EJE = 512
+
+
 def escribe(nombre, titulo, expresion, cuerpo, retardo):
-    svg = (cabeza(titulo, retardo)
-           + cuerpo.replace('@CUERPO@', f'{ESTRELLA}\n{CINCO}\n  {expresion}')
-           + '\n</svg>\n')
-    io.open(f'{SALIDA}/{nombre}.svg', 'w', encoding='utf-8').write(svg)
-    return len(svg)
+    """Saca el dibujo en las DOS direcciones.
+
+    EL 5 NO SE ESPEJA. Esto antes lo hacía la hoja de estilos con un
+    scaleX(-1) sobre la imagen entera, y el 5 salía del revés: la
+    mascota es el sello de la marca y el 5 es el 5, no se puede leer
+    al revés ni un segundo. Así que el espejo se hace aquí, en el
+    dibujo, y dentro del espejo se le da la vuelta OTRA VEZ al 5
+    —alrededor del mismo eje— para dejarlo como estaba.
+
+    Sale el doble de archivos, treinta y cuatro. Pesan 6 KB cada uno y
+    el navegador solo se baja los que usa.
+    """
+    total = 0
+    for lado in ('', '-izq'):
+        cinco = (f'<g transform="translate({2*EJE} 0) scale(-1 1)">{CINCO}</g>'
+                 if lado else CINCO)
+        dentro = cuerpo.replace('@CUERPO@', f'{ESTRELLA}\n{cinco}\n  {expresion}')
+        if lado:
+            dentro = (f'<g transform="translate({2*EJE} 0) scale(-1 1)">\n'
+                      + dentro + '\n</g>')
+        svg = cabeza(titulo + (' (al revés)' if lado else ''), retardo) + dentro + '\n</svg>\n'
+        io.open(f'{SALIDA}/{nombre}{lado}.svg', 'w', encoding='utf-8').write(svg)
+        total += len(svg)
+    return total
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -295,6 +320,28 @@ def quieta(mi, md, gi, gd, bob=0, lean=0, piernas=None, paz=False):
         ])
 
 
+# ── SENTADA ──
+# En el borde de algo: el culo en la línea, las piernas colgando por
+# delante y una mano apoyada atrás. El cuerpo baja 150 para que lo que
+# se apoya sea la punta de abajo de la estrella y no los pies.
+COLGANDO = [
+    ('<path class="tinta pierna" d="M302 988 Q 330 1062 356 1126"/>',
+     '<use href="#zapato" transform="translate(356 1126) rotate(74)"/>'),
+    ('<path class="tinta pierna" d="M722 988 Q 694 1062 668 1126"/>',
+     '<use href="#zapato" transform="translate(668 1126) rotate(-74) scale(-1 1)"/>'),
+]
+
+# ── APOYADA ──
+# De medio lado contra algo que tiene a su derecha: el cuerpo
+# inclinado, el brazo de ese lado estirado haciendo de puntal y los
+# pies cruzados.
+CRUZADAS = [
+    ('<path class="tinta pierna" d="M302 838 Q 340 920 402 1000"/>',
+     '<use href="#zapato" transform="translate(402 1000) rotate(-8)"/>'),
+    ('<path class="tinta pierna" d="M722 838 Q 680 920 610 1004"/>',
+     '<use href="#zapato" transform="translate(610 1004) rotate(10) scale(-1 1)"/>'),
+]
+
 SALTO = [
     ('<path class="tinta pierna" d="M302 838 Q 250 900 232 946"/>',
      '<use href="#zapato" transform="translate(232 946) rotate(-24)"/>'),
@@ -341,6 +388,14 @@ POSES = {
     # de un salto, con las piernas encogidas
     'salta':   ('saltando', dict(dy=-10, escala=1.3),
                 lambda: quieta((96, 246), (928, 246), -40, 40, bob=-70, piernas=SALTO)),
+    # sentada en el borde de algo, con las piernas colgando
+    'sentada': ('sentada', dict(dy=6, escala=1.05),
+                lambda: quieta((196, 1002), (828, 1002), -22, 22,
+                               bob=150, piernas=COLGANDO)),
+    # apoyada de medio lado, con el brazo derecho de puntal
+    'apoyada': ('apoyada', dict(dx=18, dy=2, escala=1.08, parpado=0.2),
+                lambda: quieta((250, 760), (1004, 900), 34, -4,
+                               lean=-11, piernas=CRUZADAS)),
 }
 
 if __name__ == '__main__':
