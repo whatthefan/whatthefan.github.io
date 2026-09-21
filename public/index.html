@@ -536,10 +536,6 @@
 
 <!-- ============ productos ============ -->
 <section class="sec-corta astro" id="productos">
-  <!-- Su trabajo aqui: plantarse debajo de la placa mas pedida y
-       senalarla. La pista se abre con .pista-bicho en el catalogo,
-       porque la placa no es lo ultimo del apartado. -->
-  <i class="bichejo" data-pista=".catalogo" data-mira=".prod-destacado" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
   <div class="env">
     <div class="enc sube">
       <span class="etq">Qué te llevas</span>
@@ -549,7 +545,7 @@
     </div>
 
     <p class="desliza"><svg width="14" height="14" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg> Desliza para verlos</p>
-    <div class="catalogo pista-bicho">
+    <div class="catalogo">
       <article class="prod prod-destacado sube">
         <div class="foto"><span class="etiqueta">La más pedida</span>
           <img src="assets/img/53173bd05566.jpg" alt="Placa de mesa NFC de PLEA5E, 90 × 90 mm en metacrilato, con código QR para dejar reseña en Google" width="480" height="480" fetchpriority="high" decoding="async">
@@ -620,12 +616,7 @@
 </section>
 
 <!-- ============ demo ============ -->
-<section class="sec-corta astro con-bicho" id="demo">
-  <!-- Su trabajo aqui: senalar el movil mientras se escribe sola la
-       resena, y hacer el ta-chan justo cuando sale el boton de
-       publicar. El movil es lo ultimo del apartado, asi que la pista
-       es el relleno de .con-bicho. -->
-  <i class="bichejo" data-mira="#movil" data-celebra="#pBtn" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
+<section class="sec-corta astro" id="demo">
   <div class="env">
     <div class="demo">
       <div class="demo-txt sube">
@@ -660,12 +651,7 @@
 </section>
 
 <!-- ============ cómo funciona ============ -->
-<section class="sec-corta astro con-bicho" id="como">
-  <!-- Su trabajo aqui: los tres pasos, uno detras de otro. data-mira
-       coge los TRES, asi que para debajo del primero, lo senala, corre
-       al segundo, lo senala, y al tercero. Eso es lo unico que hace en
-       toda la pagina que se parezca a pasear, y va a algun sitio. -->
-  <i class="bichejo" data-mira=".pasos-fila .paso" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
+<section class="sec-corta astro" id="como">
   <div class="env">
     <div class="enc sube">
       <span class="etq">Cómo funciona</span>
@@ -2993,252 +2979,352 @@
 </script>
 
 <script>
-/* ── ESTRELLITA ENSEÑA LAS COSAS ──
+/* ── ESTRELLITA, LA PELÍCULA ──
 
-   La versión de antes corría de lado a lado según bajabas y se paraba
-   a hacer un gesto donde cayera. Movía bien, pero no iba a ningún
-   sitio: era una animación dando vueltas sola, y eso se nota.
+   No tiene sitio propio. No hay una franja reservada al final de
+   ningún apartado, que es lo que había antes y era justo lo que
+   sobraba: se le hacía un hueco y ella lo ocupaba, siempre el mismo,
+   siempre abajo.
 
-   Aquí cada una tiene UN TRABAJO. En data-mira lleva escrito QUÉ
-   tiene que enseñar: la placa más pedida, el móvil de la demo, los
-   tres pasos. Sale cuando le toca, corre hasta esa cosa y la señala.
-   Si data-mira coge varios elementos —los tres pasos— los va
-   enseñando uno detrás de otro y se queda en el último. Nada de esto
-   depende de por dónde vayas bajando, depende de dónde está la cosa.
+   Ahora se pone DONDE HAY HUECO, que no es lo mismo: encima de las
+   cinco estrellas de la portada, encima de un titular, pegada al
+   móvil. Cuatro apariciones en toda la página, y entre una y otra no
+   está: hay un mínimo de aire obligatorio entre ellas. Lo que la hace
+   asomar no es la sección, es la cosa que va a enseñar.
 
-   Tres apartados de ocho. En los otros cinco no sale, y por eso se
-   nota cuando sale.
+   Y NO SE MUEVE SOLA: LA MUEVES TÚ. Su posición sale de dónde estás
+   en la página, no de un reloj. Bajas y avanza; paras y se para;
+   SUBES Y DESANDA LO ANDADO, paso a paso y al revés. Por eso parece
+   quieta cuando lo está y viva en cuanto tocas la rueda: es una
+   película a la que le pones tú los fotogramas. El efecto ese de las
+   webs en las que algo se va montando según bajas, pero con un bicho
+   dentro.
 
-   DÓNDE SE PONE. La postura «mira» tiene el brazo levantado en
-   diagonal, o sea que señala hacia ARRIBA: se planta en la franja
-   libre que hay justo debajo de su cosa y apunta. El guante cae en el
-   0,859 del ancho del dibujo, que es 0,359 a la derecha de su centro;
-   por eso al colocarla se descuenta ese trozo, para que lo que quede
-   bajo el centro de la cosa sea LA MANO y no ella.
+   Lo único que no depende del scroll es la cara: parpadea sola, y eso
+   va dentro del propio dibujo (ver marca/estrellita/dibuja.py). Aquí
+   no hay una sola línea de reloj.
 
-   Y corre siempre a la misma velocidad, no siempre en el mismo
-   tiempo: la duración sale de la distancia. Las piernas cambian cada
-   90 ms mientras corre y se paran al llegar. */
+   Va en una capa suya por encima de la página, con
+   pointer-events:none, así que no puede robar un clic ni tapar un
+   campo. Los sitios donde para están medidos uno a uno a 390 y a 1280
+   px: en ninguno pisa una letra, un botón ni una foto.                */
 (function () {
-  var bichos = [].slice.call(document.querySelectorAll('.bichejo'));
-  if (!bichos.length || !window.IntersectionObserver) return;
+  var RUTA = 'marca/estrellita/';
 
-  var RUTA  = 'marca/estrellita/';
-  var ANDA  = ['anda-0', 'anda-2', 'anda-4', 'anda-6'];
-  var MANO  = 0.859;   /* dónde cae el guante que señala, de 0 a 1 */
-  var VELOZ = 620;     /* px por segundo */
-  var PAUSA = 1250;    /* lo que se queda enseñando cada parada */
-  var BORDE = 6;       /* no se pega del todo al canto */
+  /* ══════════════════════════════════════════════════════════════
+     EL GUION
+
+     Cada corchete de dentro es UNA APARICIÓN. Entra corriendo por un
+     lado, va parando en cada sitio de la lista, y se va por el otro.
+     Entre aparición y aparición no está.
+
+       sel    a qué se pega
+       modo   'der' e 'izq' se ponen al lado; 'encima' y 'debajo',
+              arriba o abajo del todo
+       sesgo  para 'encima' y 'debajo': por dónde del ancho, de 0
+              (izquierda) a 1 (derecha). También decide hacia dónde
+              mira: si está en la mitad derecha, mira a la izquierda
+       pose   el dibujo que hace cuando llega
+       esc    de tamaño, si ese hueco pide una más pequeña
+     ══════════════════════════════════════════════════════════════ */
+  var GUION = [
+
+    /* 1 · TE SALUDA Y TE LLEVA A LAS PLACAS.
+       Sale al lado de las tres pastillas de la portada, saludando;
+       cuando bajas se queda ahí hasta que se le va el sitio de la
+       pantalla, y entonces corre a plantarse sobre el titular de las
+       placas y lo señala. Es la única que hace dos paradas, y es a
+       propósito: es la que te lleva de la portada al producto.
+
+       AQUÍ ESTUVO DE PIE SOBRE LAS CINCO ESTRELLAS DE ARRIBA, que era
+       más bonito, y no valía: esa pastilla está a 51 px del principio
+       de la página y ahí la tapan la barra y la cinta dorada, que van
+       por encima de ella. No se la veía salir. */
+    [{ sel: '.portada .chips',     modo: 'der',    hueco: 16,   pose: 'saluda' },
+     { sel: '#productos .enc h2',  modo: 'encima', sesgo: 0.60, pose: 'abajo' }],
+
+    /* 2 · SE ASOMA AL MÓVIL.
+       Pegada al lado izquierdo del móvil de la demo, inclinada, a ver
+       qué hace. Y cuando la reseña llega a «Publicar», lo celebra. */
+    [{ sel: '#movil',              modo: 'izq',    hueco: 18, pose: 'curiosa',
+       festeja: '#pBtn',           fiesta: 'tachan', tope: 2 }],
+
+    /* 3 · SE SUBE AL PEDIDO.
+       Encima del titular, señalándolo. Y si tocas algo y el precio
+       cambia, se sorprende: el pedido es lo único de la página con lo
+       que puedes jugar tú, así que es donde tiene sentido que
+       reaccione a algo que has hecho. */
+    [{ sel: '#pedido .enc h2',     modo: 'encima', sesgo: 0.74, pose: 'abajo',
+       festeja: '#rTotal',         fiesta: 'asombro' }],
+
+    /* 4 · LA DESPEDIDA.
+       Un guiño encima de lo del seguimiento, que es lo opcional, y se
+       va. A partir de ahí la página se acaba y ella ya no sale. */
+    [{ sel: '#seguimiento h2',     modo: 'encima', sesgo: 0.70, pose: 'guino' }]
+  ];
+
+  var ANDA = ['anda-0','anda-1','anda-2','anda-3','anda-4','anda-5','anda-6','anda-7'];
+
+  /* ── CUÁNTO DURA CADA COSA, EN PÍXELES DE RUEDA ──
+     No en segundos: en píxeles. Aquí no hay relojes, el tiempo lo
+     pone tu dedo. Una aparición de dos sitios ocupa
+     300+240+300+240+260 = 1340 px de bajada, y el resto de la página
+     —que son miles— ella no está. Eso es lo que la hace aparecer y
+     desaparecer en vez de acompañarte todo el rato. */
+  var ENTRA   = 240;  /* lo que tarda en entrar corriendo            */
+  var PARADA  = 200;  /* lo que se queda quieta en cada sitio        */
+  var VIAJE   = 260;  /* lo que tarda en ir de un sitio al siguiente */
+  var SALE    = 220;  /* lo que tarda en irse                        */
+  var HUECO   = 380;  /* lo que TIENE que pasar sin ella entre una
+                         aparición y la siguiente                    */
+  var ZANCADA = 22;   /* px de avance por fotograma de pierna        */
 
   var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  ANDA.concat(['mira', 'tachan']).forEach(function (n) {
-    var i = new Image(); i.src = RUTA + n + '.svg';   /* precarga */
-  });
+  /* ── la capa y ella ── */
+  var capa = document.createElement('div');
+  capa.className = 'capa-bicho';
+  capa.setAttribute('aria-hidden', 'true');
+  var bicho = document.createElement('i');
+  bicho.className = 'bichejo';
+  var dibujo = document.createElement('img');
+  dibujo.alt = '';
+  dibujo.src = RUTA + 'saluda.svg';
+  bicho.appendChild(dibujo);
+  capa.appendChild(bicho);
+  document.body.appendChild(capa);
 
-  function pose(b, n) { b.img.setAttribute('src', RUTA + n + '.svg'); }
-  function mira(b, der) { b.classList.toggle('mirando-izq', !der); }
+  ANDA.concat(['saluda','senala','abajo','arriba','curiosa','guino','asombro','tachan'])
+      .forEach(function (n) { var i = new Image(); i.src = RUTA + n + '.svg'; });
 
-  /* ── las paradas de verdad ──
-     En el móvil los tres pasos dejan de estar en fila y se apilan. Una
-     ronda de izquierda a derecha por tres cosas que están una encima
-     de otra no enseña nada: las tres caen en el mismo sitio y las dos
-     primeras quedan a media pantalla de su franja. Cuando están
-     apiladas, la ronda se deshace y señala el bloque entero, que sí
-     tiene su borde de abajo pegado a la franja. */
-  function ruta(b) {
-    if (b.paradas.length < 2) return b.paradas;
-    var y = b.paradas[0].getBoundingClientRect().top;
-    var apiladas = b.paradas.some(function (e) {
-      return Math.abs(e.getBoundingClientRect().top - y) > 24;
-    });
-    return apiladas ? [b.paradas[0].parentElement] : b.paradas;
+  /* ── dónde se pone para cada sitio del guion ──
+     Devuelve coordenadas de PÁGINA, no de pantalla: así el número no
+     cambia al rodar la rueda y se puede comparar con el scroll. */
+  function sitio(s) {
+    var el = document.querySelector(s.sel);
+    if (!el) return null;
+    var r = el.getBoundingClientRect();
+    if (!r.width && !r.height) return null;
+
+    /* El alto base sale de la VARIABLE de CSS, no de medirla a ella:
+       medirla a ella devuelve el alto que le acaba de poner este
+       mismo guion, y con un «esc» distinto de 1 se multiplicaría otra
+       vez en cada fotograma hasta llenar la pantalla. */
+    var alto = parseFloat(getComputedStyle(document.documentElement)
+                          .getPropertyValue('--ba')) * (s.esc || 1);
+    var ancho = alto * 1.1146;
+    var g = s.hueco == null ? 8 : s.hueco;
+    var x, y, der, p = s.sesgo == null ? 0.5 : s.sesgo;
+
+    if (s.modo === 'der')         { x = r.right + g;      y = r.top + r.height / 2 - alto / 2; der = false; }
+    else if (s.modo === 'izq')    { x = r.left - ancho - g; y = r.top + r.height / 2 - alto / 2; der = true; }
+    else if (s.modo === 'debajo') { x = r.left + p * r.width - ancho / 2; y = r.bottom + g; der = p <= 0.5; }
+    else                          { x = r.left + p * r.width - ancho / 2; y = r.top - alto - g; der = p <= 0.5; }
+
+    var tope = innerWidth - ancho - 4;
+    return { x: Math.max(4, Math.min(tope, x)), y: y + scrollY,
+             alto: alto, ancho: ancho, der: der, pose: s.pose };
   }
 
-  /* ── la franja por la que corre ──
-     Justo debajo de lo que señala. El suelo se mide del hueco que se
-     reservó —el bloque con .pista-bicho, o el propio apartado cuando
-     la cosa es lo último que hay en él— y no de un número escrito a
-     mano: si mañana cambia el relleno, esto se recoloca solo. */
-  function franja(b) {
-    var rs = b.sec.getBoundingClientRect();
-    var suelo = b.pista ? b.pista.getBoundingClientRect().bottom : rs.bottom;
-    return Math.round(suelo - rs.top - b.offsetHeight - 10);
+  function mezcla(a, b, t) { return a + (b - a) * t; }
+
+  /* ── EL GUION DE UNA APARICIÓN, EN PÍXELES DE RUEDA ──
+     Devuelve los fotogramas clave: en qué punto de la bajada está en
+     qué sitio. Entre dos fotogramas se interpola, y como el punto de
+     la bajada lo pones tú, subir es exactamente lo mismo del revés.  */
+  function fotogramas(paradas) {
+    var sitios = [], d = [];
+    for (var i = 0; i < paradas.length; i++) {
+      var c = sitio(paradas[i]);
+      if (!c) return null;
+      sitios.push(c);
+      var x = Math.max(0, c.y - innerHeight * 0.55);
+      /* dos sitios no pueden pisarse: si la página cambia de ancho y
+         se juntan, se separan a la fuerza o la cuenta se divide por
+         cero y sale NaN */
+      if (i && x < d[i - 1] + PARADA + VIAJE + 40) x = d[i - 1] + PARADA + VIAJE + 40;
+      d.push(x);
+    }
+
+    var pri = sitios[0], ult = sitios[sitios.length - 1];
+    /* entra por el lado CONTRARIO al sitio, para que la carrera se
+       vea de verdad y no sean dos pasos */
+    var entraPor = pri.x + pri.ancho / 2 > innerWidth / 2 ? -pri.ancho - 24 : innerWidth + 24;
+    var k = [{ s: d[0] - ENTRA, x: entraPor, c: pri },
+             { s: d[0],          x: pri.x,   c: pri },
+             { s: d[0] + PARADA, x: pri.x,   c: pri }];
+    for (var j = 1; j < sitios.length; j++) {
+      k.push({ s: d[j] - VIAJE, x: sitios[j - 1].x, c: sitios[j - 1] });
+      k.push({ s: d[j],          x: sitios[j].x,    c: sitios[j] });
+      k.push({ s: d[j] + PARADA, x: sitios[j].x,    c: sitios[j] });
+    }
+    k.push({ s: d[d.length - 1] + PARADA + SALE,
+             x: ult.der ? innerWidth + 24 : -ult.ancho - 24, c: ult });
+    return k;
   }
 
-  /* Dónde se planta para señalar «el». Si señala con la derecha se
-     queda a la izquierda de la cosa, y al revés. */
-  function sitio(b, el, der) {
-    var rs = b.sec.getBoundingClientRect(), re = el.getBoundingClientRect();
-    var w = b.offsetWidth;
-    var centro = re.left + re.width / 2 - rs.left;
-    /* Lo que tiene que caer bajo el centro de la cosa es la MANO, no
-       ella. Mirando a la derecha el guante va en el 0,859 de su ancho;
-       mirando a la izquierda, espejo, en el 0,141. */
-    var x = centro - (der ? MANO : 1 - MANO) * w;
-    return Math.max(BORDE, Math.min(rs.width - w - BORDE, Math.round(x)));
-  }
-
-  function planta(b, x, ms) {
-    b.style.transitionDuration = (quieto ? 0 : ms) + 'ms';
-    b.style.transform = 'translateX(' + x + 'px)';
-    b.x = x;
-  }
-
-  function piernas(b, enciende) {
-    clearInterval(b.trote);
-    if (!enciende) return;
-    b.trote = setInterval(function () {
-      b.paso = (b.paso + 1) % 4;
-      pose(b, ANDA[b.paso]);
-    }, 90);
-  }
-
-  /* ── la ronda: va a su cosa, la señala, y si hay más, a la siguiente ── */
-  function vaA(b, n) {
-    clearTimeout(b.reloj);
-    if (n >= b.ronda.length) return;
-    b.n = n;
-
-    var destino = sitio(b, b.ronda[n], b.rumbo);
-    var salto = Math.abs(destino - b.x);
-    var ms = quieto ? 0
-           : Math.max(340, Math.min(1150, Math.round(salto / VELOZ * 1000)));
-
-    b.classList.remove('parada');
-    mira(b, b.rumbo);
-    if (ms) piernas(b, true);
-    planta(b, destino, ms);
-
-    b.reloj = setTimeout(function () {
-      piernas(b, false);
-      pose(b, 'mira');
-      b.classList.add('parada');
-      if (n + 1 < b.ronda.length) {
-        b.reloj = setTimeout(function () { vaA(b, n + 1); }, PAUSA);
+  /* ── QUE NO SE PISEN ──
+     Las apariciones salen de dónde están las cosas en la página, y en
+     una pantalla ancha la página se encoge y se juntan. Si dos se
+     tocan, ella no llega a irse nunca y vuelve a estar todo el rato,
+     que es justo lo que no puede pasar. Así que se les obliga a
+     dejarse HUECO px de aire: la de antes se va un poco antes y la de
+     después llega un poco más tarde, medio y medio. */
+  function separa(todas) {
+    for (var g = 1; g < todas.length; g++) {
+      var ant = todas[g - 1], hoy = todas[g];
+      if (!ant || !hoy) continue;
+      var fin = ant[ant.length - 1], ini = hoy[0];
+      if (ini.s - fin.s >= HUECO) continue;
+      var medio = (fin.s + ini.s) / 2;
+      fin.s = medio - HUECO / 2;
+      ini.s = medio + HUECO / 2;
+    }
+    /* y dentro de cada aparición, que los fotogramas sigan en orden
+       aunque los extremos se hayan movido */
+    todas.forEach(function (k) {
+      if (!k) return;
+      var a = k[0].s, b = k[k.length - 1].s;
+      for (var i = 1; i < k.length - 1; i++) {
+        k[i].s = Math.min(Math.max(k[i].s, a + i), b - (k.length - 1 - i));
       }
-    }, ms);
+    });
+    return todas;
   }
 
-  /* Entra por un lado y arranca la ronda.
-     UNA sola parada: entra por el lado CONTRARIO a la cosa, para que
-     la carrera se vea de verdad y no sean dos pasos.
-     VARIAS: entra por el lado de la primera, para que la ronda vaya en
-     orden —paso 1, paso 2, paso 3— y no del revés. */
-  function saleAEscena(b) {
-    if (b.enEscena || !b.paradas.length) return;
-    b.enEscena = true;
-    b.ronda = ruta(b);
-    b.fiestas = 0;
+  function pinta() {
+    var s = scrollY;
+    var todas = separa(GUION.map(fotogramas));
 
-    b.style.top = franja(b) + 'px';
+    for (var g = 0; g < todas.length; g++) {
+      var k = todas[g];
+      if (!k || s < k[0].s || s > k[k.length - 1].s) continue;
 
-    var rs = b.sec.getBoundingClientRect(), w = b.offsetWidth;
-    var re = b.ronda[0].getBoundingClientRect();
-    var aLaIzquierda = re.left + re.width / 2 - rs.left < rs.width / 2;
-    var desdeLaIzquierda = b.ronda.length > 1 ? aLaIzquierda : !aLaIzquierda;
+      /* cambiar de aparición borra la reacción: si no, llegaba al
+         pedido todavía con el ta-chán de la demo en la cara */
+      if (g !== tramoAhora) { tramoAhora = g; reaccion = 0; }
 
-    b.rumbo = desdeLaIzquierda;        /* true = corre hacia la derecha */
-    b.x = desdeLaIzquierda ? -w - 10 : rs.width + 10;
-    b.style.transitionDuration = '0ms';
-    b.style.transform = 'translateX(' + b.x + 'px)';
-    mira(b, b.rumbo);
-    pose(b, ANDA[0]);
-    void b.offsetWidth;                /* que el salto a la salida no se anime */
-
-    b.classList.add('dentro');
-    vaA(b, 0);
+      for (var j = 0; j < k.length - 1; j++) {
+        /* el final de cada tramo es EXCLUSIVO, salvo el último.
+           Con los dos extremos incluidos, el instante exacto en que
+           llega a un sitio caía todavía en el tramo de la carrera:
+           se plantaba en el sitio bien, pero con la pierna levantada
+           y sin hacer su gesto. Se veía justo al cargar la página. */
+        if (s < k[j].s) continue;
+        if (s >= k[j + 1].s && j < k.length - 2) continue;
+        var a = k[j], b = k[j + 1];
+        var t = b.s <= a.s ? 1 : (s - a.s) / (b.s - a.s);
+        /* Si el sistema pide menos movimiento no se desliza: salta de
+           un sitio al siguiente. Una animación atada al scroll es de
+           las que marean, así que ahí se queda en aparecer y estar. */
+        if (quieto) t = t < 0.5 ? 0 : 1;
+        var x = mezcla(a.x, b.x, t);
+        var y = mezcla(a.c.y, b.c.y, t);
+        var anda = !quieto && (Math.abs(b.x - a.x) > 2 || Math.abs(b.c.y - a.c.y) > 2);
+        /* con «t» ya redondeado a 0 o 1, la pose es la del sitio en el
+           que ha caído; si no, se quedaba en el sitio de partida pero
+           con el gesto del de llegada */
+        var cual = quieto ? (t ? b.c : a.c) : (anda ? b.c : a.c);
+        /* las piernas van al ritmo de lo ANDADO, no de un reloj: un
+           fotograma cada 22 px recorridos, así que van a la velocidad
+           a la que muevas tú la rueda */
+        var recorrido = Math.sqrt((x - a.x) * (x - a.x) +
+                                  (y - a.c.y) * (y - a.c.y)) / ZANCADA;
+        coloca(x, y, cual, anda,
+               Math.abs(b.x - a.x) > 2 ? b.x > a.x : a.c.der, recorrido);
+        enEscena = true;
+        return;
+      }
+    }
+    bicho.classList.remove('dentro', 'quieta');
+    enEscena = false;
   }
 
-  function seVa(b) {
-    if (!b.enEscena) return;
-    b.enEscena = false;
-    clearTimeout(b.reloj); clearTimeout(b.fin); piernas(b, false);
-    b.classList.remove('dentro', 'parada');
+  var enEscena = false, poseAhora = '', reaccion = 0, tramoAhora = -1;
+
+  function coloca(x, y, c, moviendo, der, avance) {
+    bicho.classList.add('dentro');
+    bicho.classList.toggle('izq', !der);
+    bicho.classList.toggle('quieta', !moviendo);
+    bicho.style.height = c.alto + 'px';
+    /* «y» ya son coordenadas de PÁGINA y la capa está clavada en el
+       origen del documento, así que va tal cual. Restarle el scroll
+       —que es lo que haría falta si la capa fuese fija— se lo resta
+       dos veces y la manda a tomar viento por arriba. */
+    bicho.style.transform = 'translate3d(' + Math.round(x) + 'px,' +
+                            Math.round(y) + 'px,0)';
+
+    var quiere;
+    if (moviendo && !quieto) {
+      quiere = ANDA[Math.floor(Math.abs(avance)) % 8];
+    } else if (reaccion > Date.now()) {
+      quiere = poseFiesta;
+    } else {
+      quiere = c.pose || 'senala';
+    }
+    if (quiere !== poseAhora) {
+      poseAhora = quiere;
+      dibujo.setAttribute('src', RUTA + quiere + '.svg');
+    }
   }
 
-  /* Al cambiar el tamaño de la ventana, y cuando el carrusel de placas
-     se desliza: si la cosa que señala se mueve, ella la sigue. */
-  function recoloca(b) {
-    var y = franja(b) + 'px';
-    b.style.top = y; b.baliza.style.top = y;
-    if (!b.enEscena || !b.ronda || !b.ronda[b.n]) return;
+  /* ── lo que hace cuando la página hace algo ──
+     Los dos sitios donde la página se mueve sola o la mueves tú: la
+     reseña que se escribe en el móvil y el precio del pedido. Cuando
+     pasa, cambia de cara un segundo y medio. No hace falta tocar nada
+     de esos dos guiones: basta con mirarlos. */
+  var poseFiesta = 'tachan';
 
-    var rs = b.sec.getBoundingClientRect();
-    var re = b.ronda[b.n].getBoundingClientRect();
-    var centro = re.left + re.width / 2 - rs.left;
-
-    /* Si deslizas el carrusel hasta llevarte la placa que estaba
-       enseñando, no se queda señalando la pared con cara de tonta: se
-       aparta. Y cuando la placa vuelve, vuelve ella. */
-    b.classList.toggle('dentro', centro > 0 && centro < rs.width);
-    planta(b, sitio(b, b.ronda[b.n], b.rumbo), 160);
+  function celebra(pose) {
+    if (!enEscena) return;
+    poseFiesta = pose;
+    reaccion = Date.now() + 1500;
+    pinta();
+    setTimeout(pinta, 1560);
   }
 
-  bichos.forEach(function (b) {
-    b.sec = b.closest('section');
-    b.img = b.firstElementChild;
-    b.pista = b.dataset.pista ? b.sec.querySelector(b.dataset.pista) : null;
-    b.paradas = [].slice.call(b.sec.querySelectorAll(b.dataset.mira));
-    b.paso = 0; b.x = 0; b.n = 0; b.enEscena = false; b.fiestas = 0;
-
-    if (!b.paradas.length) { b.remove(); return; }
-
-    /* LO QUE SE VIGILA ES LA FRANJA, NO ELLA.
-       Lo suyo sería mirar el apartado, pero el de las placas mide
-       metro y medio: cuando asoma por arriba, su sitio está todavía
-       muy por debajo del borde de abajo, y la carrera pasaría fuera de
-       pantalla. Y vigilarla a ella tampoco vale, que es lo primero que
-       se probó: para salir tiene que ponerse fuera de escena, ahí el
-       overflow:clip del apartado la recorta, el vigía la da por ida y
-       le cancela la carrera antes de empezarla. Se le cancelaba sola.
-
-       Así que se le pone una baliza del tamaño de la franja, que no se
-       mueve nunca, y se vigila esa. */
-    b.baliza = document.createElement('i');
-    b.baliza.className = 'baliza-bicho';
-    b.baliza.setAttribute('aria-hidden', 'true');
-    b.sec.appendChild(b.baliza);
-    b.style.top = b.baliza.style.top = franja(b) + 'px';
-
-    new IntersectionObserver(function (es) {
-      if (es[0].isIntersecting) saleAEscena(b); else seVa(b);
-    }, { rootMargin: '0px' }).observe(b.baliza);
-
-    /* El ta-chán del móvil: cuando la demo llega a «Publicar»,
-       celebra. No hay que tocar nada de la demo para enterarse, basta
-       con mirar si al botón le ponen la clase. */
-    var fiesta = b.dataset.celebra && document.querySelector(b.dataset.celebra);
-    if (fiesta && window.MutationObserver) {
-      /* Dos veces y se calla. La demo del móvil se repite en bucle
-         mientras la tengas delante, y una que celebra lo mismo cada
-         seis segundos deja de celebrar nada: se convierte en el
-         muñeco que hace el tonto en una esquina. Lo celebra las dos
-         primeras y luego se queda señalando. */
+  GUION.forEach(function (paradas) {
+    paradas.forEach(function (s) {
+      if (!s.festeja || !window.MutationObserver) return;
+      var el = document.querySelector(s.festeja);
+      if (!el) return;
+      var veces = 0;
       new MutationObserver(function () {
-        if (!fiesta.classList.contains('on')) return;
-        if (!b.classList.contains('parada') || b.fiestas >= 2) return;
-        b.fiestas++;
-        pose(b, 'tachan');
-        clearTimeout(b.fin);
-        b.fin = setTimeout(function () {
-          if (b.classList.contains('parada')) pose(b, 'mira');
-        }, 1400);
-      }).observe(fiesta, { attributes: true, attributeFilter: ['class'] });
-    }
-
-    if (b.pista) {
-      b.pista.addEventListener('scroll', function () { recoloca(b); },
-                               { passive: true });
-    }
+        /* La demo del móvil se repite en bucle: ahí hay tope, porque
+           celebrar lo mismo cada seis segundos deja de ser celebrar.
+           El precio del pedido no lleva tope: eso lo cambias tú, y a
+           lo que haces tú se contesta siempre. */
+        if (!bicho.classList.contains('quieta')) return;
+        if (s.tope && ++veces > s.tope) return;
+        celebra(s.fiesta || 'tachan');
+      }).observe(el, { attributes: true, attributeFilter: ['class'],
+                       childList: true, characterData: true, subtree: true });
+    });
   });
 
-  function todas() { bichos.forEach(function (b) { if (b.sec) recoloca(b); }); }
-  var espera;
-  addEventListener('resize', function () {
-    clearTimeout(espera); espera = setTimeout(todas, 120);
-  });
-  addEventListener('load', todas);
+  /* ── la rueda ── */
+  var pendiente = false;
+  function alScroll() {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(function () { pendiente = false; pinta(); });
+  }
+  addEventListener('scroll', alScroll, { passive: true });
+  addEventListener('resize', alScroll);
+  addEventListener('load', alScroll);
+
+  /* Y CUANDO LA PÁGINA CAMBIE DE FORMA, NO SOLO AL RODAR LA RUEDA.
+     Las medidas de dónde va salen de dónde están las cosas, y las
+     cosas se mueven después de cargar: las tipografías acaban de
+     llegar y el texto se recoloca, las fotos ocupan su sitio, el
+     contador y el ticket del pedido cambian de alto. Colocándola solo
+     al cargar se quedaba con las medidas de antes de todo eso y
+     acababa encima de una pastilla que, cuando se midió, terminaba
+     150 px más a la izquierda. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alScroll);
+  if (window.ResizeObserver) new ResizeObserver(alScroll).observe(document.body);
+
+  alScroll();
 })();
 </script>
 
