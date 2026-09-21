@@ -535,8 +535,11 @@
 </section>
 
 <!-- ============ productos ============ -->
-<section class="sec-corta astro con-bicho" id="productos">
-  <i class="bichejo" data-pose="senala" data-rumbo="der" aria-hidden="true"><img src="marca/estrellita/senala.svg" alt=""></i>
+<section class="sec-corta astro" id="productos">
+  <!-- Su trabajo aqui: plantarse debajo de la placa mas pedida y
+       senalarla. La pista se abre con .pista-bicho en el catalogo,
+       porque la placa no es lo ultimo del apartado. -->
+  <i class="bichejo" data-pista=".catalogo" data-mira=".prod-destacado" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
   <div class="env">
     <div class="enc sube">
       <span class="etq">Qué te llevas</span>
@@ -546,7 +549,7 @@
     </div>
 
     <p class="desliza"><svg width="14" height="14" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg> Desliza para verlos</p>
-    <div class="catalogo">
+    <div class="catalogo pista-bicho">
       <article class="prod prod-destacado sube">
         <div class="foto"><span class="etiqueta">La más pedida</span>
           <img src="assets/img/53173bd05566.jpg" alt="Placa de mesa NFC de PLEA5E, 100 × 100 mm en metacrilato, con código QR para dejar reseña en Google" width="480" height="480" fetchpriority="high" decoding="async">
@@ -618,7 +621,11 @@
 
 <!-- ============ demo ============ -->
 <section class="sec-corta astro con-bicho" id="demo">
-  <i class="bichejo" data-pose="tachan" data-rumbo="izq" aria-hidden="true"><img src="marca/estrellita/tachan.svg" alt=""></i>
+  <!-- Su trabajo aqui: senalar el movil mientras se escribe sola la
+       resena, y hacer el ta-chan justo cuando sale el boton de
+       publicar. El movil es lo ultimo del apartado, asi que la pista
+       es el relleno de .con-bicho. -->
+  <i class="bichejo" data-mira="#movil" data-celebra="#pBtn" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
   <div class="env">
     <div class="demo">
       <div class="demo-txt sube">
@@ -654,7 +661,11 @@
 
 <!-- ============ cómo funciona ============ -->
 <section class="sec-corta astro con-bicho" id="como">
-  <i class="bichejo" data-pose="mira" data-rumbo="der" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
+  <!-- Su trabajo aqui: los tres pasos, uno detras de otro. data-mira
+       coge los TRES, asi que para debajo del primero, lo senala, corre
+       al segundo, lo senala, y al tercero. Eso es lo unico que hace en
+       toda la pagina que se parezca a pasear, y va a algun sitio. -->
+  <i class="bichejo" data-mira=".pasos-fila .paso" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
   <div class="env">
     <div class="enc sube">
       <span class="etq">Cómo funciona</span>
@@ -672,8 +683,7 @@
 </section>
 
 <!-- ============ pedido ============ -->
-<section class="sec-corta astro con-bicho" id="pedido">
-  <i class="bichejo" data-pose="guino" data-rumbo="izq" aria-hidden="true"><img src="marca/estrellita/guino.svg" alt=""></i>
+<section class="sec-corta astro" id="pedido">
   <div class="env">
     <div class="enc sube">
       <span class="etq">Tu pedido</span>
@@ -898,8 +908,7 @@
      Y una cosa que NO se puede prometer aquí: cuántas reseñas se
      escriben. Se cuenta cuánta gente acerca el móvil, que no es lo
      mismo. Google no dice quién escribió.                             -->
-<section class="sec-corta astro con-bicho" id="seguimiento">
-  <i class="bichejo" data-pose="salta" data-rumbo="der" aria-hidden="true"><img src="marca/estrellita/salta.svg" alt=""></i>
+<section class="sec-corta astro" id="seguimiento">
   <div class="env">
     <div class="serv-cab">
       <div class="enc sube">
@@ -2984,110 +2993,252 @@
 </script>
 
 <script>
-/* ── ESTRELLITA CORRE POR CADA APARTADO ──
+/* ── ESTRELLITA ENSEÑA LAS COSAS ──
 
-   Va DENTRO del documento, no pegada a la pantalla: es un elemento
-   absoluto dentro de cada <section>, abajo del todo, así que sube y
-   baja con la página como cualquier otra cosa. Antes iba en
-   position:fixed y se quedaba flotando en un lado de la pantalla, que
-   es justo lo que no queríamos.
+   La versión de antes corría de lado a lado según bajabas y se paraba
+   a hacer un gesto donde cayera. Movía bien, pero no iba a ningún
+   sitio: era una animación dando vueltas sola, y eso se nota.
 
-   Y no se limita a estar: CORRE de un lado a otro según avanzas. Su
-   posición sale del recorrido de la sección por la pantalla, así que
-   anda a la velocidad a la que tú bajas. Si paras, se para y se queda
-   haciendo su gesto. Eso es lo que la hace parecer viva en vez de una
-   animación dando vueltas sola.
+   Aquí cada una tiene UN TRABAJO. En data-mira lleva escrito QUÉ
+   tiene que enseñar: la placa más pedida, el móvil de la demo, los
+   tres pasos. Sale cuando le toca, corre hasta esa cosa y la señala.
+   Si data-mira coge varios elementos —los tres pasos— los va
+   enseñando uno detrás de otro y se queda en el último. Nada de esto
+   depende de por dónde vayas bajando, depende de dónde está la cosa.
 
-   Los fotogramas cambian cada 16 px RECORRIDOS, no cada X
-   milisegundos: por eso las piernas van al ritmo del avance y no
-   patina.
+   Tres apartados de ocho. En los otros cinco no sale, y por eso se
+   nota cuando sale.
 
-   El sitio se lo hace la clase .con-bicho, que le añade a la sección
-   el alto de la figura como relleno de abajo. Sin eso se metería
-   encima del último párrafo, porque abajo solo quedan entre 10 y 36
-   px libres (medido). */
+   DÓNDE SE PONE. La postura «mira» tiene el brazo levantado en
+   diagonal, o sea que señala hacia ARRIBA: se planta en la franja
+   libre que hay justo debajo de su cosa y apunta. El guante cae en el
+   0,859 del ancho del dibujo, que es 0,359 a la derecha de su centro;
+   por eso al colocarla se descuenta ese trozo, para que lo que quede
+   bajo el centro de la cosa sea LA MANO y no ella.
+
+   Y corre siempre a la misma velocidad, no siempre en el mismo
+   tiempo: la duración sale de la distancia. Las piernas cambian cada
+   90 ms mientras corre y se paran al llegar. */
 (function () {
   var bichos = [].slice.call(document.querySelectorAll('.bichejo'));
   if (!bichos.length || !window.IntersectionObserver) return;
 
-  var ANDA = ['anda-0', 'anda-2', 'anda-4', 'anda-6'];
-  ANDA.forEach(function (n) {          /* precarga: el primer paseo */
-    var i = new Image(); i.src = 'marca/estrellita/' + n + '.svg';
+  var RUTA  = 'marca/estrellita/';
+  var ANDA  = ['anda-0', 'anda-2', 'anda-4', 'anda-6'];
+  var MANO  = 0.859;   /* dónde cae el guante que señala, de 0 a 1 */
+  var VELOZ = 620;     /* px por segundo */
+  var PAUSA = 1250;    /* lo que se queda enseñando cada parada */
+  var BORDE = 6;       /* no se pega del todo al canto */
+
+  var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  ANDA.concat(['mira', 'tachan']).forEach(function (n) {
+    var i = new Image(); i.src = RUTA + n + '.svg';   /* precarga */
   });
+
+  function pose(b, n) { b.img.setAttribute('src', RUTA + n + '.svg'); }
+  function mira(b, der) { b.classList.toggle('mirando-izq', !der); }
+
+  /* ── las paradas de verdad ──
+     En el móvil los tres pasos dejan de estar en fila y se apilan. Una
+     ronda de izquierda a derecha por tres cosas que están una encima
+     de otra no enseña nada: las tres caen en el mismo sitio y las dos
+     primeras quedan a media pantalla de su franja. Cuando están
+     apiladas, la ronda se deshace y señala el bloque entero, que sí
+     tiene su borde de abajo pegado a la franja. */
+  function ruta(b) {
+    if (b.paradas.length < 2) return b.paradas;
+    var y = b.paradas[0].getBoundingClientRect().top;
+    var apiladas = b.paradas.some(function (e) {
+      return Math.abs(e.getBoundingClientRect().top - y) > 24;
+    });
+    return apiladas ? [b.paradas[0].parentElement] : b.paradas;
+  }
+
+  /* ── la franja por la que corre ──
+     Justo debajo de lo que señala. El suelo se mide del hueco que se
+     reservó —el bloque con .pista-bicho, o el propio apartado cuando
+     la cosa es lo último que hay en él— y no de un número escrito a
+     mano: si mañana cambia el relleno, esto se recoloca solo. */
+  function franja(b) {
+    var rs = b.sec.getBoundingClientRect();
+    var suelo = b.pista ? b.pista.getBoundingClientRect().bottom : rs.bottom;
+    return Math.round(suelo - rs.top - b.offsetHeight - 10);
+  }
+
+  /* Dónde se planta para señalar «el». Si señala con la derecha se
+     queda a la izquierda de la cosa, y al revés. */
+  function sitio(b, el, der) {
+    var rs = b.sec.getBoundingClientRect(), re = el.getBoundingClientRect();
+    var w = b.offsetWidth;
+    var centro = re.left + re.width / 2 - rs.left;
+    /* Lo que tiene que caer bajo el centro de la cosa es la MANO, no
+       ella. Mirando a la derecha el guante va en el 0,859 de su ancho;
+       mirando a la izquierda, espejo, en el 0,141. */
+    var x = centro - (der ? MANO : 1 - MANO) * w;
+    return Math.max(BORDE, Math.min(rs.width - w - BORDE, Math.round(x)));
+  }
+
+  function planta(b, x, ms) {
+    b.style.transitionDuration = (quieto ? 0 : ms) + 'ms';
+    b.style.transform = 'translateX(' + x + 'px)';
+    b.x = x;
+  }
+
+  function piernas(b, enciende) {
+    clearInterval(b.trote);
+    if (!enciende) return;
+    b.trote = setInterval(function () {
+      b.paso = (b.paso + 1) % 4;
+      pose(b, ANDA[b.paso]);
+    }, 90);
+  }
+
+  /* ── la ronda: va a su cosa, la señala, y si hay más, a la siguiente ── */
+  function vaA(b, n) {
+    clearTimeout(b.reloj);
+    if (n >= b.ronda.length) return;
+    b.n = n;
+
+    var destino = sitio(b, b.ronda[n], b.rumbo);
+    var salto = Math.abs(destino - b.x);
+    var ms = quieto ? 0
+           : Math.max(340, Math.min(1150, Math.round(salto / VELOZ * 1000)));
+
+    b.classList.remove('parada');
+    mira(b, b.rumbo);
+    if (ms) piernas(b, true);
+    planta(b, destino, ms);
+
+    b.reloj = setTimeout(function () {
+      piernas(b, false);
+      pose(b, 'mira');
+      b.classList.add('parada');
+      if (n + 1 < b.ronda.length) {
+        b.reloj = setTimeout(function () { vaA(b, n + 1); }, PAUSA);
+      }
+    }, ms);
+  }
+
+  /* Entra por un lado y arranca la ronda.
+     UNA sola parada: entra por el lado CONTRARIO a la cosa, para que
+     la carrera se vea de verdad y no sean dos pasos.
+     VARIAS: entra por el lado de la primera, para que la ronda vaya en
+     orden —paso 1, paso 2, paso 3— y no del revés. */
+  function saleAEscena(b) {
+    if (b.enEscena || !b.paradas.length) return;
+    b.enEscena = true;
+    b.ronda = ruta(b);
+    b.fiestas = 0;
+
+    b.style.top = franja(b) + 'px';
+
+    var rs = b.sec.getBoundingClientRect(), w = b.offsetWidth;
+    var re = b.ronda[0].getBoundingClientRect();
+    var aLaIzquierda = re.left + re.width / 2 - rs.left < rs.width / 2;
+    var desdeLaIzquierda = b.ronda.length > 1 ? aLaIzquierda : !aLaIzquierda;
+
+    b.rumbo = desdeLaIzquierda;        /* true = corre hacia la derecha */
+    b.x = desdeLaIzquierda ? -w - 10 : rs.width + 10;
+    b.style.transitionDuration = '0ms';
+    b.style.transform = 'translateX(' + b.x + 'px)';
+    mira(b, b.rumbo);
+    pose(b, ANDA[0]);
+    void b.offsetWidth;                /* que el salto a la salida no se anime */
+
+    b.classList.add('dentro');
+    vaA(b, 0);
+  }
+
+  function seVa(b) {
+    if (!b.enEscena) return;
+    b.enEscena = false;
+    clearTimeout(b.reloj); clearTimeout(b.fin); piernas(b, false);
+    b.classList.remove('dentro', 'parada');
+  }
+
+  /* Al cambiar el tamaño de la ventana, y cuando el carrusel de placas
+     se desliza: si la cosa que señala se mueve, ella la sigue. */
+  function recoloca(b) {
+    var y = franja(b) + 'px';
+    b.style.top = y; b.baliza.style.top = y;
+    if (!b.enEscena || !b.ronda || !b.ronda[b.n]) return;
+
+    var rs = b.sec.getBoundingClientRect();
+    var re = b.ronda[b.n].getBoundingClientRect();
+    var centro = re.left + re.width / 2 - rs.left;
+
+    /* Si deslizas el carrusel hasta llevarte la placa que estaba
+       enseñando, no se queda señalando la pared con cara de tonta: se
+       aparta. Y cuando la placa vuelve, vuelve ella. */
+    b.classList.toggle('dentro', centro > 0 && centro < rs.width);
+    planta(b, sitio(b, b.ronda[b.n], b.rumbo), 160);
+  }
 
   bichos.forEach(function (b) {
-    b.sec = b.parentElement;
+    b.sec = b.closest('section');
     b.img = b.firstElementChild;
-    b.paso = 0; b.antes = null; b.reloj = null;
+    b.pista = b.dataset.pista ? b.sec.querySelector(b.dataset.pista) : null;
+    b.paradas = [].slice.call(b.sec.querySelectorAll(b.dataset.mira));
+    b.paso = 0; b.x = 0; b.n = 0; b.enEscena = false; b.fiestas = 0;
+
+    if (!b.paradas.length) { b.remove(); return; }
+
+    /* LO QUE SE VIGILA ES LA FRANJA, NO ELLA.
+       Lo suyo sería mirar el apartado, pero el de las placas mide
+       metro y medio: cuando asoma por arriba, su sitio está todavía
+       muy por debajo del borde de abajo, y la carrera pasaría fuera de
+       pantalla. Y vigilarla a ella tampoco vale, que es lo primero que
+       se probó: para salir tiene que ponerse fuera de escena, ahí el
+       overflow:clip del apartado la recorta, el vigía la da por ida y
+       le cancela la carrera antes de empezarla. Se le cancelaba sola.
+
+       Así que se le pone una baliza del tamaño de la franja, que no se
+       mueve nunca, y se vigila esa. */
+    b.baliza = document.createElement('i');
+    b.baliza.className = 'baliza-bicho';
+    b.baliza.setAttribute('aria-hidden', 'true');
+    b.sec.appendChild(b.baliza);
+    b.style.top = b.baliza.style.top = franja(b) + 'px';
+
+    new IntersectionObserver(function (es) {
+      if (es[0].isIntersecting) saleAEscena(b); else seVa(b);
+    }, { rootMargin: '0px' }).observe(b.baliza);
+
+    /* El ta-chán del móvil: cuando la demo llega a «Publicar»,
+       celebra. No hay que tocar nada de la demo para enterarse, basta
+       con mirar si al botón le ponen la clase. */
+    var fiesta = b.dataset.celebra && document.querySelector(b.dataset.celebra);
+    if (fiesta && window.MutationObserver) {
+      /* Dos veces y se calla. La demo del móvil se repite en bucle
+         mientras la tengas delante, y una que celebra lo mismo cada
+         seis segundos deja de celebrar nada: se convierte en el
+         muñeco que hace el tonto en una esquina. Lo celebra las dos
+         primeras y luego se queda señalando. */
+      new MutationObserver(function () {
+        if (!fiesta.classList.contains('on')) return;
+        if (!b.classList.contains('parada') || b.fiestas >= 2) return;
+        b.fiestas++;
+        pose(b, 'tachan');
+        clearTimeout(b.fin);
+        b.fin = setTimeout(function () {
+          if (b.classList.contains('parada')) pose(b, 'mira');
+        }, 1400);
+      }).observe(fiesta, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    if (b.pista) {
+      b.pista.addEventListener('scroll', function () { recoloca(b); },
+                               { passive: true });
+    }
   });
 
-  var vivos = [], pendiente = false;
-
-  /* Esto tiene que ser una FUNCION y no un setTimeout suelto dentro
-     del bucle: alli «b» se declara con var, que es una sola variable
-     reutilizada en cada vuelta, asi que al saltar el temporizador «b»
-     ya apuntaba al ultimo bicho del bucle y el gesto se lo llevaba
-     otro. Pasandolo como parametro, cada llamada tiene el suyo. */
-  function paraYGesticula(b) {
-    clearTimeout(b.reloj);
-    b.reloj = setTimeout(function () {
-      b.img.setAttribute('src', 'marca/estrellita/' + b.dataset.pose + '.svg');
-    }, 190);
-  }
-
-  function pinta() {
-    for (var i = 0; i < vivos.length; i++) {
-      var b = vivos[i], r = b.sec.getBoundingClientRect();
-      var w = b.offsetWidth, ancho = r.width - w;
-      if (ancho <= 0) continue;
-
-      /* recorrido de la seccion por la pantalla, de 0 a 1 */
-      var p = (innerHeight - r.top) / (innerHeight + r.height);
-      p = p < 0 ? 0 : (p > 1 ? 1 : p);
-      var x = (b.dataset.rumbo === 'der' ? p : 1 - p) * ancho;
-
-      /* Un fotograma cada 16 px ANDADOS, no cada X milisegundos: por
-         eso las piernas van al ritmo del avance y no patina. */
-      if (b.antes === null) {
-        b.antes = x;
-      } else if (Math.abs(x - b.antes) > 16) {
-        b.paso++;
-        b.img.setAttribute('src', 'marca/estrellita/' + ANDA[b.paso % 4] + '.svg');
-        b.antes = x;
-        /* Y cuando dejas de bajar, para y hace su gesto. Con
-           temporizador, no contando vueltas del bucle: el bucle solo
-           corre mientras hay scroll, asi que al parar dejaria de
-           contar y no llegaria nunca al gesto. */
-        paraYGesticula(b);
-      }
-
-      /* mira hacia donde anda */
-      b.style.transform = 'translateX(' + x + 'px)' +
-                          (b.dataset.rumbo === 'izq' ? ' scaleX(-1)' : '');
-    }
-  }
-
-  function alScroll() {
-    if (pendiente) return;
-    pendiente = true;
-    requestAnimationFrame(function () { pendiente = false; pinta(); });
-  }
-
-  var ojo = new IntersectionObserver(function (es) {
-    for (var i = 0; i < es.length; i++) {
-      var b = es[i].target;
-      b.classList.toggle('dentro', es[i].isIntersecting);
-      var n = vivos.indexOf(b);
-      if (es[i].isIntersecting && n < 0) vivos.push(b);
-      if (!es[i].isIntersecting && n >= 0) { vivos.splice(n, 1); b.antes = null; }
-    }
-    alScroll();
-  }, { threshold: 0 });
-
-  bichos.forEach(function (b) { ojo.observe(b); });
-  addEventListener('scroll', alScroll, { passive: true });
-  addEventListener('resize', alScroll);
-  alScroll();
+  function todas() { bichos.forEach(function (b) { if (b.sec) recoloca(b); }); }
+  var espera;
+  addEventListener('resize', function () {
+    clearTimeout(espera); espera = setTimeout(todas, 120);
+  });
+  addEventListener('load', todas);
 })();
 </script>
 

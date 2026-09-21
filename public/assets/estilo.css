@@ -1573,36 +1573,66 @@ body::after{
   font-weight:700; color:var(--txt); font-size:.95rem}
 
 
-/* ══════════ ESTRELLITA CORRE POR CADA APARTADO ══════════
+/* ══════════ ESTRELLITA ENSEÑA LAS COSAS ══════════
 
-   Va DENTRO de la sección, no pegada a la pantalla: position:absolute
-   contra la propia sección, abajo del todo. Sube y baja con la página
-   como cualquier otro elemento. La versión anterior iba en
-   position:fixed y se quedaba flotando en un lado, que era justo lo
-   que no se quería.
+   NO ANDA POR ANDAR. Antes había una en cada apartado y corría de
+   lado a lado según bajabas, sin ir a ningún sitio: parecía una
+   animación dando vueltas sola. Ahora cada una tiene UN TRABAJO —una
+   cosa concreta de la página que explicar— y todo lo que hace es ir a
+   esa cosa y señalarla.
 
-   EL SITIO SE LO HACE .con-bicho. Al final de cada sección solo
-   quedaban entre 10 y 36 px libres —medido en móvil y en portátil—,
-   así que sin añadirle relleno abajo se metería encima del último
-   párrafo. Esos 8 px de más son el respiro entre sus pies y el borde.
+   Son tres, no cinco. Sale en la placa más pedida, en el móvil de la
+   demo y en los tres pasos. En el resto de apartados no sale, que es
+   lo que la hace que se note cuando sale.
+
+   LA PISTA. Corre por una franja libre justo DEBAJO de aquello que
+   señala, para que señalar hacia arriba caiga encima de la cosa. Esa
+   franja no existe sola: se reserva con relleno. Si lo que explica es
+   lo último del apartado vale el relleno del propio apartado
+   (.con-bicho); si está en medio, se le pone .pista-bicho al bloque
+   que lo contiene y el hueco se abre ahí.
 
    Va en z-index 0, por debajo del z-index 1 que ya tiene
    «.astro > .env», y con pointer-events:none. No puede tapar un texto
-   ni robar un clic. Y el overflow:clip de .astro la recorta sola si
-   alguna vez se pasa de largo. */
-.con-bicho{--ba:74px;
-  padding-bottom:calc(clamp(26px,2.8vw,36px) + var(--ba) + 8px)}
-@media (min-width:1100px){.con-bicho{--ba:92px}}
+   ni robar un clic. Y el overflow:clip de .astro la recorta sola
+   mientras está fuera de escena esperando su turno. */
+:root{--ba:74px}
+@media (min-width:1100px){:root{--ba:92px}}
 
+.con-bicho{padding-bottom:calc(clamp(26px,2.8vw,36px) + var(--ba) + 8px)}
+.pista-bicho{padding-bottom:calc(var(--ba) + 32px)}
+
+/* El guion le pone «top» (la franja) y «transform» (dónde está en
+   ella). La duración de la carrera también la pone el guion, según lo
+   lejos que esté: así siempre corre a la misma velocidad en vez de
+   tardar lo mismo para dos metros que para veinte. */
 .bichejo{
-  position:absolute;left:0;bottom:calc(clamp(26px,2.8vw,36px) - 6px);
+  position:absolute;left:0;top:0;
   z-index:0;height:var(--ba);width:calc(var(--ba) * 1.1146);
   pointer-events:none;user-select:none;
-  opacity:0;transition:opacity .45s ease}
-.bichejo.dentro{opacity:.95}
+  opacity:0;transition:opacity .4s ease,transform .8s cubic-bezier(.22,.62,.3,1)}
+.bichejo.dentro{opacity:.96}
 .bichejo img{display:block;width:100%;height:100%}
 
-/* Si el sistema pide menos movimiento se queda quieta en su sitio,
-   sin correr: el guion sigue colocándola, pero sin transición. */
+/* La baliza: una tira invisible del alto de la franja, quieta, que es
+   lo que se vigila para saber cuándo le toca salir. La pone el guion.
+   No se ve, no se toca y no ocupa: va absoluta como ella. */
+.baliza-bicho{position:absolute;left:0;right:0;height:var(--ba);
+  z-index:-1;opacity:0;pointer-events:none}
+
+/* La vuelta para mirar es instantánea, como en los dibujos. Por eso
+   el scaleX va en la IMAGEN y el translateX en la figura: si
+   estuvieran los dos en la misma propiedad, la transición de la
+   carrera aplastaría el bicho al girarse. */
+.bichejo.mirando-izq img{transform:scaleX(-1)}
+
+/* Y mientras señala, respira. Va en «translate», que es una propiedad
+   aparte de «transform», así que no le pisa el scaleX de arriba. */
+@keyframes bichoRespira{0%,100%{translate:0 0}50%{translate:0 -4px}}
+.bichejo.parada img{animation:bichoRespira 2.8s ease-in-out infinite}
+
+/* Si el sistema pide menos movimiento no corre: aparece ya puesta
+   donde le toca, señalando. */
 @media (prefers-reduced-motion:reduce){
-  .bichejo{transition:none}}
+  .bichejo{transition:opacity .4s ease}
+  .bichejo.parada img{animation:none}}
