@@ -1598,7 +1598,7 @@ body::after{
    detrás de lo que esconderse.
 
    El parpadeo NO está aquí: va dentro de cada SVG, que se anima solo
-   aunque se cargue como imagen. Ver marca/estrellita/dibuja.py. */
+   aunque se cargue como imagen. Ver gen/estrellita.py. */
 :root{--ba:66px}
 @media (min-width:900px){:root{--ba:92px}}
 

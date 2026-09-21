@@ -26,8 +26,8 @@
      un comentario de CSS— se lee como etiqueta y parte el archivo.
      Por eso esta explicacion esta aqui arriba y no ahi abajo.
 
-     NO SE EDITA A MANO. Sale de dibuja.py; si hay que cambiar algo se
-     cambia alli y se sacan las diecisiete de golpe.                   -->
+     NO SE EDITA A MANO. Sale de gen/estrellita.py; si hay que cambiar
+     algo se cambia alli y se sacan las diecisiete de golpe.                   -->
 
 <defs>
   <style>
