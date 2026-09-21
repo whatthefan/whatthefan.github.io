@@ -302,7 +302,7 @@ def fotograma(p):
     ])
 
 
-def quieta(mi, md, gi, gd, bob=0, lean=0, piernas=None, paz=False):
+def quieta(mi, md, gi, gd, bob=0, lean=0, piernas=None, paz=False, lleva=''):
     """Una pose de pie: se dan las dos manos y el giro de cada guante."""
     pz = piernas or [
         (pierna(CAD_I, (288, SUELO), bob), f'<use href="#zapato" transform="translate(288 {SUELO})"/>'),
@@ -315,6 +315,7 @@ def quieta(mi, md, gi, gd, bob=0, lean=0, piernas=None, paz=False):
         [p[0] for p in pz] + [p[1] for p in pz] + [
             brazo(HOM_I, mi, bob), brazo(HOM_D, md, bob),
             f'<g transform="translate(0 {bob}) rotate({lean} 512 600)">@CUERPO@</g>',
+            lleva,   # lo que tenga en las manos, entre el cuerpo y los guantes
             f'<use href="#guante" transform="translate({mi[0]} {mi[1]}) rotate({gi})"/>',
             f'<use href="#{mano_d}" transform="translate({md[0]} {md[1]}) rotate({giro}){esp}"/>',
         ])
@@ -341,6 +342,26 @@ CRUZADAS = [
     ('<path class="tinta pierna" d="M722 838 Q 680 920 610 1004"/>',
      '<use href="#zapato" transform="translate(610 1004) rotate(10) scale(-1 1)"/>'),
 ]
+
+# ── LA LIBRETA Y EL LÁPIZ ──
+# Va delante del cuerpo y detrás de los guantes, para que se vea que
+# la agarra. Las anillas de arriba son cuatro trazos, igual que los
+# pliegues del guante: el mismo dibujo de siempre, sin sombras ni
+# degradados que aquí cantarían.
+LIBRETA = '''<g transform="translate(360 536) rotate(-7)">
+  <rect class="borde" x="0" y="0" width="300" height="244" rx="18" fill="#F7F4EC"/>
+  <g stroke="#0A0E16" stroke-width="15" stroke-linecap="round" opacity="0.5">
+    <path d="M46 84 H254"/><path d="M46 142 H254"/><path d="M46 200 H196"/>
+  </g>
+  <g class="tinta" stroke-width="15">
+    <path d="M44 -10 V30"/><path d="M116 -10 V30"/><path d="M188 -10 V30"/><path d="M260 -10 V30"/>
+  </g>
+</g>'''
+
+LAPIZ = '''<g transform="translate(742 596) rotate(34)">
+  <rect class="borde" x="-17" y="-152" width="34" height="176" rx="8" fill="#0A0E16"/>
+  <path class="borde" fill="#F2EFE6" d="M-17 24 L0 62 L17 24 Z"/>
+</g>'''
 
 SALTO = [
     ('<path class="tinta pierna" d="M302 838 Q 250 900 232 946"/>',
@@ -388,6 +409,10 @@ POSES = {
     # de un salto, con las piernas encogidas
     'salta':   ('saltando', dict(dy=-10, escala=1.3),
                 lambda: quieta((96, 246), (928, 246), -40, 40, bob=-70, piernas=SALTO)),
+    # tomando nota en la libreta: la de apuntarte el pedido
+    'apunta':  ('tomando nota', dict(dx=6, dy=18, escala=1.0, parpado=0.24),
+                lambda: quieta((342, 712), (742, 596), 26, -46,
+                               lleva=LIBRETA + LAPIZ)),
     # sentada en el borde de algo, con las piernas colgando
     'sentada': ('sentada', dict(dy=6, escala=1.05),
                 lambda: quieta((196, 1002), (828, 1002), -22, 22,

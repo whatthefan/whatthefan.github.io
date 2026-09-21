@@ -100,6 +100,7 @@
   <circle cx="639" cy="234" r="11" fill="#F7F4EC"/>
   </g>
   <g class="ojo-cierra"><path d="M 532 224 Q 588 270 644 224" fill="none" stroke="#0A0E16" stroke-width="24" stroke-linecap="round"/></g></g>
+
 <use href="#guante" transform="translate(6 612) rotate(14)"/>
 <use href="#guante" transform="translate(1064 452) rotate(-4) scale(-1 1)"/>
 </svg>

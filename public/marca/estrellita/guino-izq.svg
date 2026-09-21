@@ -97,6 +97,7 @@
   </g>
   <g class="ojo-cierra"><path d="M 382 232 Q 438 278 494 232" fill="none" stroke="#0A0E16" stroke-width="24" stroke-linecap="round"/></g>
   <path d="M 532 224 Q 588 270 644 224" fill="none" stroke="#0A0E16" stroke-width="24" stroke-linecap="round"/></g>
+
 <use href="#guante" transform="translate(72 176) rotate(-46)"/>
 <use href="#guante-paz" transform="translate(952 152) rotate(9)"/>
 </g>

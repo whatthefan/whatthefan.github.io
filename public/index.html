@@ -3034,13 +3034,17 @@
        mide 48, así que el texto de arriba la partía por la mitad y
        solo se le veían los pies. */
     [{ saltos: '.portada .tresp li', modo: 'debajo', hueco: 3,
-       esc: 0.56, pose: 'arriba',
+       esc: 0.56, pose: 'arriba', poseApilado: 'abajo',
        /* En el móvil los tres pasos se apilan y «debajo» de uno cae
           encima del siguiente, y separada a la derecha se queda
           suelta en medio de la nada. Pegada al paso, señalándolo, se
           ve de quién habla. Encima no cabe: los pasos apilados van a
           31 px uno de otro y ella mide 40. */
-       apilado: { modo: 'der', hueco: 8, pose: 'senala' } }],
+       /* Apilados va ENCIMA igual, saltando hacia abajo de palabra en
+          palabra. Para cabe entre una y otra se hace más pequeña: van
+          a 31 px de distancia, así que a tamaño normal el texto de
+          arriba la partía. */
+       apilado: { modo: 'encima', hueco: 1, esc: 0.4, pose: 'abajo' } }],
 
     /* AQUÍ HUBO UNA PARADA ENCIMA DEL TITULAR DE LAS PLACAS y se ha
        quitado: caía a doscientos píxeles de rueda de los saltos, o sea
@@ -3067,12 +3071,13 @@
        del panel solo hay 26 px en el móvil, así que se comía el
        párrafo. Partida por el canto, le basta con la mitad, y la otra
        mitad cae en el relleno del panel, que está vacío. */
-    /* fx 0.62 y no en la esquina: encima del canto izquierdo está la
-       última línea del párrafo de arriba y le pisaba el texto. A dos
-       tercios del panel, lo que tiene encima es aire tanto en el
-       móvil como en el portátil. */
-    [{ sel: '.rapido', modo: 'punto', fx: 0.62, fy: 0, asiento: 0.5,
-       esc: 0.57, frente: true, pose: 'abajo',
+    /* EN LA ESQUINA DE ARRIBA A LA DERECHA DEL PANEL, con la libreta,
+       apuntándote el pedido. Es el único sitio de la página donde ella
+       tiene un oficio de verdad: tú marcas y ella lo anota. Por eso va
+       más grande que en el resto, y por eso mira hacia abajo, a la
+       libreta, en vez de señalar nada. */
+    [{ sel: '.rapido', modo: 'punto', fx: 0.90, fy: 0, asiento: 0.55,
+       esc: 0.95, frente: true, pose: 'apunta',
        festeja: '#rTotal', fiesta: 'asombro' }],
 
     /* 4 · EN LA ESQUINA DEL BOTÓN DE PREGUNTAR, señalándolo.
@@ -3286,7 +3291,14 @@
     var pri = sitios[0], ult = sitios[sitios.length - 1];
     /* entra por el lado CONTRARIO al sitio, para que la carrera se vea
        de verdad y no sean dos pasos */
-    var entraPor = pri.x + pri.ancho / 2 > innerWidth / 2 ? -pri.ancho - 24 : innerWidth + 24;
+    /* ── ENTRA Y SALE SIEMPRE POR LA IZQUIERDA ──
+       Sacarla por la derecha a innerWidth+24 ENSANCHA EL DOCUMENTO, y
+       el móvil, para que quepa todo a lo ancho, ALEJA LA PÁGINA: se
+       ve pequeñita con una franja negra a la derecha y abajo. Pasaba
+       solo a veces, que es justo cuando ella estaba fuera por ese
+       lado. A la izquierda no pasa: lo que se sale por ahí no cuenta
+       para el ancho. */
+    var entraPor = -pri.ancho - 24;
     var quedarse = function (c) { return c.salto ? POSA : PARADA; };
     var k = [{ s: d[0] - ENTRA,         x: entraPor, c: pri },
              { s: d[0],                 x: pri.x,    c: pri },
@@ -3300,7 +3312,7 @@
        rodar, así que no se va por ningún lado. */
     if (!ult.fin) {
       k.push({ s: d[d.length - 1] + quedarse(ult) + SALE,
-               x: ult.der ? innerWidth + 24 : -ult.ancho - 24, c: ult });
+               x: -ult.ancho - 24, c: ult });
     }
     /* Cada luz apunta a SU fotograma, no a una copia del número:
        separa() mueve los extremos después, y con el número copiado la

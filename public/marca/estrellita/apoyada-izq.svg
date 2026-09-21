@@ -38,8 +38,8 @@
 
     @keyframes abre   { 0%, 95.4%, 100% { opacity:1 } 96.6%, 98.2% { opacity:0 } }
     @keyframes cierra { 0%, 95.4%, 100% { opacity:0 } 96.6%, 98.2% { opacity:1 } }
-    .ojo-abre   { animation: abre   6.4s steps(1,end) 4.08s infinite }
-    .ojo-cierra { animation: cierra 6.4s steps(1,end) 4.08s infinite; opacity:0 }
+    .ojo-abre   { animation: abre   6.4s steps(1,end) 4.29s infinite }
+    .ojo-cierra { animation: cierra 6.4s steps(1,end) 4.29s infinite; opacity:0 }
     @media (prefers-reduced-motion: reduce) {
       .ojo-abre { animation: none } .ojo-cierra { animation: none; opacity:0 } }
   </style>
@@ -103,6 +103,7 @@
   <g class="ojo-cierra"><path d="M 532 224 Q 588 270 644 224" fill="none" stroke="#0A0E16" stroke-width="24" stroke-linecap="round"/></g>
   <g class="ojo-abre" clip-path="url(#ojo0)"><rect x="328" y="104" width="220" height="78" fill="#0A0E16" transform="rotate(0 438 238)"/></g>
   <g class="ojo-abre" clip-path="url(#ojo1)"><rect x="478" y="96" width="220" height="78" fill="#0A0E16" transform="rotate(0 588 230)"/></g></g>
+
 <use href="#guante" transform="translate(250 760) rotate(34)"/>
 <use href="#guante" transform="translate(1004 900) rotate(-4) scale(-1 1)"/>
 </g>

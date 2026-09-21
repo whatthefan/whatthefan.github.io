@@ -103,6 +103,7 @@
   <g class="ojo-cierra"><path d="M 532 224 Q 588 270 644 224" fill="none" stroke="#0A0E16" stroke-width="24" stroke-linecap="round"/></g>
   <g class="ojo-abre" clip-path="url(#ojo0)"><rect x="328" y="104" width="220" height="70" fill="#0A0E16" transform="rotate(0 438 238)"/></g>
   <g class="ojo-abre" clip-path="url(#ojo1)"><rect x="478" y="96" width="220" height="70" fill="#0A0E16" transform="rotate(0 588 230)"/></g></g>
+
 <use href="#guante" transform="translate(372 742) rotate(52)"/>
 <use href="#guante" transform="translate(742 786) rotate(-34) scale(-1 1)"/>
 </g>
