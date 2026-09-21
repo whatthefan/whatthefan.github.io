@@ -137,6 +137,16 @@ GUANTE_PAZ = '''  <g id="guante-paz">
           d="M-58 -34 C -92 -66, -126 -62, -138 -34 C -150 -6, -128 22, -92 24"/>
   </g>'''
 
+GUANTE_LIKE = '''  <g id="guante-like">
+    <circle class="borde" cx="0" cy="0" r="82" fill="#F7F4EC"/>
+    <path class="borde" fill="#F7F4EC"
+          d="M-36 -50 C -78 -96, -70 -158, -32 -176 C 6 -194, 30 -156, 28 -92"/>
+    <g class="tinta" stroke-width="14">
+      <path d="M-56 16 C -42 30, -24 38, -6 38"/>
+      <path d="M-38 50 C -26 60, -12 64, 2 64"/>
+    </g>
+  </g>'''
+
 ZAPATO = '''  <g id="zapato">
     <path class="borde" fill="#0A0E16"
           d="M0 0 C -86 0, -146 34, -146 84 C -146 120, -92 134, -18 134
@@ -202,14 +212,18 @@ def cabeza(titulo, retardo):
 
     @keyframes abre   {{ 0%, 95.4%, 100% {{ opacity:1 }} 96.6%, 98.2% {{ opacity:0 }} }}
     @keyframes cierra {{ 0%, 95.4%, 100% {{ opacity:0 }} 96.6%, 98.2% {{ opacity:1 }} }}
+    @keyframes saluda {{ 0%,100% {{ rotate: 0deg }} 50% {{ rotate: -17deg }} }}
+    .saluda {{ transform-origin: 762px 476px; animation: saluda 1.1s ease-in-out infinite }}
     .ojo-abre   {{ animation: abre   6.4s steps(1,end) {retardo}s infinite }}
     .ojo-cierra {{ animation: cierra 6.4s steps(1,end) {retardo}s infinite; opacity:0 }}
     @media (prefers-reduced-motion: reduce) {{
-      .ojo-abre {{ animation: none }} .ojo-cierra {{ animation: none; opacity:0 }} }}
+      .ojo-abre {{ animation: none }} .ojo-cierra {{ animation: none; opacity:0 }}
+      .saluda {{ animation: none }} }}
   </style>
 {CLIPS}
 {GUANTE}
 {GUANTE_PAZ}
+{GUANTE_LIKE}
 {ZAPATO}
 </defs>
 '''
@@ -302,22 +316,29 @@ def fotograma(p):
     ])
 
 
-def quieta(mi, md, gi, gd, bob=0, lean=0, piernas=None, paz=False, lleva=''):
+def quieta(mi, md, gi, gd, bob=0, lean=0, piernas=None, paz=False, lleva='', menea=False, mano=None):
     """Una pose de pie: se dan las dos manos y el giro de cada guante."""
     pz = piernas or [
         (pierna(CAD_I, (288, SUELO), bob), f'<use href="#zapato" transform="translate(288 {SUELO})"/>'),
         (pierna(CAD_D, (736, SUELO), bob), f'<use href="#zapato" transform="translate(736 {SUELO}) scale(-1 1)"/>'),
     ]
-    mano_d = 'guante-paz' if paz else 'guante'
-    esp = '' if paz else ' scale(-1 1)'
+    mano_d = mano or ('guante-paz' if paz else 'guante')
+    esp = '' if (paz or mano) else ' scale(-1 1)'
     giro = gd if paz else gd
+    # El brazo derecho y su guante, envueltos para que puedan menearse
+    # desde la hoja de estilo del propio SVG. El giro es alrededor del
+    # hombro, que es de donde sale el brazo.
+    abre = '<g class="saluda">' if menea else ''
+    cierra = '</g>' if menea else ''
     return '\n'.join(
         [p[0] for p in pz] + [p[1] for p in pz] + [
-            brazo(HOM_I, mi, bob), brazo(HOM_D, md, bob),
+            brazo(HOM_I, mi, bob), abre, brazo(HOM_D, md, bob), cierra,
             f'<g transform="translate(0 {bob}) rotate({lean} 512 600)">@CUERPO@</g>',
             lleva,   # lo que tenga en las manos, entre el cuerpo y los guantes
             f'<use href="#guante" transform="translate({mi[0]} {mi[1]}) rotate({gi})"/>',
+            abre,
             f'<use href="#{mano_d}" transform="translate({md[0]} {md[1]}) rotate({giro}){esp}"/>',
+            cierra,
         ])
 
 
@@ -391,9 +412,14 @@ POSES = {
     # tapaban medio ojo y parecia que le habian dado un golpe.
     'asombro': ('asombrada', dict(dy=-6, escala=1.45),
                 lambda: quieta((130, 150), (894, 150), -34, 34)),
-    # saluda con la mano: la primera vez que la ves
+    # saluda con la mano, y la mano SE MUEVE: es lo primero que ves
     'saluda':  ('saludando', dict(dy=-4, escala=1.1),
-                lambda: quieta((6, 612), (952, 176), 14, 46)),
+                lambda: quieta((6, 612), (952, 176), 14, 46, menea=True)),
+    # el guiño con el pulgar arriba. El guante es el de siempre girado
+    # noventa grados: el pulgar que ya tenía dibujado queda hacia
+    # arriba, que es lo que hace que se lea como un «vale».
+    'pulgar':  ('pulgar arriba', dict(dy=-6, escala=1.2, guino='der'),
+                lambda: quieta((6, 612), (872, 196), 14, 4, mano='guante-like')),
     # asomandose: el cuerpo inclinado hacia delante, las manos juntas
     # por delante y las pupilas del todo hacia el lado. Aqui estuvo la
     # mano de visera sobre los ojos y no valia: unos ojos que se salen

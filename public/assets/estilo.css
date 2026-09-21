@@ -1641,6 +1641,12 @@ body::after{
    según DÓNDE ESTÁS, no según por dónde hayas pasado. */
 .tresp li{transition:color .3s ease}
 .tresp li.encendida b{color:var(--oro)}
+/* y lo mismo en las tres fichas de «cómo funciona», que es donde va
+   saltando ahora */
+.pasos-fila .paso{transition:background .3s ease}
+.pasos-fila .paso.encendida{background:rgba(233,188,70,.07)}
+.pasos-fila .paso.encendida h3{color:var(--oro)}
+.pasos-fila .paso h3{transition:color .3s ease}
 .tresp li.encendida .tresp-i{border-color:var(--oro);
   background:rgba(233,188,70,.14);
   box-shadow:0 0 0 4px rgba(233,188,70,.10)}

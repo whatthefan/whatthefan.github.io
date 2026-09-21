@@ -3023,81 +3023,46 @@
      ══════════════════════════════════════════════════════════════ */
   var GUION = [
 
-    /* 1 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE.
-       Los tres pasos de la portada son el producto entero contado en
-       tres palabras, y pasan desapercibidos. Ahora va saltando de uno
-       a otro y cada uno se queda encendido en amarillo cuando lo pisa.
-       En pantalla ancha están en fila y salta de izquierda a derecha;
-       en el móvil están en columna y salta hacia abajo. */
-    /* Va DEBAJO del paso y lo señala hacia arriba, no encima. Encima
-       no cabe: entre el paso y la línea de arriba hay 23 px y ella
-       mide 48, así que el texto de arriba la partía por la mitad y
-       solo se le veían los pies. */
-    [{ saltos: '.portada .tresp li', modo: 'debajo', hueco: 3,
-       esc: 0.56, pose: 'arriba', poseApilado: 'abajo',
-       /* En el móvil los tres pasos se apilan y «debajo» de uno cae
-          encima del siguiente, y separada a la derecha se queda
-          suelta en medio de la nada. Pegada al paso, señalándolo, se
-          ve de quién habla. Encima no cabe: los pasos apilados van a
-          31 px uno de otro y ella mide 40. */
-       /* Apilados va ENCIMA igual, saltando hacia abajo de palabra en
-          palabra. Para cabe entre una y otra se hace más pequeña: van
-          a 31 px de distancia, así que a tamaño normal el texto de
-          arriba la partía. */
-       apilado: { modo: 'encima', hueco: 1, esc: 0.4, pose: 'abajo' } }],
+    /* 1 · TE SALUDA Y SE VA. Lo primero que ves. La mano se mueve de
+       verdad —la animación va dentro del propio dibujo— y en cuanto
+       bajas un poco, se marcha. No enseña nada: solo dice hola. */
+    [{ sel: '.portada .chips', modo: 'der', hueco: 16, esc: 0.8,
+       pose: 'saluda' }],
 
-    /* AQUÍ HUBO UNA PARADA ENCIMA DEL TITULAR DE LAS PLACAS y se ha
-       quitado: caía a doscientos píxeles de rueda de los saltos, o sea
-       que era la misma aparición partida en dos con una carrera en
-       diagonal en medio que no llevaba a ningún sitio. Los saltos ya
-       cubren toda la portada; las placas se enseñan solas. */
+    /* 2 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE.
+       Los tres pasos de «cómo funciona» son fichas grandes con la
+       esquina de arriba a la derecha vacía, así que cabe entera ahí
+       dentro y se la ve, estén en fila (pantalla ancha) o en columna
+       (móvil). Cada ficha se queda en amarillo cuando la pisa, y se
+       apaga si vuelves a subir. */
+    [{ saltos: '#como .paso', modo: 'punto', fx: 0.86, fy: 0.10,
+       asiento: 0, esc: 0.7, frente: true, pose: 'abajo' }],
 
-    /* 2 · SE APOYA EN EL MÓVIL de la demo mientras se escribe sola la
-       reseña, con el brazo de puntal. Y cuando llega a «Publicar», lo
-       celebra: dos veces y se calla, que la demo va en bucle. */
-    [{ sel: '#movil', modo: 'izq', hueco: 2, pose: 'apoyada',
-       festeja: '#pBtn', fiesta: 'tachan', tope: 2 }],
-
-    /* 3 · SUBIDA A LA ESQUINA DEL PANEL DEL PEDIDO, señalando hacia
-       dentro. Encima del titular se quedaba flotando arriba a la
-       derecha sin pintar nada; de pie en el canto del panel señala
-       DONDE SE MONTA, que es su trabajo aquí. Y si tocas algo y el
-       precio cambia, se sorprende: el pedido es lo único de la página
-       con lo que puedes jugar tú.
-
-       VA DELANTE, no detrás: el panel es opaco y por detrás no se la
-       vería. Y va A CABALLO del canto (asiento 0.5), no de pie encima:
-       de pie necesita su altura entera de aire por arriba, y encima
-       del panel solo hay 26 px en el móvil, así que se comía el
-       párrafo. Partida por el canto, le basta con la mitad, y la otra
-       mitad cae en el relleno del panel, que está vacío. */
-    /* EN LA ESQUINA DE ARRIBA A LA DERECHA DEL PANEL, con la libreta,
-       apuntándote el pedido. Es el único sitio de la página donde ella
-       tiene un oficio de verdad: tú marcas y ella lo anota. Por eso va
-       más grande que en el resto, y por eso mira hacia abajo, a la
-       libreta, en vez de señalar nada. */
+    /* 3 · CON LA LIBRETA, EN LA ESQUINA DEL PANEL DEL PEDIDO.
+       Es el único sitio de la página donde tiene un oficio de verdad:
+       tú marcas y ella lo apunta. Por eso va más grande y mira a la
+       libreta en vez de señalar nada. Y si tocas algo y el precio
+       cambia, se sorprende. Va delante porque el panel es opaco. */
     [{ sel: '.rapido', modo: 'punto', fx: 0.90, fy: 0, asiento: 0.55,
        esc: 0.95, frente: true, pose: 'apunta',
        festeja: '#rTotal', fiesta: 'asombro' }],
 
-    /* 4 · EN LA ESQUINA DEL BOTÓN DE PREGUNTAR, señalándolo.
-       El seguimiento es lo único opcional de la página y el botón se
-       pierde: está en un recuadro con un precio grande al lado. Ella
-       de pie en su esquina, apuntándolo, lo convierte en lo que hay
-       que tocar. */
-    [{ sel: '#seguimiento .serv-precio .btn', modo: 'punto',
-       fx: -0.02, fy: 0, asiento: 0.55, esc: 0.55, frente: true, pose: 'abajo' }]
+    /* 4 · SEÑALANDO EL BOTÓN DE PREGUNTAR, a caballo de su esquina de
+       arriba a la izquierda. El hueco blanco que se ve al lado del
+       botón no existe a todas las anchuras —en un portátil quedan
+       diecisiete píxeles entre «sin permanencia» y el botón—, así que
+       el único sitio que siempre está libre es el propio canto del
+       botón, y encima ahí el brazo cae justo sobre él. */
+    [{ sel: '#seguimiento .serv-precio', modo: 'punto',
+       fx: 0.82, fy: 0, asiento: 0.55, esc: 0.9, frente: true,
+       pose: 'abajo' }],
 
-    /* AQUÍ ESTUVO SENTADA EN EL BRAZO DEL LOGOTIPO DEL PIE y se ha
-       quitado: el brazo mide dieciocho píxeles y por mucho que se
-       ajuste, a ese tamaño no se apoya en nada, parece que flota al
-       lado. Y encima era la cuarta aparición: con cuatro no caben
-       carreras lentas en una página de 4.880 px de bajada, y lo que
-       salía eran entradas y salidas comprimidas a cuarenta píxeles,
-       que es lo que se veía como un fallo.
-
-       Si vuelve al pie tiene que ser con un sitio de verdad donde
-       apoyarse, no con el remate de una raya. */
+    /* 5 · EL GUIÑO Y EL PULGAR, al lado del logotipo del pie.
+       Es lo último que ves de la página. Ahí se queda: no hay más
+       rueda que rodar, así que esta aparición no tiene salida. */
+    [{ sel: '.marca-pie .logotipo', modo: 'punto',
+       fx: 1.30, fy: 1, asiento: 1, esc: 0.95,
+       der: false, pose: 'pulgar', fin: true }]
   ];
 
   var ANDA = ['anda-0','anda-1','anda-2','anda-3','anda-4','anda-5','anda-6','anda-7'];
@@ -3113,8 +3078,8 @@
      píxeles: la misma carrera en una décima parte de la rueda, o sea
      un borrón. Tres, despacio y enteras, se ven mucho mejor que
      cuatro a trompicones. */
-  var ENTRA   = 400;  /* lo que tarda en entrar corriendo            */
-  var PARADA  = 300;  /* lo que se queda quieta en cada sitio        */
+  var ENTRA   = 300;  /* lo que tarda en entrar corriendo            */
+  var PARADA  = 240;  /* lo que se queda quieta en cada sitio        */
   var VIAJE   = 520;  /* lo que tarda en ir de un sitio al siguiente */
   var SALTO   = 150;  /* lo que tarda cada brinco de palabra a palabra */
   var POSA    = 100;  /* y lo que se queda encima de cada una.
@@ -3126,8 +3091,8 @@
                          lo veía nadie: los tres pasos solo están a la
                          vista unos 600 px de bajada, y ahí tienen que
                          caber los tres brincos enteros. */
-  var SALE    = 360;  /* lo que tarda en irse                        */
-  var HUECO   = 380;  /* lo que TIENE que pasar sin ella entre una
+  var SALE    = 260;  /* lo que tarda en irse                        */
+  var HUECO   = 300;  /* lo que TIENE que pasar sin ella entre una
                          aparición y la siguiente                    */
   var ZANCADA = 26;   /* px de avance por fotograma de pierna        */
   var VUELO   = 0.62; /* lo alto que salta, en veces su propia altura */

@@ -38,10 +38,13 @@
 
     @keyframes abre   { 0%, 95.4%, 100% { opacity:1 } 96.6%, 98.2% { opacity:0 } }
     @keyframes cierra { 0%, 95.4%, 100% { opacity:0 } 96.6%, 98.2% { opacity:1 } }
+    @keyframes saluda { 0%,100% { rotate: 0deg } 50% { rotate: -17deg } }
+    .saluda { transform-origin: 762px 476px; animation: saluda 1.1s ease-in-out infinite }
     .ojo-abre   { animation: abre   6.4s steps(1,end) 1.35s infinite }
     .ojo-cierra { animation: cierra 6.4s steps(1,end) 1.35s infinite; opacity:0 }
     @media (prefers-reduced-motion: reduce) {
-      .ojo-abre { animation: none } .ojo-cierra { animation: none; opacity:0 } }
+      .ojo-abre { animation: none } .ojo-cierra { animation: none; opacity:0 }
+      .saluda { animation: none } }
   </style>
   <clipPath id="ojo0"><ellipse cx="438" cy="238" rx="80" ry="94"/></clipPath>
   <clipPath id="ojo1"><ellipse cx="588" cy="230" rx="80" ry="94"/></clipPath>
@@ -69,6 +72,15 @@
     <circle class="borde" cx="0" cy="0" r="82" fill="#F7F4EC"/>
     <path class="borde" fill="#F7F4EC"
           d="M-58 -34 C -92 -66, -126 -62, -138 -34 C -150 -6, -128 22, -92 24"/>
+  </g>
+  <g id="guante-like">
+    <circle class="borde" cx="0" cy="0" r="82" fill="#F7F4EC"/>
+    <path class="borde" fill="#F7F4EC"
+          d="M-36 -50 C -78 -96, -70 -158, -32 -176 C 6 -194, 30 -156, 28 -92"/>
+    <g class="tinta" stroke-width="14">
+      <path d="M-56 16 C -42 30, -24 38, -6 38"/>
+      <path d="M-38 50 C -26 60, -12 64, 2 64"/>
+    </g>
   </g>
   <g id="zapato">
     <path class="borde" fill="#0A0E16"
