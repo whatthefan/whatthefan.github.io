@@ -535,7 +535,8 @@
 </section>
 
 <!-- ============ productos ============ -->
-<section class="sec-corta astro" id="productos">
+<section class="sec-corta astro con-bicho" id="productos">
+  <i class="bichejo" data-pose="senala" data-rumbo="der" aria-hidden="true"><img src="marca/estrellita/senala.svg" alt=""></i>
   <div class="env">
     <div class="enc sube">
       <span class="etq">Qué te llevas</span>
@@ -616,7 +617,8 @@
 </section>
 
 <!-- ============ demo ============ -->
-<section class="sec-corta astro" id="demo">
+<section class="sec-corta astro con-bicho" id="demo">
+  <i class="bichejo" data-pose="tachan" data-rumbo="izq" aria-hidden="true"><img src="marca/estrellita/tachan.svg" alt=""></i>
   <div class="env">
     <div class="demo">
       <div class="demo-txt sube">
@@ -651,7 +653,8 @@
 </section>
 
 <!-- ============ cómo funciona ============ -->
-<section class="sec-corta astro" id="como">
+<section class="sec-corta astro con-bicho" id="como">
+  <i class="bichejo" data-pose="mira" data-rumbo="der" aria-hidden="true"><img src="marca/estrellita/mira.svg" alt=""></i>
   <div class="env">
     <div class="enc sube">
       <span class="etq">Cómo funciona</span>
@@ -669,7 +672,8 @@
 </section>
 
 <!-- ============ pedido ============ -->
-<section class="sec-corta astro" id="pedido">
+<section class="sec-corta astro con-bicho" id="pedido">
+  <i class="bichejo" data-pose="guino" data-rumbo="izq" aria-hidden="true"><img src="marca/estrellita/guino.svg" alt=""></i>
   <div class="env">
     <div class="enc sube">
       <span class="etq">Tu pedido</span>
@@ -894,7 +898,8 @@
      Y una cosa que NO se puede prometer aquí: cuántas reseñas se
      escriben. Se cuenta cuánta gente acerca el móvil, que no es lo
      mismo. Google no dice quién escribió.                             -->
-<section class="sec-corta astro" id="seguimiento">
+<section class="sec-corta astro con-bicho" id="seguimiento">
+  <i class="bichejo" data-pose="salta" data-rumbo="der" aria-hidden="true"><img src="marca/estrellita/salta.svg" alt=""></i>
   <div class="env">
     <div class="serv-cab">
       <div class="enc sube">
@@ -2978,116 +2983,111 @@
 })();
 </script>
 
-<div id="bichejo" aria-hidden="true"><img src="marca/estrellita/senala.svg" alt=""></div>
 <script>
-/* ── ESTRELLITA VIAJA CONTIGO ──
+/* ── ESTRELLITA CORRE POR CADA APARTADO ──
 
-   Antes eran cinco figuras clavadas en cinco secciones, y solo salian
-   en pantallas de mas de 1420 px: o sea que en un portatil normal y en
-   el movil no se veia ninguna. Ahora es UNA sola, en position:fixed,
-   que va bajando contigo cambiando de sitio y de pose.
+   Va DENTRO del documento, no pegada a la pantalla: es un elemento
+   absoluto dentro de cada <section>, abajo del todo, así que sube y
+   baja con la página como cualquier otra cosa. Antes iba en
+   position:fixed y se quedaba flotando en un lado de la pantalla, que
+   es justo lo que no queríamos.
 
-   Al cambiar de estacion se va ANDANDO hacia un lado mientras se
-   desvanece, y reaparece en el otro sitio con otra pose. Los cuatro
-   fotogramas de andar son los mismos del reel.
+   Y no se limita a estar: CORRE de un lado a otro según avanzas. Su
+   posición sale del recorrido de la sección por la pantalla, así que
+   anda a la velocidad a la que tú bajas. Si paras, se para y se queda
+   haciendo su gesto. Eso es lo que la hace parecer viva en vez de una
+   animación dando vueltas sola.
 
-   Donde NO puede ponerse: la esquina de abajo a la derecha, que la
-   ocupa el boton flotante (z-index 70). Ella va en z-index 4, por
-   encima del contenido pero por debajo de la cabecera, la cinta y ese
-   boton. Y con pointer-events:none, asi que no roba un clic jamas. */
+   Los fotogramas cambian cada 16 px RECORRIDOS, no cada X
+   milisegundos: por eso las piernas van al ritmo del avance y no
+   patina.
+
+   El sitio se lo hace la clase .con-bicho, que le añade a la sección
+   el alto de la figura como relleno de abajo. Sin eso se metería
+   encima del último párrafo, porque abajo solo quedan entre 10 y 36
+   px libres (medido). */
 (function () {
-  var caja = document.getElementById('bichejo');
-  if (!caja || !window.IntersectionObserver) return;
-  var img = caja.firstElementChild;
+  var bichos = [].slice.call(document.querySelectorAll('.bichejo'));
+  if (!bichos.length || !window.IntersectionObserver) return;
 
-  var ESTACIONES = [
-    { sec: 'productos',   lado: 'izq', y: .46, yMovil: .80, pose: 'senala' },
-    { sec: 'demo',        lado: 'der', y: .40, yMovil: .28, pose: 'tachan' },
-    { sec: 'como',        lado: 'izq', y: .62, yMovil: .80, pose: 'mira'   },
-    { sec: 'pedido',      lado: 'der', y: .34, yMovil: .28, pose: 'guino'  },
-    { sec: 'seguimiento', lado: 'izq', y: .56, yMovil: .80, pose: 'salta'  }
-  ];
   var ANDA = ['anda-0', 'anda-2', 'anda-4', 'anda-6'];
-  var actual = -1, andando = null;
-
-  /* Los fotogramas de andar se piden cada 70 ms, y la primera vez
-     ninguno esta en cache: el navegador aborta el anterior al pedir el
-     siguiente y el primer paseo sale a trompicones. Precargarlos son
-     cuatro peticiones de 3 KB que se hacen una vez y en silencio. */
-  ANDA.forEach(function (n) {
+  ANDA.forEach(function (n) {          /* precarga: el primer paseo */
     var i = new Image(); i.src = 'marca/estrellita/' + n + '.svg';
   });
 
-  /* En el movil tiene que verse, no intuirse: a 58 px se quedaba en
-     una mancha. A 76 se lee la cara y sigue sin estorbar, porque va
-     pegada al borde y con pointer-events:none. */
-  function tam() { return innerWidth < 720 ? 76 : (innerWidth < 1100 ? 86 : 104); }
+  bichos.forEach(function (b) {
+    b.sec = b.parentElement;
+    b.img = b.firstElementChild;
+    b.paso = 0; b.antes = null; b.reloj = null;
+  });
 
-  function coloca(e) {
-    var w = tam(), alto = Math.round(w * 1292 / 1440);
-    caja.style.width = w + 'px'; caja.style.height = alto + 'px';
-    /* el hueco que deja la columna de contenido a cada lado; si no hay
-       hueco, se pega al borde con un respiro de 6 px */
-    var col = Math.min(1180, innerWidth - 48);
-    var borde = Math.max(innerWidth < 720 ? 2 : 6, (innerWidth - col) / 4 - w / 2);
-    caja.style.left = (e.lado === 'izq' ? borde : innerWidth - w - borde) + 'px';
-    var y = (innerWidth < 720 ? e.yMovil : e.y) * innerHeight - alto / 2;
-    caja.style.top = Math.max(76, Math.min(innerHeight - alto - 16, y)) + 'px';
-    caja.style.setProperty('--fuga', (e.lado === 'izq' ? -70 : 70) + 'px');
-    img.setAttribute('src', 'marca/estrellita/' + e.pose + '.svg');
+  var vivos = [], pendiente = false;
+
+  /* Esto tiene que ser una FUNCION y no un setTimeout suelto dentro
+     del bucle: alli «b» se declara con var, que es una sola variable
+     reutilizada en cada vuelta, asi que al saltar el temporizador «b»
+     ya apuntaba al ultimo bicho del bucle y el gesto se lo llevaba
+     otro. Pasandolo como parametro, cada llamada tiene el suyo. */
+  function paraYGesticula(b) {
+    clearTimeout(b.reloj);
+    b.reloj = setTimeout(function () {
+      b.img.setAttribute('src', 'marca/estrellita/' + b.dataset.pose + '.svg');
+    }, 190);
   }
 
-  function cambia(i) {
-    if (i === actual) return;
-    var primera = actual < 0;
-    actual = i;
-    clearInterval(andando);
-    if (primera) { coloca(ESTACIONES[i]); caja.classList.add('dentro'); return; }
+  function pinta() {
+    for (var i = 0; i < vivos.length; i++) {
+      var b = vivos[i], r = b.sec.getBoundingClientRect();
+      var w = b.offsetWidth, ancho = r.width - w;
+      if (ancho <= 0) continue;
 
-    caja.classList.add('saliendo');            /* se va andando... */
-    var f = 0;
-    andando = setInterval(function () {
-      img.setAttribute('src', 'marca/estrellita/' + ANDA[f++ % 4] + '.svg');
-    }, 70);
-    setTimeout(function () {
-      clearInterval(andando);
-      caja.classList.remove('dentro');         /* ...y aparece en otro lado */
-      coloca(ESTACIONES[actual]);
-      requestAnimationFrame(function () {
-        caja.classList.remove('saliendo');
-        caja.classList.add('dentro');
-      });
-    }, 420);
+      /* recorrido de la seccion por la pantalla, de 0 a 1 */
+      var p = (innerHeight - r.top) / (innerHeight + r.height);
+      p = p < 0 ? 0 : (p > 1 ? 1 : p);
+      var x = (b.dataset.rumbo === 'der' ? p : 1 - p) * ancho;
+
+      /* Un fotograma cada 16 px ANDADOS, no cada X milisegundos: por
+         eso las piernas van al ritmo del avance y no patina. */
+      if (b.antes === null) {
+        b.antes = x;
+      } else if (Math.abs(x - b.antes) > 16) {
+        b.paso++;
+        b.img.setAttribute('src', 'marca/estrellita/' + ANDA[b.paso % 4] + '.svg');
+        b.antes = x;
+        /* Y cuando dejas de bajar, para y hace su gesto. Con
+           temporizador, no contando vueltas del bucle: el bucle solo
+           corre mientras hay scroll, asi que al parar dejaria de
+           contar y no llegaria nunca al gesto. */
+        paraYGesticula(b);
+      }
+
+      /* mira hacia donde anda */
+      b.style.transform = 'translateX(' + x + 'px)' +
+                          (b.dataset.rumbo === 'izq' ? ' scaleX(-1)' : '');
+    }
+  }
+
+  function alScroll() {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(function () { pendiente = false; pinta(); });
   }
 
   var ojo = new IntersectionObserver(function (es) {
     for (var i = 0; i < es.length; i++) {
-      if (!es[i].isIntersecting) continue;
-      for (var j = 0; j < ESTACIONES.length; j++) {
-        if (ESTACIONES[j].sec === es[i].target.id) cambia(j);
-      }
+      var b = es[i].target;
+      b.classList.toggle('dentro', es[i].isIntersecting);
+      var n = vivos.indexOf(b);
+      if (es[i].isIntersecting && n < 0) vivos.push(b);
+      if (!es[i].isIntersecting && n >= 0) { vivos.splice(n, 1); b.antes = null; }
     }
-  }, {
-    /* Nada de threshold por porcentaje: una seccion mas alta que la
-       pantalla NUNCA llega al 35 % visible, y en el movil casi todas
-       lo son. Con este margen la ventana se reduce a una franja fina
-       en el centro, asi que manda la seccion que cruza la mitad de la
-       pantalla, mida lo que mida. */
-    threshold: 0, rootMargin: '-45% 0px -45% 0px'
-  });
+    alScroll();
+  }, { threshold: 0 });
 
-  var hay = 0;
-  ESTACIONES.forEach(function (e) {
-    var s = document.getElementById(e.sec);
-    if (s) { ojo.observe(s); hay++; }
-  });
-  if (!hay) return;
-
-  var t;                                       /* al girar el movil */
-  addEventListener('resize', function () {
-    clearTimeout(t);
-    t = setTimeout(function () { if (actual >= 0) coloca(ESTACIONES[actual]); }, 150);
-  });
+  bichos.forEach(function (b) { ojo.observe(b); });
+  addEventListener('scroll', alScroll, { passive: true });
+  addEventListener('resize', alScroll);
+  alScroll();
 })();
 </script>
 
