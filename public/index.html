@@ -3036,10 +3036,11 @@
     [{ saltos: '.portada .tresp li', modo: 'debajo', hueco: 3,
        esc: 0.56, pose: 'arriba',
        /* En el móvil los tres pasos se apilan y «debajo» de uno cae
-          encima del siguiente. Ahí se corre al hueco de la derecha,
-          que en una pantalla estrecha está vacío: el texto de los
-          pasos no llega ni a la mitad del ancho. */
-       apilado: { sesgo: 1.5 } }],
+          encima del siguiente, y separada a la derecha se queda
+          suelta en medio de la nada. Pegada al paso, señalándolo, se
+          ve de quién habla. Encima no cabe: los pasos apilados van a
+          31 px uno de otro y ella mide 40. */
+       apilado: { modo: 'der', hueco: 8, pose: 'senala' } }],
 
     /* AQUÍ HUBO UNA PARADA ENCIMA DEL TITULAR DE LAS PLACAS y se ha
        quitado: caía a doscientos píxeles de rueda de los saltos, o sea
@@ -3053,12 +3054,34 @@
     [{ sel: '#movil', modo: 'izq', hueco: 2, pose: 'apoyada',
        festeja: '#pBtn', fiesta: 'tachan', tope: 2 }],
 
-    /* 3 · SE SUBE AL TITULAR DEL PEDIDO. Y si tocas algo y el precio
-       cambia, se sorprende: el pedido es lo único de la página con lo
-       que puedes jugar tú, así que es donde tiene sentido que
-       reaccione a algo que has hecho. */
-    [{ sel: '#pedido .enc h2', modo: 'encima', sesgo: 0.74, pose: 'abajo',
+    /* 3 · SUBIDA A LA ESQUINA DEL PANEL DEL PEDIDO, señalando hacia
+       dentro. Encima del titular se quedaba flotando arriba a la
+       derecha sin pintar nada; de pie en el canto del panel señala
+       DONDE SE MONTA, que es su trabajo aquí. Y si tocas algo y el
+       precio cambia, se sorprende: el pedido es lo único de la página
+       con lo que puedes jugar tú.
+
+       VA DELANTE, no detrás: el panel es opaco y por detrás no se la
+       vería. Y va A CABALLO del canto (asiento 0.5), no de pie encima:
+       de pie necesita su altura entera de aire por arriba, y encima
+       del panel solo hay 26 px en el móvil, así que se comía el
+       párrafo. Partida por el canto, le basta con la mitad, y la otra
+       mitad cae en el relleno del panel, que está vacío. */
+    /* fx 0.62 y no en la esquina: encima del canto izquierdo está la
+       última línea del párrafo de arriba y le pisaba el texto. A dos
+       tercios del panel, lo que tiene encima es aire tanto en el
+       móvil como en el portátil. */
+    [{ sel: '.rapido', modo: 'punto', fx: 0.62, fy: 0, asiento: 0.5,
+       esc: 0.57, frente: true, pose: 'abajo',
        festeja: '#rTotal', fiesta: 'asombro' }],
+
+    /* 4 · EN LA ESQUINA DEL BOTÓN DE PREGUNTAR, señalándolo.
+       El seguimiento es lo único opcional de la página y el botón se
+       pierde: está en un recuadro con un precio grande al lado. Ella
+       de pie en su esquina, apuntándolo, lo convierte en lo que hay
+       que tocar. */
+    [{ sel: '#seguimiento .serv-precio .btn', modo: 'punto',
+       fx: -0.02, fy: 0, asiento: 0.55, esc: 0.55, frente: true, pose: 'abajo' }]
 
     /* AQUÍ ESTUVO SENTADA EN EL BRAZO DEL LOGOTIPO DEL PIE y se ha
        quitado: el brazo mide dieciocho píxeles y por mucho que se
@@ -3189,6 +3212,7 @@
     var tope = innerWidth - ancho - 4;
     return { x: Math.max(4, Math.min(tope, x)), y: y + scrollY,
              alto: alto, ancho: ancho, der: der, pose: s.pose,
+             frente: !!s.frente,
              salto: !!s.saltos, luz: s.saltos ? el : null, fin: !!s.fin };
   }
 
@@ -3413,6 +3437,11 @@
   function coloca(x, y, c, mueve, brinca, der, avance) {
     bicho.classList.add('dentro');
     bicho.classList.toggle('quieta', !mueve);
+    /* La capa entera sube por delante del texto solo para las paradas
+       que lo piden. Tiene que ser LA CAPA y no ella: la capa lleva
+       z-index 0, que ya hace contexto de apilado, así que desde
+       dentro no se puede escapar por mucho z-index que se le ponga. */
+    capa.classList.toggle('delante', !!c.frente);
     bicho.style.height = c.alto + 'px';
     /* «y» ya son coordenadas de PÁGINA y la capa está clavada en el
        origen del documento, así que va tal cual. Restarle el scroll

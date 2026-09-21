@@ -1605,6 +1605,11 @@ body::after{
 .capa-bicho{position:absolute;top:0;left:0;width:100%;height:0;
   z-index:0;pointer-events:none}
 
+/* Salvo cuando se sube al canto de un panel opaco: ahí tiene que ir
+   por delante o no se la ve. Sigue por debajo de la barra de arriba
+   (60), del botón de WhatsApp (70) y del menú (2000). */
+.capa-bicho.delante{z-index:41}
+
 .bichejo{position:absolute;top:0;left:0;
   height:var(--ba);width:auto;aspect-ratio:1404 / 1260;
   opacity:0;transition:opacity .35s ease;will-change:transform}
