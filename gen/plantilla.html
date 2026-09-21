@@ -133,7 +133,7 @@ canvas{display:none}
       </div>
       <!-- lo pisa ponMedida() en cuanto carga; esto es solo lo que se ve
            durante el parpadeo de antes -->
-      <span class="pista" id="medidaTxt">90 × 90 mm</span>
+      <span class="pista" id="medidaTxt">88 × 88 mm de vinilo · placa de 90 × 90 mm</span>
     </div>
 
     <div class="campo">
@@ -279,28 +279,44 @@ canvas{display:none}
      dibuja de pie, no tumbada: tumbada no cabe esta composicion y
      salia otra cosa distinta, que es justo lo que no queremos. */
   var FORMATOS = {
-    /* LA PLACA ES DE 90 × 90 Y EL EXPOSITOR DE 76 × 118.
+    /* OJO: 'mm' ES LA MEDIDA DEL VINILO, NO LA DE LA PLACA.
 
-       Estuvieron a 100 × 100 y 100 × 150 por una razón que ya no vale:
-       la copistería no bajaba de 10 cm de lado. Ese mínimo era del
-       corte A GUILLOTINA, que es una cuchilla recta y no sujeta piezas
-       pequeñas.
+       Son dos cosas distintas y conviene no mezclarlas nunca:
 
-       Ahora las piezas van SILUETEADAS: las corta un plóter siguiendo
-       el trazo de corte que va dentro del archivo (ver pdf()). A esa
-       máquina el tamaño le da igual, corta por donde le digas, y con
-       eso se recupera la medida que se quería vender desde el
-       principio.
+         · LA PLACA es la pieza de metacrilato que se le vende al
+           cliente: 90 × 90 la de mesa, 76 × 118 el expositor. Eso es lo
+           que dicen las fichas de la web, y ahí no se toca.
 
-       Bajarlas no descoloca nada: el cuadrado sigue siendo cuadrado y
-       toda la composición va en fracciones del lado (ver REJA), así que
-       el dibujo es el mismo, más pequeño. El expositor pasa de 2:3 a
-       1:1,55, que es un pelo más estirado y la reja absorbe sola.
+         · EL VINILO es lo que se manda a imprimir y va pegado encima:
+           88 × 88 y 74 × 116. DOS MILÍMETROS MENOS, uno por cada lado.
+
+       Ese milímetro de margen es para que el vinilo no asome por el
+       canto del metacrilato. Pegar a mano nunca sale centrado al pelo,
+       y un vinilo que sobresale medio milímetro se ve, se engancha y
+       empieza a despegarse por ahí. Un milímetro por lado se perdona
+       solo.
+
+       AQUÍ VA LA DEL VINILO porque este archivo dibuja lo que se
+       imprime. La de la placa va en 'placaMm', que no se dibuja: sale
+       escrita debajo de los botones para que al mirar el generador se
+       sepa de qué pieza estamos hablando.
+
+       Antes esto estuvo a 100 × 100 y 100 × 150 porque la copistería no
+       bajaba de 10 cm de lado. Ese mínimo era del corte A GUILLOTINA,
+       que es una cuchilla recta y no sujeta piezas pequeñas. Ahora las
+       piezas van SILUETEADAS: las corta un plóter siguiendo el contorno
+       que va dentro del archivo (ver el PDF de imprenta), y a esa
+       máquina el tamaño le da igual.
 
        SI ALGÚN DÍA SE VUELVE A CORTAR A GUILLOTINA, esto hay que
-       revisarlo: a guillotina no bajan de 100 mm. */
-    placa:   { nombre: 'Placa de mesa',    mm: [90, 90],  reja: 'cuadrada' },
-    stand:   { nombre: 'Expositor de pie', mm: [76, 118], reja: 'alta' },
+       revisarlo: a guillotina no bajan de 100 mm.
+
+       El radio de 4 mm es el redondeo de las esquinas, y lo decide el
+       contorno de corte que mandamos nosotros. Una esquina en pico se
+       levanta con el uso -el trapo de la barra, un dedo- y la pegatina
+       empieza a despegarse por la punta. */
+    placa:   { nombre: 'Placa de mesa',    mm: [88, 88],  placaMm: [90, 90],  reja: 'cuadrada', radio: 4 },
+    stand:   { nombre: 'Expositor de pie', mm: [74, 116], placaMm: [76, 118], reja: 'alta',     radio: 4 },
     /* LA TARJETA VA TUMBADA, 85 × 54, que es la que se vende.
 
        Estaba como 55 × 85 de pie, y eso no es lo que pone la web ni lo
@@ -1060,16 +1076,19 @@ canvas{display:none}
 
     var bx = sang * px, by = sang * px;
     var bw = mmW * px, bh = mmH * px;
-    /* EL TROQUEL. La placa y el expositor son rectangulos a sangre: el
-       redondeo lo pone luego la maquina, y dibujarlo aqui haria que la
-       imprenta cortara sobre una esquina ya curvada. La TARJETA si lo
-       lleva, porque es una tarjeta de PVC troquelada de serie con unos
-       3 mm de radio, y una tarjeta con las esquinas en pico no es lo
-       que se le entrega al cliente.
+    /* EL REDONDEO DE LAS ESQUINAS. Los tres formatos lo llevan: 4 mm el
+       vinilo de la placa y del expositor, 3 mm la tarjeta de PVC, que
+       viene troquelada de serie.
 
-       Con sangrado se dibuja cuadrada igualmente: el archivo para la
-       imprenta va a sangre entera y el troquel se marca con la linea de
-       corte. */
+       Aqui se dibuja solo PARA VERLO. Quien manda de verdad es el
+       contorno de corte del PDF, que sale del mismo F.radio: la maquina
+       corta por ahi, no por lo que se pinte en el lienzo.
+
+       Con sangrado se dibuja cuadrado igualmente, y no es un descuido:
+       el archivo de imprenta va a sangre entera hasta el canto, y el
+       redondeo lo marca el contorno de corte. Si ademas lo dibujaramos
+       curvado, la maquina cortaria sobre una esquina ya curvada y se
+       comeria el sangrado justo donde mas falta hace. */
     var radio = sang ? 0 : (F.radio || 0) * px;
 
     cx.clearRect(0, 0, W, H);
@@ -1797,9 +1816,21 @@ canvas{display:none}
      de ningún otro sitio: estaba escrita a mano en tres trozos de
      código, y asi es como un dia la placa pasa a 100 mm y la pantalla
      se queda diciendo 90. */
+  /* Se dicen LAS DOS MEDIDAS cuando hay dos: la del vinilo, que es lo
+     que se dibuja y se manda a imprimir, y la de la placa de
+     metacrilato, que es lo que se le vende al cliente. Escribir solo
+     una es la forma segura de que un día alguien pida 88 mm de
+     metacrilato, o mande 90 mm de vinilo a la copistería. */
   function ponMedida(v) {
     var F = FORMATOS[v];
-    $('medidaTxt').textContent = F.mm[0] + ' × ' + F.mm[1] + ' mm · ' + F.nombre;
+    var t = F.mm[0] + ' × ' + F.mm[1] + ' mm';
+    /* La tarjeta no lleva las dos medidas: es PVC de una pieza, no un
+       vinilo pegado sobre metacrilato. Ahí lo que se imprime y lo que
+       se vende miden lo mismo, y decir "de vinilo" sería mentir. */
+    if (F.placaMm) {
+      t += ' de vinilo · placa de ' + F.placaMm[0] + ' × ' + F.placaMm[1] + ' mm';
+    }
+    $('medidaTxt').textContent = t + ' · ' + F.nombre;
   }
 
   grupo('fFormato', function (v) {
