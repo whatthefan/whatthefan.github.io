@@ -3029,12 +3029,17 @@
        a otro y cada uno se queda encendido en amarillo cuando lo pisa.
        En pantalla ancha están en fila y salta de izquierda a derecha;
        en el móvil están en columna y salta hacia abajo. */
-    [{ saltos: '.portada .tresp li', modo: 'debajo', hueco: 4,
-       esc: 0.66, pose: 'arriba',
-       /* En el móvil los tres pasos se apilan, y ahí «debajo» de uno
-          es encima del siguiente. Cuando están apilados se pone al
-          lado y señala de lado. */
-       apilado: { modo: 'der', hueco: 10, pose: 'senala' } }],
+    /* Va DEBAJO del paso y lo señala hacia arriba, no encima. Encima
+       no cabe: entre el paso y la línea de arriba hay 23 px y ella
+       mide 48, así que el texto de arriba la partía por la mitad y
+       solo se le veían los pies. */
+    [{ saltos: '.portada .tresp li', modo: 'debajo', hueco: 3,
+       esc: 0.56, pose: 'arriba',
+       /* En el móvil los tres pasos se apilan y «debajo» de uno cae
+          encima del siguiente. Ahí se corre al hueco de la derecha,
+          que en una pantalla estrecha está vacío: el texto de los
+          pasos no llega ni a la mitad del ancho. */
+       apilado: { sesgo: 1.5 } }],
 
     /* AQUÍ HUBO UNA PARADA ENCIMA DEL TITULAR DE LAS PLACAS y se ha
        quitado: caía a doscientos píxeles de rueda de los saltos, o sea
@@ -3055,13 +3060,16 @@
     [{ sel: '#pedido .enc h2', modo: 'encima', sesgo: 0.74, pose: 'abajo',
        festeja: '#rTotal', fiesta: 'asombro' }],
 
-    /* 4 · Y SE SIENTA EN EL BRAZO DEL LOGOTIPO DEL PIE.
-       Ahí se queda: es el final de la página y no hay más rueda que
-       rodar, así que esta aparición no tiene salida. La última vez que
-       la ves está sentada en la marca con las piernas colgando. */
-    [{ sel: '.marca-pie .logotipo', modo: 'punto',
-       fx: 0.93, fy: 0.315, asiento: 0.827, anclaX: 0.15, esc: 0.55,
-       der: false, pose: 'sentada', fin: true }]
+    /* AQUÍ ESTUVO SENTADA EN EL BRAZO DEL LOGOTIPO DEL PIE y se ha
+       quitado: el brazo mide dieciocho píxeles y por mucho que se
+       ajuste, a ese tamaño no se apoya en nada, parece que flota al
+       lado. Y encima era la cuarta aparición: con cuatro no caben
+       carreras lentas en una página de 4.880 px de bajada, y lo que
+       salía eran entradas y salidas comprimidas a cuarenta píxeles,
+       que es lo que se veía como un fallo.
+
+       Si vuelve al pie tiene que ser con un sitio de verdad donde
+       apoyarse, no con el remate de una raya. */
   ];
 
   var ANDA = ['anda-0','anda-1','anda-2','anda-3','anda-4','anda-5','anda-6','anda-7'];
@@ -3069,18 +3077,28 @@
   /* ── CUÁNTO DURA CADA COSA, EN PÍXELES DE RUEDA ──
      No en segundos: en píxeles. Aquí no hay relojes, el tiempo lo
      pone tu dedo. Cuanto más grandes son estos números MÁS DESPACIO
-     va, porque es más rueda para el mismo recorrido. */
-  var ENTRA   = 300;  /* lo que tarda en entrar corriendo            */
-  var PARADA  = 260;  /* lo que se queda quieta en cada sitio        */
-  var VIAJE   = 420;  /* lo que tarda en ir de un sitio al siguiente */
-  var SALTO   = 160;  /* lo que tarda cada brinco de palabra a palabra */
-  var POSA    = 80;   /* y lo que se queda encima de cada una.
+     va, porque es más rueda para el mismo recorrido.
+
+     Y CABEN PORQUE SON TRES APARICIONES. Con cuatro sumaban más que
+     la bajada entera de la página en un portátil, y la regla que las
+     separa les comía la entrada o la salida hasta dejarla en cuarenta
+     píxeles: la misma carrera en una décima parte de la rueda, o sea
+     un borrón. Tres, despacio y enteras, se ven mucho mejor que
+     cuatro a trompicones. */
+  var ENTRA   = 400;  /* lo que tarda en entrar corriendo            */
+  var PARADA  = 300;  /* lo que se queda quieta en cada sitio        */
+  var VIAJE   = 520;  /* lo que tarda en ir de un sitio al siguiente */
+  var SALTO   = 150;  /* lo que tarda cada brinco de palabra a palabra */
+  var POSA    = 100;  /* y lo que se queda encima de cada una.
                          Los brincos van más apretados que el resto a
                          propósito: tienen que caber enteros MIENTRAS
                          los tres pasos siguen en pantalla. Con la
                          pausa larga, el tercer salto caía con la
-                         portada ya por arriba y no lo veía nadie. */
-  var SALE    = 260;  /* lo que tarda en irse                        */
+                         fila ya debajo de la cabecera pegajosa y no
+                         lo veía nadie: los tres pasos solo están a la
+                         vista unos 600 px de bajada, y ahí tienen que
+                         caber los tres brincos enteros. */
+  var SALE    = 360;  /* lo que tarda en irse                        */
   var HUECO   = 380;  /* lo que TIENE que pasar sin ella entre una
                          aparición y la siguiente                    */
   var ZANCADA = 26;   /* px de avance por fotograma de pierna        */
