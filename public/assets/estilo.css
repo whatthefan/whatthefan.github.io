@@ -1612,7 +1612,7 @@ body::after{
 
 .bichejo{position:absolute;top:0;left:0;
   height:var(--ba);width:auto;aspect-ratio:1404 / 1260;
-  opacity:0;transition:opacity .35s ease;will-change:transform}
+  opacity:0;transition:opacity .55s ease;will-change:transform}
 .bichejo.dentro{opacity:1}
 .bichejo img{display:block;width:100%;height:100%}
 

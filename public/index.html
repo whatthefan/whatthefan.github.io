@@ -3028,10 +3028,18 @@
      ══════════════════════════════════════════════════════════════ */
   var GUION = [
 
-    /* 1 · TE SALUDA ARRIBA DEL TODO, grande y quieta. Es lo primero
-       que ves y no hace nada más: solo dice hola y se va. */
-    [{ sel: '#hueco3d', modo: 'punto', fx: 0.03, fy: 0.06, asiento: 0,
-       esc: 1.15, pose: 'saluda' }],
+    /* 1 · TE SALUDA, agitando la mano. Es lo primero que ves y no hace
+       nada más: dice hola.
+
+       Va AL LADO DE LAS TRES PASTILLAS, no en el hueco de la placa.
+       Ahí estuvo y quedaba mal: alrededor de la placa solo hay negro,
+       así que se la veía flotando en medio de la nada, sin nada al
+       lado con lo que medirse. Pegada a las pastillas tiene algo al
+       lado, y es el único sitio de la portada que da cero solape a
+       390, 768 y 1280. Encima de ellas también se probó y ahí sí
+       pisaba el párrafo en las pantallas estrechas. */
+    [{ sel: '.portada .chips', modo: 'der', hueco: 16, esc: 1.15,
+       pose: 'saluda' }],
 
     /* 2 · APOYADA EN EL MÓVIL de la demo mientras se escribe sola la
        reseña, con el brazo de puntal. Y cuando llega a «Publicar», lo
@@ -3085,11 +3093,11 @@
      píxeles: la misma carrera en una décima parte de la rueda, o sea
      un borrón. Tres, despacio y enteras, se ven mucho mejor que
      cuatro a trompicones. */
-  var ENTRA   = 220;  /* lo que tarda en entrar corriendo            */
-  var PARADA  = 240;  /* lo que se queda quieta en cada sitio        */
-  var VIAJE   = 520;  /* lo que tarda en ir de un sitio al siguiente */
-  var SALTO   = 150;  /* lo que tarda cada brinco de palabra a palabra */
-  var POSA    = 100;  /* y lo que se queda encima de cada una.
+  var ENTRA   = 240;  /* lo que tarda en entrar corriendo            */
+  var PARADA  = 420;  /* lo que se queda quieta en cada sitio        */
+  var VIAJE   = 640;  /* lo que tarda en ir de un sitio al siguiente */
+  var SALTO   = 210;  /* lo que tarda cada brinco de palabra a palabra */
+  var POSA    = 150;  /* y lo que se queda encima de cada una.
                          Los brincos van más apretados que el resto a
                          propósito: tienen que caber enteros MIENTRAS
                          los tres pasos siguen en pantalla. Con la
@@ -3098,9 +3106,14 @@
                          lo veía nadie: los tres pasos solo están a la
                          vista unos 600 px de bajada, y ahí tienen que
                          caber los tres brincos enteros. */
-  var SALE    = 200;  /* lo que tarda en irse                        */
-  var HUECO   = 300;  /* lo que TIENE que pasar sin ella entre una
-                         aparición y la siguiente                    */
+  var SALE    = 240;  /* lo que tarda en irse                        */
+  var HUECO   = 140;  /* lo poco que TIENE que pasar sin ella entre
+                         una aparición y la siguiente. Antes eran 380
+                         y con seis apariciones eso obligaba a
+                         recortarles la parada: se iban enseguida.
+                         Ahora se quedan casi el doble de rato en cada
+                         sitio y el hueco es el justo para que se note
+                         que es otra. */
   var ZANCADA = 26;   /* px de avance por fotograma de pierna        */
   var VUELO   = 0.62; /* lo alto que salta, en veces su propia altura */
 

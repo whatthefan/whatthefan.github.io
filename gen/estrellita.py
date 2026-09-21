@@ -413,9 +413,11 @@ POSES = {
     'asombro': ('asombrada', dict(dy=-6, escala=1.45),
                 lambda: quieta((130, 150), (894, 150), -34, 34)),
     # saluda con la mano, y la mano SE MUEVE: es lo primero que ves
-    # saluda con la mano quieta: se queda ahi arriba, sin agitarla
+    # saluda agitando la mano. El meneo va dentro del propio dibujo,
+    # como el parpadeo, asi que no gasta ni una linea de reloj en la
+    # pagina.
     'saluda':  ('saludando', dict(dy=-4, escala=1.1),
-                lambda: quieta((6, 612), (952, 176), 14, 46)),
+                lambda: quieta((6, 612), (952, 176), 14, 46, menea=True)),
     # el guiño con el pulgar arriba. El guante es el de siempre girado
     # noventa grados: el pulgar que ya tenía dibujado queda hacia
     # arriba, que es lo que hace que se lea como un «vale».
