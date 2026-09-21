@@ -402,12 +402,19 @@ LA CASILLA DE "SANGRADO DE 3 MM" ES OTRA COSA: es para mirar en
 pantalla como queda el archivo a sangre. No hace falta tocarla para
 bajar el PDF.
 
-PARA ENSENARSELO AL CLIENTE, EL PNG
-Sin sangrado y sin contorno de corte. El boton "Descargar PNG" te lo
-baja; "Copiar imagen" lo
-deja en el portapapeles para pegarlo en WhatsApp directamente. En el
-movil, si el boton no hace nada, deja el dedo pulsado sobre la imagen y
-dale a Guardar.
+PARA ENSENARSELO AL CLIENTE, EL PNG O EL JPG
+Sin sangrado y sin contorno de corte. Hay tres maneras de sacarlo:
+
+  - "Descargar PNG": la de siempre, la de mas calidad.
+  - "Descargar JPG": pesa la cuarta parte, y lo traga cualquier sitio
+    que se ponga tonto con el PNG. Para la imprenta NO vale: pierde
+    calidad en los cantos del QR y no puede llevar el contorno de
+    corte.
+  - "Copiar imagen": lo deja en el portapapeles para pegarlo en
+    WhatsApp directamente.
+
+En el movil, si el boton no hace nada, deja el dedo pulsado sobre la
+imagen y dale a Guardar.
 
 LO QUE NO HACE
   - No sube nada a ningun sitio. Todo se dibuja en tu navegador. El

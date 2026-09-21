@@ -249,6 +249,7 @@ canvas{display:none}
     <div class="lienzo-caja"><img id="salida" alt="Vista previa de la placa"></div>
     <div class="acciones">
       <button type="button" class="btn btn-oro" id="descarga">Descargar PNG</button>
+      <button type="button" class="btn btn-fan" id="descargaJpg">Descargar JPG</button>
       <button type="button" class="btn btn-fan" id="descargaPdf">Descargar PDF (imprenta)</button>
       <button type="button" class="btn btn-fan" id="copia">Copiar imagen</button>
       <button type="button" class="btn btn-fan" id="copiaEnlace">Copiar enlace</button>
@@ -2039,6 +2040,29 @@ canvas{display:none}
     lienzo.toBlob(function (b) { baja(b, nombreArchivo('png')); }, 'image/png');
   });
 
+  /* EL JPG. Pesa la cuarta parte que el PNG y lo traga cualquier sitio
+     que se ponga tonto con el PNG: algunos formularios de pedido, algun
+     correo antiguo, WhatsApp Web cuando le da por ahi.
+
+     OJO CON LAS ESQUINAS. El JPG no sabe de transparencia, y el dibujo
+     SI la tiene: sin sangrado, las esquinas redondeadas dejan cuatro
+     picos transparentes. Volcado tal cual a JPG, esos picos salen
+     NEGROS. Por eso se copia antes sobre un fondo blanco, que es el
+     color del material.
+
+     Para la imprenta NO se usa: el JPG pierde calidad en los cantos del
+     QR y, sobre todo, no puede llevar el contorno de corte. Para eso
+     esta el PDF. */
+  $('descargaJpg').addEventListener('click', function () {
+    var c = document.createElement('canvas');
+    c.width = lienzo.width; c.height = lienzo.height;
+    var k = c.getContext('2d');
+    k.fillStyle = '#FFFFFF';
+    k.fillRect(0, 0, c.width, c.height);
+    k.drawImage(lienzo, 0, 0);
+    c.toBlob(function (b) { baja(b, nombreArchivo('jpg')); }, 'image/jpeg', 0.92);
+  });
+
   /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 EL PDF PARA LA IMPRENTA \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 
      EL PNG NO SIRVE PARA MANDAR A CORTAR, y no es cuesti\u00f3n de calidad:
@@ -2266,10 +2290,12 @@ canvas{display:none}
   })();
   if (DENTRO_DE_MARCO) {
     $('descarga').textContent = 'Guardar la imagen';
-    $('descarga').addEventListener('click', function () {
-      $('avisoGuardar').classList.add('malo');
-      $('avisoGuardar').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, true);
+    [$('descarga'), $('descargaJpg')].forEach(function (b) {
+      b.addEventListener('click', function () {
+        $('avisoGuardar').classList.add('malo');
+        $('avisoGuardar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, true);
+    });
     $('avisoGuardar').innerHTML =
       'Estás viendo esto <b>dentro de la vista previa</b>, y aquí el navegador no ' +
       'deja descargar archivos. Para quedarte la placa: <b>pulsa sobre la imagen con ' +
