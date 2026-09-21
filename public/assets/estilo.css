@@ -1571,3 +1571,48 @@ body::after{
 .resumen dt.fin,.resumen dd.fin{
   padding-top:10px; margin-top:3px; border-top:1px solid var(--borde);
   font-weight:700; color:var(--txt); font-size:.95rem}
+
+
+/* ══════════ ESTRELLITA VIAJA CONTIGO ══════════
+
+   Una sola figura en position:fixed que baja contigo, cambiando de
+   lado y de pose en cada sección. Antes eran cinco clavadas y solo
+   salían por encima de 1420 px de ancho: en un portátil normal y en el
+   móvil no se veía ninguna, que es justo lo que pasó.
+
+   Tres cosas que la mantienen fuera del camino:
+
+   - pointer-events:none. No puede robar un clic ni un toque nunca,
+     esté donde esté.
+   - z-index 4: por encima del contenido, por DEBAJO de la cabecera
+     (60), la cinta (55) y el botón flotante (70).
+   - En móvil se hace de 58 px y las estaciones de la derecha suben
+     arriba, porque abajo a la derecha está ese botón. */
+#bichejo{
+  /* medida y sitio de partida: sin esto, hasta que el guion la coloca
+     el <img> se dibuja a su tamano natural y en el pie de la pagina.
+     No se ve porque va a opacidad 0, pero mejor que no exista ese
+     instante. */
+  position:fixed;left:6px;top:50%;width:104px;height:93px;
+  z-index:4;pointer-events:none;user-select:none;
+  opacity:0;will-change:opacity,transform;
+  transform:translateX(0) scale(.88);
+  transition:opacity .34s ease,transform .42s cubic-bezier(.2,.9,.3,1.25)}
+#bichejo img{display:block;width:100%;height:100%}
+
+#bichejo.dentro{opacity:.96;transform:translateX(0) scale(1);
+  animation:bichejo-flota 4.4s ease-in-out infinite}
+/* se va andando hacia el lado por el que entró, y se apaga */
+#bichejo.saliendo{opacity:0;transform:translateX(var(--fuga,-70px)) scale(.9);
+  animation:none}
+
+/* El vaivén va en «translate», que es una propiedad aparte de
+   «transform»: así el flotar no pisa el desplazamiento de la salida y
+   no hay que encadenar los dos en una sola declaración. */
+@keyframes bichejo-flota{
+  0%,100%{translate:0 0}
+  50%    {translate:0 -7px}}
+
+@media (prefers-reduced-motion:reduce){
+  #bichejo{transform:none;transition:opacity .3s ease}
+  #bichejo.dentro,#bichejo.saliendo{transform:none;animation:none}}

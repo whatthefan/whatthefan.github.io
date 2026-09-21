@@ -2978,5 +2978,118 @@
 })();
 </script>
 
+<div id="bichejo" aria-hidden="true"><img src="marca/estrellita/senala.svg" alt=""></div>
+<script>
+/* ── ESTRELLITA VIAJA CONTIGO ──
+
+   Antes eran cinco figuras clavadas en cinco secciones, y solo salian
+   en pantallas de mas de 1420 px: o sea que en un portatil normal y en
+   el movil no se veia ninguna. Ahora es UNA sola, en position:fixed,
+   que va bajando contigo cambiando de sitio y de pose.
+
+   Al cambiar de estacion se va ANDANDO hacia un lado mientras se
+   desvanece, y reaparece en el otro sitio con otra pose. Los cuatro
+   fotogramas de andar son los mismos del reel.
+
+   Donde NO puede ponerse: la esquina de abajo a la derecha, que la
+   ocupa el boton flotante (z-index 70). Ella va en z-index 4, por
+   encima del contenido pero por debajo de la cabecera, la cinta y ese
+   boton. Y con pointer-events:none, asi que no roba un clic jamas. */
+(function () {
+  var caja = document.getElementById('bichejo');
+  if (!caja || !window.IntersectionObserver) return;
+  var img = caja.firstElementChild;
+
+  var ESTACIONES = [
+    { sec: 'productos',   lado: 'izq', y: .46, yMovil: .80, pose: 'senala' },
+    { sec: 'demo',        lado: 'der', y: .40, yMovil: .28, pose: 'tachan' },
+    { sec: 'como',        lado: 'izq', y: .62, yMovil: .80, pose: 'mira'   },
+    { sec: 'pedido',      lado: 'der', y: .34, yMovil: .28, pose: 'guino'  },
+    { sec: 'seguimiento', lado: 'izq', y: .56, yMovil: .80, pose: 'salta'  }
+  ];
+  var ANDA = ['anda-0', 'anda-2', 'anda-4', 'anda-6'];
+  var actual = -1, andando = null;
+
+  /* Los fotogramas de andar se piden cada 70 ms, y la primera vez
+     ninguno esta en cache: el navegador aborta el anterior al pedir el
+     siguiente y el primer paseo sale a trompicones. Precargarlos son
+     cuatro peticiones de 3 KB que se hacen una vez y en silencio. */
+  ANDA.forEach(function (n) {
+    var i = new Image(); i.src = 'marca/estrellita/' + n + '.svg';
+  });
+
+  /* En el movil tiene que verse, no intuirse: a 58 px se quedaba en
+     una mancha. A 76 se lee la cara y sigue sin estorbar, porque va
+     pegada al borde y con pointer-events:none. */
+  function tam() { return innerWidth < 720 ? 76 : (innerWidth < 1100 ? 86 : 104); }
+
+  function coloca(e) {
+    var w = tam(), alto = Math.round(w * 1292 / 1440);
+    caja.style.width = w + 'px'; caja.style.height = alto + 'px';
+    /* el hueco que deja la columna de contenido a cada lado; si no hay
+       hueco, se pega al borde con un respiro de 6 px */
+    var col = Math.min(1180, innerWidth - 48);
+    var borde = Math.max(innerWidth < 720 ? 2 : 6, (innerWidth - col) / 4 - w / 2);
+    caja.style.left = (e.lado === 'izq' ? borde : innerWidth - w - borde) + 'px';
+    var y = (innerWidth < 720 ? e.yMovil : e.y) * innerHeight - alto / 2;
+    caja.style.top = Math.max(76, Math.min(innerHeight - alto - 16, y)) + 'px';
+    caja.style.setProperty('--fuga', (e.lado === 'izq' ? -70 : 70) + 'px');
+    img.setAttribute('src', 'marca/estrellita/' + e.pose + '.svg');
+  }
+
+  function cambia(i) {
+    if (i === actual) return;
+    var primera = actual < 0;
+    actual = i;
+    clearInterval(andando);
+    if (primera) { coloca(ESTACIONES[i]); caja.classList.add('dentro'); return; }
+
+    caja.classList.add('saliendo');            /* se va andando... */
+    var f = 0;
+    andando = setInterval(function () {
+      img.setAttribute('src', 'marca/estrellita/' + ANDA[f++ % 4] + '.svg');
+    }, 70);
+    setTimeout(function () {
+      clearInterval(andando);
+      caja.classList.remove('dentro');         /* ...y aparece en otro lado */
+      coloca(ESTACIONES[actual]);
+      requestAnimationFrame(function () {
+        caja.classList.remove('saliendo');
+        caja.classList.add('dentro');
+      });
+    }, 420);
+  }
+
+  var ojo = new IntersectionObserver(function (es) {
+    for (var i = 0; i < es.length; i++) {
+      if (!es[i].isIntersecting) continue;
+      for (var j = 0; j < ESTACIONES.length; j++) {
+        if (ESTACIONES[j].sec === es[i].target.id) cambia(j);
+      }
+    }
+  }, {
+    /* Nada de threshold por porcentaje: una seccion mas alta que la
+       pantalla NUNCA llega al 35 % visible, y en el movil casi todas
+       lo son. Con este margen la ventana se reduce a una franja fina
+       en el centro, asi que manda la seccion que cruza la mitad de la
+       pantalla, mida lo que mida. */
+    threshold: 0, rootMargin: '-45% 0px -45% 0px'
+  });
+
+  var hay = 0;
+  ESTACIONES.forEach(function (e) {
+    var s = document.getElementById(e.sec);
+    if (s) { ojo.observe(s); hay++; }
+  });
+  if (!hay) return;
+
+  var t;                                       /* al girar el movil */
+  addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { if (actual >= 0) coloca(ESTACIONES[actual]); }, 150);
+  });
+})();
+</script>
+
 </body>
 </html>
