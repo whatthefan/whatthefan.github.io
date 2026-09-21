@@ -261,22 +261,59 @@ dos maneras:
 QUE HACE
 Le metes el nombre del negocio, el enlace de Google y el logo, y te
 dibuja la placa terminada, lista para ensenarsela al cliente o para
-mandarla a imprimir. Los tres formatos: placa 100x100, expositor 100x150
-y tarjeta 85x54 (esta, troquelada con 3 mm de radio).
+mandarla a imprimir. Los tres formatos: placa, expositor y tarjeta.
 
-LA MEDIDA MINIMA ES 10 CM, Y NO LA PONEMOS NOSOTROS
-La placa y el expositor se piden en la copisteria, y alli no bajan de
-10 cm ni de ancho ni de alto. Por eso la placa es de 100x100 y no de
-90x90, que es como estaba: una placa de 90 mm no la pueden sacar. Si
-algun dia se cambia de sitio de impresion, esto se puede revisar; hasta
-entonces, ningun formato de los que se piden alli baja de 100 mm.
+DOS MEDIDAS POR PIEZA, Y NO SON LA MISMA
+Esto es lo que mas se presta a liarla, asi que va lo primero:
+
+  PIEZA        VINILO (lo que se imprime)   PLACA (lo que se vende)
+  placa            88 x 88 mm                   90 x 90 mm
+  expositor        74 x 116 mm                  76 x 118 mm
+  tarjeta          85 x 54 mm                   (no lleva, es PVC)
+
+El vinilo mide DOS MILIMETROS MENOS que el metacrilato, uno por cada
+lado. Ese margen es para que el vinilo no asome por el canto: pegar a
+mano nunca sale centrado al pelo, y un vinilo que sobresale medio
+milimetro se ve, se engancha y empieza a despegarse por ahi.
+
+  - A LA COPISTERIA se le manda la del VINILO. Es la que dibuja el
+    generador y la que sale en el PDF.
+  - EN LA WEB se ensena la de la PLACA. Es la pieza que recibe el
+    cliente, con el metacrilato.
+
+Las dos salen escritas debajo de los botones del generador, para que al
+mirarlo se sepa de cual estamos hablando.
+
+Las esquinas van redondeadas: 4 mm de radio en el vinilo de la placa y
+del expositor, 3 mm en la tarjeta, que viene troquelada de serie. Una
+esquina en pico se levanta con el uso -el trapo de la barra, un dedo- y
+la pegatina empieza a despegarse por la punta.
+
+YA NO HAY MEDIDA MINIMA: LAS PIEZAS VAN SILUETEADAS
+Durante un tiempo la placa fue de 100x100 y el expositor de 100x150
+porque la copisteria no bajaba de 10 cm de lado. Ese minimo era del
+corte A GUILLOTINA: una cuchilla recta no sujeta piezas pequenas.
+
+Ahora las piezas van SILUETEADAS. Las corta un ploter siguiendo el
+contorno de corte que va DENTRO DEL ARCHIVO, y a esa maquina el tamano
+le da igual: corta por donde le digas. Con eso vuelven las medidas que
+se querian vender desde el principio, placa 90x90 y expositor 76x118.
+
+LO QUE HAY QUE MANDAR A LA COPISTERIA ES EL PDF, NO EL PNG. El contorno
+de corte es una LINEA, y en un PNG no cabe una linea: un PNG son
+pixeles. El boton "Descargar PDF (imprenta)" saca el archivo bueno.
+Mira el apartado PARA LA IMPRENTA, aqui abajo.
+
+SI ALGUN DIA SE VUELVE A CORTAR A GUILLOTINA, esto hay que revisarlo:
+a guillotina no bajan de 100 mm y estas dos medidas no se pueden hacer.
 (La tarjeta no entra en esto: es PVC y no sale de la copisteria.)
 
-(Aqui ponia "expositor 76x118". Eso SI era lo que ponia la web, en los
-cuatro sitios donde sale el expositor, pero no lo que dibujaba el
-generador, que iba a 100x150: otra vez una cosa dibujada y otra
-vendida. Manda 100x150, porque la copisteria no baja de 10 cm de lado y
-76 mm no se puede hacer. La web ya esta cambiada. Y la tarjeta, que aqui ya decia 85x54 desde el
+(Estas dos medidas ya estuvieron en la web una vez, cuando el generador
+dibujaba 100x150: se dibujaba una cosa y se vendia otra. Ahora los tres
+sitios que hablan de la PLACA -fichas de producto, formulario de pedido
+y datos para Google- dicen los tres 90x90 y 76x118, y el generador dice
+la del VINILO, que es su trabajo. Si cambias una, mira las otras: la
+del vinilo son siempre 2 mm menos que la de la placa. Y la tarjeta, que aqui ya decia 85x54 desde el
 principio, el generador la dibujaba de pie a 55x85: se dibujaba una cosa
 y se vendia otra. Arreglado: la tarjeta va tumbada y tiene composicion
 propia, con el icono y el texto a la izquierda y el QR a la derecha,
@@ -331,17 +368,53 @@ Vale de las tres maneras:
   - cualquier direccion pegada
 Si le das el codigo a secas, el te monta el enlace de escribir resena.
 
-PARA LA IMPRENTA
-Marca "Sangrado de 3 mm" y el fondo se sale por los cuatro lados, con
-la linea de corte marcada. Es lo que te va a pedir la imprenta. El PNG
-sale a 2000 px de lado largo: para 90 mm son unos 565 puntos por
-pulgada, de sobra.
+PARA LA IMPRENTA: EL BOTON "DESCARGAR PDF (IMPRENTA)"
+Ese es el archivo que se manda a cortar, y no hay que preparar nada
+antes: el PDF sale siempre con el sangrado puesto y con el contorno de
+corte dentro, marques lo que marques en la casilla de sangrado.
 
-PARA ENSENARSELO AL CLIENTE
-Sin sangrado. El boton "Descargar PNG" te lo baja; "Copiar imagen" lo
-deja en el portapapeles para pegarlo en WhatsApp directamente. En el
-movil, si el boton no hace nada, deja el dedo pulsado sobre la imagen y
-dale a Guardar.
+Lo que lleva dentro:
+
+  - EL DIBUJO A SANGRE. El fondo se sale 3 mm por los cuatro lados. Eso
+    es para que, cuando la cuchilla se desvie medio milimetro -y se
+    desvia, ninguna corta al pelo-, no aparezca un canto en blanco.
+
+  - EL CONTORNO DE CORTE, en una tinta plana llamada CutContour. No se
+    imprime: solo le dice al ploter por donde pasar la cuchilla. Ese
+    nombre es el que entienden las maquinas de corte (Versaworks, Onyx,
+    Caldera). SI TU COPISTERIA PIDE OTRO NOMBRE -Thru-cut, Dieline-, se
+    cambia en una sola linea del generador: busca TINTA_CORTE en
+    gen/plantilla.html, cambialo, y vuelve a montar el generador.
+
+  - LAS CAJAS DEL PDF. MediaBox con el sangrado dentro y TrimBox justo
+    en la linea de corte. Es como la imprenta comprueba de un vistazo
+    que el sangrado esta puesto y cuanto mide.
+
+En el PDF la linea de corte NO se dibuja de puntos como en la vista
+previa. Es a proposito: ahi va como trazo de verdad, y si ademas se
+pintara saldria impresa una raya gris alrededor de la placa.
+
+El dibujo va a 3600 px de lado largo. Para un vinilo de 88 mm (94 con
+el sangrado) son unos 973 puntos por pulgada: mas del triple de lo que
+pide una imprenta.
+
+LA CASILLA DE "SANGRADO DE 3 MM" ES OTRA COSA: es para mirar en
+pantalla como queda el archivo a sangre. No hace falta tocarla para
+bajar el PDF.
+
+PARA ENSENARSELO AL CLIENTE, EL PNG O EL JPG
+Sin sangrado y sin contorno de corte. Hay tres maneras de sacarlo:
+
+  - "Descargar PNG": la de siempre, la de mas calidad.
+  - "Descargar JPG": pesa la cuarta parte, y lo traga cualquier sitio
+    que se ponga tonto con el PNG. Para la imprenta NO vale: pierde
+    calidad en los cantos del QR y no puede llevar el contorno de
+    corte.
+  - "Copiar imagen": lo deja en el portapapeles para pegarlo en
+    WhatsApp directamente.
+
+En el movil, si el boton no hace nada, deja el dedo pulsado sobre la
+imagen y dale a Guardar.
 
 LO QUE NO HACE
   - No sube nada a ningun sitio. Todo se dibuja en tu navegador. El

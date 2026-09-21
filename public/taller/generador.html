@@ -133,7 +133,7 @@ canvas{display:none}
       </div>
       <!-- lo pisa ponMedida() en cuanto carga; esto es solo lo que se ve
            durante el parpadeo de antes -->
-      <span class="pista" id="medidaTxt">100 × 100 mm</span>
+      <span class="pista" id="medidaTxt">88 × 88 mm de vinilo · placa de 90 × 90 mm</span>
     </div>
 
     <div class="campo">
@@ -249,10 +249,13 @@ canvas{display:none}
     <div class="lienzo-caja"><img id="salida" alt="Vista previa de la placa"></div>
     <div class="acciones">
       <button type="button" class="btn btn-oro" id="descarga">Descargar PNG</button>
+      <button type="button" class="btn btn-fan" id="descargaJpg">Descargar JPG</button>
+      <button type="button" class="btn btn-fan" id="descargaPdf">Descargar PDF (imprenta)</button>
       <button type="button" class="btn btn-fan" id="copia">Copiar imagen</button>
       <button type="button" class="btn btn-fan" id="copiaEnlace">Copiar enlace</button>
       <span class="ficha" id="ficha"></span>
     </div>
+    <p class="aviso" id="avisoPdf">El <b>PDF</b> es el que se manda a la copistería: lleva el sangrado de 3 mm puesto y el contorno de corte en la tinta <b>CutContour</b>, que es por donde silueteará la máquina. El PNG es para enseñárselo al cliente.</p>
     <p class="aviso" id="avisoQR">Pon el <b>nombre del negocio</b> y saldrá el QR. La placa se dibuja igual sin él, pero con un hueco.</p>
     <p class="aviso" id="avisoDestino" hidden></p>
     <p class="aviso" id="avisoGuardar">En el móvil, si el botón de descargar no hace nada, <b>deja el dedo pulsado sobre la imagen y dale a «Guardar»</b>.</p>
@@ -2576,19 +2579,44 @@ var qrcode = function() {
      dibuja de pie, no tumbada: tumbada no cabe esta composicion y
      salia otra cosa distinta, que es justo lo que no queremos. */
   var FORMATOS = {
-    /* LA PLACA ES DE 100 × 100, NO DE 90 × 90.
+    /* OJO: 'mm' ES LA MEDIDA DEL VINILO, NO LA DE LA PLACA.
 
-       Estaba a 90 × 90 y eso es lo que se vendía, pero la copistería no
-       baja de 10 cm ni de ancho ni de alto: una placa de 90 mm no la
-       pueden sacar. Como la placa se pide ahí, la medida la manda la
-       máquina, no nosotros.
+       Son dos cosas distintas y conviene no mezclarlas nunca:
 
-       Subirla no descoloca nada: el cuadrado sigue siendo cuadrado y
-       toda la composición va en fracciones del lado (ver REJA), así que
-       el dibujo es el mismo, más grande. El QR también crece, que para
-       leerlo solo es bueno. */
-    placa:   { nombre: 'Placa de mesa',    mm: [100, 100], reja: 'cuadrada' },
-    stand:   { nombre: 'Expositor de pie', mm: [100, 150], reja: 'alta' },
+         · LA PLACA es la pieza de metacrilato que se le vende al
+           cliente: 90 × 90 la de mesa, 76 × 118 el expositor. Eso es lo
+           que dicen las fichas de la web, y ahí no se toca.
+
+         · EL VINILO es lo que se manda a imprimir y va pegado encima:
+           88 × 88 y 74 × 116. DOS MILÍMETROS MENOS, uno por cada lado.
+
+       Ese milímetro de margen es para que el vinilo no asome por el
+       canto del metacrilato. Pegar a mano nunca sale centrado al pelo,
+       y un vinilo que sobresale medio milímetro se ve, se engancha y
+       empieza a despegarse por ahí. Un milímetro por lado se perdona
+       solo.
+
+       AQUÍ VA LA DEL VINILO porque este archivo dibuja lo que se
+       imprime. La de la placa va en 'placaMm', que no se dibuja: sale
+       escrita debajo de los botones para que al mirar el generador se
+       sepa de qué pieza estamos hablando.
+
+       Antes esto estuvo a 100 × 100 y 100 × 150 porque la copistería no
+       bajaba de 10 cm de lado. Ese mínimo era del corte A GUILLOTINA,
+       que es una cuchilla recta y no sujeta piezas pequeñas. Ahora las
+       piezas van SILUETEADAS: las corta un plóter siguiendo el contorno
+       que va dentro del archivo (ver el PDF de imprenta), y a esa
+       máquina el tamaño le da igual.
+
+       SI ALGÚN DÍA SE VUELVE A CORTAR A GUILLOTINA, esto hay que
+       revisarlo: a guillotina no bajan de 100 mm.
+
+       El radio de 4 mm es el redondeo de las esquinas, y lo decide el
+       contorno de corte que mandamos nosotros. Una esquina en pico se
+       levanta con el uso -el trapo de la barra, un dedo- y la pegatina
+       empieza a despegarse por la punta. */
+    placa:   { nombre: 'Placa de mesa',    mm: [88, 88],  placaMm: [90, 90],  reja: 'cuadrada', radio: 4 },
+    stand:   { nombre: 'Expositor de pie', mm: [74, 116], placaMm: [76, 118], reja: 'alta',     radio: 4 },
     /* LA TARJETA VA TUMBADA, 85 × 54, que es la que se vende.
 
        Estaba como 55 × 85 de pie, y eso no es lo que pone la web ni lo
@@ -3318,6 +3346,13 @@ var qrcode = function() {
   }
 
   /* ══════════ el plano de la placa ══════════ */
+
+  /* Mientras esto vale true, pinta() no dibuja la línea de corte de
+     puntos. Solo lo enciende pdf() y vuelve a apagarlo antes de salir:
+     no es un ajuste del usuario y por eso no vive en 'est' —si viviera
+     ahí acabaría viajando dentro del enlace que se copia. */
+  var SIN_GUIA = false;
+
   function pinta() {
     var F = FORMATOS[est.formato];
     var mmW = F.mm[0], mmH = F.mm[1];
@@ -3341,16 +3376,19 @@ var qrcode = function() {
 
     var bx = sang * px, by = sang * px;
     var bw = mmW * px, bh = mmH * px;
-    /* EL TROQUEL. La placa y el expositor son rectangulos a sangre: el
-       redondeo lo pone luego la maquina, y dibujarlo aqui haria que la
-       imprenta cortara sobre una esquina ya curvada. La TARJETA si lo
-       lleva, porque es una tarjeta de PVC troquelada de serie con unos
-       3 mm de radio, y una tarjeta con las esquinas en pico no es lo
-       que se le entrega al cliente.
+    /* EL REDONDEO DE LAS ESQUINAS. Los tres formatos lo llevan: 4 mm el
+       vinilo de la placa y del expositor, 3 mm la tarjeta de PVC, que
+       viene troquelada de serie.
 
-       Con sangrado se dibuja cuadrada igualmente: el archivo para la
-       imprenta va a sangre entera y el troquel se marca con la linea de
-       corte. */
+       Aqui se dibuja solo PARA VERLO. Quien manda de verdad es el
+       contorno de corte del PDF, que sale del mismo F.radio: la maquina
+       corta por ahi, no por lo que se pinte en el lienzo.
+
+       Con sangrado se dibuja cuadrado igualmente, y no es un descuido:
+       el archivo de imprenta va a sangre entera hasta el canto, y el
+       redondeo lo marca el contorno de corte. Si ademas lo dibujaramos
+       curvado, la maquina cortaria sobre una esquina ya curvada y se
+       comeria el sangrado justo donde mas falta hace. */
     var radio = sang ? 0 : (F.radio || 0) * px;
 
     cx.clearRect(0, 0, W, H);
@@ -3397,12 +3435,20 @@ var qrcode = function() {
       cx.restore();
 
       /* La línea de corte va la ÚLTIMA: si se pintara antes, el estirón
-         de arriba se llevaría los guiones hacia fuera. */
-      cx.save();
-      cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
-      cx.setLineDash([px*1.6, px*1.6]);
-      cx.strokeRect(bx, by, bw, bh);
-      cx.restore();
+         de arriba se llevaría los guiones hacia fuera.
+
+         EN EL PDF NO SE PINTA, y es a propósito. Ahí la línea de corte
+         va como trazo vectorial de verdad (la tinta CutContour, ver
+         pdf()), que es lo que lee el plóter. Si además la dibujáramos
+         aquí, saldría IMPRESA sobre el vinilo: una raya gris de puntos
+         alrededor de la placa, encima justo por donde se corta. */
+      if (!SIN_GUIA) {
+        cx.save();
+        cx.strokeStyle = 'rgba(0,0,0,.25)'; cx.lineWidth = Math.max(1, px*0.12);
+        cx.setLineDash([px*1.6, px*1.6]);
+        cx.strokeRect(bx, by, bw, bh);
+        cx.restore();
+      }
     }
     return { W: W, H: H, mm: [totW, totH], dpi: Math.round(px * 25.4) };
   }
@@ -4070,9 +4116,21 @@ var qrcode = function() {
      de ningún otro sitio: estaba escrita a mano en tres trozos de
      código, y asi es como un dia la placa pasa a 100 mm y la pantalla
      se queda diciendo 90. */
+  /* Se dicen LAS DOS MEDIDAS cuando hay dos: la del vinilo, que es lo
+     que se dibuja y se manda a imprimir, y la de la placa de
+     metacrilato, que es lo que se le vende al cliente. Escribir solo
+     una es la forma segura de que un día alguien pida 88 mm de
+     metacrilato, o mande 90 mm de vinilo a la copistería. */
   function ponMedida(v) {
     var F = FORMATOS[v];
-    $('medidaTxt').textContent = F.mm[0] + ' × ' + F.mm[1] + ' mm · ' + F.nombre;
+    var t = F.mm[0] + ' × ' + F.mm[1] + ' mm';
+    /* La tarjeta no lleva las dos medidas: es PVC de una pieza, no un
+       vinilo pegado sobre metacrilato. Ahí lo que se imprime y lo que
+       se vende miden lo mismo, y decir "de vinilo" sería mentir. */
+    if (F.placaMm) {
+      t += ' de vinilo · placa de ' + F.placaMm[0] + ' × ' + F.placaMm[1] + ' mm';
+    }
+    $('medidaTxt').textContent = t + ' · ' + F.nombre;
   }
 
   grupo('fFormato', function (v) {
@@ -4262,20 +4320,253 @@ var qrcode = function() {
     refresca();
   });
 
-  function nombreArchivo() {
+  function nombreArchivo(ext) {
     var n = (est.negocio || 'placa').toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'placa';
-    return 'plea5e-' + est.formato + '-' + n + '.png';
+    return 'plea5e-' + est.formato + '-' + n + '.' + (ext || 'png');
+  }
+  /* Bajar un archivo al disco. Lo usan el PNG y el PDF, que hasta ahora
+     era el mismo trozo de c\u00f3digo escrito dos veces. */
+  function baja(blob, nombre) {
+    var u = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = u; a.download = nombre;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
   }
   $('descarga').addEventListener('click', function () {
-    lienzo.toBlob(function (b) {
-      var u = URL.createObjectURL(b);
-      var a = document.createElement('a');
-      a.href = u; a.download = nombreArchivo();
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
-    }, 'image/png');
+    lienzo.toBlob(function (b) { baja(b, nombreArchivo('png')); }, 'image/png');
+  });
+
+  /* EL JPG. Pesa la cuarta parte que el PNG y lo traga cualquier sitio
+     que se ponga tonto con el PNG: algunos formularios de pedido, algun
+     correo antiguo, WhatsApp Web cuando le da por ahi.
+
+     OJO CON LAS ESQUINAS. El JPG no sabe de transparencia, y el dibujo
+     SI la tiene: sin sangrado, las esquinas redondeadas dejan cuatro
+     picos transparentes. Volcado tal cual a JPG, esos picos salen
+     NEGROS. Por eso se copia antes sobre un fondo blanco, que es el
+     color del material.
+
+     Para la imprenta NO se usa: el JPG pierde calidad en los cantos del
+     QR y, sobre todo, no puede llevar el contorno de corte. Para eso
+     esta el PDF. */
+  $('descargaJpg').addEventListener('click', function () {
+    var c = document.createElement('canvas');
+    c.width = lienzo.width; c.height = lienzo.height;
+    var k = c.getContext('2d');
+    k.fillStyle = '#FFFFFF';
+    k.fillRect(0, 0, c.width, c.height);
+    k.drawImage(lienzo, 0, 0);
+    c.toBlob(function (b) { baja(b, nombreArchivo('jpg')); }, 'image/jpeg', 0.92);
+  });
+
+  /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 EL PDF PARA LA IMPRENTA \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+     EL PNG NO SIRVE PARA MANDAR A CORTAR, y no es cuesti\u00f3n de calidad:
+     un PNG es una rejilla de p\u00edxeles y el contorno de corte tiene que
+     ser una L\u00cdNEA, algo que el pl\u00f3ter pueda seguir. En un PNG no cabe.
+     La casilla de sangrado dibuja una l\u00ednea de puntos, pero eso es un
+     dibujo de una l\u00ednea; la m\u00e1quina no puede cortar por un dibujo.
+
+     Lo que se monta aqu\u00ed es el archivo que pide cualquier copister\u00eda
+     para un silueteado:
+
+       \u00b7 el dibujo a sangre, a tama\u00f1o real y en su sitio;
+       \u00b7 encima, el contorno de corte en una TINTA PLANA llamada
+         CutContour, en magenta y con sobreimpresi\u00f3n. Ese es el nombre
+         que reconocen los RIP de corte (Versaworks, Onyx, Caldera). Si
+         la imprenta pide otro \u2014Thru-cut, Dieline\u2014, se cambia abajo en
+         TINTA_CORTE y no hay que tocar nada m\u00e1s;
+       \u00b7 las cajas del PDF: MediaBox con el sangrado dentro y TrimBox
+         justo en la l\u00ednea de corte. As\u00ed la imprenta ve de un vistazo
+         que el sangrado est\u00e1 puesto y cu\u00e1nto mide.
+
+     El PDF se escribe a mano, byte a byte. Son unas pocas decenas de
+     l\u00edneas, y a cambio el generador sigue siendo UN SOLO ARCHIVO que se
+     abre con doble clic, sin librer\u00edas y sin internet. Meter aqu\u00ed una
+     librer\u00eda de PDF por ahorrarse esto ser\u00edan cientos de kilobytes y
+     una dependencia m\u00e1s que mantener. */
+
+  /* El nombre de la tinta de corte. SI LA IMPRENTA PIDE OTRO, se cambia
+     aqu\u00ed. Es una tinta plana: no se imprime, solo le dice a la m\u00e1quina
+     por d\u00f3nde pasar la cuchilla. */
+  var TINTA_CORTE = 'CutContour';
+  var MM = 72 / 25.4;              /* un mil\u00edmetro, en puntos PDF */
+
+  function pdfNum(v) { return (Math.round(v * 1000) / 1000).toString(); }
+
+  function pdfBytes(s) {
+    var u = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) u[i] = s.charCodeAt(i) & 0xFF;
+    return u;
+  }
+
+  /* El dibujo del lienzo como bytes RGB, sin transparencia. El PDF la
+     llevar\u00eda en un canal aparte y aqu\u00ed no hace falta: lo que se imprime
+     es opaco. Lo que sea transparente se apoya sobre blanco, que es el
+     color del material. */
+  function pdfPixeles() {
+    var d = cx.getImageData(0, 0, lienzo.width, lienzo.height).data;
+    var n = lienzo.width * lienzo.height;
+    var rgb = new Uint8Array(n * 3);
+    for (var i = 0, j = 0; i < n; i++) {
+      var p = i * 4, a = d[p + 3] / 255;
+      rgb[j++] = Math.round(d[p]     * a + 255 * (1 - a));
+      rgb[j++] = Math.round(d[p + 1] * a + 255 * (1 - a));
+      rgb[j++] = Math.round(d[p + 2] * a + 255 * (1 - a));
+    }
+    return rgb;
+  }
+
+  /* Comprime como lo hace el PDF: zlib, que es justo lo que devuelve
+     CompressionStream('deflate'). Si el navegador no lo tiene, devuelve
+     null y quien llama se va al JPEG. */
+  function pdfComprime(bytes) {
+    if (typeof CompressionStream !== 'function') return Promise.resolve(null);
+    try {
+      var cs = new CompressionStream('deflate');
+      var w = cs.writable.getWriter();
+      w.write(bytes); w.close();
+      return new Response(cs.readable).arrayBuffer()
+        .then(function (b) { return new Uint8Array(b); })
+        .catch(function () { return null; });
+    } catch (e) { return Promise.resolve(null); }
+  }
+
+  /* El respaldo: JPEG al 95 %, que el PDF sabe llevar tal cual
+     (DCTDecode). Pierde un pelo de calidad en los cantos del QR, pero a
+     m\u00e1s de 1000 puntos por pulgada no se ve ni con lupa, y es mejor eso
+     que quedarse sin PDF en un navegador viejo. */
+  function pdfJPEG() {
+    var bin = atob(lienzo.toDataURL('image/jpeg', 0.95).split(',')[1]);
+    var u = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return u;
+  }
+
+  /* El recorrido del corte. Rect\u00e1ngulo pelado, o con las esquinas
+     redondeadas si el formato lleva radio (la tarjeta). El 0,5523 es la
+     constante de siempre para dibujar un cuarto de c\u00edrculo con una
+     curva de B\u00e9zier. */
+  function pdfTrazo(x, y, w, h, r) {
+    if (!(r > 0)) {
+      return pdfNum(x) + ' ' + pdfNum(y) + ' ' + pdfNum(w) + ' ' + pdfNum(h) + ' re';
+    }
+    r = Math.min(r, w / 2, h / 2);
+    var k = r * 0.5523, X = x + w, Y = y + h, p = pdfNum;
+    return p(x + r) + ' ' + p(y) + ' m\n' +
+           p(X - r) + ' ' + p(y) + ' l\n' +
+           p(X - r + k) + ' ' + p(y) + ' ' + p(X) + ' ' + p(y + r - k) + ' ' + p(X) + ' ' + p(y + r) + ' c\n' +
+           p(X) + ' ' + p(Y - r) + ' l\n' +
+           p(X) + ' ' + p(Y - r + k) + ' ' + p(X - r + k) + ' ' + p(Y) + ' ' + p(X - r) + ' ' + p(Y) + ' c\n' +
+           p(x + r) + ' ' + p(Y) + ' l\n' +
+           p(x + r - k) + ' ' + p(Y) + ' ' + p(x) + ' ' + p(Y - r + k) + ' ' + p(x) + ' ' + p(Y - r) + ' c\n' +
+           p(x) + ' ' + p(y + r) + ' l\n' +
+           p(x) + ' ' + p(y + r - k) + ' ' + p(x + r - k) + ' ' + p(y) + ' ' + p(x + r) + ' ' + p(y) + ' c\n' +
+           'h';
+  }
+
+  function pdfMonta(img, filtro, pw, ph, mmW, mmH, sang, radioMm) {
+    var totW = (mmW + sang * 2) * MM, totH = (mmH + sang * 2) * MM;
+    var x0 = sang * MM, y0 = sang * MM, w = mmW * MM, h = mmH * MM;
+
+    /* Primero el dibujo, estirado a la hoja entera (la hoja YA es el
+       tama\u00f1o con sangrado). Despu\u00e9s el contorno, en su tinta y con
+       sobreimpresi\u00f3n para que no recorte lo que tiene debajo. */
+    var contenido =
+      'q\n' + pdfNum(totW) + ' 0 0 ' + pdfNum(totH) + ' 0 0 cm\n/Im0 Do\nQ\n' +
+      'q\n/GSc gs\n/CSc CS\n1 SCN\n0.25 w\n' +
+      pdfTrazo(x0, y0, w, h, radioMm * MM) + '\nS\nQ\n';
+    var contBytes = pdfBytes(contenido);
+
+    var trozos = [], largo = 0, pos = [];
+    function mete(x) {
+      var b = (typeof x === 'string') ? pdfBytes(x) : x;
+      trozos.push(b); largo += b.length;
+    }
+    function obj(n, cabecera, cuerpo) {
+      pos[n] = largo;
+      mete(n + ' 0 obj\n' + cabecera + '\n');
+      if (cuerpo) { mete('stream\n'); mete(cuerpo); mete('\nendstream\n'); }
+      mete('endobj\n');
+    }
+
+    /* La segunda l\u00ednea son cuatro bytes altos. Es la se\u00f1al de toda la
+       vida de que el archivo es binario: sin ella hay programas que lo
+       tratan como texto y lo estropean al copiarlo. */
+    mete('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+
+    obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+    obj(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+    obj(3, '<< /Type /Page /Parent 2 0 R' +
+           ' /MediaBox [0 0 ' + pdfNum(totW) + ' ' + pdfNum(totH) + ']' +
+           ' /BleedBox [0 0 ' + pdfNum(totW) + ' ' + pdfNum(totH) + ']' +
+           ' /TrimBox [' + pdfNum(x0) + ' ' + pdfNum(y0) + ' ' +
+                           pdfNum(x0 + w) + ' ' + pdfNum(y0 + h) + ']' +
+           ' /Resources << /XObject << /Im0 5 0 R >>' +
+                        ' /ExtGState << /GSc 6 0 R >>' +
+                        ' /ColorSpace << /CSc 7 0 R >> >>' +
+           ' /Contents 4 0 R >>');
+    obj(4, '<< /Length ' + contBytes.length + ' >>', contBytes);
+    obj(5, '<< /Type /XObject /Subtype /Image' +
+           ' /Width ' + pw + ' /Height ' + ph +
+           ' /ColorSpace /DeviceRGB /BitsPerComponent 8' +
+           ' /Filter /' + filtro + ' /Length ' + img.length + ' >>', img);
+    /* Sobreimpresi\u00f3n: el contorno no tapa ni recorta lo que lleva
+       debajo. Es lo que se pide para una tinta de corte. */
+    obj(6, '<< /Type /ExtGState /OP true /op true /OPM 1 >>');
+    /* La tinta plana. El magenta es solo para que se vea al abrirlo:
+       lo que importa es el nombre, que es por donde la m\u00e1quina la
+       reconoce. */
+    obj(7, '[/Separation /' + TINTA_CORTE + ' /DeviceCMYK 8 0 R]');
+    obj(8, '<< /FunctionType 2 /Domain [0 1] /C0 [0 0 0 0] /C1 [0 1 0 0] /N 1 >>');
+
+    var inicio = largo;
+    var x = 'xref\n0 9\n0000000000 65535 f \n';
+    for (var i = 1; i <= 8; i++) x += ('0000000000' + pos[i]).slice(-10) + ' 00000 n \n';
+    mete(x + 'trailer\n<< /Size 9 /Root 1 0 R >>\nstartxref\n' + inicio + '\n%%EOF\n');
+
+    var todo = new Uint8Array(largo), z = 0;
+    for (var t = 0; t < trozos.length; t++) { todo.set(trozos[t], z); z += trozos[t].length; }
+    return new Blob([todo], { type: 'application/pdf' });
+  }
+
+  $('descargaPdf').addEventListener('click', function () {
+    var boton = this, antes = boton.textContent;
+    boton.disabled = true; boton.textContent = 'Montando el PDF\u2026';
+
+    /* EL PDF DE IMPRENTA SIEMPRE LLEVA SANGRADO, marque lo que marque la
+       casilla. Esa casilla es para mirar el archivo; este es para
+       cortarlo, y sin sangrado el primer corte que se desv\u00ede medio
+       mil\u00edmetro deja un canto en blanco. Y sin la gu\u00eda de puntos, que
+       aqu\u00ed la l\u00ednea de corte va de verdad. */
+    var sangAntes = est.sangrado;
+    est.sangrado = true; SIN_GUIA = true;
+    pinta();
+    est.sangrado = sangAntes;
+
+    var F = FORMATOS[est.formato];
+    var pw = lienzo.width, ph = lienzo.height;
+
+    function acaba() {
+      SIN_GUIA = false;
+      boton.disabled = false; boton.textContent = antes;
+      refresca();                     /* deja la vista como estaba */
+    }
+
+    pdfComprime(pdfPixeles()).then(function (z) {
+      var img = z, filtro = 'FlateDecode';
+      if (!img) { img = pdfJPEG(); filtro = 'DCTDecode'; }
+      baja(pdfMonta(img, filtro, pw, ph, F.mm[0], F.mm[1], 3, F.radio || 0),
+           nombreArchivo('pdf'));
+      acaba();
+    }).catch(function (e) {
+      acaba();
+      boton.textContent = 'No ha salido';
+      setTimeout(function () { boton.textContent = antes; }, 2200);
+    });
   });
   $('copia').addEventListener('click', function () {
     var b = this;
@@ -4298,16 +4589,27 @@ var qrcode = function() {
   })();
   if (DENTRO_DE_MARCO) {
     $('descarga').textContent = 'Guardar la imagen';
-    $('descarga').addEventListener('click', function () {
-      $('avisoGuardar').classList.add('malo');
-      $('avisoGuardar').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, true);
+    [$('descarga'), $('descargaJpg')].forEach(function (b) {
+      b.addEventListener('click', function () {
+        $('avisoGuardar').classList.add('malo');
+        $('avisoGuardar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, true);
+    });
     $('avisoGuardar').innerHTML =
       'Estás viendo esto <b>dentro de la vista previa</b>, y aquí el navegador no ' +
       'deja descargar archivos. Para quedarte la placa: <b>pulsa sobre la imagen con ' +
       'el botón derecho (o deja el dedo pulsado en el móvil) y dale a «Guardar imagen»</b>. ' +
       'Con el archivo de la carpeta <code>taller/</code> abierto por tu cuenta, el botón de ' +
       'descargar sí funciona.';
+    /* Con el PNG se puede salir del paso guardando la imagen a mano. Con
+       el PDF no: no hay imagen que guardar, el archivo hay que bajarlo.
+       Así que aquí el botón no se deja a medias, se apaga y se dice por
+       qué. */
+    $('descargaPdf').disabled = true;
+    $('descargaPdf').textContent = 'PDF: ábrelo fuera de la vista previa';
+    $('avisoPdf').innerHTML =
+      'El <b>PDF para la imprenta</b> no se puede bajar desde dentro de la vista previa. ' +
+      'Abre <code>taller/generador.html</code> por tu cuenta y el botón funciona.';
   }
 
   /* ══════════ el encargo viaja dentro del enlace ══════════
