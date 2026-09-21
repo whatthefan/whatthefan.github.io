@@ -3006,9 +3006,14 @@
   /* ══════════════════════════════════════════════════════════════
      EL GUION
 
-     Cada corchete es UNA APARICIÓN: entra corriendo por un lado, va
-     parando en cada sitio de la lista, y se va por el otro. Entre
-     aparición y aparición no está.
+     Cada corchete es UNA APARICIÓN. Entre una y otra no está.
+
+     VAN EN EL ORDEN DE LA PÁGINA, de arriba abajo, y eso no es por
+     orden: la regla que las obliga a dejarse aire entre ellas compara
+     cada una con la de al lado dando por hecho que la siguiente va
+     más abajo. Con una fuera de sitio, a la de antes se le da la
+     vuelta al tramo y esa aparición NO SALE NUNCA. Pasó con la del
+     móvil, que estaba escrita después de la de los tres pasos.
 
        sel     a qué se pega
        modo    'der'/'izq' al lado · 'encima'/'debajo' arriba o abajo
@@ -3023,43 +3028,45 @@
      ══════════════════════════════════════════════════════════════ */
   var GUION = [
 
-    /* 1 · TE SALUDA Y SE VA. Lo primero que ves. La mano se mueve de
-       verdad —la animación va dentro del propio dibujo— y en cuanto
-       bajas un poco, se marcha. No enseña nada: solo dice hola. */
-    [{ sel: '.portada .chips', modo: 'der', hueco: 16, esc: 0.8,
-       pose: 'saluda' }],
+    /* 1 · TE SALUDA ARRIBA DEL TODO, grande y quieta. Es lo primero
+       que ves y no hace nada más: solo dice hola y se va. */
+    [{ sel: '#hueco3d', modo: 'punto', fx: 0.03, fy: 0.06, asiento: 0,
+       esc: 1.15, pose: 'saluda' }],
 
-    /* 2 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE.
-       Los tres pasos de «cómo funciona» son fichas grandes con la
-       esquina de arriba a la derecha vacía, así que cabe entera ahí
-       dentro y se la ve, estén en fila (pantalla ancha) o en columna
-       (móvil). Cada ficha se queda en amarillo cuando la pisa, y se
-       apaga si vuelves a subir. */
+    /* 2 · APOYADA EN EL MÓVIL de la demo mientras se escribe sola la
+       reseña, con el brazo de puntal. Y cuando llega a «Publicar», lo
+       celebra: dos veces y se calla, que la demo va en bucle. */
+    [{ sel: '#movil', modo: 'izq', hueco: 2, pose: 'apoyada',
+       festeja: '#pBtn', fiesta: 'tachan', tope: 2 }],
+
+    /* 3 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE.
+       Las fichas de «cómo funciona» tienen la esquina de arriba a la
+       derecha vacía, así que cabe entera ahí dentro, estén en fila o
+       en columna. Cada ficha pone su título en amarillo cuando la
+       pisa, y se apaga si vuelves a subir. */
     [{ saltos: '#como .paso', modo: 'punto', fx: 0.86, fy: 0.10,
        asiento: 0, esc: 0.7, frente: true, pose: 'abajo' }],
 
-    /* 3 · CON LA LIBRETA, EN LA ESQUINA DEL PANEL DEL PEDIDO.
+    /* 4 · CON LA LIBRETA, EN LA ESQUINA DEL PANEL DEL PEDIDO.
        Es el único sitio de la página donde tiene un oficio de verdad:
-       tú marcas y ella lo apunta. Por eso va más grande y mira a la
-       libreta en vez de señalar nada. Y si tocas algo y el precio
-       cambia, se sorprende. Va delante porque el panel es opaco. */
+       tú marcas y ella lo apunta. Y si tocas algo y el precio cambia,
+       se sorprende. Va delante porque el panel es opaco. */
     [{ sel: '.rapido', modo: 'punto', fx: 0.90, fy: 0, asiento: 0.55,
        esc: 0.95, frente: true, pose: 'apunta',
        festeja: '#rTotal', fiesta: 'asombro' }],
 
-    /* 4 · SEÑALANDO EL BOTÓN DE PREGUNTAR, a caballo de su esquina de
-       arriba a la izquierda. El hueco blanco que se ve al lado del
-       botón no existe a todas las anchuras —en un portátil quedan
-       diecisiete píxeles entre «sin permanencia» y el botón—, así que
-       el único sitio que siempre está libre es el propio canto del
-       botón, y encima ahí el brazo cae justo sobre él. */
+    /* 5 · SEÑALANDO EL BOTÓN DE PREGUNTAR, desde el canto de arriba
+       del recuadro del precio, justo encima de él.
+       ES LA ÚNICA QUE LLEGA CORRIENDO. Todas las demás aparecen y
+       desaparecen donde están; que entraran y salieran corriendo seis
+       veces cansaba. Una sola carrera en toda la página se nota; seis
+       son ruido. Y corre solo al venir: al irse, se esfuma. */
     [{ sel: '#seguimiento .serv-precio', modo: 'punto',
        fx: 0.82, fy: 0, asiento: 0.55, esc: 0.9, frente: true,
-       pose: 'abajo' }],
+       corre: true, pose: 'abajo' }],
 
-    /* 5 · EL GUIÑO Y EL PULGAR, al lado del logotipo del pie.
-       Es lo último que ves de la página. Ahí se queda: no hay más
-       rueda que rodar, así que esta aparición no tiene salida. */
+    /* 6 · EL GUIÑO Y EL PULGAR, al lado del logotipo del pie. Es lo
+       último que ves. Ahí se queda: no hay más rueda que rodar. */
     [{ sel: '.marca-pie .logotipo', modo: 'punto',
        fx: 1.30, fy: 1, asiento: 1, esc: 0.95,
        der: false, pose: 'pulgar', fin: true }]
@@ -3078,7 +3085,7 @@
      píxeles: la misma carrera en una décima parte de la rueda, o sea
      un borrón. Tres, despacio y enteras, se ven mucho mejor que
      cuatro a trompicones. */
-  var ENTRA   = 300;  /* lo que tarda en entrar corriendo            */
+  var ENTRA   = 220;  /* lo que tarda en entrar corriendo            */
   var PARADA  = 240;  /* lo que se queda quieta en cada sitio        */
   var VIAJE   = 520;  /* lo que tarda en ir de un sitio al siguiente */
   var SALTO   = 150;  /* lo que tarda cada brinco de palabra a palabra */
@@ -3091,7 +3098,7 @@
                          lo veía nadie: los tres pasos solo están a la
                          vista unos 600 px de bajada, y ahí tienen que
                          caber los tres brincos enteros. */
-  var SALE    = 260;  /* lo que tarda en irse                        */
+  var SALE    = 200;  /* lo que tarda en irse                        */
   var HUECO   = 300;  /* lo que TIENE que pasar sin ella entre una
                          aparición y la siguiente                    */
   var ZANCADA = 26;   /* px de avance por fotograma de pierna        */
@@ -3256,14 +3263,18 @@
     var pri = sitios[0], ult = sitios[sitios.length - 1];
     /* entra por el lado CONTRARIO al sitio, para que la carrera se vea
        de verdad y no sean dos pasos */
-    /* ── ENTRA Y SALE SIEMPRE POR LA IZQUIERDA ──
-       Sacarla por la derecha a innerWidth+24 ENSANCHA EL DOCUMENTO, y
-       el móvil, para que quepa todo a lo ancho, ALEJA LA PÁGINA: se
-       ve pequeñita con una franja negra a la derecha y abajo. Pasaba
-       solo a veces, que es justo cuando ella estaba fuera por ese
-       lado. A la izquierda no pasa: lo que se sale por ahí no cuenta
-       para el ancho. */
-    var entraPor = -pri.ancho - 24;
+    /* ── APARECE, NO ENTRA CORRIENDO ──
+       Salvo la que lleva «corre», que es una sola en toda la página,
+       la entrada empieza en el mismo sitio donde acaba: lo único que
+       pasa es el fundido de la capa. Y la salida, igual: nunca se va
+       andando, se esfuma.
+
+       Cuando SÍ corre, entra por la IZQUIERDA. Sacarla por la derecha
+       a innerWidth+24 ensancha el documento, y el móvil, para que
+       quepa todo a lo ancho, aleja la página entera: se ve pequeñita
+       con una franja negra. A la izquierda no pasa, porque lo que se
+       sale por ahí no cuenta para el ancho. */
+    var entraPor = paradas[0][0].corre ? -pri.ancho - 24 : pri.x;
     var quedarse = function (c) { return c.salto ? POSA : PARADA; };
     var k = [{ s: d[0] - ENTRA,         x: entraPor, c: pri },
              { s: d[0],                 x: pri.x,    c: pri },
@@ -3277,7 +3288,7 @@
        rodar, así que no se va por ningún lado. */
     if (!ult.fin) {
       k.push({ s: d[d.length - 1] + quedarse(ult) + SALE,
-               x: -ult.ancho - 24, c: ult });
+               x: ult.x, c: ult });
     }
     /* Cada luz apunta a SU fotograma, no a una copia del número:
        separa() mueve los extremos después, y con el número copiado la
