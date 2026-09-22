@@ -3006,7 +3006,9 @@
   /* ══════════════════════════════════════════════════════════════
      EL GUION
 
-     Cada corchete es UNA APARICIÓN. Entre una y otra no está.
+     Cada corchete es UNA APARICIÓN: un sitio de la página y un papel
+     que hacer ahí. Manda una sola a la vez, y el cambio de una a otra
+     se da fuera de la pantalla (ver EL RELEVO, más abajo).
 
      VAN EN EL ORDEN DE LA PÁGINA, de arriba abajo, y eso no es por
      orden: la regla que las obliga a dejarse aire entre ellas compara
@@ -3025,26 +3027,45 @@
                en amarillo la que pisa
        pose    el dibujo que hace al llegar
        esc     de tamaño, si el hueco pide una más pequeña
+       pegada  NI APARECE NI DESAPARECE: ya está ahí. El fundido se
+               echa tan atrás y tan adelante que le pilla fuera de la
+               pantalla, así que llegas y está, y se va cuando se va
+               aquello a lo que está pegada. Es lo contrario de que se
+               esfume delante de ti a media bajada, que era lo feo
      ══════════════════════════════════════════════════════════════ */
   var GUION = [
 
     /* 1 · TE SALUDA, agitando la mano. Es lo primero que ves y no hace
        nada más: dice hola.
 
-       Va AL LADO DE LAS TRES PASTILLAS, no en el hueco de la placa.
-       Ahí estuvo y quedaba mal: alrededor de la placa solo hay negro,
-       así que se la veía flotando en medio de la nada, sin nada al
-       lado con lo que medirse. Pegada a las pastillas tiene algo al
-       lado, y es el único sitio de la portada que da cero solape a
-       390, 768 y 1280. Encima de ellas también se probó y ahí sí
-       pisaba el párrafo en las pantallas estrechas. */
-    [{ sel: '.portada .chips', modo: 'der', hueco: 16, esc: 1.15,
-       pose: 'saluda' }],
+       DE PIE AL LADO DE LOS TRES PASOS, apoyada en su línea de abajo.
+       Es el hueco de la portada, y se ancla a la RAYA DE ABAJO de la
+       lista a propósito: es lo único que existe igual estén los tres
+       pasos en columna (móvil) o en fila (pantalla ancha). Medido
+       contra la TINTA —los renglones escritos, no las cajas, que
+       llegan hasta el borde aunque el texto acabe a la mitad— da cero
+       solape a 390, 600, 768, 1024 y 1280.
+
+       Antes estaba al lado de las tres pastillas y se salía por arriba
+       en el móvil. Y antes de eso, en el hueco de la placa, flotando
+       en medio del negro sin nada al lado con lo que medirse. */
+    [{ sel: '.portada .tresp', modo: 'punto', fx: 1, fy: 1,
+       asiento: 1, anclaX: 0, esc: 1.15, pose: 'saluda', pegada: true }],
 
     /* 2 · APOYADA EN EL MÓVIL de la demo mientras se escribe sola la
        reseña, con el brazo de puntal. Y cuando llega a «Publicar», lo
-       celebra: dos veces y se calla, que la demo va en bucle. */
-    [{ sel: '#movil', modo: 'izq', hueco: 2, pose: 'apoyada',
+       celebra: dos veces y se calla, que la demo va en bucle.
+       No se despega del móvil: se va con él, por arriba.
+
+       Y va apoyada en el TERCIO DE ARRIBA del móvil, no a media
+       altura, por una razón de reloj y no de dibujo: mientras ella
+       esté en pantalla no puede empezar la siguiente, y el móvil mide
+       más de quinientos píxeles. Pegada al centro se iba tan tarde que
+       a los brincos de los tres pasos no les quedaba sitio y tenían
+       que ir a toda prisa. Un tercio más arriba son doscientos
+       píxeles de rueda que se le regalan a la siguiente. */
+    [{ sel: '#movil', modo: 'punto', fx: 0, fy: 0.30, asiento: 0.5,
+       anclaX: 1.03, pose: 'apoyada', pegada: true,
        festeja: '#pBtn', fiesta: 'tachan', tope: 2 }],
 
     /* 3 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE.
@@ -3053,14 +3074,14 @@
        en columna. Cada ficha pone su título en amarillo cuando la
        pisa, y se apaga si vuelves a subir. */
     [{ saltos: '#como .paso', modo: 'punto', fx: 0.86, fy: 0.10,
-       asiento: 0, esc: 0.7, frente: true, pose: 'abajo' }],
+       asiento: 0, esc: 0.7, frente: true, pose: 'abajo', pegada: true }],
 
     /* 4 · CON LA LIBRETA, EN LA ESQUINA DEL PANEL DEL PEDIDO.
        Es el único sitio de la página donde tiene un oficio de verdad:
        tú marcas y ella lo apunta. Y si tocas algo y el precio cambia,
        se sorprende. Va delante porque el panel es opaco. */
     [{ sel: '.rapido', modo: 'punto', fx: 0.90, fy: 0, asiento: 0.55,
-       esc: 0.95, frente: true, pose: 'apunta',
+       esc: 0.95, frente: true, pose: 'apunta', pegada: true,
        festeja: '#rTotal', fiesta: 'asombro' }],
 
     /* 5 · SEÑALANDO EL BOTÓN DE PREGUNTAR, desde el canto de arriba
@@ -3077,7 +3098,7 @@
        último que ves. Ahí se queda: no hay más rueda que rodar. */
     [{ sel: '.marca-pie .logotipo', modo: 'punto',
        fx: 1.30, fy: 1, asiento: 1, esc: 0.95,
-       der: false, pose: 'pulgar', fin: true }]
+       der: false, pose: 'pulgar', fin: true, pegada: true }]
   ];
 
   var ANDA = ['anda-0','anda-1','anda-2','anda-3','anda-4','anda-5','anda-6','anda-7'];
@@ -3087,33 +3108,30 @@
      pone tu dedo. Cuanto más grandes son estos números MÁS DESPACIO
      va, porque es más rueda para el mismo recorrido.
 
-     Y CABEN PORQUE SON TRES APARICIONES. Con cuatro sumaban más que
-     la bajada entera de la página en un portátil, y la regla que las
-     separa les comía la entrada o la salida hasta dejarla en cuarenta
-     píxeles: la misma carrera en una décima parte de la rueda, o sea
-     un borrón. Tres, despacio y enteras, se ven mucho mejor que
-     cuatro a trompicones. */
+     Estos números son LO QUE SE PIDE, no lo que sale siempre: si a
+     una aparición no le cabe, se le encoge (ver el reparto de los
+     brincos). Vale más un brinco entero y corto que uno largo que se
+     salga de la pantalla. */
   var ENTRA   = 240;  /* lo que tarda en entrar corriendo            */
   var PARADA  = 420;  /* lo que se queda quieta en cada sitio        */
   var VIAJE   = 640;  /* lo que tarda en ir de un sitio al siguiente */
-  var SALTO   = 210;  /* lo que tarda cada brinco de palabra a palabra */
-  var POSA    = 150;  /* y lo que se queda encima de cada una.
-                         Los brincos van más apretados que el resto a
-                         propósito: tienen que caber enteros MIENTRAS
-                         los tres pasos siguen en pantalla. Con la
-                         pausa larga, el tercer salto caía con la
-                         fila ya debajo de la cabecera pegajosa y no
-                         lo veía nadie: los tres pasos solo están a la
-                         vista unos 600 px de bajada, y ahí tienen que
-                         caber los tres brincos enteros. */
+  var SALTO   = 320;  /* lo que tarda cada brinco de palabra a palabra.
+                         Este es EL número del salto: cuanta más rueda
+                         para el mismo brinco, más despacio se ve. */
+  var POSA    = 100;  /* y lo que se queda encima de cada una.
+                         Fíjate en que al alargar el brinco se ACORTA
+                         la pausa, y no es un despiste: los tres tienen
+                         que caber enteros MIENTRAS las tres fichas
+                         siguen en pantalla. Lo que se le quita a la
+                         pausa es lo que se le puede dar al vuelo, y la
+                         pausa no se echa de menos: antes del primer
+                         brinco y después del último se queda pegada a
+                         la ficha un buen rato. */
   var SALE    = 240;  /* lo que tarda en irse                        */
-  var HUECO   = 140;  /* lo poco que TIENE que pasar sin ella entre
-                         una aparición y la siguiente. Antes eran 380
-                         y con seis apariciones eso obligaba a
-                         recortarles la parada: se iban enseguida.
-                         Ahora se quedan casi el doble de rato en cada
-                         sitio y el hueco es el justo para que se note
-                         que es otra. */
+  var HUECO   = 140;  /* lo poco que tiene que pasar sin ella entre una
+                         aparición y la siguiente. Solo vale para las
+                         que no van pegadas: a las pegadas el hueco se
+                         lo da el relevo, más abajo. */
   var ZANCADA = 26;   /* px de avance por fotograma de pierna        */
   var VUELO   = 0.62; /* lo alto que salta, en veces su propia altura */
 
@@ -3232,7 +3250,7 @@
      Los fotogramas clave: en qué punto de la bajada está en qué sitio.
      Entre dos se interpola, y como el punto de la bajada lo pones tú,
      subir es exactamente lo mismo del revés. */
-  function fotogramas(ap) {
+  function fotogramas(ap, desde) {
     var paradas = paradasDe(ap);
     if (!paradas.length) return null;
 
@@ -3242,6 +3260,7 @@
     var suelo = document.documentElement.scrollHeight - innerHeight;
 
     var sitios = [], d = [];
+    var vuela = SALTO, posa = POSA;
     for (var i = 0; i < paradas.length; i++) {
       var c = sitio(paradas[i][0], paradas[i][1], paradas[i][2]);
       if (!c) return null;
@@ -3255,21 +3274,44 @@
       d.push(x);
     }
 
-    /* ── LOS BRINCOS SE CENTRAN EN CUANDO SE VE LA FILA ──
-       Los tres pasos están todos a la misma altura de la página, o sea
-       que los tres tienen el mismo momento natural. Espaciándolos
-       hacia delante, el tercer brinco caía con la fila ya por encima
-       del borde de arriba: saltaba en una pantalla en la que no había
-       nada que pisar. Repartidos a los dos lados de ese momento, los
-       tres caen mientras la fila está a la vista. */
+    /* ── LOS BRINCOS VAN DENTRO DEL HUECO QUE DE VERDAD TIENEN ──
+       Los tres pasos están todos a la misma altura de la página (en
+       pantalla ancha), o sea que los tres tienen el mismo momento
+       natural: hay que repartirlos a mano. Y el hueco para repartirlos
+       no empieza cuando a ellos les tocaría, sino CUANDO ELLA COGE EL
+       TESTIGO —«desde»—, que es cuando la de antes se ha ido por
+       arriba; y acaba cuando la ficha en la que tiene que caer se va
+       por el borde de arriba. Brincar en una pantalla donde ya no está
+       la ficha no lo ve nadie.
+
+       Así que se mide el hueco y se reparten los brincos dentro. Si
+       cabe, van al tranco largo de SALTO y POSA, que es lo que pasa en
+       el móvil: ahí las tres fichas van en columna y el hueco es toda
+       la sección. En pantalla ancha van EN FILA, o sea que las tres se
+       van por arriba a la vez, y encima el móvil de la demo —que mide
+       más de quinientos píxeles— se come el principio: ahí el tranco
+       sale más corto, y no hay manera de que no salga más corto. */
     if (sitios[0].salto && sitios.length > 1) {
-      var paso1 = SALTO + POSA + 30;
-      /* d[0] es el momento natural sin tocar: la regla de separación
-         solo ha empujado a los de detrás, que es justo lo que hay que
-         deshacer aquí. */
-      var nat = d[0];
-      for (var m = 0; m < d.length; m++) {
-        d[m] = Math.max(0, Math.min(suelo, nat + (m - (sitios.length - 1) / 2) * paso1));
+      var n = sitios.length, tranco = SALTO + POSA + 30, MINIMO_BRINCO = 210;
+      var abre = d[0] - tranco * (n - 1) / 2;
+      if (desde != null && desde > abre) abre = desde;
+      var cabe = tranco;
+      for (var m = 1; m < n; m++) {
+        /* al caer, su cabeza tiene que estar 40 px por debajo del
+           borde de arriba; ni un brinco a ciegas */
+        cabe = Math.min(cabe, (sitios[m].y - 40 - abre) / m);
+      }
+      var tranco2 = Math.max(MINIMO_BRINCO, Math.min(tranco, cabe));
+      /* Y si hay que encoger, LO QUE SE ENCOGE ES LA PAUSA, no el
+         vuelo. El vuelo es lo que se ve; la pausa es solo esperar
+         encima. Primero se paga el brinco entero y lo que sobra es lo
+         que se queda posada. */
+      if (tranco2 < tranco) {
+        vuela = Math.min(SALTO, Math.max(150, tranco2 - 30));
+        posa = Math.max(0, tranco2 - 30 - vuela);
+      }
+      for (var m2 = 0; m2 < n; m2++) {
+        d[m2] = Math.max(0, Math.min(suelo, abre + m2 * tranco2));
       }
     }
 
@@ -3288,21 +3330,45 @@
        con una franja negra. A la izquierda no pasa, porque lo que se
        sale por ahí no cuenta para el ancho. */
     var entraPor = paradas[0][0].corre ? -pri.ancho - 24 : pri.x;
-    var quedarse = function (c) { return c.salto ? POSA : PARADA; };
-    var k = [{ s: d[0] - ENTRA,         x: entraPor, c: pri },
+
+    /* ── LAS «PEGADAS»: NI APARECEN NI DESAPARECEN ──
+       El fundido no se quita —sigue estando, porque en algún momento
+       hay que dejar de dibujarla—: se ECHA FUERA DE LA PANTALLA. Se le
+       da de margen, por delante y por detrás, más de una pantalla de
+       bajada, y como su sitio va clavado a una cosa de la página, a esa
+       distancia esa cosa todavía no ha entrado por abajo o ya se ha ido
+       por arriba. Resultado: llegas y ya está ahí, y se va cuando se va
+       aquello en lo que está apoyada. Nunca la ves esfumarse.
+
+       La cuenta, para que no sea un número mágico: al llegar a su sitio
+       está al 55 % de la pantalla, así que con media pantalla larga de
+       margen ya está por debajo del borde de abajo, y con otro tanto
+       más su alto, por encima del de arriba. */
+    var pegada = !!paradas[0][0].pegada;
+    var MARGEN = innerHeight * 0.7 + pri.alto;
+
+    var quedarse = function (c) { return c.salto ? posa : PARADA; };
+    var k = [{ s: d[0] - (pegada ? MARGEN : ENTRA), x: entraPor, c: pri },
              { s: d[0],                 x: pri.x,    c: pri },
              { s: d[0] + quedarse(pri), x: pri.x,    c: pri }];
     for (var j = 1; j < sitios.length; j++) {
-      k.push({ s: d[j] - (sitios[j].salto ? SALTO : VIAJE), x: sitios[j - 1].x, c: sitios[j - 1] });
+      k.push({ s: d[j] - (sitios[j].salto ? vuela : VIAJE), x: sitios[j - 1].x, c: sitios[j - 1] });
       k.push({ s: d[j],                        x: sitios[j].x, c: sitios[j] });
       k.push({ s: d[j] + quedarse(sitios[j]),  x: sitios[j].x, c: sitios[j] });
     }
     /* La última aparición se queda: en el pie no hay más rueda que
        rodar, así que no se va por ningún lado. */
     if (!ult.fin) {
-      k.push({ s: d[d.length - 1] + quedarse(ult) + SALE,
+      k.push({ s: d[d.length - 1] + quedarse(ult) + (pegada ? MARGEN : SALE),
                x: ult.x, c: ult });
     }
+    k.pegada = pegada;
+    /* EL MOMENTO EN QUE SE VA POR EL BORDE DE ARRIBA. No es el final de
+       su tramo: es cuando el sitio al que está pegada se sale de la
+       pantalla por arriba y, por tanto, ya no se la ve aunque se la
+       siga dibujando. Ese es el momento bueno para dejar de dibujarla
+       y para que coja el testigo la siguiente. */
+    k.fuera = ult.y + ult.alto;
     /* Cada luz apunta a SU fotograma, no a una copia del número:
        separa() mueve los extremos después, y con el número copiado la
        palabra se encendía en un sitio y ella llegaba en otro. */
@@ -3310,15 +3376,25 @@
     return k;
   }
 
-  /* ── QUE NO SE PISEN ──
+  /* ── QUE NO SE PISEN (solo las que no van pegadas) ──
      Las apariciones salen de dónde están las cosas, y en una pantalla
      ancha la página se encoge y se juntan. Si dos se tocan, ella no
      llega a irse nunca y vuelve a estar todo el rato, que es lo que no
-     puede pasar. Se les obliga a dejarse HUECO px de aire. */
+     puede pasar. Se les obliga a dejarse HUECO px de aire. A las
+     pegadas no: de esas se encarga el relevo. */
   function separa(todas) {
     for (var g = 1; g < todas.length; g++) {
       var ant = todas[g - 1], hoy = todas[g];
       if (!ant || !hoy) continue;
+      /* A LAS PEGADAS NO SE LES TOCA EL AIRE. Su margen de entrada y de
+         salida es justo lo que las hace no aparecer ni desaparecer
+         delante de ti; recortándolo para que se dejen hueco con la de
+         al lado, el fundido volvería a caer dentro de la pantalla, que
+         es lo que se quiere evitar. Y no hace falta: cuando dos tramos
+         se pisan manda la que de verdad está en pantalla —lo decide
+         pinta() un poco más abajo—, y la otra está a media pantalla de
+         distancia, por arriba o por abajo, sin que se la vea. */
+      if (ant.pegada || hoy.pegada) continue;
       var fin = ant[ant.length - 1], ini = hoy[0];
       if (ini.s - fin.s >= HUECO) continue;
       var medio = (fin.s + ini.s) / 2;
@@ -3387,9 +3463,56 @@
     return null;
   }
 
+  /* ── EL RELEVO, QUE ES LO ÚNICO DELICADO DE TODO ESTO ──
+     Solo se dibuja una, así que en algún momento hay que pasar de una
+     aparición a la siguiente. Si el cambio se hace mientras las dos se
+     ven, ella desaparece de un sitio de la pantalla y sale de golpe en
+     otro: un teletransporte, que queda peor que cualquier fundido.
+     (Se probó con «manda la que esté más cerca del centro de la
+     pantalla» y es justo lo que pasaba: el relevo caía cuando las dos
+     estaban a la misma distancia del centro, o sea las dos a la vista.)
+
+     La regla es esta y se lee en dos líneas:
+
+       · cada aparición se deja de dibujar EN CUANTO SE VA POR ARRIBA,
+         no cuando se acaba su tramo. Se va de la pantalla scrolleando,
+         como todo lo demás de la página: no la ves esfumarse.
+       · la siguiente coge el testigo un poco después, no en el mismo
+         instante. Ese poco —RELEVO— es el respiro que hace que el
+         fundido de la capa tenga algo que hacer: en vez de un corte
+         seco, se apaga una y se enciende la otra.
+
+     Y como cada una va clavada a una cosa de la página, cuando la de
+     antes ya se ha ido por arriba, la de después casi siempre está
+     todavía por debajo del borde de abajo: llegas y ya está puesta.
+     Sale del scroll y de nada más, así que subir lo desanda igual. */
+  var RELEVO = 90;
+
+  function reparto() {
+    var todas = [], libre = null;
+    for (var g = 0; g < GUION.length; g++) {
+      /* cada una se construye sabiendo cuándo puede empezar, porque los
+         brincos se reparten dentro del hueco que les quede */
+      var k = fotogramas(GUION[g], libre == null ? null : libre + RELEVO);
+      todas.push(k);
+      if (k) libre = k.fuera;
+    }
+    separa(todas);
+    libre = null;
+    todas.forEach(function (k) {
+      if (!k) return;
+      k.tomar = libre == null ? k[0].s : Math.max(k[0].s, libre + RELEVO);
+      /* hasta cuándo se la dibuja: lo que pase antes, que se acabe su
+         tramo o que se vaya por el borde de arriba */
+      k.hasta = Math.min(k[k.length - 1].s, k.fuera);
+      libre = k.fuera;
+    });
+    return todas;
+  }
+
   function pinta() {
     var s = scrollY;
-    var todas = separa(GUION.map(fotogramas));
+    var todas = reparto();
 
     /* Las palabras encendidas salen de dónde estás, no de por dónde
        has pasado: si subes, se van apagando en el mismo orden. */
@@ -3404,24 +3527,15 @@
     luces.forEach(function (el) { el.classList.add('encendida'); });
     encendidas = luces;
 
-    /* ── CUÁL DE ELLAS MANDA ──
-       Dos apariciones pueden solaparse en la rueda sin solaparse en la
-       pantalla: la de los saltos se queda pegada a los tres pasos de
-       la portada, y esos se van por arriba mientras tú sigues bajando,
-       así que su tramo llega hasta bien entradas las placas aunque ya
-       no se la vea. Cogiendo siempre la primera de la lista, la de las
-       placas no salía NUNCA.
-
-       Así que entre las que caen en este punto de la rueda gana la que
-       de verdad está en pantalla, y si ninguna lo está, la que quede
-       más cerca de estarlo. */
-    var mejor = null, suMal = Infinity;
+    /* De las que llegan a este punto de la rueda manda LA ÚLTIMA QUE HA
+       COGIDO EL TESTIGO, que es lo que dice el comentario de arriba. */
+    var mejor = null, suVez = -Infinity;
     for (var g = 0; g < todas.length; g++) {
-      var e = estado(todas[g], s);
+      var k = todas[g];
+      if (!k || k.tomar > s || s > k.hasta) continue;
+      var e = estado(k, s);
       if (!e) continue;
-      var centro = e.y - s + e.c.alto / 2;
-      var mal = Math.abs(centro - innerHeight / 2);
-      if (mal < suMal) { suMal = mal; mejor = e; mejor.g = g; }
+      if (k.tomar >= suVez) { suVez = k.tomar; mejor = e; mejor.g = g; }
     }
 
     if (mejor) {
