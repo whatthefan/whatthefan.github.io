@@ -95,6 +95,12 @@
     margin-top:7px;font-weight:600}
   .ficha p{color:var(--txt-2);font-size:.9rem;margin-top:12px}
 
+  .estudios{margin:22px 0 0;display:grid;gap:0;border-top:1px solid var(--borde)}
+  .estudios>div{display:grid;grid-template-columns:minmax(150px,.52fr) 1fr;gap:clamp(12px,2.4vw,26px);
+    padding:13px 0;border-bottom:1px solid var(--borde)}
+  .estudios dt{color:var(--txt);font-weight:500;font-size:.92rem}
+  .estudios dd{margin:0;color:var(--txt-2);font-size:.9rem;max-width:62ch}
+
   /* ── encaje con el puesto ───────────────────────────────── */
   .encaje{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:0;
     border:1px solid var(--borde);border-radius:var(--r);overflow:hidden}
@@ -154,56 +160,59 @@
     @page{size:A4;margin:10mm 12mm}
     :root{--noche:#fff;--noche-2:#fff;--panel:#fff;--panel-2:#fff;--txt:#101318;--txt-2:#3A4150;
       --txt-3:#6C7382;--borde:#C9CDD6;--borde-claro:#A3A9B6;--oro:#8A6A10;--oro-cl:#8A6A10;--oro-os:#8A6A10}
-    body{font-size:8.6pt;line-height:1.5;font-weight:400;
+    body{font-size:8pt;line-height:1.45;font-weight:400;
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
     .hoja{width:100%;max-width:none;padding:0}
-    h1{font-size:22pt}
-    h2{font-size:13.5pt}
+    h1{font-size:20pt}
+    h2{font-size:12.5pt}
     h3{font-size:9.2pt}
-    .eyebrow{font-size:6.6pt;margin-bottom:7px;letter-spacing:.17em}
-    .bloque{margin-top:13px}
-    .cabecera{grid-template-columns:112px 1fr;gap:18px}
-    .retrato{width:112px;height:112px;box-shadow:none}
+    .eyebrow{font-size:6.3pt;margin-bottom:5px;letter-spacing:.16em}
+    .bloque{margin-top:10px}
+    .cabecera{grid-template-columns:96px 1fr;gap:16px}
+    .retrato{width:96px;height:96px;box-shadow:none}
     .titular .rol{font-size:9.4pt;margin-top:6px}
-    .lema{font-size:9pt;margin-top:9px;max-width:none}
+    .lema{font-size:8.3pt;margin-top:7px;max-width:none}
     .contacto{margin-top:10px;gap:5px}
     .contacto li{padding:3px 8px;font-size:7.3pt}
-    .intro{font-size:8.7pt;max-width:none}
-    .caso-cuerpo{padding:13px 15px}
+    .intro{font-size:8.1pt;max-width:none}
+    .caso-cuerpo{padding:11px 13px}
     .caso .sub{font-size:7.4pt;margin-top:6px}
     .caso p{margin-top:9px;max-width:none}
-    .piezas{margin-top:10px;gap:5px}
+    .piezas{margin-top:8px;gap:4px}
     .piezas li{max-width:none;padding-left:15px}
     .piezas li::before{width:5px;height:5px}
     .cifras{background:#F2F3F5;border-top-color:#C9CDD6}
-    .cifra{padding:8px 12px;border-right-color:#C9CDD6}
+    .cifra{padding:6px 11px;border-right-color:#C9CDD6}
     .cifra .q{color:#6C7382}
-    .cifra .n{font-size:15pt}
+    .cifra .n{font-size:13pt}
     .cifra .q{font-size:6.1pt;margin-top:4px}
     .rejilla{gap:8px;margin-top:11px;grid-template-columns:repeat(3,1fr)}
     .ficha{padding:11px 12px}
     .ficha .sector{font-size:6.2pt;margin-top:4px}
     .ficha p{margin-top:6px;font-size:7.9pt}
     .encaje{margin-top:11px}
-    .encaje li{padding:7px 12px;grid-template-columns:minmax(122px,.62fr) 1fr;gap:16px}
+    .encaje li{padding:5.5px 11px;grid-template-columns:minmax(122px,.62fr) 1fr;gap:16px}
     .encaje li:nth-child(odd){background:#F2F3F5}
-    .encaje .piden,.encaje .tengo{font-size:8.1pt}
+    .encaje .piden,.encaje .tengo{font-size:7.7pt}
     .plan{margin-top:11px}
-    .plan li{padding:7px 0;grid-template-columns:76px 1fr;gap:16px}
+    .plan li{padding:5.5px 0;grid-template-columns:76px 1fr;gap:16px}
     .plan .cuando{font-size:7.6pt}
-    .plan .que{font-size:8.1pt;max-width:none}
-    .plan .que b{font-size:8.4pt;margin-bottom:1px}
-    .cajon{gap:13px;margin-top:11px}
+    .plan .que{font-size:7.7pt;max-width:none}
+    .plan .que b{font-size:8pt;margin-bottom:0}
+    .cajon{gap:11px;margin-top:9px;grid-template-columns:repeat(4,1fr)}
     .etiquetas{gap:5px;margin-top:8px}
     .etiquetas li{font-size:7.1pt;padding:2px 7px}
     .idiomas{margin-top:8px;gap:6px}
     .idiomas li{font-size:8pt;padding-bottom:5px}
-    .condiciones{padding:13px 15px;margin-top:11px;border-color:#8A6A10}
-    .condiciones p,.preguntas li{font-size:8.2pt;max-width:none}
+    .condiciones{padding:11px 13px;margin-top:9px;border-color:#8A6A10}
+    .condiciones p,.preguntas li{font-size:7.7pt;max-width:none}
     .condiciones p+p{margin-top:8px}
     .preguntas{margin-top:9px;gap:5px}
-    .cierre{margin-top:15px;padding-top:9px;font-size:7.3pt}
-    #herramientas{break-before:page;margin-top:0}
+    .cierre{margin-top:11px;padding-top:7px;font-size:7pt}
+    .estudios{margin-top:9px;border-top-color:#C9CDD6}
+    .estudios>div{padding:5.5px 0;border-bottom-color:#C9CDD6;grid-template-columns:minmax(118px,.42fr) 1fr;gap:16px}
+    .estudios dt{font-size:8pt}
+    .estudios dd{font-size:7.7pt;max-width:none}
     a{color:#8A6A10;border:0}
     .caso,.ficha,.condiciones,.encaje li,.plan li,.cifras{break-inside:avoid}
   }
@@ -228,7 +237,7 @@
 
   <section class="bloque">
     <p class="eyebrow">Why this brief</p>
-    <p class="intro">You need one person who can turn an English-language print magazine into a mobile app and an advertising platform, in time for a fixed sporting date — and who can also write the ad copy and talk to advertisers. That is three jobs in most studios. <b>It is the job I already do on my own product:</b> I designed PLEA5E, built its site and its back end, wrote every word of its sales copy, and I answer the phone when a customer calls. A print-to-digital conversion is the same problem I solve every week — a fixed editorial grid that has to survive on a 390-pixel screen without losing its typography or its advertisers' visibility.</p>
+    <p class="intro">You need one person who can turn an English-language print magazine into a mobile app and an advertising platform, in time for a fixed sporting date — and who can also write the ad copy and talk to advertisers. That is three jobs in most studios. <b>It is the job I already do on my own product:</b> PLEA5E is mine end to end and it is live: I designed it, built the site and the back end, wrote every word of the sales copy, and I answer the phone when a customer calls. It is one finished product rather than a folder of mockups, and it is the one I would judge me on. A print-to-digital conversion is the same problem I solve every week — a fixed editorial grid that has to survive on a 390-pixel screen without losing its typography or its advertisers' visibility.</p>
   </section>
 
   <section class="bloque">
@@ -257,35 +266,15 @@
   </section>
 
   <section class="bloque">
-    <p class="eyebrow">Selected work</p>
-    <p class="intro">Self-initiated projects, each one designed and coded end to end. They exist because I wanted to solve a specific layout problem, not because a client paid for them — so every decision in them is mine to explain.</p>
-    <div class="rejilla">
-      <article class="ficha">
-        <h3>Theatre &amp; magic venue</h3>
-        <div class="sector">Live entertainment</div>
-        <p>What's-on listings, a sub-page per show, seat selection and a checkout wired for a payment gateway. Immersive JavaScript animation, fully responsive.</p>
-      </article>
-      <article class="ficha">
-        <h3>Japanese restaurant</h3>
-        <div class="sector">Hospitality</div>
-        <p>Interactive digital menu, dish pages with allergen data, SVG entrance animations and booking straight into WhatsApp. Local SEO throughout.</p>
-      </article>
-      <article class="ficha">
-        <h3>Bilingual events site</h3>
-        <div class="sector">Event decoration</div>
-        <p>Spanish/English site with a JavaScript translation layer, service sub-pages, gallery and contact form. Editorial layout that holds up in both languages — the exact discipline a bilingual magazine needs.</p>
-      </article>
-      <article class="ficha">
-        <h3>Sports club</h3>
-        <div class="sector">Sport</div>
-        <p>Corporate site with sectioned sub-pages, reviews, map and contact form. Animation, responsive layout and local SEO.</p>
-      </article>
-      <article class="ficha">
-        <h3>Coffee shop landing</h3>
-        <div class="sector">Hospitality</div>
-        <p>Single-page landing with digital menu, animation and Google Maps and social integration. Built around mobile performance.</p>
-      </article>
-    </div>
+    <p class="eyebrow">Practice builds</p>
+    <p class="intro">Design studies I set myself, each one to solve a specific layout problem. <b>They are exercises and samples, not delivered client work</b> — some are finished, some stop at the point where the problem was solved. I list them for what they show I can lay out and animate, and I'm happy to walk through any of them.</p>
+    <dl class="estudios">
+      <div><dt>Theatre &amp; magic venue</dt><dd>What's-on listings, a page per show, seat selection and a checkout flow — the hardest layout of the five, because the seat map has to work with a thumb.</dd></div>
+      <div><dt>Japanese restaurant</dt><dd>Interactive menu with allergen data per dish, SVG entrance animation, booking through WhatsApp.</dd></div>
+      <div><dt>Bilingual events site</dt><dd>Spanish/English on one editorial grid with a JavaScript translation layer — the same discipline a bilingual magazine needs when two languages fight for one column.</dd></div>
+      <div><dt>Sports club</dt><dd>Sectioned sub-pages, reviews, map and contact form. Local SEO throughout.</dd></div>
+      <div><dt>Coffee shop landing</dt><dd>One-page menu with maps and social integration, built around mobile performance.</dd></div>
+    </dl>
   </section>
 
   <section class="bloque">
