@@ -3068,26 +3068,36 @@
        anclaX: 1.03, pose: 'apoyada', pegada: true,
        festeja: '#pBtn', fiesta: 'tachan', tope: 2 }],
 
-    /* 3 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE, Y ESTA LO HACE
-       SOLA: la tienes delante y baja ella, sin que sigas bajando tú.
-       Es la única de toda la página que se mueve por su cuenta.
-       Las fichas de «cómo funciona» tienen la esquina de arriba a la
-       derecha vacía, así que cabe entera ahí dentro, estén en fila o
-       en columna. Cada ficha pone su título en amarillo cuando la
-       pisa, y se apaga si vuelves a subir. */
-    [{ saltos: '#como .paso', modo: 'punto', fx: 0.86, fy: 0.10,
-       asiento: 0, esc: 0.7, frente: true, pose: 'abajo',
-       pegada: true, sola: true }],
+    /* 3 · LOS TRES PASOS Y, DE UN SALTO, LA LIBRETA DEL PEDIDO.
+       Son DOS SITIOS EN LA MISMA APARICIÓN, y eso es a propósito.
 
-    /* 4 · CON LA LIBRETA, EN LA ESQUINA DEL PANEL DEL PEDIDO.
-       Es el único sitio de la página donde tiene un oficio de verdad:
+       Primero baja saltando por las tres fichas y las enciende, y eso
+       LO HACE SOLA: la tienes delante y baja ella, sin que sigas
+       bajando tú. Es lo único de toda la página que se mueve por su
+       cuenta. Las fichas tienen la esquina de arriba a la derecha
+       vacía, así que cabe entera ahí dentro, estén en fila o en
+       columna.
+
+       Y de la última ficha SALTA A LA ESQUINA DEL PANEL DEL PEDIDO, en
+       vez de esfumarse allí y salir de la nada aquí. Ese salto no es
+       un adorno: es la única manera de que en el pedido «ya esté ahí».
+       Las dos secciones van pegadas —cuando la última ficha se va por
+       arriba, la esquina del panel lleva media pantalla a la vista—,
+       así que no hay ningún momento fuera de pantalla en el que
+       cambiarla de sitio sin que se la vea. O salta, o aparece de la
+       nada a media pantalla. Salta.
+
+       En el panel tiene el único oficio de verdad de toda la página:
        tú marcas y ella lo apunta. Y si tocas algo y el precio cambia,
        se sorprende. Va delante porque el panel es opaco. */
-    [{ sel: '.rapido', modo: 'punto', fx: 0.90, fy: 0, asiento: 0.55,
-       esc: 0.95, frente: true, pose: 'apunta', pegada: true,
+    [{ saltos: '#como .paso', modo: 'punto', fx: 0.86, fy: 0.10,
+       asiento: 0, esc: 0.7, frente: true, pose: 'abajo',
+       pegada: true, sola: true },
+     { sel: '.rapido', modo: 'punto', fx: 0.90, fy: 0, asiento: 0.55,
+       esc: 0.95, frente: true, pose: 'apunta', brinca: true, viaja: 260,
        festeja: '#rTotal', fiesta: 'asombro' }],
 
-    /* 5 · SEÑALANDO EL BOTÓN DE PREGUNTAR, desde el canto de arriba
+    /* 4 · SEÑALANDO EL BOTÓN DE PREGUNTAR, desde el canto de arriba
        del recuadro del precio, justo encima de él.
        ES LA ÚNICA QUE LLEGA CORRIENDO. Todas las demás aparecen y
        desaparecen donde están; que entraran y salieran corriendo seis
@@ -3097,7 +3107,7 @@
        fx: 0.82, fy: 0, asiento: 0.55, esc: 0.9, frente: true,
        corre: true, pose: 'abajo' }],
 
-    /* 6 · EL GUIÑO Y EL PULGAR, al lado del logotipo del pie. Es lo
+    /* 5 · EL GUIÑO Y EL PULGAR, al lado del logotipo del pie. Es lo
        último que ves. Ahí se queda: no hay más rueda que rodar. */
     [{ sel: '.marca-pie .logotipo', modo: 'punto',
        fx: 1.30, fy: 1, asiento: 1, esc: 0.95,
@@ -3224,7 +3234,11 @@
     return { x: Math.max(4, Math.min(tope, x)), y: y + scrollY,
              alto: alto, ancho: ancho, der: der, pose: s.pose,
              frente: !!s.frente,
-             salto: !!s.saltos, luz: s.saltos ? el : null, fin: !!s.fin };
+             salto: !!s.saltos, luz: s.saltos ? el : null, fin: !!s.fin,
+             /* «brinca» es llegar dando un salto sin ser una de las
+                paradas de brincar: mismo vuelo y misma pose, pero se
+                le mide el tiempo con «viaja», no con el tranco */
+             brinca: !!s.brinca, viaja: s.viaja };
   }
 
   /* Una aparición con «saltos» no es una parada: son TANTAS como
@@ -3262,20 +3276,24 @@
        pie— no llegaría a salir nunca si no se le baja el disparo. */
     var suelo = document.documentElement.scrollHeight - innerHeight;
 
+    /* ── EL MOMENTO NATURAL DE CADA PARADA ──
+       Cuándo le tocaría a cada sitio si no hubiera nadie más: cuando
+       eso que hay en la página está al 55 % de la pantalla. */
     var sitios = [], d = [];
     var vuela = SALTO, posa = POSA;
     for (var i = 0; i < paradas.length; i++) {
       var c = sitio(paradas[i][0], paradas[i][1], paradas[i][2]);
       if (!c) return null;
       sitios.push(c);
-      var x = Math.max(0, Math.min(suelo, c.y - innerHeight * 0.55));
-      var paso = c.salto ? SALTO : VIAJE;
-      var espera = c.salto ? POSA : PARADA;
-      /* dos sitios no pueden pisarse: si la página cambia de ancho y se
-         juntan, se separan a la fuerza o la cuenta se divide por cero */
-      if (i && x < d[i - 1] + espera + paso + 30) x = d[i - 1] + espera + paso + 30;
-      d.push(x);
+      d.push(Math.max(0, Math.min(suelo, c.y - innerHeight * 0.55)));
     }
+    /* cuántas van de brinco al principio, y el momento natural de cada
+       una antes de que nadie lo toque: para la que se mueve sola, el
+       natural de la parada de después es EL AVISO de que ya puede dar
+       el salto, y hay que guardarlo antes de recolocar nada */
+    var brincos = 0;
+    while (brincos < sitios.length && sitios[brincos].salto) brincos++;
+    var natural = d.slice();
 
     /* ── LOS BRINCOS VAN DENTRO DEL HUECO QUE DE VERDAD TIENEN ──
        Los tres pasos están todos a la misma altura de la página (en
@@ -3293,22 +3311,40 @@
        la sección. En pantalla ancha van EN FILA, o sea que las tres se
        van por arriba a la vez, y encima el móvil de la demo —que mide
        más de quinientos píxeles— se come el principio: ahí el tranco
-       sale más corto, y no hay manera de que no salga más corto. */
-    if (sitios[0].salto && sitios.length > 1) {
-      var n = sitios.length, tranco = SALTO + POSA + 30, MINIMO_BRINCO = 210;
-      var abre = d[0] - tranco * (n - 1) / 2;
+       sale más corto, y no hay manera de que no salga más corto.
+
+       Y si detrás de los brincos viene otra parada —la libreta del
+       pedido—, el techo del hueco es SU momento menos lo que tarda el
+       salto hasta ella: los brincos no le pueden comer la rueda al
+       salto que viene después.
+
+       OJO CON UNA COSA: cuando los brincos los mueve el reloj (sola),
+       lo de aquí deja de decidir la VELOCIDAD y pasa a ser pura
+       contabilidad. El reloj reparte el mismo recorrido en el mismo
+       tiempo mida lo que mida el hueco; esto solo decide cuánta rueda
+       gastan, que es lo que hay que dejarle a la parada siguiente. */
+    if (brincos > 1) {
+      var tranco = SALTO + POSA + 30, MINIMO_BRINCO = 210;
+      var abre = d[0] - tranco * (brincos - 1) / 2;
       if (desde != null && desde > abre) abre = desde;
       var cabe = tranco;
-      /* A LA QUE SE MUEVE SOLA NO SE LE MIDE EL HUECO, porque no lo
-         gasta: sus brincos los paga un reloj, no tu dedo, y le da
-         igual cuánta rueda quede. Se le mide solo si el sistema pide
-         menos movimiento, que entonces vuelve a tirar de rueda como
-         todas las demás. */
+      /* A LA QUE SE MUEVE SOLA NO SE LE MIDE NADA DE ESTO, porque no
+         brinca con tu rueda: sus brincos los paga un reloj y va al
+         tranco largo siempre. Se le mide solo si el sistema pide menos
+         movimiento, que entonces vuelve a tirar de rueda como todas
+         las demás: ahí sí hay que mirar que la ficha siga en pantalla
+         cuando caiga, y que a la parada de después le quede sitio. */
       if (!paradas[0][0].sola || quieto) {
-        for (var m = 1; m < n; m++) {
+        for (var m = 1; m < brincos; m++) {
           /* al caer, su cabeza tiene que estar 40 px por debajo del
              borde de arriba; ni un brinco a ciegas */
           cabe = Math.min(cabe, (sitios[m].y - 40 - abre) / m);
+        }
+        if (brincos < sitios.length) {
+          var sigue = sitios[brincos];
+          var techo = Math.max(abre + 80,
+                               d[brincos] - (sigue.viaja || VIAJE)) - abre;
+          cabe = Math.min(cabe, techo / (brincos - 1));
         }
       }
       var tranco2 = Math.max(MINIMO_BRINCO, Math.min(tranco, cabe));
@@ -3317,12 +3353,32 @@
          encima. Primero se paga el brinco entero y lo que sobra es lo
          que se queda posada. */
       if (tranco2 < tranco) {
-        vuela = Math.min(SALTO, Math.max(150, tranco2 - 30));
-        posa = Math.max(0, tranco2 - 30 - vuela);
+        if (paradas[0][0].sola && !quieto) {
+          /* la que va con reloj encoge LAS DOS COSAS a la vez: el
+             reparto de aquí no es velocidad, es contabilidad, y lo que
+             se ve es el ritmo —brinco, respiro, brinco—, que se
+             mantiene igual mida lo que mida el hueco */
+          vuela = SALTO * tranco2 / tranco;
+          posa  = POSA  * tranco2 / tranco;
+        } else {
+          /* las que van con tu rueda encogen la pausa, no el vuelo: el
+             vuelo es lo que se ve, la pausa es solo esperar encima */
+          vuela = Math.min(SALTO, Math.max(0.72 * tranco2, tranco2 - 30));
+          posa = Math.max(0, tranco2 - 30 - vuela);
+        }
       }
-      for (var m2 = 0; m2 < n; m2++) {
+      for (var m2 = 0; m2 < brincos; m2++) {
         d[m2] = Math.max(0, Math.min(suelo, abre + m2 * tranco2));
       }
+    }
+
+    /* ── Y LAS DEMÁS PARADAS, QUE NO SE PISEN ──
+       Cada una en su momento natural, salvo que la de delante llegue
+       tan tarde que no dé tiempo al viaje. */
+    for (var q = Math.max(1, brincos); q < sitios.length; q++) {
+      var antes = d[q - 1] + (sitios[q - 1].salto ? posa : PARADA);
+      var viaje = sitios[q].viaja || VIAJE;
+      if (d[q] < antes + viaje) d[q] = Math.min(suelo, antes + viaje);
     }
 
     var pri = sitios[0], ult = sitios[sitios.length - 1];
@@ -3362,7 +3418,8 @@
              { s: d[0],                 x: pri.x,    c: pri },
              { s: d[0] + quedarse(pri), x: pri.x,    c: pri }];
     for (var j = 1; j < sitios.length; j++) {
-      k.push({ s: d[j] - (sitios[j].salto ? vuela : VIAJE), x: sitios[j - 1].x, c: sitios[j - 1] });
+      k.push({ s: d[j] - (sitios[j].salto ? vuela : (sitios[j].viaja || VIAJE)),
+               x: sitios[j - 1].x, c: sitios[j - 1] });
       k.push({ s: d[j],                        x: sitios[j].x, c: sitios[j] });
       k.push({ s: d[j] + quedarse(sitios[j]),  x: sitios[j].x, c: sitios[j] });
     }
@@ -3374,10 +3431,32 @@
     }
     k.pegada = pegada;
     k.sola = !!paradas[0][0].sola;
-    /* dónde se le acaba el baile: la última parada más lo que se queda
-       en ella. Lo que viene después es margen, y ahí ya no hay nada
-       que animar */
-    k.baile = d[d.length - 1] + quedarse(ult);
+    /* Las tres marcas del reloj, para la que se mueve sola:
+         baile   dónde se le acaba la bajada por las fichas
+         soltar  a partir de qué punto de TU rueda puede dar el salto
+                 al sitio siguiente (antes de eso, el panel todavía no
+                 está donde tiene que estar)
+         salta   dónde cae */
+    k.baile = d[Math.max(0, brincos - 1)] + posa;
+    /* y cuándo se va por arriba la última ficha, EN RUEDA DE VERDAD:
+       pasado eso, bailar es bailar para nadie */
+    if (brincos) k.finBrincos = sitios[brincos - 1].y + sitios[brincos - 1].alto;
+    if (brincos && brincos < sitios.length) {
+      var salta = sitios[brincos].viaja || VIAJE;
+      k.salta = d[brincos];
+      /* DE DÓNDE SALE el salto, en píxeles de la lista: de donde ella
+         está, no del aviso. Poniendo aquí el aviso —que va en rueda de
+         verdad y cae mucho antes— el salto empezaba en mitad de los
+         brincos y se los volvía a hacer todos a toda prisa. */
+      k.desdeSalto = Math.max(k.baile, k.salta - salta);
+      /* EL AVISO va en píxeles de TU rueda —el momento natural del
+         panel—, no en los de la lista, que para los brincos van
+         estirados. Y se le adelanta lo que dura el salto, para que
+         salga con la ficha todavía a la vista y caiga con la esquina
+         del panel abajo del todo: esperando al momento justo, saldría
+         de una ficha ya pegada al borde de arriba. */
+      k.soltar = natural[brincos] - salta;
+    }
     /* EL MOMENTO EN QUE SE VA POR EL BORDE DE ARRIBA. No es el final de
        su tramo: es cuando el sitio al que está pegada se sale de la
        pantalla por arriba y, por tanto, ya no se la ve aunque se la
@@ -3465,8 +3544,13 @@
 
       var x = mezcla(a.x, b.x, t);
       var y = mezcla(a.c.y, b.c.y, t);
-      var mueve = !quieto && (Math.abs(b.x - a.x) > 2 || Math.abs(b.c.y - a.c.y) > 2);
-      var brinca = mueve && b.c.salto && b !== a;
+      /* JUSTO EN EL INSTANTE DE SALIR TODAVÍA NO HA SALIDO. Sin esto,
+         al pararse el reloj exactamente en el fotograma en que empieza
+         el salto al panel, se quedaba plantada en la ficha con la pose
+         de estar saltando, para siempre. */
+      var mueve = !quieto && t > 0 &&
+                  (Math.abs(b.x - a.x) > 2 || Math.abs(b.c.y - a.c.y) > 2);
+      var brinca = mueve && (b.c.salto || b.c.brinca) && b !== a;
       if (brinca) y -= VUELO * b.c.alto * Math.sin(Math.PI * t);
 
       return { x: x, y: y, mueve: mueve, brinca: brinca,
@@ -3532,21 +3616,32 @@
 
      Y no hay dos motores para eso. El motor es el mismo —la misma
      lista de fotogramas en píxeles de rueda—, lo único que cambia es
-     QUIÉN EMPUJA: en vez de tu dedo, un reloj. Se le lleva su propio
-     avance, en los mismos píxeles, y se le suma solo el tiempo que
-     lleva en pantalla. Por eso sigue estando clavada a las fichas: el
-     reloj dice por qué brinco va, y la página dice dónde está la
-     ficha de ese brinco. Bajas mientras salta y salta igual, pero
-     pegada a su sitio.
+     QUIÉN EMPUJA: en vez de tu dedo, un reloj que recorre su trozo de
+     lista en un tiempo fijo. Por eso sigue estando clavada a las
+     fichas: el reloj dice por qué brinco va, y la página dice dónde
+     está la ficha de ese brinco. Bajas mientras salta y salta igual,
+     pero pegada a su sitio.
+
+     El reloj solo manda hasta el último brinco. El salto de ahí a la
+     libreta del pedido lo pagas tú bajando, porque ese sí tiene que
+     caer cuando el panel esté donde tiene que estar.
 
      Si la sacas de pantalla y vuelves, el reloj empieza otra vez: la
      ves bajar de nuevo. Y si el sistema pide menos movimiento, no hay
      reloj que valga: se queda quieta como todo lo demás. */
-  var ESPERA   = 500;  /* ms plantada en la primera antes de arrancar */
-  var VELOCIDAD = 430; /* píxeles de los de la rueda que le regala el
-                          reloj por segundo. Con esto, cada brinco dura
-                          tres cuartos de segundo largos */
-  var reloj = 0, pedido = false;
+  var ESPERA  = 350;  /* ms plantada en la primera antes de arrancar  */
+  var BAILE   = 1800; /* y ms en bajar los tres pasos, mida lo que mida
+                         el hueco de rueda que le haya tocado.
+
+                         Más despacio se veía mejor, pero en pantalla
+                         ancha las tres fichas van en fila y solo están
+                         a la vista segundo y medio largo si sigues
+                         bajando: con el baile de dos segundos y pico
+                         no llegaba a acabarlo antes de que se fueran
+                         por arriba. Dos segundos justos lo ve entero
+                         casi todo el mundo.                          */
+  var SALTAZO = 650;  /* ms del salto de la última ficha a la libreta */
+  var reloj = 0, reloj2 = 0, pedido = false;
 
   function pinta() {
     var s = scrollY;
@@ -3560,17 +3655,45 @@
       if (k.tomar >= suVez) { suVez = k.tomar; mando = g; }
     }
 
-    if (mando !== tramoAhora) { tramoAhora = mando; reaccion = 0; reloj = 0; }
+    if (mando !== tramoAhora) { tramoAhora = mando; reaccion = 0; reloj = reloj2 = 0; }
 
     /* El avance de cada una: el tuyo, salvo la que va sola. */
+    /* ── EL RELOJ, EN DOS TIEMPOS ──
+       Primero baja las tres fichas ella sola, en un tiempo fijo: el
+       mismo en el móvil que en el portátil, aunque en uno ese trozo de
+       lista mida el triple de rueda que en el otro.
+
+       Y luego ESPERA A QUE LLEGUES TÚ. El salto de la última ficha a
+       la esquina del panel no lo puede dar cuando le apetezca: tiene
+       que caer cuando el panel esté a la vista, y eso lo decides tú
+       bajando. Cuando tu rueda pasa de «soltar», salta, y eso también
+       lo cuenta el reloj, que si no el salto duraría lo que tardes en
+       mover el dedo. */
     var sola = mando >= 0 && todas[mando].sola && !quieto;
     var suyo = s, seguir = false;
     if (sola) {
       var k2 = todas[mando];
       if (!reloj) reloj = Date.now();
-      var tope = k2.baile;
-      suyo = k2[1].s + Math.max(0, Date.now() - reloj - ESPERA) / 1000 * VELOCIDAD;
-      if (suyo >= tope) suyo = tope; else seguir = true;
+      var parte = (Date.now() - reloj - ESPERA) / BAILE;
+      /* SI YA HAS PASADO DE LARGO, NO HAY BAILE. Bajando a lo bruto,
+         para cuando el reloj va por el segundo brinco las fichas se
+         han ido por arriba: seguir bailando ahí es bailar para nadie,
+         y luego llegaría tarde a todo lo demás. Se da por bailado. */
+      if (s > k2.finBrincos) parte = 1;
+      if (parte < 1) {
+        suyo = k2[1].s + Math.max(0, parte) * (k2.baile - k2[1].s);
+        seguir = true;
+      } else {
+        suyo = k2.baile;
+        if (k2.soltar != null) {
+          if (!reloj2 && s >= k2.soltar) reloj2 = Date.now();
+          if (reloj2) {
+            var vuelo = (Date.now() - reloj2) / SALTAZO;
+            suyo = k2.desdeSalto + Math.min(1, vuelo) * (k2.salta - k2.desdeSalto);
+            if (vuelo < 1) seguir = true;
+          }
+        }
+      }
     }
 
     /* Las palabras encendidas salen de por dónde va ELLA, y para las
