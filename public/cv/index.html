@@ -151,14 +151,61 @@
   }
 
   @media print{
-    :root{--noche:#fff;--noche-2:#fff;--panel:#fff;--panel-2:#fff;--txt:#111;--txt-2:#333;
-      --txt-3:#666;--borde:#ccc;--borde-claro:#999;--oro:#8A6A10;--oro-cl:#8A6A10;--oro-os:#8A6A10}
-    body{font-size:10.5pt}
-    .caso{background:#fff}
-    .condiciones{background:#fff}
-    .bloque{margin-top:24px;break-inside:avoid}
-    .caso,.ficha,.encaje,.condiciones{break-inside:avoid}
-    a{color:#8A6A10}
+    @page{size:A4;margin:10mm 12mm}
+    :root{--noche:#fff;--noche-2:#fff;--panel:#fff;--panel-2:#fff;--txt:#101318;--txt-2:#3A4150;
+      --txt-3:#6C7382;--borde:#C9CDD6;--borde-claro:#A3A9B6;--oro:#8A6A10;--oro-cl:#8A6A10;--oro-os:#8A6A10}
+    body{font-size:8.6pt;line-height:1.5;font-weight:400;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .hoja{width:100%;max-width:none;padding:0}
+    h1{font-size:22pt}
+    h2{font-size:13.5pt}
+    h3{font-size:9.2pt}
+    .eyebrow{font-size:6.6pt;margin-bottom:7px;letter-spacing:.17em}
+    .bloque{margin-top:13px}
+    .cabecera{grid-template-columns:112px 1fr;gap:18px}
+    .retrato{width:112px;height:112px;box-shadow:none}
+    .titular .rol{font-size:9.4pt;margin-top:6px}
+    .lema{font-size:9pt;margin-top:9px;max-width:none}
+    .contacto{margin-top:10px;gap:5px}
+    .contacto li{padding:3px 8px;font-size:7.3pt}
+    .intro{font-size:8.7pt;max-width:none}
+    .caso-cuerpo{padding:13px 15px}
+    .caso .sub{font-size:7.4pt;margin-top:6px}
+    .caso p{margin-top:9px;max-width:none}
+    .piezas{margin-top:10px;gap:5px}
+    .piezas li{max-width:none;padding-left:15px}
+    .piezas li::before{width:5px;height:5px}
+    .cifras{background:#F2F3F5;border-top-color:#C9CDD6}
+    .cifra{padding:8px 12px;border-right-color:#C9CDD6}
+    .cifra .q{color:#6C7382}
+    .cifra .n{font-size:15pt}
+    .cifra .q{font-size:6.1pt;margin-top:4px}
+    .rejilla{gap:8px;margin-top:11px;grid-template-columns:repeat(3,1fr)}
+    .ficha{padding:11px 12px}
+    .ficha .sector{font-size:6.2pt;margin-top:4px}
+    .ficha p{margin-top:6px;font-size:7.9pt}
+    .encaje{margin-top:11px}
+    .encaje li{padding:7px 12px;grid-template-columns:minmax(122px,.62fr) 1fr;gap:16px}
+    .encaje li:nth-child(odd){background:#F2F3F5}
+    .encaje .piden,.encaje .tengo{font-size:8.1pt}
+    .plan{margin-top:11px}
+    .plan li{padding:7px 0;grid-template-columns:76px 1fr;gap:16px}
+    .plan .cuando{font-size:7.6pt}
+    .plan .que{font-size:8.1pt;max-width:none}
+    .plan .que b{font-size:8.4pt;margin-bottom:1px}
+    .cajon{gap:13px;margin-top:11px}
+    .etiquetas{gap:5px;margin-top:8px}
+    .etiquetas li{font-size:7.1pt;padding:2px 7px}
+    .idiomas{margin-top:8px;gap:6px}
+    .idiomas li{font-size:8pt;padding-bottom:5px}
+    .condiciones{padding:13px 15px;margin-top:11px;border-color:#8A6A10}
+    .condiciones p,.preguntas li{font-size:8.2pt;max-width:none}
+    .condiciones p+p{margin-top:8px}
+    .preguntas{margin-top:9px;gap:5px}
+    .cierre{margin-top:15px;padding-top:9px;font-size:7.3pt}
+    #herramientas{break-before:page;margin-top:0}
+    a{color:#8A6A10;border:0}
+    .caso,.ficha,.condiciones,.encaje li,.plan li,.cifras{break-inside:avoid}
   }
 </style>
 
@@ -265,7 +312,7 @@
     </ol>
   </section>
 
-  <section class="bloque">
+  <section class="bloque" id="herramientas">
     <p class="eyebrow">Toolkit</p>
     <div class="cajon">
       <div>
