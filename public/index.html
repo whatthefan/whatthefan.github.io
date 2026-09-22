@@ -3068,13 +3068,16 @@
        anclaX: 1.03, pose: 'apoyada', pegada: true,
        festeja: '#pBtn', fiesta: 'tachan', tope: 2 }],
 
-    /* 3 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE.
+    /* 3 · VA SALTANDO POR LOS TRES PASOS Y LOS ENCIENDE, Y ESTA LO HACE
+       SOLA: la tienes delante y baja ella, sin que sigas bajando tú.
+       Es la única de toda la página que se mueve por su cuenta.
        Las fichas de «cómo funciona» tienen la esquina de arriba a la
        derecha vacía, así que cabe entera ahí dentro, estén en fila o
        en columna. Cada ficha pone su título en amarillo cuando la
        pisa, y se apaga si vuelves a subir. */
     [{ saltos: '#como .paso', modo: 'punto', fx: 0.86, fy: 0.10,
-       asiento: 0, esc: 0.7, frente: true, pose: 'abajo', pegada: true }],
+       asiento: 0, esc: 0.7, frente: true, pose: 'abajo',
+       pegada: true, sola: true }],
 
     /* 4 · CON LA LIBRETA, EN LA ESQUINA DEL PANEL DEL PEDIDO.
        Es el único sitio de la página donde tiene un oficio de verdad:
@@ -3296,10 +3299,17 @@
       var abre = d[0] - tranco * (n - 1) / 2;
       if (desde != null && desde > abre) abre = desde;
       var cabe = tranco;
-      for (var m = 1; m < n; m++) {
-        /* al caer, su cabeza tiene que estar 40 px por debajo del
-           borde de arriba; ni un brinco a ciegas */
-        cabe = Math.min(cabe, (sitios[m].y - 40 - abre) / m);
+      /* A LA QUE SE MUEVE SOLA NO SE LE MIDE EL HUECO, porque no lo
+         gasta: sus brincos los paga un reloj, no tu dedo, y le da
+         igual cuánta rueda quede. Se le mide solo si el sistema pide
+         menos movimiento, que entonces vuelve a tirar de rueda como
+         todas las demás. */
+      if (!paradas[0][0].sola || quieto) {
+        for (var m = 1; m < n; m++) {
+          /* al caer, su cabeza tiene que estar 40 px por debajo del
+             borde de arriba; ni un brinco a ciegas */
+          cabe = Math.min(cabe, (sitios[m].y - 40 - abre) / m);
+        }
       }
       var tranco2 = Math.max(MINIMO_BRINCO, Math.min(tranco, cabe));
       /* Y si hay que encoger, LO QUE SE ENCOGE ES LA PAUSA, no el
@@ -3363,6 +3373,11 @@
                x: ult.x, c: ult });
     }
     k.pegada = pegada;
+    k.sola = !!paradas[0][0].sola;
+    /* dónde se le acaba el baile: la última parada más lo que se queda
+       en ella. Lo que viene después es margen, y ahí ya no hay nada
+       que animar */
+    k.baile = d[d.length - 1] + quedarse(ult);
     /* EL MOMENTO EN QUE SE VA POR EL BORDE DE ARRIBA. No es el final de
        su tramo: es cuando el sitio al que está pegada se sale de la
        pantalla por arriba y, por tanto, ya no se la ve aunque se la
@@ -3510,16 +3525,62 @@
     return todas;
   }
 
+  /* ── LA QUE SE MUEVE SOLA ──
+     Toda la película la mueves tú con la rueda menos UNA: la de los
+     tres pasos. Esa, en cuanto la tienes delante, baja saltando por
+     las tres fichas ELLA SOLA, sin que tengas que seguir bajando.
+
+     Y no hay dos motores para eso. El motor es el mismo —la misma
+     lista de fotogramas en píxeles de rueda—, lo único que cambia es
+     QUIÉN EMPUJA: en vez de tu dedo, un reloj. Se le lleva su propio
+     avance, en los mismos píxeles, y se le suma solo el tiempo que
+     lleva en pantalla. Por eso sigue estando clavada a las fichas: el
+     reloj dice por qué brinco va, y la página dice dónde está la
+     ficha de ese brinco. Bajas mientras salta y salta igual, pero
+     pegada a su sitio.
+
+     Si la sacas de pantalla y vuelves, el reloj empieza otra vez: la
+     ves bajar de nuevo. Y si el sistema pide menos movimiento, no hay
+     reloj que valga: se queda quieta como todo lo demás. */
+  var ESPERA   = 500;  /* ms plantada en la primera antes de arrancar */
+  var VELOCIDAD = 430; /* píxeles de los de la rueda que le regala el
+                          reloj por segundo. Con esto, cada brinco dura
+                          tres cuartos de segundo largos */
+  var reloj = 0, pedido = false;
+
   function pinta() {
     var s = scrollY;
     var todas = reparto();
 
-    /* Las palabras encendidas salen de dónde estás, no de por dónde
-       has pasado: si subes, se van apagando en el mismo orden. */
+    /* quién manda: LA ÚLTIMA QUE HA COGIDO EL TESTIGO */
+    var mando = -1, suVez = -Infinity;
+    for (var g = 0; g < todas.length; g++) {
+      var k = todas[g];
+      if (!k || k.tomar > s || s > k.hasta) continue;
+      if (k.tomar >= suVez) { suVez = k.tomar; mando = g; }
+    }
+
+    if (mando !== tramoAhora) { tramoAhora = mando; reaccion = 0; reloj = 0; }
+
+    /* El avance de cada una: el tuyo, salvo la que va sola. */
+    var sola = mando >= 0 && todas[mando].sola && !quieto;
+    var suyo = s, seguir = false;
+    if (sola) {
+      var k2 = todas[mando];
+      if (!reloj) reloj = Date.now();
+      var tope = k2.baile;
+      suyo = k2[1].s + Math.max(0, Date.now() - reloj - ESPERA) / 1000 * VELOCIDAD;
+      if (suyo >= tope) suyo = tope; else seguir = true;
+    }
+
+    /* Las palabras encendidas salen de por dónde va ELLA, y para las
+       que empujas tú eso es dónde estás: si subes, se van apagando en
+       el mismo orden. */
     var luces = [];
-    todas.forEach(function (k) {
+    todas.forEach(function (k, g2) {
       if (!k || !k.luces) return;
-      k.luces.forEach(function (l) { if (l.el && s >= l.k.s) luces.push(l.el); });
+      var q = g2 === mando ? suyo : s;
+      k.luces.forEach(function (l) { if (l.el && q >= l.k.s) luces.push(l.el); });
     });
     encendidas.forEach(function (el) {
       if (luces.indexOf(el) < 0) el.classList.remove('encendida');
@@ -3527,26 +3588,22 @@
     luces.forEach(function (el) { el.classList.add('encendida'); });
     encendidas = luces;
 
-    /* De las que llegan a este punto de la rueda manda LA ÚLTIMA QUE HA
-       COGIDO EL TESTIGO, que es lo que dice el comentario de arriba. */
-    var mejor = null, suVez = -Infinity;
-    for (var g = 0; g < todas.length; g++) {
-      var k = todas[g];
-      if (!k || k.tomar > s || s > k.hasta) continue;
-      var e = estado(k, s);
-      if (!e) continue;
-      if (k.tomar >= suVez) { suVez = k.tomar; mejor = e; mejor.g = g; }
-    }
-
+    var mejor = mando < 0 ? null : estado(todas[mando], suyo);
     if (mejor) {
-      if (mejor.g !== tramoAhora) { tramoAhora = mejor.g; reaccion = 0; }
       coloca(mejor.x, mejor.y, mejor.c, mejor.mueve, mejor.brinca,
              mejor.der, mejor.avance);
       enEscena = true;
-      return;
+    } else {
+      bicho.classList.remove('dentro', 'quieta');
+      enEscena = false;
     }
-    bicho.classList.remove('dentro', 'quieta');
-    enEscena = false;
+
+    /* Mientras le quede baile por hacer, otro fotograma. Y en cuanto
+       acaba, se para: nada de un bucle dando vueltas para siempre. */
+    if (seguir && !pedido) {
+      pedido = true;
+      requestAnimationFrame(function () { pedido = false; pinta(); });
+    }
   }
 
   function coloca(x, y, c, mueve, brinca, der, avance) {
