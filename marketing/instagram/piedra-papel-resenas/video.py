@@ -72,11 +72,16 @@ RAYAS = ''.join(f'<line x1="{540 + 330 * c}" y1="{1010 + 330 * s}" x2="{540 + 42
                 for c, s in ((__import__('math').cos(a), __import__('math').sin(a))
                              for a in (i * 3.14159 / 5 + .3 for i in range(10))))
 
+# la estrella que gana en el marcador: la de la marca (recta y con el 5), centrada en su circulo
+GANADORA = svg_uri(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 900"><path fill="#E9BC46" stroke="#8A6534" '
+                   f'stroke-width="28" stroke-linejoin="round" d="{STAR}"/><path fill="#06080E" '
+                   f'transform="translate(407.2 677.2) scale(.42)" d="{FIVE}"/></svg>')
+
 html = open(P + 'video/plantilla.html').read()
-for k_, v in {'MONT': b64('fuente/montserrat-latin.woff2'), 'PIEDRA': mano('piedra')[0], 'PAPEL': mano('papel')[0],
+for k_, v in {'CAVEAT': b64('fuente/caveat-latin.woff2'), 'MONT': b64('fuente/montserrat-latin.woff2'), 'PIEDRA': mano('piedra')[0], 'PAPEL': mano('papel')[0],
               'TIJERA': tijera, 'MOVIL': mano('resenas')[0], 'PLACA': PLACA, 'CANTO': CANTO, 'ESTRELLAS': ESTRELLAS,
               'FONDO': FONDO, 'HUECOS': HUECO, 'RAYAS': RAYAS, 'NOTA': NOTA, 'TECLADO': TECLADO, 'SELLO': SELLO.replace('#B98B2E', '#E9BC46').replace('#E2D3BE', '#06080E'),
-              'ESTRELLA': ESTRELLA, 'TECLAS': json.dumps(teclas, ensure_ascii=False),
+              'ESTRELLA': ESTRELLA, 'GANADORA': GANADORA, 'TECLAS': json.dumps(teclas, ensure_ascii=False),
               'CTA': str(CTA), 'DUR': str(DUR)}.items():
     html = html.replace('%' + k_ + '%', v)
 open(P + 'video/escena.html', 'w').write(html)

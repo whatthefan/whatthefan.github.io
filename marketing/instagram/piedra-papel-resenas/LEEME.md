@@ -19,9 +19,9 @@ la mano en el centro.
 2. **¡Reseñas! (3,6–7 s):** entra el ritmo, la placa y el brazo con el
    móvil. El brazo entra por el borde derecho, con el codo fuera del
    cuadro. El móvil toca la placa y saltan las 5 estrellas. En el
-   marcador, la tercera ronda pasa a ser una estrella y dice RESEÑAS.
+   marcador, la tercera ronda pasa a ser la estrella de PLEA5E (recta, con el 5, centrada) y dice RESEÑAS.
    "…y esta gana siempre".
-3. **Zoom al móvil (7–17 s):** dentro hay una nota ("Nota para ti") que
+3. **Zoom al móvil (7–17 s):** dentro hay una nota titulada *"De mí, para mí."* (en letra a mano, dorada) que
    se escribe tecla a tecla. Suena siempre la misma tecla y cada tecla se
    enciende en el teclado, mientras la música se queda de fondo:
    *No tengas miedo. / Los que llegan arriba no se echaron para atrás. /*

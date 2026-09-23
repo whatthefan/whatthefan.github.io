@@ -1,5 +1,6 @@
 <!doctype html><html><head><meta charset="utf-8"><style>
 /* Plantilla del video: ../video.py cambia los %NOMBRE% por las imagenes y la nota */
+@font-face{font-family:Caveat;font-weight:700;src:url(data:font/woff2;base64,%CAVEAT%)}
 @font-face{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,%MONT%)}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;overflow:hidden;font-family:Mont,sans-serif;background:#CDBBA2}
@@ -28,12 +29,12 @@ html,body{width:1080px;height:1920px;overflow:hidden;font-family:Mont,sans-serif
 #barra{position:absolute;left:0;right:0;top:0;height:120px;padding:44px 80px 0;display:flex;justify-content:space-between;font-weight:700;font-size:40px}
 #isla{position:absolute;left:390px;top:30px;width:256px;height:72px;border-radius:40px;background:#000}
 #cab{position:absolute;left:70px;right:70px;top:170px;display:flex;justify-content:space-between;align-items:center;color:#E9BC46;font-weight:700;font-size:40px}
-#nota{position:absolute;left:78px;right:70px;top:300px;font-weight:800;font-size:82px;line-height:1.16;letter-spacing:-1px}
+#nota{position:absolute;left:78px;right:70px;top:395px;font-weight:800;font-size:82px;line-height:1.16;letter-spacing:-1px}
 #nota p{margin-bottom:46px}
 #nota p.oro{color:#E9BC46;font-size:96px;line-height:1.1}
 #nota span{visibility:hidden}
 #cursor{position:absolute;width:9px;height:90px;border-radius:4px;background:#E9BC46}
-#fecha{position:absolute;left:78px;top:245px;font-weight:600;font-size:30px;color:#6B7385;letter-spacing:1px}
+#fecha{position:absolute;left:78px;top:240px;font-family:Caveat;font-weight:700;font-size:92px;color:#E9BC46}
 #teclado{position:absolute;left:0;right:0;bottom:0;height:640px;background:#1C212C;padding:28px 10px 70px}
 .fila{display:flex;gap:12px;height:124px;margin-bottom:22px;padding:0 6px}
 .fila:nth-child(2){padding:0 12px}
@@ -80,12 +81,12 @@ html,body{width:1080px;height:1920px;overflow:hidden;font-family:Mont,sans-serif
 %ESTRELLAS%
 <div class="frase" id="gana" style="top:1420px">…y esta <b>gana siempre</b></div>
 %HUECOS%
-<img class="abs" id="ganadora" src="%ESTRELLA%" style="left:778px;top:1600px;width:124px">
+<img class="abs" id="ganadora" src="%GANADORA%" style="left:760px;top:1598px;width:140px;height:123px">
 </div>
 <div id="tel"><div id="pantalla">
   <div id="barra"><span>9:41</span><span style="letter-spacing:6px">▮▮▮ ▰</span></div><div id="isla"></div>
   <div id="cab"><span>‹ Notas</span><span>Hecho</span></div>
-  <div id="fecha">NOTA PARA TI</div>
+  <div id="fecha">De mí, para mí.</div>
   <div id="nota">%NOTA%</div><div id="cursor"></div>
   <div id="teclado">%TECLADO%</div>
   <div id="final"><div id="boton">Comenta PLACA</div><div id="web">plea5e.es</div>
