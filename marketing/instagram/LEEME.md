@@ -33,3 +33,20 @@ Las letras son Anton (el nombre, de la misma familia que el 5 del sello)
 y Montserrat (los textos del aro), metidas en base64 desde `fuente/`.
 Se regenera con `python3 marketing/instagram/avatar/ronda2/generar.py`;
 los PNG se sacan haciendo captura de los `.html` sueltos que monta.
+
+## avatar/final/
+
+Las elegidas: la 3 y la 5, las dos con el aro de oro metálico de la 8.
+
+| | |
+|---|---|
+| `PLEA5E-avatar-3-estrella-y-nombre.png` | La estrella arriba y PLEA5E debajo. |
+| `PLEA5E-avatar-5-plea-estrella-e.png` | PLEA★E: la estrella hace de 5, con las cinco estrellitas debajo. |
+| `perfil.png` | Las dos puestas en un perfil de Instagram en modo oscuro. |
+
+El 5 va más pequeño dentro de la estrella (escala 0,42 en vez de 0,46):
+antes la base del 5 se salía por la muesca entre las dos patas y se
+fundía con el fondo. Ahora queda entero, con oro alrededor.
+
+Se regenera con `python3 marketing/instagram/avatar/final/generar.py`;
+los PNG salen de la captura de los `.html` que monta.
