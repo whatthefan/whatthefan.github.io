@@ -50,3 +50,16 @@ fundía con el fondo. Ahora queda entero, con oro alrededor.
 
 Se regenera con `python3 marketing/instagram/avatar/final/generar.py`;
 los PNG salen de la captura de los `.html` que monta.
+
+## avatar/canva/
+
+La 3 y la 5 en plano, "como hecho en Canva": fondo negro liso (el de la
+ronda 2), sin aro ni degradados ni brillos, y la estrella con contorno
+grueso en dos estilos:
+
+- `…-blanco.png`: contorno blanco, tipo pegatina.
+- `…-doble.png`: franja negra y línea de oro alrededor de la estrella.
+
+`tablero.png` enseña las cuatro juntas, en grande y a tamaño de perfil,
+historia y comentario. Se regenera con
+`python3 marketing/instagram/avatar/canva/generar.py`.
