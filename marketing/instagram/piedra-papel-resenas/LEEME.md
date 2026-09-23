@@ -23,7 +23,7 @@ la mano en el centro.
    "…y esta gana siempre".
 3. **Zoom al móvil (7–17 s):** dentro hay una nota titulada *"De mí, para mí."*
    (en letra a mano, dorada) que se escribe tecla a tecla. Cada tecla se
-   enciende en el teclado y suena el "tic" suave del teclado del móvil,
+   enciende en el teclado y suena el "tic" suave y bajito del teclado del iPhone (apagado, sin agudos),
    mientras la música se queda muy bajita:
    *Este negocio lo levanté a pulso. / Si lo hago bien, que se sepa. /*
    **Sin riesgo, no hay reseñas.** (en oro)

@@ -120,10 +120,10 @@ pads *= (.35 + .65 * duck)[:, None]
 melodia = a.reverb(a.eco(melodia, NEGRA * .75, .28), .4)
 bateria = a.reverb(bateria, .12)
 fx = a.reverb(fx, .22)
-teclado = a.filtro(a.reverb(teclado, .04), 'lowpass', 9000)     # sin el siseo de arriba: mas suave
-# un click de 20 ms casi no suena aunque tenga mucho pico: se le recorta el pico (tanh) y se
-# sube, para que se oiga claro sin que mande en la normalizacion del master
-teclado = np.tanh(teclado * 12) * .32
+# el teclado, como el del iPhone: suave y apagado. Sin los agudos (que es lo que lo hace
+# sonar duro), sin recortar el pico y bajito: se oye porque la musica esta casi en silencio
+teclado = a.filtro(a.filtro(teclado, 'lowpass', 4500), 'highpass', 400)
+teclado = teclado / np.max(np.abs(teclado)) * .13
 a.guardar(a.master(.9 * bajos + .85 * pads + .8 * bateria + .8 * melodia + .8 * fx + teclado, cola=.8), V + 'audio.wav')
 a.guardar(a.master(fx + teclado, cola=.8), V + 'audio-solo-efectos.wav')
 print('audio.wav', DUR, 's')
