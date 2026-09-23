@@ -5,7 +5,7 @@ const path = require('path');
 const { spawn, execSync } = require('child_process');
 const { chromium } = require(execSync('npm root -g').toString().trim() + '/playwright');
 const D = 'marketing/instagram/video-como-topstar/';
-const FPS = 30, DUR = 60;
+const FPS = 30, DUR = 67.5;
 (async () => {
   const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-y',
     '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',

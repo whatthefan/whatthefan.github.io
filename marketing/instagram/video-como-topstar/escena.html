@@ -153,11 +153,28 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--noche);col
   <div class="paso" id="w1" style="top:720px"><div class="n">2</div><div>Diseño en 48 horas<small>hecho a medida, sin coste de diseño</small></div></div>
   <div class="paso" id="w2" style="top:920px"><div class="n">3</div><div>No se imprime nada<small>hasta que el diseño te guste</small></div></div>
   <div class="paso" id="w3" style="top:1120px"><div class="n">4</div><div>En tu local en 3-10 días<small>envío gratis a península</small></div></div>
-  <div class="pastilla" id="pago" style="left:50%;top:1360px;font-size:44px;padding:20px 44px">Pago único · sin cuotas</div>
+  <div class="pastilla" id="pago" style="left:50%;top:1360px;font-size:44px;padding:20px 44px">Las placas: pago único</div>
 </div>
 
-<!-- ============ 8 · CIERRE (52.5 - 60) ============ -->
+<!-- ============ 8 · TE LO LLEVAMOS (52.5 - 60) ============
+     Lo mismo que la seccion de la web: opcional, sin permanencia, y se
+     cuentan TOQUES, no resenas (Google no dice quien escribio). -->
 <div class="sc" id="s8">
+  <div class="tit" id="g0" style="top:270px;font-size:92px">Y si quieres,<br><b>te lo llevamos nosotros</b></div>
+  <div class="pastilla" id="gprecio" style="left:50%;top:500px;font-size:42px;padding:16px 40px">35 € al mes · sin permanencia</div>
+  <div class="abs" id="ginf" style="left:90px;top:620px;width:900px;padding:34px 40px;border-radius:28px;background:var(--panel);border:3px solid var(--borde)">
+    <div style="font-weight:800;font-size:30px;letter-spacing:3px;color:var(--txt2)">INFORME DEL MES · BAR LA PLAZA</div>
+    <div id="barras"></div>
+    <div style="font-weight:600;font-size:24px;color:#5D6679;margin-top:14px">Ejemplo</div>
+  </div>
+  <div class="dato" id="gd0" style="top:1110px"><span></span><div>Cuánta gente las usa<small>un correo al mes con los toques de cada placa</small></div></div>
+  <div class="dato" id="gd1" style="top:1250px"><span></span><div>Cambiamos a dónde lleva<small>otra ficha u otro local, sin tocar la placa</small></div></div>
+  <div class="dato" id="gd2" style="top:1390px"><span></span><div>Cambio de imagen a mitad de precio<small>el primer año, si cambias de nombre o de colores</small></div></div>
+  <div class="sub" id="gnota" style="top:1570px;font-size:30px;color:#5D6679">Opcional: las placas funcionan igual sin esto. Se cuentan toques, no reseñas.</div>
+</div>
+
+<!-- ============ 9 · CIERRE (60 - 67.5) ============ -->
+<div class="sc" id="s9">
   <div class="tit" id="s8a" style="top:300px;font-size:104px">¿Sería una locura<br><b>probarlo en tu local?</b></div>
   <div class="est" id="estSaluda" style="left:330px;top:620px;width:420px;height:377px">{{EST_SALUDA}}</div>
   <div class="abs" id="comenta" style="left:110px;top:1060px;width:860px;padding:34px 0 30px;border-radius:28px;background:var(--oro);color:#100B00;text-align:center">
@@ -186,7 +203,8 @@ function pop(el, t, a, z, dy = 50) {
   T(el, { y: (1 - i) * dy - f * 30, s: .7 + .3 * i, o: cl(p(t, a, a + .2)) * (1 - f) });
 }
 const ESCENAS = [['s1', 0, 5], ['s2', 5, 12.5], ['s3', 12.5, 20], ['s4', 20, 25], ['s5', 25, 37.5],
-                 ['s6', 37.5, 45], ['s7', 45, 52.5], ['s8', 52.5, 60]];
+                 ['s6', 37.5, 45], ['s7', 45, 52.5], ['s8', 52.5, 60], ['s9', 60, 67.5]];
+const FIN = 67.5;
 
 // datos de cada modelo (salen de la web): [dato, detalle]
 const DATOS = [
@@ -194,6 +212,10 @@ const DATOS = [
   [['76 × 118 mm', 'metacrilato doblado en L'], ['No se pega', 'se pone y se mueve donde quieras'], ['Chip NFC + código QR', 'programado y listo para usar']],
   [['85 × 54 mm', 'PVC laminado, tamaño tarjeta'], ['Para el delantal', 'o para el mostrador'], ['Chip NFC + código QR', 'programado y listo para usar']],
 ];
+const BARRAS = [['Placa de la barra', 214], ['Placa de la terraza', 96], ['Tarjeta del delantal', 41]];
+$('barras').innerHTML = BARRAS.map(([n, v], i) => `<div style="margin-top:26px">
+  <div style="display:flex;justify-content:space-between;font-weight:700;font-size:36px"><span>${n}</span><span id="bn${i}" style="color:var(--oro)">0</span></div>
+  <div style="height:22px;border-radius:11px;background:var(--borde);margin-top:10px"><div id="bb${i}" style="height:100%;border-radius:11px;background:var(--oro);width:0"></div></div></div>`).join('');
 $('datos').innerHTML = DATOS.map((d, m) => d.map(([a, b], i) =>
   `<div class="dato" id="d${m}${i}" style="top:${1390 + i * 118}px"><span></span><div>${a}<small>${b}</small></div></div>`).join('')).join('');
 
@@ -208,7 +230,7 @@ function render(t) {
       $(id).style.transform = `scale(${1.05 - .05 * ent + .04 * sal})`;
     }
   }
-  T('franja', { o: p(t, .2, .6) * (1 - p(t, 59.6, 60)) });
+  T('franja', { o: p(t, .2, .6) * (1 - p(t, FIN - .4, FIN)) });
 
   // 1 · gancho
   if (t < 5) { pop('s1a', t, .2); pop('s1b', t, 1.9); }
@@ -294,11 +316,24 @@ function render(t) {
     if (t > 50.2) $('pago').style.transform += ` scale(${1 + .03 * Math.sin((t - 50.2) * 5)})`;
   }
 
-  // 8 · cierre
-  if (t >= 52.5) {
-    pop('s8a', t, 52.7); pop('estSaluda', t, 53.4, null, 150); pop('comenta', t, 54.2);
-    if (t > 54.8) $('comenta').style.transform += ` scale(${1 + .025 * Math.sin((t - 54.8) * 5)})`;
-    pop('s8b', t, 54.9); pop('s8c', t, 55.3);
+  // 8 · te lo llevamos nosotros
+  if (t >= 52.5 && t < 60) {
+    pop('g0', t, 52.7); pop('gprecio', t, 53.3); $('gprecio').style.transform = 'translateX(-50%) ' + $('gprecio').style.transform;
+    pop('ginf', t, 53.8);
+    for (let i = 0; i < 3; i++) {
+      const k = out(p(t, 54.3 + i * .35, 55.6 + i * .35));
+      $('bb' + i).style.width = (k * BARRAS[i][1] / 214 * 100) + '%';
+      $('bn' + i).textContent = Math.round(k * BARRAS[i][1]) + ' toques';
+    }
+    for (let i = 0; i < 3; i++) { const a = 55.9 + i * .6, e = out(p(t, a, a + .4)); T('gd' + i, { x: (1 - e) * -80, o: e }); }
+    pop('gnota', t, 57.8);
+  }
+
+  // 9 · cierre
+  if (t >= 60) {
+    pop('s8a', t, 60.2); pop('estSaluda', t, 60.9, null, 150); pop('comenta', t, 61.7);
+    if (t > 62.3) $('comenta').style.transform += ` scale(${1 + .025 * Math.sin((t - 62.3) * 5)})`;
+    pop('s8b', t, 62.4); pop('s8c', t, 62.8);
   }
 }
 window.render = render;
