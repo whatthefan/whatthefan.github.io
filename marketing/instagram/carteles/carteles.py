@@ -107,4 +107,18 @@ cartel('ticket-bar', 600, 1180, f'''
 <div style="text-align:center;font-size:22px">Reseñas con PLEA5E · plea5e.es</div>
 </div>''', '#F4F2EE')
 
+# 4. La ultima foto del carrusel "en todas partes": el producto de verdad y el gancho.
+# Antes van las fotos de ambientes (nubes, moneda, arena...: ver PROMPTS.md).
+cartel('final-producto', 1080, 1350, f'''
+<div class="firma" style="font-size:40px;color:#F4EDE0;letter-spacing:.02em;text-align:center;line-height:1.25">NO HACE FALTA<br>ESCRIBIRLO EN EL CIELO.</div>
+<div class="gordo" style="margin-top:22px;font-size:84px;color:#E9BC46;letter-spacing:-.02em;line-height:1">BASTA CON UNA</div>
+<div class="gordo" style="font-size:84px;color:#E9BC46;letter-spacing:-.02em;line-height:1.05">PLACA EN LA MESA.</div>
+<div style="margin-top:46px">{placa_foto(600, 18, -6, 'rgba(0,0,0,.75)')}</div>
+<div class="linea" style="margin-top:50px;font-size:30px;color:#C9CEDA;white-space:normal;text-align:center;line-height:1.35;font-weight:600">
+  Tu cliente acerca el móvil y te deja la reseña en 10 segundos.<br>Toca o escanea. Sin apps.</div>
+<div style="margin-top:40px;display:flex;align-items:center;gap:26px">
+  <div style="background:#E9BC46;color:#06080E;font-weight:900;font-size:42px;padding:20px 44px;border-radius:60px">Comenta PLACA</div>
+  <div style="display:flex;align-items:center;gap:12px">{sello(52)}<span class="firma" style="font-size:30px;color:#F4EDE0">plea5e.es</span></div></div>
+''', 'radial-gradient(ellipse 75% 55% at 50% 52%,#1A2130 0%,#0B0F18 60%,#06080E 100%)')
+
 print('carteles hechos')
