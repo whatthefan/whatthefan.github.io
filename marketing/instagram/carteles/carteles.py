@@ -121,4 +121,15 @@ cartel('final-producto', 1080, 1350, f'''
   <div style="display:flex;align-items:center;gap:12px">{sello(52)}<span class="firma" style="font-size:30px;color:#F4EDE0">plea5e.es</span></div></div>
 ''', 'radial-gradient(ellipse 75% 55% at 50% 52%,#1A2130 0%,#0B0F18 60%,#06080E 100%)')
 
+# 5. Fotos de referencia para el generador de imagenes (se le adjuntan con el prompt):
+#    la placa de frente, la placa en 3/4 (para que vea el grosor) y la estrella de la marca.
+cartel('ref-placa-frontal', 2048, 2048, f'''
+<div style="position:relative;width:1640px;height:1640px">
+  <div style="position:absolute;left:3%;right:3%;bottom:-2.5%;height:8%;border-radius:50%;background:rgba(0,0,0,.28);filter:blur(40px)"></div>
+  <div style="position:absolute;inset:0;border-radius:4.2%;transform:translateY(14px);background:#cfdedd"></div>
+  <img src="{PLACA}" style="position:absolute;inset:0;width:100%;height:100%;border-radius:4.2%">
+  <div style="position:absolute;inset:0;border-radius:4.2%;box-shadow:inset 0 3px 0 rgba(255,255,255,.8)"></div></div>''', '#FFFFFF')
+cartel('ref-placa-3-4', 2048, 2048, f'''<div>{placa_foto(1450, 32, -12, 'rgba(0,0,0,.35)')}</div>''', '#FFFFFF')
+cartel('ref-estrella-marca', 2048, 2048, f'''{sello(1500)}''', '#FFFFFF')
+
 print('carteles hechos')
