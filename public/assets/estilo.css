@@ -426,8 +426,11 @@ td .destaca{color:var(--oro);font-weight:700}
 .cierre .env{display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:space-between}
 .cierre h3{font-size:clamp(1.4rem,2.4vw,1.9rem)}
 .cierre p{color:var(--txt-2);font-size:.92rem;margin-top:6px}
+/* Arriba hay aire de sobra a proposito: Estrellita se pone de pie al
+   lado del logotipo y, con menos, la cabeza se le salia por encima y la
+   tapaba la seccion de preguntas, que va por delante (z-index 1). */
 .pie{position:relative;overflow:hidden;border-top:1px solid var(--borde);
-  padding:clamp(28px,3.2vw,40px) 0 20px;background:rgba(255,255,255,.015)}
+  padding:clamp(56px,5.5vw,76px) 0 20px;background:rgba(255,255,255,.015)}
 /* La estrella grande del fondo. Va DE CONTORNO, como las de las
    secciones: rellena era una mancha, y además tener dos estrellas
    distintas en la misma página (rellena aquí, de línea arriba) se nota
