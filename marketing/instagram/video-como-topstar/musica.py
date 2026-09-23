@@ -1,7 +1,7 @@
 """Musica y efectos del reel, sintetizados aqui: sin muestras de nadie, sin
 derechos que pagar.
 
-Saca dos pistas (60 s, 44,1 kHz, estereo):
+Saca dos pistas (67,5 s, 44,1 kHz, estereo):
   audio.wav                musica + efectos (la que lleva el video)
   audio-solo-efectos.wav   solo los efectos, para poner encima una cancion
                            de la biblioteca de Instagram
@@ -20,13 +20,13 @@ import numpy as np
 from scipy.signal import butter, fftconvolve, sosfilt
 
 SR = 44100
-DUR = 60
+DUR = 67.5
 BPM = 96
 NEGRA = 60 / BPM
 COMPAS = 4 * NEGRA
 N = int(SR * DUR)
 GOLPE = 20.0          # entra PLEA5E: arranca la parte fuerte
-FIN = 57.5            # ultimo acorde, que se queda sonando
+FIN = 65.0            # ultimo acorde, que se queda sonando
 rng = np.random.default_rng(7)
 
 
@@ -356,7 +356,7 @@ teclas *= (0.7 + 0.3 * duck)[:, None]
 # ───────────────────────── efectos, al segundo de cada animacion ─────────────────────────
 poner(fx, burbuja(420), .2)
 poner(fx, impacto(), 1.9, .45)                                   # "esto te está costando clientes"
-for tc in (5, 12.5, 37.5, 45, 52.5):
+for tc in (5, 12.5, 37.5, 45, 52.5, 60):
     poner(fx, zas(), tc - .35)
 poner(fx, zas(.8, .8, -.9, .9), 5.3)                             # suben los edificios
 poner(fx, burbuja(520), 6.2, .6); poner(fx, burbuja(560), 6.4, .6)
@@ -385,7 +385,12 @@ poner(fx, acierto(), 44.5)
 for i in range(4):
     poner(fx, burbuja(520 + 60 * i), 45.5 + i * .9)
 poner(fx, campana(88, 1.4, .7), 49.6)
-poner(fx, burbuja(480), 53.4); poner(fx, impacto(), 54.2, .35); poner(fx, acierto(), 54.2)
+poner(fx, burbuja(560), 53.3); poner(fx, zas(.4, .6), 53.7)
+for i in range(3):
+    poner(fx, clic(.6), 54.3 + i * .35)
+for i in range(3):
+    poner(fx, burbuja(600 + 70 * i, .7), 55.9 + i * .6)
+poner(fx, burbuja(480), 60.9); poner(fx, impacto(), 61.7, .35); poner(fx, acierto(), 61.7)
 
 # ───────────────────────── mezcla y master ─────────────────────────
 teclas = reverb(teclas, .5)

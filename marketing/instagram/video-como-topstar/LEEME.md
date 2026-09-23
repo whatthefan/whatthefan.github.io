@@ -1,6 +1,6 @@
 # Reel "Cómo funciona PLEA5E" (al estilo del anuncio de topStar)
 
-`PLEA5E-reel-como-funciona.mp4`: 60 s, vertical 1080×1920, 30 fps, con
+`PLEA5E-reel-como-funciona.mp4`: 67,5 s, vertical 1080×1920, 30 fps, con
 música y efectos. `portada.png` es la portada del reel (el gancho).
 
 `PLEA5E-reel-como-funciona-solo-efectos.mp4`: el mismo vídeo sin música,
@@ -31,11 +31,13 @@ limpios, sin fondo, de cerca y con el grosor del material.
 | 25 – 37,5 | Los tres modelos, de cerca y girando, con sus datos: placa de mesa (90×90 mm, metacrilato 4 mm, adhesivo 3M), expositor (76×118 mm, en L, no se pega) y tarjeta (85×54 mm, PVC). Todos con chip NFC y QR. |
 | 37,5 – 45 | Así de fácil: acerca el móvil, se abre tu ficha de Google, cinco estrellas. Sin app, iPhone y Android; sin NFC, el QR. |
 | 45 – 52,5 | Cómo trabajamos: WhatsApp → diseño en 48 h → no se imprime hasta que te guste → en tu local en 3-10 días, envío gratis. Las placas: pago único. |
-| 52,5 – 60 | "¿Sería una locura probarlo en tu local?" · COMENTA PLACA · WhatsApp · plea5e.es · Desde 25 €. |
+| 52,5 – 60 | Y si quieres, te lo llevamos nosotros: opcional y sin permanencia, sin decir el precio (el precio se da por privado a quien comente PLACA). Informe del mes de ejemplo (toques de cada placa), cambiamos a dónde lleva sin tocar la placa, cambio de imagen a mitad de precio el primer año. "Opcional: las placas funcionan igual sin esto. Se cuentan toques, no reseñas." |
+| 60 – 67,5 | "¿Sería una locura probarlo en tu local?" · COMENTA PLACA · WhatsApp · plea5e.es · Desde 25 €. |
 
-El seguimiento de 35 €/mes no sale en el vídeo: el cierre es "Comenta
-PLACA" y con la cuota delante se liaba. Aun así el vídeo no dice "sin
-cuotas" (el servicio existe en la web): dice "las placas: pago único".
+El seguimiento se cuenta igual que en la web: opcional, sin permanencia,
+y nunca como "cuántas reseñas" (se cuentan los toques; Google no dice
+quién escribió). Como hay una cuota opcional, el vídeo ya no dice "sin
+cuotas": dice "las placas: pago único", que es lo que pone la web.
 
 Los modelos llevan negocios inventados (Bar La Plaza, Barbería Norte,
 Taller Hermanos Ruiz) y salen del generador con `modelos.js`, que los
@@ -61,7 +63,8 @@ detrás) y baja la música al 30 %.
 | 25,2 s | Placa de mesa, en metacrilato, con adhesivo 3M. Expositor de pie para la barra. Y tarjeta para el delantal. |
 | 37,8 s | Acerca el móvil, se abre tu Google y cinco estrellas. Sin app. |
 | 45,3 s | Nos escribes, te diseñamos la placa en 48 horas y no se imprime nada hasta que te guste. Las placas se pagan una vez. |
-| 52,7 s | ¿Sería una locura probarlo en tu local? Comenta PLACA y te lo contamos. |
+| 52,7 s | Y si quieres, te lo llevamos nosotros: cada mes te decimos cuánta gente toca cada placa, y si cambias de ficha lo arreglamos sin tocarla. Opcional y sin permanencia. |
+| 60,2 s | ¿Sería una locura probarlo en tu local? Comenta PLACA y te lo contamos. |
 
 ## Texto de la publicación
 
@@ -82,6 +85,7 @@ detrás) y baja la música al 30 %.
 > ✅ Las placas se pagan una vez, sin apps
 > ✅ Envío gratis a península
 >
+> ➕ Opcional: te lo llevamos nosotros, sin permanencia. Cada mes sabes cuánta gente toca cada placa y, si cambias de ficha, lo arreglamos sin tocarla.
 >
 > 👉 Comenta PLACA y te mandamos precios y ejemplos por privado.
 > 📍 Córdoba · Envío a toda España · plea5e.es
