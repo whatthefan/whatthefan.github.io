@@ -1,5 +1,5 @@
 """La ultima del carrusel, en video (8,5 s, 1080x1350): la placa baja girando,
-salen cinco estrellas y "Que hablen bien de ti.", se da la vuelta y por detras
+salen cinco estrellas y "Del cielo… a tu mesa." (el carrusel empieza con la estrella en el cielo), se da la vuelta y por detras
 esta Estrellita con el pulgar arriba ("Aqui no hay nada... Comenta PLACA"). Al volver,
 Estrellita se asoma por el borde, coge impulso, salta fuera y cae de pie al
 lado, con el pulgar arriba, junto al "Comenta PLACA". Muy poco texto.
@@ -62,7 +62,7 @@ html,body{{width:1080px;height:1350px;overflow:hidden;font-family:Mont,sans-seri
 <div class="escena" id="esc"><div class="pieza" id="placa">{PIEZA}</div></div>
 <img class="abs" id="bicho" src="{svg(E + 'curiosa-izq.svg')}">
 <div class="abs" id="estrellas">{''.join(f'<span id="s{i}">{ESTRELLA}</span>' for i in range(5))}</div>
-<div class="abs" id="frase">Que hablen <b>bien</b> de ti.</div>
+<div class="abs" id="frase">Del cielo… a <b>tu mesa</b>.</div>
 <div class="abs" id="cta"><div id="boton">Comenta PLACA</div><div id="web">PLEA5E.ES</div></div>
 <script>
 const P = {{ salta: '{svg(E + 'salta.svg')}', curiosa: '{svg(E + 'curiosa-izq.svg')}', pulgar: '{svg(E + 'pulgar-izq.svg')}' }};
