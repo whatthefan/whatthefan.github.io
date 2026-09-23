@@ -1,8 +1,8 @@
 """Musica y efectos del video, sintetizados aqui: sin muestras de nadie, sin
-derechos que pagar. Saca audio.wav (45,5 s, 44,1 kHz, estereo).
+derechos que pagar. Saca audio.wav (60 s, 44,1 kHz, estereo).
 
 96 BPM: un compas dura 2,5 s, y los cortes de escena caen en compas
-(el golpe de PLEA5E, a los 12,5 s, es el comienzo del compas 6).
+(el golpe de PLEA5E, a los 20 s, es el comienzo del compas 9).
 Desde la raiz del repo:  python3 marketing/instagram/video-como-topstar/musica.py
 """
 import wave
@@ -11,7 +11,7 @@ import numpy as np
 from scipy.signal import butter, sosfilt
 
 SR = 44100
-DUR = 45.5
+DUR = 60
 BPM = 96
 NEGRA = 60 / BPM
 COMPAS = 4 * NEGRA
@@ -144,8 +144,8 @@ fx = np.zeros(N)
 
 # Do - Sol - La m - Fa, un acorde por compas
 ACORDES = [(48, [60, 64, 67, 72]), (43, [59, 62, 67, 71]), (45, [60, 64, 69, 72]), (41, [60, 65, 69, 72])]
-GOLPE = 12.5            # entra PLEA5E
-FIN_RITMO = 43.75
+GOLPE = 20              # entra PLEA5E
+FIN_RITMO = 57.5
 compases = int(DUR / COMPAS) + 1
 
 for c in range(compases):
@@ -185,32 +185,34 @@ poner(musica, pad([48, 55, 60, 64, 67, 72], 3.5), FIN_RITMO, 1.4)
 poner(musica, ding(84), FIN_RITMO, .8)
 
 # efectos, al segundo de cada animacion (ver render(t) en escena.html)
-for t in (1.6, 2.1):
-    poner(fx, pop(700), t)
-for i in range(4):
-    poner(fx, pop(900 + 120 * i), 7.9 + i * .22, .8)
-poner(fx, pop(500), 8.5)
-poner(fx, whoosh(.9), 9.9, .8)                 # se van los clientes
-poner(fx, pop(1200), 10.6)
-poner(fx, subida(2.0), 10.5)
+poner(fx, pop(600), .2); poner(fx, golpe(), 1.9, .45)          # gancho
+for t in (6.5, 6.9):
+    poner(fx, pop(700), t)                                      # notas de los locales
+poner(fx, whoosh(.9), 9.0, .6)                                  # el cliente cruza
+poner(fx, pop(700), 13.4)
+poner(fx, whoosh(.35), 14.6, .8); poner(fx, pop(300), 15.0)    # tachon y X
+poner(fx, ding(84), 16.6, .8); poner(fx, ding(91), 16.72, .6)  # la forma buena
+poner(fx, subida(2.0), 18.0)
 poner(fx, golpe(), GOLPE)
-for i in range(5):
-    poner(fx, ding(88 + [0, 2, 4, 7, 9][i]), 13.4 + i * .12, .5)
-for t in (7.5, 17.5, 22.5, 30, 35, 40):
+poner(fx, ding(96), 20.8, .5)
+for m in range(3):                                              # los tres modelos
+    a = 25 + m * 4.17
+    poner(fx, whoosh(.6), a - .2, .8)
+    for i in range(3):
+        poner(fx, pop(900 + 100 * i), a + .9 + i * .45, .55)
+for t in (5, 12.5, 37.5, 45, 52.5):
     poner(fx, whoosh(.5), t - .3, .9)
-poner(fx, thud(), 18.45)
 for i in range(3):
-    poner(fx, ding(96), 24.0 + i * .35, .35)   # NFC
+    poner(fx, ding(96), 39.0 + i * .35, .35)                    # NFC
 for i in range(5):
-    poner(fx, ding(76 + [0, 4, 7, 12, 16][i]), 27.9 + i * .3, .9)
-for k in range(12):
-    poner(fx, tecla(), 29.0 + k * .05)
-poner(fx, ding(91), 29.6, .8); poner(fx, ding(96), 29.72, .6)
-for i in range(6):
-    poner(fx, pop(800 + 60 * i), 30.4 + i * .45, .7)
+    poner(fx, ding(76 + [0, 4, 7, 12, 16][i]), 42.9 + i * .3, .9)
+for k in range(10):
+    poner(fx, tecla(), 44.0 + k * .05)
+poner(fx, ding(91), 44.5, .8); poner(fx, ding(96), 44.62, .6)
 for i in range(4):
-    poner(fx, pop(1000), 36.2 + i * .45, .6)
-poner(fx, pop(700), 41.0)
+    poner(fx, pop(800 + 80 * i), 45.5 + i * .9, .6)
+poner(fx, ding(88), 49.6, .7)
+poner(fx, pop(700), 53.4); poner(fx, golpe(), 54.2, .4); poner(fx, ding(91), 54.2, .7)
 
 # mezcla: la musica un poco agachada donde hay efectos grandes
 mezcla = .8 * musica + .75 * bateria + fx
