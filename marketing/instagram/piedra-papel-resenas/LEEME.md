@@ -21,17 +21,20 @@ la mano en el centro.
    cuadro. El móvil toca la placa y saltan las 5 estrellas. En el
    marcador, la tercera ronda pasa a ser la estrella de PLEA5E (recta, con el 5, centrada) y dice RESEÑAS.
    "…y esta gana siempre".
-3. **Zoom al móvil (7–17 s):** dentro hay una nota titulada *"De mí, para mí."* (en letra a mano, dorada) que
-   se escribe tecla a tecla. Suena siempre la misma tecla y cada tecla se
-   enciende en el teclado, mientras la música se queda de fondo:
-   *No tengas miedo. / Los que llegan arriba no se echaron para atrás. /*
+3. **Zoom al móvil (7–17 s):** dentro hay una nota titulada *"De mí, para mí."*
+   (en letra a mano, dorada) que se escribe tecla a tecla. Cada tecla se
+   enciende en el teclado y suena el "tic" suave del teclado del móvil,
+   mientras la música se queda muy bajita:
+   *Este negocio lo levanté a pulso. / Si lo hago bien, que se sepa. /*
    **Sin riesgo, no hay reseñas.** (en oro)
+   Para cambiar el texto, se cambia `TEXTO` en `video.py` y se rehace:
+   el sonido de cada tecla se ajusta solo.
 4. **Cierre:** baja el teclado y entra la notificación de PLEA5E ("Tu placa
    te está esperando. ¿Te atreves?"). Vuelve el ritmo con el botón
    **Comenta PLACA** · plea5e.es.
 
 El fondo tiene la frase "PIEDRA · PAPEL · RESEÑAS" pasando en líneas, para
-que la pantalla no quede vacía. Hay versión `-solo-efectos` (con el
+que la pantalla no quede vacía. Todos los efectos van ligeros. Hay versión `-solo-efectos` (con el
 teclado incluido) para ponerle una canción de Instagram;
 `video/portada.png` es la portada.
 

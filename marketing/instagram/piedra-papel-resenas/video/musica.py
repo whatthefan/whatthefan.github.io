@@ -5,14 +5,21 @@ instrumentos y efectos grabados (CC0): ../../audio.py.
 
   0 - 3,6   piedra, papel, ¿tijera?: tres golpes secos
   3,6 - 7   ¡reseñas!: entra el ritmo
-  7 - cta   zoom al movil: la musica se queda en un pad y se oye solo el
-            teclado (siempre la misma tecla grabada, como un movil de verdad)
+  7 - cta   zoom al movil: la musica se queda en un pad muy bajito y se oye
+            el teclado del movil: un toque corto y suave por letra (click-soft,
+            un "tic" de 20 ms, como el teclado del iPhone), la barra
+            espaciadora un poco mas grave y el intro con otro click
   cta - fin la notificacion y vuelve el ritmo para el Comenta PLACA
+
+Todos los efectos van ligeros: golpes sin subgrave, impactos y whooshes
+bajitos, para que no tapen la musica ni el teclado.
 
 Desde la raiz del repo:  python3 marketing/instagram/piedra-papel-resenas/video/musica.py
 """
 import json
 import sys
+
+import numpy as np
 
 sys.path.insert(0, 'marketing/instagram')
 import audio as a  # noqa: E402
@@ -58,52 +65,51 @@ def ritmo(desde, hasta):
 
 # el "piedra... papel... tijera...": tres golpes secos, cada vez mas fuertes
 for i, t in enumerate((.3, 1.3, 2.3)):
-    a.poner(bateria, a.bombo(), t, .8 + .1 * i); golpes.append(t)
-    a.poner(bateria, a.palmas(), t, .5 + .1 * i)
-    a.poner(fx, m('whoosh.mp3', 3), t - .2, .45)
-    a.poner(fx, m('kenney-drop_002.wav', -2 + 2 * i), t, .5)
+    a.poner(bateria, a.bombo(), t, .55 + .08 * i); golpes.append(t)
+    a.poner(bateria, a.palmas(), t, .4 + .08 * i)
+    a.poner(fx, m('whoosh.mp3', 3), t - .2, .25)
+    a.poner(fx, m('kenney-drop_002.wav', -2 + 2 * i), t, .3)
     a.poner(pads, a.pad([57, 60, 64], .9, 1400), t, .6)
 # la tijera, tachada y al suelo
-a.poner(fx, m('kenney-scratch_002.wav'), 2.85, .8)
-a.poner(fx, m('kenney-error_004.wav'), 3.0, .9)
-a.poner(fx, m('whoosh-short.mp3', -4), 3.2, .5)
+a.poner(fx, m('kenney-scratch_002.wav'), 2.85, .45)
+a.poner(fx, m('kenney-error_004.wav'), 3.0, .5)
+a.poner(fx, m('whoosh-short.mp3', -4), 3.2, .3)
 # ¡reseñas!: golpe y arranca el ritmo
-a.poner(fx, m('riser.mp3'), REVELA - 1.1, .5)
-a.poner(fx, m('impact-bass-2.mp3'), REVELA, 1); a.poner(fx, a.sub_golpe(1.4), REVELA, .7)
-a.poner(fx, m('kenney-confirmation_002.wav'), REVELA + .05, .6)   # el marcador: gana la estrella
+a.poner(fx, m('riser.mp3'), REVELA - 1.1, .3)
+a.poner(fx, m('impact-bass-2.mp3'), REVELA, .45)
+a.poner(fx, m('kenney-confirmation_002.wav'), REVELA + .05, .4)   # el marcador: gana la estrella
 ritmo(REVELA, ZOOM)
-a.poner(fx, m('whoosh-cinematic.mp3'), 3.62, .8)                   # entra la placa
-a.poner(fx, m('whoosh.mp3', -2), 3.75, .6)                          # entra el movil
+a.poner(fx, m('whoosh-cinematic.mp3'), 3.62, .4)                   # entra la placa
+a.poner(fx, m('whoosh.mp3', -2), 3.75, .3)                          # entra el movil
 for i in range(3):
-    a.poner(fx, m('ping.mp3', 4 * i), 4.3 + i * .2, .5)             # NFC
+    a.poner(fx, m('ping.mp3', 4 * i), 4.3 + i * .2, .3)             # NFC
 for i in range(5):
-    a.poner(fx, m('kenney-glass_004.wav', [0, 2, 4, 7, 9][i]), 4.5 + i * .16, .8, pan=-.5 + .25 * i)
-a.poner(fx, m('sparkle.mp3'), 5.4, .7)
-a.poner(fx, m('pop.mp3', 2), 5.6, .6)
+    a.poner(fx, m('kenney-glass_004.wav', [0, 2, 4, 7, 9][i]), 4.5 + i * .16, .5, pan=-.5 + .25 * i)
+a.poner(fx, m('sparkle.mp3'), 5.4, .4)
+a.poner(fx, m('pop.mp3', 2), 5.6, .35)
 
 # zoom al movil: whoosh largo y la musica se queda en un pad bajito
-a.poner(fx, m('whoosh-cinematic.mp3', -3), ZOOM - .1, 1)
-a.poner(fx, a.sub_golpe(1.2), ZOOM + .85, .35)
+a.poner(fx, m('whoosh-cinematic.mp3', -3), ZOOM - .1, .45)
 t0, c = ZOOM + .85, 0
 while t0 < CTA:
     raiz, notas = ACORDES[c % 4]
-    a.poner(pads, a.pad(notas, 2 * K + .4, 900), t0, .9)
-    a.poner(bajos, a.ochocientos(raiz + 12, 2 * K), t0, .25)
+    a.poner(pads, a.pad(notas, 2 * K + .4, 800), t0, .45)
     t0 += 2 * K
     c += 1
-# el teclado: siempre la misma tecla (la espacio, un poco mas grave; el intro, otro click)
+# el teclado del movil: un "tic" corto y suave por letra, casi igual cada vez
 for i, (t, ch) in enumerate(T['teclas']):
     if ch == '\n':
-        a.poner(teclado, m('kenney-switch_002.wav', -2), t, .5)
+        a.poner(teclado, m('click.mp3', -3), t, .6)
+    elif ch == ' ':
+        a.poner(teclado, m('click-soft.mp3', -3), t, .6)
     else:
-        a.poner(teclado, m('key-press.mp3', -2.5 if ch == ' ' else a.rng.uniform(-.25, .25)), t,
-                .8 if ch != ' ' else .9, pan=-.1 + .2 * a.rng.random())
+        a.poner(teclado, m('click-soft.mp3', 1 + a.rng.uniform(-.2, .2)), t, .55 + .1 * a.rng.random(),
+                pan=-.08 + .16 * a.rng.random())
 
 # el final: notificacion y vuelve el ritmo
-a.poner(fx, m('whoosh-short.mp3'), CTA, .5)                         # baja el teclado
-a.poner(fx, m('notification.mp3'), CTA + .25, 1)
-a.poner(fx, m('impact-bass-1.mp3'), CTA + .55, .8); a.poner(fx, a.sub_golpe(1.4), CTA + .55, .6)
-a.poner(fx, m('pop.mp3', 3), CTA + .55, .6)
+a.poner(fx, m('whoosh-short.mp3'), CTA, .25)                        # baja el teclado
+a.poner(fx, m('notification.mp3'), CTA + .25, .6)
+a.poner(fx, m('pop.mp3', 3), CTA + .55, .35)
 ritmo(CTA + .55, DUR - .9)
 raiz, notas = ACORDES[0]
 a.poner(pads, a.pad(notas, 1.4, 1800), DUR - .9, .8); a.poner(melodia, a.campana(69, 1.4), DUR - .9)
@@ -114,7 +120,10 @@ pads *= (.35 + .65 * duck)[:, None]
 melodia = a.reverb(a.eco(melodia, NEGRA * .75, .28), .4)
 bateria = a.reverb(bateria, .12)
 fx = a.reverb(fx, .22)
-teclado = a.reverb(teclado, .06)
-a.guardar(a.master(bajos + .9 * pads + .95 * bateria + .8 * melodia + 1.1 * fx + 1.2 * teclado, cola=.8), V + 'audio.wav')
-a.guardar(a.master(fx + 1.2 * teclado, cola=.8), V + 'audio-solo-efectos.wav')
+teclado = a.filtro(a.reverb(teclado, .04), 'lowpass', 9000)     # sin el siseo de arriba: mas suave
+# un click de 20 ms casi no suena aunque tenga mucho pico: se le recorta el pico (tanh) y se
+# sube, para que se oiga claro sin que mande en la normalizacion del master
+teclado = np.tanh(teclado * 12) * .32
+a.guardar(a.master(.9 * bajos + .85 * pads + .8 * bateria + .8 * melodia + .8 * fx + teclado, cola=.8), V + 'audio.wav')
+a.guardar(a.master(fx + teclado, cola=.8), V + 'audio-solo-efectos.wav')
 print('audio.wav', DUR, 's')

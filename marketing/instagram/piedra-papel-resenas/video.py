@@ -1,7 +1,7 @@
 """Video "Piedra, papel... ¡reseñas!" (1080x1920): el juego de toda la
 vida, pero la tijera se tacha y la jugada que gana es la mano con el movil
 tocando la placa. Despues, zoom al movil: en una nota se escribe, tecla a
-tecla, el mensaje ("No tengas miedo... Sin riesgo, no hay reseñas.") y
+tecla, el mensaje ("Este negocio lo levanté a pulso... Sin riesgo, no hay reseñas.") y
 cierra con Comenta PLACA.
 
 Monta video/escena.html y video/tiempos.json (el segundo de cada tecla,
@@ -23,8 +23,8 @@ exec(open(P + 'construir.py').read().split("CSS = f'''")[0])   # mano(), ESTRELL
 tijera = svg_uri(open(P + 'manos/tijera.svg').read())
 
 # ───────────────────────── la nota que se escribe en el movil ─────────────────────────
-TEXTO = [('No tengas miedo.', ''),
-         ('Los que llegan arriba no se echaron para atrás.', ''),
+TEXTO = [('Este negocio lo levanté a pulso.', ''),
+         ('Si lo hago bien, que se sepa.', ''),
          ('Sin riesgo, no hay reseñas.', 'oro')]
 ESCRIBE = 8.45                   # primera tecla
 rnd = random.Random(5)
