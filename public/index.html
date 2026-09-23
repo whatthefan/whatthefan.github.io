@@ -493,7 +493,7 @@
           <span class="est5" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg><svg viewBox="0 0 20 20"><path d="M10 .8l2.7 5.7 6.2.9-4.5 4.3 1.1 6.2L10 14.9 4.5 17.9l1.1-6.2L1.1 7.4l6.2-.9z"/></svg></span>
           <span>Reseñas de Google</span>
         </div>
-        <h1>Reseñas de <span class="oro">5 estrellas</span> sin pedirlas dos veces</h1>
+        <h1>Reseñas de <span class="oro">5 estrellas</span> sin pedirlas dos <span class="veces">veces</span></h1>
       </div>
 
       <div class="hero-b">
@@ -609,8 +609,8 @@
          solo una respuesta, y dice tambien que la respuesta puede ser
          que no. Eso ultimo es lo que lo hace creible. -->
     <div class="medida-libre sube" style="background:rgba(233,188,70,.07);border-color:rgba(233,188,70,.32)">
-      <p><b>¿Se te ocurre otra cosa?</b> Si tienes una idea distinta para tu local, cuéntanosla. Le damos una vuelta y te decimos si se puede hacer y cuánto saldría. Si no se puede, también te lo decimos.</p>
-      <a class="btn btn-fan btn-sm" href="#pedido">Cuéntanos tu idea</a>
+      <p><b>¿Buscas algo a medida?</b> Cuéntanos tu idea y te confirmamos si es viable y su presupuesto.</p>
+      <a class="btn btn-fan btn-sm" href="#pedido">Consultar</a>
     </div>
   </div>
 </section>
@@ -3003,6 +3003,29 @@
 (function () {
   var RUTA = 'marca/estrellita/';
 
+  /* ¿Cabe de pie encima de «veces» sin pisar ninguna letra del titular?
+     Se miden los renglones de verdad (lo escrito antes de «veces») y se
+     mira si alguno cae dentro de la caja que ocuparía ella. */
+  var PC = matchMedia('(min-width: 881px)');
+  function huecoEncima(s) {
+    var v = document.querySelector(s.sel);
+    if (!v) return false;
+    var rv = v.getBoundingClientRect();
+    var alto = parseFloat(getComputedStyle(document.documentElement)
+                          .getPropertyValue('--ba')) * (s.esc || 1);
+    var ancho = alto * 1.1146;
+    var x0 = rv.left + s.fx * rv.width - s.anclaX * ancho, x1 = x0 + ancho;
+    var y1 = rv.top + s.fy * rv.height, y0 = y1 - alto;
+    var r = document.createRange();
+    r.setStart(v.parentNode, 0);
+    r.setEndBefore(v);
+    return ![].some.call(r.getClientRects(), function (q) {
+      /* los renglones llevan el espacio del final pegado: se le
+         perdonan unos píxeles de lado, que ahí no hay letra */
+      return q.right > x0 + 4 && q.left < x1 - 4 && q.bottom > y0 && q.top < y1 - 8;
+    });
+  }
+
   /* ══════════════════════════════════════════════════════════════
      EL GUION
 
@@ -3050,7 +3073,15 @@
        en el móvil. Y antes de eso, en el hueco de la placa, flotando
        en medio del negro sin nada al lado con lo que medirse. */
     [{ sel: '.portada .tresp', modo: 'punto', fx: 1, fy: 1,
-       asiento: 1, anclaX: 0, esc: 1.15, pose: 'saluda', pegada: true }],
+       asiento: 1, anclaX: 0, esc: 1.15, pose: 'saluda', pegada: true,
+       /* EN EL ORDENADOR, DE PIE ENCIMA DE «VECES», saludando. Ahí el
+          titular va en tres renglones y el de en medio («estrellas
+          sin») es más corto que el de abajo: encima de «veces» queda
+          un hueco negro que pide a alguien. Solo si ese hueco está de
+          verdad libre (ver huecoEncima); si el titular se parte de
+          otra manera, se queda en los tres pasos, como en el móvil. */
+       pc: { sel: '.portada h1 .veces', modo: 'punto', fx: 0.5, fy: 0.06,
+             asiento: 1, anclaX: 0.5, esc: 1.15, si: huecoEncima } }],
 
     /* 2 · APOYADA EN EL MÓVIL de la demo mientras se escribe sola la
        reseña, con el brazo de puntal. Y cuando llega a «Publicar», lo
@@ -3189,6 +3220,7 @@
      Devuelve coordenadas de PÁGINA, no de pantalla: así el número no
      cambia al rodar la rueda y se puede comparar con el scroll. */
   function sitio(s, el, apilados) {
+    if (s.pc && PC.matches && (!s.pc.si || s.pc.si(s.pc))) { el = null; s = s.pc; }
     el = el || document.querySelector(s.sel);
     if (!el) return null;
     if (apilados && s.apilado) {
