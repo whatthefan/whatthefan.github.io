@@ -1,0 +1,308 @@
+<!doctype html>
+<!-- PLANTILLA del video. No se abre tal cual: montar.py mete dentro las
+     letras, las fotos y a Estrellita y saca escena-montada.html.
+     Todo se mueve desde render(t): un fotograma es una llamada con el
+     segundo exacto, asi que el video sale igual cada vez que se graba. -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(data:font/woff2;base64,{{ANTON}})}
+@font-face{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,{{MONT}})}
+:root{--noche:#06080E;--panel:#0F1522;--panel2:#141B2B;--borde:#1C2536;--oro:#E9BC46;--oro-cl:#F8E1A6;--txt:#EAEDF4;--txt2:#8B95AB}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--noche);color:var(--txt);font-family:Mont,sans-serif}
+.sc{position:absolute;inset:0;display:none}
+.abs{position:absolute}
+.tit{position:absolute;left:0;right:0;text-align:center;font-family:Anton;text-transform:uppercase;line-height:1.02;letter-spacing:1px;color:#fff}
+.tit b{color:var(--oro);font-weight:400}
+.sub{position:absolute;left:0;right:0;text-align:center;font-weight:700;font-size:44px;color:var(--txt2)}
+.sub b{color:var(--oro)}
+.burbuja{position:absolute;background:#fff;color:var(--noche);font-family:Anton;font-size:84px;padding:14px 36px;border-radius:22px;white-space:nowrap}
+.burbuja:after{content:"";position:absolute;left:50%;bottom:-26px;margin-left:-18px;border:18px solid transparent;border-top:26px solid #fff;border-bottom:0}
+.burbuja i{font-style:normal;color:var(--oro)}
+.etq{position:absolute;font-weight:800;font-size:34px;letter-spacing:4px;color:var(--txt2);text-align:center;width:420px}
+.est{position:absolute}
+.est svg{width:100%;height:100%;display:block}
+/* Estrellita tiene brazos y piernas en tinta oscura: sobre la noche se pierden.
+   Aqui van en claro, como el contorno de una pegatina. */
+.est svg .tinta{stroke:#EAEDF4}
+.est svg .borde{stroke:#EAEDF4}
+.pastilla{position:absolute;background:var(--oro);color:#100B00;font-weight:800;font-size:38px;padding:12px 28px;border-radius:40px;letter-spacing:2px;box-shadow:0 8px 0 rgba(0,0,0,.35)}
+.movil{position:absolute;width:430px;height:880px;border-radius:64px;background:#10141d;border:14px solid #2A3448;box-shadow:0 30px 0 rgba(0,0,0,.35)}
+.pantalla{position:absolute;inset:0;border-radius:50px;overflow:hidden;background:#fff;color:#1f1f1f}
+.tarjeta-resena{position:absolute;width:520px;background:#fff;color:#1f1f1f;border-radius:22px;padding:24px 28px;box-shadow:0 12px 0 rgba(0,0,0,.35)}
+.tarjeta-resena .e{color:#FBBC05;font-size:38px;letter-spacing:4px}
+.tarjeta-resena p{font-size:34px;font-weight:600;margin-top:6px}
+.check{position:absolute;left:120px;font-weight:800;font-size:46px;display:flex;align-items:center;gap:26px;white-space:nowrap}
+.check span{width:64px;height:64px;border-radius:50%;background:var(--oro);display:flex;align-items:center;justify-content:center;flex:none}
+.chip{display:inline-block;border:3px solid var(--oro);color:var(--oro);font-weight:800;font-size:36px;padding:12px 30px;border-radius:60px;margin-right:22px;letter-spacing:2px}
+.linea-oro{position:absolute;height:6px;background:var(--oro)}
+</style></head><body>
+
+<!-- ============ 1 · LA CALLE (0 - 7.5) ============ -->
+<div class="sc" id="s1">
+  <div class="tit" id="s1a" style="top:250px;font-size:120px">Dos locales.<br><b>La misma calle.</b></div>
+  <div class="tit" id="s1b" style="top:250px;font-size:120px">¿A cuál entra<br><b>el cliente?</b></div>
+  <div class="tit" id="s1c" style="top:250px;font-size:120px">Al que tiene<br><b>más estrellas.</b></div>
+  <div class="linea-oro" style="left:60px;right:60px;top:1405px;height:8px;background:#2A3448"></div>
+  <svg class="abs" id="edif1" style="left:90px;top:870px" width="420" height="540" viewBox="0 0 420 540">
+    <rect x="20" y="40" width="380" height="500" fill="#141B2B"/><rect x="0" y="20" width="420" height="40" fill="#1C2536"/>
+    <rect x="60" y="100" width="110" height="110" fill="#2A3448"/><rect x="250" y="100" width="110" height="110" fill="#2A3448"/>
+    <g id="toldo1"><rect x="30" y="260" width="360" height="70" fill="#8B95AB"/>
+    <path d="M30 330 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0" fill="#8B95AB"/></g>
+    <rect x="150" y="380" width="120" height="160" fill="#06080E"/><rect x="50" y="390" width="80" height="90" fill="#2A3448"/><rect x="290" y="390" width="80" height="90" fill="#2A3448"/>
+  </svg>
+  <svg class="abs" id="edif2" style="left:570px;top:870px" width="420" height="540" viewBox="0 0 420 540">
+    <rect x="20" y="40" width="380" height="500" fill="#141B2B"/><rect x="0" y="20" width="420" height="40" fill="#1C2536"/>
+    <rect x="60" y="100" width="110" height="110" fill="#F8E1A6"/><rect x="250" y="100" width="110" height="110" fill="#F8E1A6"/>
+    <rect x="30" y="260" width="360" height="70" fill="#E9BC46"/>
+    <path d="M30 330 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0 q22.5 30 45 0" fill="#E9BC46"/>
+    <rect x="150" y="380" width="120" height="160" fill="#F8E1A6"/><rect x="50" y="390" width="80" height="90" fill="#F8E1A6"/><rect x="290" y="390" width="80" height="90" fill="#F8E1A6"/>
+  </svg>
+  <div class="burbuja" id="bur1" style="left:170px;top:700px">3,9 <i>★</i></div>
+  <div class="burbuja" id="bur2" style="left:650px;top:700px">4,7 <i>★</i></div>
+  <div class="etq" id="etq1" style="left:90px;top:1440px">TU LOCAL</div>
+  <div class="etq" id="etq2" style="left:570px;top:1440px">EL DE ENFRENTE</div>
+  <svg class="abs" id="persona" style="left:490px;top:1230px" width="100" height="180" viewBox="0 0 100 180">
+    <circle cx="50" cy="30" r="26" fill="#EAEDF4"/><rect x="22" y="62" width="56" height="80" rx="26" fill="#EAEDF4"/>
+    <rect id="pie1" x="28" y="130" width="18" height="48" rx="9" fill="#EAEDF4"/><rect id="pie2" x="54" y="130" width="18" height="48" rx="9" fill="#EAEDF4"/>
+  </svg>
+</div>
+
+<!-- ============ 2 · EL PROBLEMA (7.5 - 12.5) ============ -->
+<div class="sc" id="s2">
+  <div class="tit" id="s2a" style="top:250px;font-size:112px">Y tus clientes<br><b>contentos…</b></div>
+  <div class="tit" id="s2b" style="top:250px;font-size:112px">…se van <b>sin dejar</b><br><b>reseña.</b></div>
+  <div id="caras"></div>
+  <div class="abs" id="cont0" style="left:190px;top:1020px;width:700px;height:420px;background:var(--panel);border:4px solid var(--borde);border-radius:36px;text-align:center">
+    <div style="font-weight:800;font-size:40px;color:var(--txt2);margin-top:50px;letter-spacing:2px">RESEÑAS NUEVAS ESTA SEMANA</div>
+    <div style="font-family:Anton;font-size:230px;color:var(--oro);line-height:1.2">0</div>
+  </div>
+  <div class="est" id="estAsombro" style="left:700px;top:1250px;width:360px;height:323px">{{EST_ASOMBRO}}</div>
+</div>
+
+<!-- ============ 3 · PLEA5E (12.5 - 17.5) ============ -->
+<div class="sc" id="s3">
+  <div class="abs" id="marca" style="left:40px;top:640px;width:1000px;height:200px">{{MARCA}}</div>
+  <div id="estrellitas" class="abs" style="left:0;right:0;top:900px;text-align:center;font-size:76px;color:var(--oro);letter-spacing:22px"></div>
+  <div class="sub" id="s3a" style="top:1030px;font-size:50px;color:#fff">Placas NFC para <b>reseñas de Google</b></div>
+  <div class="sub" id="s3b" style="top:1110px;font-size:44px">diseñadas con tu marca</div>
+  <div class="est" id="estTachan" style="left:340px;top:1240px;width:400px;height:359px">{{EST_TACHAN}}</div>
+  <div class="abs" id="flash" style="left:540px;top:960px;width:10px;height:10px;border-radius:50%;background:var(--oro)"></div>
+</div>
+
+<!-- ============ 4 · LA PLACA (17.5 - 22.5) ============ -->
+<div class="sc" id="s4">
+  <div class="tit" id="s4t" style="top:250px;font-size:112px">Tu placa,<br><b>con tu marca.</b></div>
+  <img class="abs" id="placa" src="{{PLACA}}" style="left:250px;top:620px;width:580px">
+  <div class="pastilla" id="cal1" style="left:120px;top:1030px">CHIP NFC</div>
+  <div class="pastilla" id="cal2" style="left:600px;top:780px">CÓDIGO QR</div>
+  <img class="abs" id="barvi" src="{{BARVI}}" style="left:50px;top:1340px;width:290px;border-radius:26px">
+  <img class="abs" id="piccola" src="{{PICCOLA}}" style="left:740px;top:1340px;width:290px;border-radius:26px">
+  <div class="sub" id="s4s" style="top:1630px;font-size:38px">Diseños reales de clientes</div>
+</div>
+
+<!-- ============ 5 · ASÍ DE FÁCIL (22.5 - 30) ============ -->
+<div class="sc" id="s5">
+  <div class="tit" style="top:230px;font-size:100px">Así de <b>fácil</b></div>
+  <div class="tit" id="paso1" style="top:380px;font-size:64px;color:var(--oro)">1 · Acerca el móvil</div>
+  <div class="tit" id="paso2" style="top:380px;font-size:64px;color:var(--oro)">2 · Se abre tu Google</div>
+  <div class="tit" id="paso3" style="top:380px;font-size:64px;color:var(--oro)">3 · 5 estrellas en 10 segundos</div>
+  <img class="abs" id="placa2" src="{{PLACA}}" style="left:90px;top:760px;width:440px">
+  <svg class="abs" id="ondas" style="left:470px;top:880px" width="220" height="300" viewBox="0 0 220 300">
+    <path id="o1" d="M30 90 a70 70 0 0 1 0 120" fill="none" stroke="#E9BC46" stroke-width="16" stroke-linecap="round"/>
+    <path id="o2" d="M80 55 a120 120 0 0 1 0 190" fill="none" stroke="#E9BC46" stroke-width="16" stroke-linecap="round"/>
+    <path id="o3" d="M130 20 a170 170 0 0 1 0 260" fill="none" stroke="#E9BC46" stroke-width="16" stroke-linecap="round"/>
+  </svg>
+  <div class="movil" id="movil" style="left:620px;top:620px">
+    <div class="pantalla">
+      <div id="pvacia" class="abs" style="inset:0;background:#0b0e14;z-index:2"></div>
+      <div id="pgoogle" class="abs" style="inset:0">
+        <div style="height:210px;background:#E9BC46;padding:70px 36px 0">
+          <div style="font-weight:800;font-size:40px;color:#06080E">Tu local</div>
+          <div style="font-weight:600;font-size:26px;color:#3a2c05;margin-top:6px">Reseña en Google</div>
+        </div>
+        <div style="padding:44px 30px;text-align:center">
+          <div style="font-weight:700;font-size:30px">¿Qué tal tu visita?</div>
+          <div id="estrellasMovil" style="margin-top:40px;font-size:66px;letter-spacing:2px;color:#d6d9df">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div style="margin:44px auto 0;height:170px;border:3px solid #e2e5ea;border-radius:18px;text-align:left;padding:18px;font-size:26px;color:#9aa0aa" id="texto">Cuéntanos tu experiencia…</div>
+          <div id="publicada" style="margin:36px auto 0;width:300px;padding:20px;border-radius:40px;background:#06080E;color:#E9BC46;font-weight:800;font-size:30px">✓ ¡Publicada!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 6 · RESULTADO (30 - 35) ============ -->
+<div class="sc" id="s6">
+  <div class="tit" style="top:250px;font-size:112px">Reseñas que<br><b>llegan solas.</b></div>
+  <div class="abs" style="left:0;right:0;top:620px;text-align:center">
+    <span id="nota" style="font-family:Anton;font-size:300px;color:#fff">3,9</span>
+    <span style="font-family:Anton;font-size:220px;color:var(--oro)">★</span>
+  </div>
+  <div id="tarjetas"></div>
+  <div class="sub" style="top:1690px;font-size:28px;color:#5D6679">Ejemplo ilustrativo</div>
+</div>
+
+<!-- ============ 7 · VENTAJAS (35 - 40) ============ -->
+<div class="sc" id="s7">
+  <div class="tit" style="top:230px;font-size:112px">Sin cuotas.<br><b>Sin apps.</b></div>
+  <img class="abs" id="f1" src="{{PLACA_CUAD}}" style="left:60px;top:540px;width:300px;border-radius:24px">
+  <img class="abs" id="f2" src="{{EXPOSITOR}}" style="left:390px;top:540px;width:300px;border-radius:24px">
+  <img class="abs" id="f3" src="{{TARJETA}}" style="left:720px;top:540px;width:300px;border-radius:24px">
+  <div class="abs" style="left:60px;top:855px;width:960px;display:flex;font-weight:800;font-size:30px;color:var(--txt2);text-align:center">
+    <div style="flex:1" id="l1">PLACA DE MESA</div><div style="flex:1" id="l2">EXPOSITOR</div><div style="flex:1" id="l3">TARJETA</div></div>
+  <div id="checks"></div>
+  <div class="abs" style="left:0;top:1560px;width:1080px;height:120px;overflow:hidden">
+    <div id="cinta" class="abs" style="white-space:nowrap;top:20px"></div>
+  </div>
+</div>
+
+<!-- ============ 8 · ¿HABLAMOS? (40 - 45) ============ -->
+<div class="sc" id="s8">
+  <div class="tit" id="s8t" style="top:280px;font-size:190px">¿Hablamos?</div>
+  <div class="est" id="estSaluda" style="left:290px;top:560px;width:500px;height:449px">{{EST_SALUDA}}</div>
+  <div class="abs" id="boton" style="left:240px;top:1100px;width:600px;padding:34px 0;border-radius:24px;background:var(--oro);color:#100B00;text-align:center;font-family:Anton;font-size:84px;letter-spacing:2px">PLEA5E.ES</div>
+  <div class="sub" id="s8a" style="top:1290px;font-size:46px;color:#fff">Escríbenos por <b>WhatsApp</b></div>
+  <div class="sub" id="s8b" style="top:1370px;font-size:38px">Desde 25 € · Córdoba · envío a toda España</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cl = x => Math.min(1, Math.max(0, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out = x => 1 - Math.pow(1 - x, 3);
+const inOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function T(el, o) {
+  el = typeof el === 'string' ? $(el) : el;
+  el.style.transform = `translate(${o.x || 0}px,${o.y || 0}px) scale(${o.s ?? 1}) rotate(${o.r || 0}deg)`;
+  el.style.opacity = o.o ?? 1;
+}
+// aparece "saltando" en a, desaparece en z (si hay z)
+function pop(el, t, a, z, dy = 60) {
+  const i = back(p(t, a, a + .45)), f = z ? p(t, z, z + .3) : 0;
+  T(el, { y: (1 - i) * dy - f * 30, s: .6 + .4 * i, o: cl(p(t, a, a + .2)) * (1 - f) });
+}
+const ESCENAS = [['s1', 0, 7.5], ['s2', 7.5, 12.5], ['s3', 12.5, 17.5], ['s4', 17.5, 22.5],
+                 ['s5', 22.5, 30], ['s6', 30, 35], ['s7', 35, 40], ['s8', 40, 45.5]];
+
+// ---- piezas que se generan una vez ----
+const caras = ['¡Qué rico!', '¡Genial!', '¡Volveremos!', '¡Top!'];
+$('caras').innerHTML = caras.map((c, i) => `
+  <div class="abs" id="cara${i}" style="left:${70 + i * 245}px;top:640px;width:220px;text-align:center">
+    <div style="background:#fff;color:#06080E;font-weight:800;font-size:30px;border-radius:18px;padding:12px 6px;margin-bottom:22px">${c}</div>
+    <svg width="150" height="150" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#E9BC46"/>
+    <circle cx="35" cy="42" r="6" fill="#06080E"/><circle cx="65" cy="42" r="6" fill="#06080E"/>
+    <path d="M30 60 q20 22 40 0" stroke="#06080E" stroke-width="7" fill="none" stroke-linecap="round"/></svg></div>`).join('');
+$('estrellitas').innerHTML = '★★★★★'.split('').map((s, i) => `<span id="mini${i}" style="display:inline-block">${s}</span>`).join('');
+const resenas = ['Trato de diez', 'Volveremos seguro', 'El mejor café de la zona', 'Todo buenísimo', 'Rápidos y muy amables', 'Sitio top'];
+const posR = [[40, 1030, -4], [520, 1110, 3], [60, 1260, 2], [500, 1340, -3], [40, 1490, -2], [520, 1560, 4]];
+$('tarjetas').innerHTML = resenas.map((r, i) => `<div class="tarjeta-resena" id="r${i}" style="left:${posR[i][0]}px;top:${posR[i][1]}px">
+  <div class="e">★★★★★</div><p>${r}</p></div>`).join('');
+const ventajas = ['Pago único, sin cuotas', 'Diseño con tu marca, gratis', 'Envío gratis a península', 'No se imprime hasta que te guste'];
+const tick = '<svg width="34" height="34" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" stroke="#06080E" stroke-width="3.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+$('checks').innerHTML = ventajas.map((v, i) => `<div class="check" id="c${i}" style="top:${960 + i * 130}px"><span>${tick}</span>${v}</div>`).join('');
+const sectores = 'BARES,RESTAURANTES,PELUQUERÍAS,CLÍNICAS,CAFETERÍAS,TIENDAS,TALLERES,HOTELES'.split(',');
+$('cinta').innerHTML = [...sectores, ...sectores].map(s => `<span class="chip">${s}</span>`).join('');
+
+function render(t) {
+  // CSS de Estrellita (parpadeo, saludo) a la hora exacta del video
+  for (const a of document.getAnimations()) { a.pause(); a.currentTime = (t * 1000) % 60000; }
+  for (const [id, a, z] of ESCENAS) {
+    const on = t >= a && t < z;
+    $(id).style.display = on ? 'block' : 'none';
+    if (on) {
+      const ent = inOut(p(t, a, a + .35)), sal = p(t, z - .25, z);
+      $(id).style.opacity = Math.min(ent, 1 - sal);
+      $(id).style.transform = `scale(${1.05 - .05 * ent + .04 * sal})`;
+    }
+  }
+  // 1 · la calle
+  if (t < 7.5) {
+    pop('s1a', t, .15, 3.1); pop('s1b', t, 3.3, 5.2); pop('s1c', t, 5.4);
+    const e1 = out(p(t, .5, 1.2)), e2 = out(p(t, .7, 1.4));
+    T('edif1', { y: (1 - e1) * 600, o: e1 }); T('edif2', { y: (1 - e2) * 600, o: e2 });
+    pop('bur1', t, 1.6); pop('bur2', t, 2.1);
+    const gris = p(t, 5.6, 6.2);
+    $('bur1').style.filter = `grayscale(1) brightness(${1 - .45 * gris})`;
+    $('edif1').style.filter = `brightness(${1 - .4 * gris})`;
+    if (t > 5.8) { const k = 1 + .08 * Math.sin((t - 5.8) * 9); $('bur2').style.transform += ` scale(${k})`; }
+    pop('etq1', t, 1.3); pop('etq2', t, 1.5);
+    const ap = p(t, 3.5, 3.9), anda = inOut(p(t, 5.1, 6.7)), dentro = p(t, 6.7, 7.0);
+    const paso = t > 5.1 && t < 6.7 ? Math.sin(t * 22) : 0;
+    T('persona', { x: anda * 290, y: -Math.abs(paso) * 8, s: 1 - .25 * dentro, o: ap * (1 - dentro) });
+    $('pie1').setAttribute('y', 130 + Math.max(0, paso) * 10); $('pie2').setAttribute('y', 130 + Math.max(0, -paso) * 10);
+  }
+  // 2 · el problema
+  if (t >= 7.5 && t < 12.5) {
+    pop('s2a', t, 7.7, 9.9); pop('s2b', t, 10.1);
+    for (let i = 0; i < 4; i++) {
+      const a = 7.9 + i * .22, e = back(p(t, a, a + .45)), vete = inOut(p(t, 9.9 + i * .12, 10.9 + i * .12));
+      T('cara' + i, { y: (1 - e) * 80, x: -vete * 1100, s: .6 + .4 * e, o: p(t, a, a + .2) });
+    }
+    pop('cont0', t, 8.5); pop('estAsombro', t, 10.6, null, 200);
+  }
+  // 3 · PLEA5E
+  if (t >= 12.5 && t < 17.5) {
+    const fl = p(t, 12.5, 12.8), flo = p(t, 12.8, 13.2);
+    T('flash', { s: 1 + out(fl) * 260, o: 1 - flo });
+    const m = back(p(t, 12.85, 13.5)); T('marca', { s: .5 + .5 * m, o: p(t, 12.85, 13.1) });
+    for (let i = 0; i < 5; i++) pop('mini' + i, t, 13.4 + i * .12, null, 40);
+    pop('s3a', t, 14.0); pop('s3b', t, 14.4); pop('estTachan', t, 15.0, null, 260);
+  }
+  // 4 · la placa
+  if (t >= 17.5 && t < 22.5) {
+    pop('s4t', t, 17.6);
+    const d = back(p(t, 17.8, 18.6));
+    T('placa', { y: (1 - d) * -700, r: -14 * (1 - d) + 2 * Math.sin((t - 18.6) * 1.2), o: p(t, 17.8, 18) });
+    pop('cal1', t, 19.0); pop('cal2', t, 19.4);
+    const b = out(p(t, 20.3, 20.9)), c = out(p(t, 20.5, 21.1));
+    T('barvi', { x: (1 - b) * -500, r: -6, o: b }); T('piccola', { x: (1 - c) * 500, r: 6, o: c });
+    pop('s4s', t, 20.9);
+  }
+  // 5 · así de fácil
+  if (t >= 22.5 && t < 30) {
+    pop('paso1', t, 22.8, 24.9); pop('paso2', t, 25.1, 27.4); pop('paso3', t, 27.6);
+    // el movil entra por la derecha, se acerca a la placa y luego se centra y crece
+    const entra = out(p(t, 22.6, 23.3)), acerca = inOut(p(t, 23.4, 24.2)), centra = inOut(p(t, 25.0, 25.8));
+    const x = (1 - entra) * 500 - acerca * 140 * (1 - centra) - centra * 295, y = centra * 40;
+    T('movil', { x, y, s: 1 + centra * .22, r: -8 * acerca * (1 - centra) });
+    T('placa2', { o: 1 - centra, x: -centra * 200 });
+    const onda = t > 24.0 && t < 25.2;
+    ['o1', 'o2', 'o3'].forEach((o, i) => { $(o).style.opacity = onda ? cl(Math.sin((t - 24 - i * .12) * 7)) : 0; });
+    T('ondas', { o: 1 - centra });
+    $('pvacia').style.opacity = 1 - p(t, 24.5, 24.8);
+    const est = $('estrellasMovil').children;
+    for (let i = 0; i < 5; i++) { const on = p(t, 27.9 + i * .3, 28.0 + i * .3); est[i].style.color = on ? '#FBBC05' : '#d6d9df';
+      est[i].style.display = 'inline-block'; est[i].style.transform = `scale(${1 + .5 * Math.sin(Math.PI * p(t, 27.9 + i * .3, 28.2 + i * .3))})`; }
+    const txt = '¡Nos ha encantado! Volveremos.', n = Math.floor(p(t, 29.0, 29.6) * txt.length);
+    $('texto').textContent = n ? txt.slice(0, n) : 'Cuéntanos tu experiencia…'; $('texto').style.color = n ? '#1f1f1f' : '#9aa0aa';
+    pop('publicada', t, 29.6, null, 20);
+  }
+  // 6 · resultado
+  if (t >= 30 && t < 35) {
+    const v = 3.9 + .9 * inOut(p(t, 30.5, 33.4));
+    $('nota').textContent = v.toFixed(1).replace('.', ',');
+    for (let i = 0; i < 6; i++) {
+      const a = 30.4 + i * .45, e = back(p(t, a, a + .5)), lado = posR[i][0] < 300 ? -1 : 1;
+      T('r' + i, { x: (1 - e) * 700 * lado, r: posR[i][2], o: p(t, a, a + .15) });
+    }
+  }
+  // 7 · ventajas
+  if (t >= 35 && t < 40) {
+    ['f1', 'f2', 'f3', 'l1', 'l2', 'l3'].forEach((f, i) => pop(f, t, 35.2 + (i % 3) * .18 + (i > 2 ? .3 : 0)));
+    for (let i = 0; i < 4; i++) { const a = 36.2 + i * .45, e = out(p(t, a, a + .4)); T('c' + i, { x: (1 - e) * -120, o: e }); }
+    T('cinta', { x: -((t - 35) * 170) % 2400, o: p(t, 35.3, 35.8) });
+  }
+  // 8 · ¿hablamos?
+  if (t >= 40) {
+    pop('s8t', t, 40.1); pop('estSaluda', t, 40.5, null, 200); pop('boton', t, 41.0);
+    if (t > 41.6) $('boton').style.transform += ` scale(${1 + .03 * Math.sin((t - 41.6) * 5)})`;
+    pop('s8a', t, 41.4); pop('s8b', t, 41.7);
+  }
+}
+window.render = render;
+render(0);
+</script>
+</body></html>
