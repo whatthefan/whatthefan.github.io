@@ -132,4 +132,25 @@ cartel('ref-placa-frontal', 2048, 2048, f'''
 cartel('ref-placa-3-4', 2048, 2048, f'''<div>{placa_foto(1450, 32, -12, 'rgba(0,0,0,.35)')}</div>''', '#FFFFFF')
 cartel('ref-estrella-marca', 2048, 2048, f'''{sello(1500)}''', '#FFFFFF')
 
+# 6. La ultima del carrusel "en todas partes": recoge los ambientes y aterriza en los
+#    tres productos de verdad (las fotos de la web), con el porque y la llamada.
+foto = lambda n: 'data:image/jpeg;base64,' + b64(f'{C}referencias/{n}.jpg')
+PROD = ''.join(f'''<div style="text-align:center"><div style="width:300px;height:300px;border-radius:28px;overflow:hidden;background:#EEF1F6">
+  <img src="{foto(n)}" style="width:100%;height:100%;object-fit:cover;transform:scale(1.18)"></div>
+  <div class="firma" style="margin-top:14px;font-size:24px;color:#F4EDE0">{t}</div><div style="font-size:19px;font-weight:600;color:#8A93A6">{m}</div></div>'''
+  for n, t, m in (('ref-placa-mesa-90x90', 'PLACA DE MESA', '90 × 90 mm'), ('ref-expositor-pie-76x118', 'EXPOSITOR DE PIE', '76 × 118 mm'),
+                  ('ref-tarjeta-mano-85x54', 'TARJETA DE MANO', '85 × 54 mm')))
+cartel('final-todas-partes', 1080, 1350, f'''
+<div class="firma" style="font-size:24px;color:#8A93A6;letter-spacing:.08em;text-align:center">EN EL CIELO · EN UNA MONEDA · EN LA ARENA · EN LA PARED</div>
+<div class="gordo" style="margin-top:26px;font-size:76px;color:#F4EDE0;letter-spacing:-.02em;line-height:1.02;text-align:center">TU RESEÑA SE VE<br>EN TODAS PARTES.</div>
+<div class="gordo" style="margin-top:18px;font-size:76px;color:#E9BC46;letter-spacing:-.02em;line-height:1.02;text-align:center">PERO SE CONSIGUE<br>AQUÍ.</div>
+<div style="display:flex;gap:28px;margin-top:54px">{PROD}</div>
+<div style="margin-top:50px;font-size:29px;font-weight:600;color:#C9CEDA;text-align:center;line-height:1.5">
+  Tu cliente acerca el móvil o escanea el QR<br>y está en tu ficha de Google. <b style="color:#F4EDE0">10 segundos, sin apps.</b><br>
+  Diseñadas con tu marca · Las placas: pago único</div>
+<div style="margin-top:40px;display:flex;align-items:center;gap:26px">
+  <div style="background:#E9BC46;color:#06080E;font-weight:900;font-size:42px;padding:20px 44px;border-radius:60px">Comenta PLACA</div>
+  <div style="display:flex;align-items:center;gap:12px">{sello(52)}<span class="firma" style="font-size:30px;color:#F4EDE0">plea5e.es</span></div></div>
+''', 'radial-gradient(ellipse 75% 55% at 50% 52%,#1A2130 0%,#0B0F18 60%,#06080E 100%)')
+
 print('carteles hechos')
