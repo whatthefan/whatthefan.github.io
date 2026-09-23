@@ -31,7 +31,9 @@ CAPAS = [
     ('toca', [uri('pieza-nfc'), uri('pieza-instr'), uri('pieza-tel')], '<b>Toca</b> o escanea'),
 ]
 css = '\n'.join(f'.k-{c}{{background-image:{",".join(f"url({u})" for u in f)}}}' for c, f, _ in CAPAS if f)
-html = ''.join(f'<div class="capa {"vidrio" if c == "vidrio" else "k-" + c}" id="capa{i}"></div>' for i, (c, f, _) in enumerate(CAPAS))
+html = ''.join(f'<div class="capa {"vidrio" if c == "vidrio" else "k-" + c}" id="capa{i}">'
+               + ('<i class="lado ab"></i><i class="lado de"></i>' if c == 'vidrio' else '') + '</div>'
+               for i, (c, f, _) in enumerate(CAPAS))
 
 
 def estrellita(pose, pref):

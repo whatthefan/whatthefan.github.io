@@ -10,11 +10,13 @@ const TODAS = ['fondo', 'banda', 'adornos', 'titulo', 'g', 'nfc', 'qr', 'marco',
 const solo = (...v) => Object.fromEntries(TODAS.filter(k => !v.includes(k)).map(k => [k, true]));
 const CREMA = '#F4EDE0', BLANCO = '#FFFFFF';
 const PASOS = {
-  // el carrusel: cada paso anade lo suyo a lo de antes
-  'paso1-nombre':  { oc: solo('fondo', 'cliente', 'lema'), fondo: BLANCO, ve: 'nombre' },
-  'paso2-logo':    { oc: solo('fondo', 'cliente', 'lema'), fondo: BLANCO, ve: 'ambos' },
-  'paso3-colores': { oc: solo('fondo', 'cliente', 'lema', 'banda', 'adornos', 'pie'), fondo: CREMA, ve: 'ambos' },
-  'paso4-qr':      { oc: solo('fondo', 'cliente', 'lema', 'banda', 'adornos', 'pie', 'titulo', 'g', 'qr', 'marco', 'instr'), fondo: CREMA, ve: 'ambos' },
+  // el carrusel: cada paso anade lo suyo a lo de antes. Primero lo que mas
+  // cambia la placa (los colores) y despues el detalle, para que cada foto
+  // se note distinta de la anterior
+  'paso1-colores': { oc: solo('fondo', 'banda', 'adornos', 'pie'), fondo: CREMA, ve: 'ambos' },
+  'paso2-mensaje': { oc: solo('fondo', 'banda', 'adornos', 'pie', 'titulo', 'g'), fondo: CREMA, ve: 'ambos' },
+  'paso3-cliente': { oc: solo('fondo', 'banda', 'adornos', 'pie', 'titulo', 'g', 'cliente', 'lema'), fondo: CREMA, ve: 'ambos' },
+  'paso4-qr':      { oc: solo('fondo', 'banda', 'adornos', 'pie', 'titulo', 'g', 'cliente', 'lema', 'qr', 'instr'), fondo: CREMA, ve: 'ambos' },
   'paso5-nfc':     { oc: {}, fondo: CREMA, ve: 'ambos' },
   // las piezas sueltas del video
   'pieza-fondo':   { oc: solo('fondo'), fondo: CREMA, ve: 'ambos' },

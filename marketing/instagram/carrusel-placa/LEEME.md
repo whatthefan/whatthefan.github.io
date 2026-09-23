@@ -6,15 +6,20 @@ son **inventados** (Bar La Plaza): no existe.
 
 ## Carrusel (7 fotos de 1080×1350, `diapositivas/PLEA5E-carrusel-0N.png`)
 
+Como los del cuenco: foto cenital sobre negro, la placa llenando la
+imagen (960 px de 1080) y dibujada con su canto de metacrilato, el
+brillo y la sombra. Primero lo que más cambia la placa (los colores) y
+después el detalle; lo nuevo de cada foto va en un recuadro dorado.
+
 | | Arriba | Se ve |
 |---|---|---|
-| 1 | Desliza para agregar **tu nombre** | La placa de metacrilato vacía (4 mm, 90 × 90 mm) |
-| 2 | … **tu logo** | Con el nombre y el lema |
-| 3 | … **tus colores** | Con el logo, y una lupa que lo amplía |
-| 4 | … **el código QR** | Con la banda y los colores de la marca |
-| 5 | … **el chip NFC** | Con el mensaje, la G de Google y el QR |
-| 6 | Desliza para **probarla** | La placa "en rayos X": el chip de cobre dentro, "Programado con tu ficha de Google" |
-| 7 | ¡Lista para tu mesa! **5 ★ en 10 segundos** | La placa terminada con el móvil dejando la reseña · "Comenta PLACA y te hacemos la tuya" |
+| 1 | Desliza para agregar **tus colores** | La placa de metacrilato vacía y transparente |
+| 2 | … **tu mensaje** | Con la banda, el fondo y las estrellas de la marca |
+| 3 | … **tu logo y nombre** | + el mensaje y la G de Google (recuadro) |
+| 4 | … **el código QR** | + logo, nombre y lema (recuadro) |
+| 5 | … **el chip NFC** | + el QR y "toca o escanea" (recuadro) |
+| 6 | Desliza para **probarla** | "Rayos X": el chip de cobre dentro + el icono NFC (recuadro "chip NFC programado") |
+| 7 | ¡Lista para tu mesa! **5 ★ en 10 segundos** | La placa terminada con el móvil dejando la reseña |
 
 **Texto de la publicación:**
 
@@ -33,7 +38,9 @@ son **inventados** (Bar La Plaza): no existe.
 
 ## Vídeo (`video/PLEA5E-placa-destripada.mp4`, 21,7 s, 1080×1920)
 
-La placa entera cae, se inclina y **se abre en sus 8 capas** (metacrilato,
+De cerca y con un ángulo suave, la placa (con el grosor del metacrilato
+en 3D) cae, se inclina y **se abre en sus 8 capas**, y la cámara sube de
+una a otra dejando en el centro la que se explica (metacrilato,
 chip NFC, vinilo, colores, mensaje + Google, logo y nombre, QR, "toca o
 escanea"); cada una se enciende con su nombre. Se vuelve a juntar de un
 golpe (ahí entra la parte fuerte de la música), se programa el chip, un

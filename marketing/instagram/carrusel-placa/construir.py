@@ -1,8 +1,16 @@
-"""Carrusel "Desliza para agregar": la placa de ejemplo montada paso a paso.
+"""Carrusel "Desliza para agregar": la placa de ejemplo montada paso a paso,
+al estilo de los del cuenco (foto cenital sobre negro, el producto llenando
+la imagen y cada foto con algo nuevo que se ve de un vistazo).
 
-Toma las capas que saca capas.js y monta 7 diapositivas de 1080x1350
-(el 4:5 del carrusel de Instagram) en diapositivas/NN.html; hacer-png.js
-les hace la foto. Negocio y logo son INVENTADOS (Bar La Plaza).
+Toma las capas que saca capas.js y monta 7 diapositivas de 1080x1350 (el
+4:5 del carrusel) en diapositivas/NN.html; hacer-png.js les hace la foto.
+Negocio y logo son INVENTADOS (Bar La Plaza).
+
+La placa se dibuja "de verdad": el metacrilato con su canto de 4 mm (la
+silueta repetida hacia abajo, con el borde claro que tiene el acrilico
+cortado), el brillo de la superficie, una sombra de contacto y otra
+suave, y un foco de luz sobre el negro. Un poco inclinada hacia atras
+(rotateX) para que el canto se vea, como en una foto hecha desde arriba.
 
 Desde la raiz del repo:  python3 marketing/instagram/carrusel-placa/construir.py
 """
@@ -17,102 +25,115 @@ png = lambda f: f'data:image/png;base64,{b64(f)}'
 ico = open('public/icono.svg').read()
 STAR = re.search(r'<path fill="#E9BC46" d="([^"]+)"', ico).group(1)
 FIVE = re.search(r'<path fill="#0A0E16" transform="[^"]+" d="([^"]+)"', ico).group(1)
-SELLO = (f'<svg viewBox="0 0 1024 900" width="46" height="40"><path fill="#E9BC46" d="{STAR}"/>'
+SELLO = (f'<svg viewBox="0 0 1024 900" width="52" height="46"><path fill="#E9BC46" d="{STAR}"/>'
          f'<path fill="#06080E" transform="translate(407.2 677.2) scale(.42)" d="{FIVE}"/></svg>')
+
+LADO = 960                       # la placa, en pixeles de la foto
+X0, Y0 = (1080 - LADO) // 2, 318
+GROSOR = 16                      # el canto de 4 mm a esta escala
 
 CSS = f'''
 @font-face{{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,{b64('fuente/montserrat-latin.woff2')})}}
 @font-face{{font-family:Caveat;font-weight:700;src:url(data:font/woff2;base64,{b64('fuente/caveat-latin.woff2')})}}
 *{{margin:0;padding:0;box-sizing:border-box}}
-html,body{{width:1080px;height:1350px;overflow:hidden;background:#06080E;font-family:Mont,sans-serif;color:#F4EDE0}}
-.cab{{position:absolute;top:62px;left:0;right:0;text-align:center}}
-.cab .a{{font-weight:800;font-size:62px;letter-spacing:1px;color:#F7F1E3}}
-.cab .b{{font-family:Caveat;font-weight:700;font-size:128px;line-height:1.05;color:#E9BC46}}
-.placa{{position:absolute;left:130px;top:360px;width:820px;height:820px}}
-.placa .canto{{position:absolute;inset:0;border-radius:4.2%}}
-.placa img{{position:absolute;inset:0;width:100%;height:100%}}
-.sombra{{position:absolute;left:150px;top:1150px;width:780px;height:60px;border-radius:50%;background:rgba(0,0,0,.8);filter:blur(22px)}}
-.nota{{position:absolute;left:0;right:0;top:1222px;text-align:center;font-weight:600;font-size:30px;color:#8B95AB}}
-.nota b{{color:#E9BC46}}
-.firma{{position:absolute;left:0;right:0;bottom:30px;display:flex;justify-content:center;align-items:center;gap:10px;
-       font-weight:800;font-size:24px;letter-spacing:5px;color:#5D6679}}
+html,body{{width:1080px;height:1350px;overflow:hidden;font-family:Mont,sans-serif;color:#F4EDE0;
+  background:radial-gradient(ellipse 70% 55% at 50% 60%,#171b24 0%,#0a0c12 55%,#040507 100%)}}
+.cab{{position:absolute;top:44px;left:0;right:0;text-align:center;z-index:5}}
+.cab .a{{font-weight:800;font-size:64px;letter-spacing:1px;color:#F7F1E3}}
+.cab .b{{font-family:Caveat;font-weight:700;font-size:134px;line-height:1.02;color:#E9BC46}}
+.mesa{{position:absolute;left:{X0}px;top:{Y0}px;width:{LADO}px;height:{LADO}px;
+  transform:perspective(2600px) rotateX(9deg);transform-origin:50% 100%}}
+.capa{{position:absolute;inset:0;border-radius:4.2%}}
+.capa img{{position:absolute;inset:0;width:100%;height:100%;border-radius:4.2%}}
+.sombra{{position:absolute;left:{X0 + 30}px;top:{Y0 + LADO - 40}px;width:{LADO - 60}px;height:90px;border-radius:50%;
+  background:rgba(0,0,0,.85);filter:blur(30px)}}
+.contacto{{position:absolute;left:{X0 + 10}px;top:{Y0 + LADO + 4}px;width:{LADO - 20}px;height:16px;border-radius:50%;
+  background:rgba(0,0,0,.95);filter:blur(6px)}}
+.marca{{position:absolute;border:6px solid #E9BC46;border-radius:22px;box-shadow:0 0 34px rgba(233,188,70,.75),inset 0 0 18px rgba(233,188,70,.35)}}
+.marca span{{position:absolute;top:-30px;left:18px;background:#E9BC46;color:#100B00;font-weight:800;font-size:28px;
+  padding:6px 16px;border-radius:30px;white-space:nowrap}}
+.pie{{position:absolute;left:0;right:0;bottom:22px;display:flex;justify-content:center;align-items:center;gap:10px;
+  font-weight:800;font-size:22px;letter-spacing:6px;color:#4A5263}}
 '''
 
 
-def canto(transparente=False):
-    """el grosor del metacrilato: la silueta repetida hacia abajo a la derecha.
-    Con la placa ya impresa el vinilo lo tapa todo y solo asoma el canto;
-    vacia se ve a traves, asi que ahi solo se pintan los bordes."""
+def canto(vacia=False):
+    """el grosor: la silueta repetida hacia abajo. El acrilico cortado tiene
+    el canto mas claro que la cara, y con la placa vacia se ve a traves"""
     capas = ''
-    for i in range(10, 0, -1):
-        relleno = 'transparent' if transparente else f'rgba(214,226,232,{.10 + .012 * i:.3f})'
-        capas += (f'<div class="canto" style="transform:translate({i * .9:.1f}px,{i * 1.4:.1f}px);'
-                  f'background:{relleno};border:1px solid rgba(255,255,255,{.05 if transparente else .10})"></div>')
+    for i in range(GROSOR, 0, -1):
+        k = i / GROSOR
+        fondo = 'transparent' if vacia else f'rgba({int(180 + 40 * k)},{int(200 + 30 * k)},{int(200 + 30 * k)},.9)'
+        borde = f'rgba(255,255,255,{.10 + .25 * (1 - k):.2f})'
+        capas += f'<div class="capa" style="transform:translateY({i}px);background:{fondo};border:1.5px solid {borde}"></div>'
     return capas
 
 
-def vidrio():
-    return ('<div class="canto" style="background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 42%,'
-            'rgba(255,255,255,.01) 58%,rgba(255,255,255,.06));border:3px solid rgba(255,255,255,.55);'
-            'box-shadow:inset 0 0 40px rgba(255,255,255,.08)"></div>'
-            '<div class="canto" style="background:linear-gradient(115deg,transparent 18%,rgba(255,255,255,.18) 22%,'
-            'transparent 30%,transparent 62%,rgba(255,255,255,.10) 66%,transparent 70%)"></div>')
+def brillo():
+    """el brillo del metacrilato por encima de lo impreso"""
+    return ('<div class="capa" style="background:linear-gradient(118deg,rgba(255,255,255,0) 22%,rgba(255,255,255,.13) 30%,'
+            'rgba(255,255,255,0) 40%,rgba(255,255,255,0) 64%,rgba(255,255,255,.07) 70%,rgba(255,255,255,0) 76%);'
+            'box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 2px 0 0 rgba(255,255,255,.25),inset 0 -2px 0 rgba(0,0,0,.25)"></div>')
 
 
-def diapo(num, arriba, grande, placa_html, extra='', nota='', tam=128, vacia=False):
+def vacia():
+    return ('<div class="capa" style="background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.015) 45%,'
+            'rgba(255,255,255,.04));border:3px solid rgba(255,255,255,.6);box-shadow:inset 0 0 50px rgba(255,255,255,.06)"></div>'
+            '<div class="capa" style="background:linear-gradient(118deg,transparent 20%,rgba(255,255,255,.22) 26%,'
+            'transparent 34%,transparent 62%,rgba(255,255,255,.12) 67%,transparent 72%)"></div>'
+            # los cuatro taladros no: esta placa va pegada con adhesivo 3M
+            )
+
+
+capa = lambda n: f'<div class="capa"><img src="{png(C + "capas/" + n + ".png")}"></div>'
+
+
+def marca(x0, y0, x1, y1, texto):
+    """el recuadro dorado de lo que se acaba de anadir (fracciones de la placa)"""
+    m = 18
+    return (f'<div class="marca" style="left:{x0 * LADO - m:.0f}px;top:{y0 * LADO - m:.0f}px;'
+            f'width:{(x1 - x0) * LADO + 2 * m:.0f}px;height:{(y1 - y0) * LADO + 2 * m:.0f}px"><span>{texto}</span></div>')
+
+
+def diapo(num, arriba, grande, cara, extra='', tam=134, vacia_=False, sobre=''):
+    """sobre: lo que va encima de la placa y se inclina con ella (recuadros, chip)"""
     html = f'''<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>
 <div class="cab"><div class="a">{arriba}</div><div class="b" style="font-size:{tam}px">{grande}</div></div>
-<div class="sombra"></div>
-<div class="placa">{canto(vacia)}{placa_html}</div>
+<div class="sombra"></div><div class="contacto"></div>
+<div class="mesa">{canto(vacia_)}{cara}{'' if vacia_ else brillo()}{sobre}</div>
 {extra}
-<div class="nota">{nota}</div>
-<div class="firma">{SELLO}PLEA5E</div>
+<div class="pie">{SELLO}PLEA5E</div>
 </body></html>'''
     os.makedirs(C + 'diapositivas', exist_ok=True)
     open(f'{C}diapositivas/{num:02d}.html', 'w').write(html)
 
 
-capa = lambda n: f'<img src="{png(C + "capas/" + n + ".png")}">'
+CHIP = f'''<svg style="position:absolute;left:0;top:0" width="{LADO}" height="{LADO}" viewBox="0 0 1000 1000">
+  {''.join(f'<rect x="{200 + 22 * i}" y="{420 + 22 * i}" width="{300 - 44 * i}" height="{300 - 44 * i}" rx="{24 - 4 * i}" fill="none" stroke="#D4933F" stroke-width="10"/>' for i in range(4))}
+  <rect x="320" y="540" width="60" height="60" rx="6" fill="#1b1b1b" stroke="#D4933F" stroke-width="5"/></svg>'''
 
-LUPA = f'''<svg style="position:absolute;left:0;top:0" width="1080" height="1350">
-  <line x1="570" y1="1010" x2="780" y2="930" stroke="#E9BC46" stroke-width="4"/>
-  <circle cx="555" cy="1012" r="22" fill="none" stroke="#E9BC46" stroke-width="4"/></svg>
-<div style="position:absolute;left:760px;top:730px;width:260px;height:260px;border-radius:50%;border:8px solid #E9BC46;
-  background:#F7F7F7 url({png(C + 'logo-ejemplo.png')}) center/78% no-repeat;box-shadow:0 12px 30px rgba(0,0,0,.6)"></div>'''
-
-CHIP = '''<svg style="position:absolute;left:130px;top:360px" width="820" height="820" viewBox="0 0 820 820">
-  <g opacity=".95">
-    <rect x="150" y="270" width="300" height="300" rx="26" fill="none" stroke="#C98A3A" stroke-width="9"/>
-    <rect x="172" y="292" width="256" height="256" rx="20" fill="none" stroke="#C98A3A" stroke-width="9"/>
-    <rect x="194" y="314" width="212" height="212" rx="16" fill="none" stroke="#C98A3A" stroke-width="9"/>
-    <rect x="270" y="390" width="60" height="60" rx="6" fill="#1b1b1b" stroke="#C98A3A" stroke-width="5"/>
-  </g></svg>
-<div style="position:absolute;left:60px;top:1060px;background:#E9BC46;color:#100B00;font-weight:800;font-size:30px;
-  padding:14px 26px;border-radius:40px">Programado con tu ficha de Google ✓</div>'''
-
-MOVIL = f'''<div style="position:absolute;left:745px;top:640px;width:285px;height:552px;border-radius:42px;background:#10141d;
-  border:11px solid #2A3448;transform:rotate(-10deg);overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.7)">
+MOVIL = f'''<div style="position:absolute;left:720px;top:600px;width:320px;height:620px;border-radius:46px;background:#10141d;
+  border:12px solid #2A3448;transform:rotate(-12deg);overflow:hidden;box-shadow:0 40px 70px rgba(0,0,0,.8);z-index:4">
   <div style="position:absolute;inset:0;background:#fff;color:#1f1f1f;font-family:Mont">
-    <div style="height:150px;background:#1F4D3A;padding:52px 26px 0"><div style="font-weight:800;font-size:30px;color:#fff">Bar La Plaza</div>
-      <div style="font-weight:600;font-size:20px;color:#E9C46A;margin-top:4px">Reseña en Google</div></div>
-    <div style="padding:34px 20px;text-align:center"><div style="font-weight:700;font-size:23px">¿Qué tal tu visita?</div>
-      <div style="margin-top:26px;font-size:50px;letter-spacing:1px;color:#FBBC05">★★★★★</div>
-      <div style="margin:26px auto 0;height:120px;border:3px solid #e2e5ea;border-radius:14px;text-align:left;padding:14px;font-size:20px;color:#1f1f1f">¡Trato de diez! Volveremos.</div></div>
+    <div style="height:160px;background:#1F4D3A;padding:56px 26px 0"><div style="font-weight:800;font-size:31px;color:#fff">Bar La Plaza</div>
+      <div style="font-weight:600;font-size:21px;color:#E9C46A;margin-top:4px">Reseña en Google</div></div>
+    <div style="padding:34px 20px;text-align:center"><div style="font-weight:700;font-size:24px">¿Qué tal tu visita?</div>
+      <div style="margin-top:26px;font-size:54px;letter-spacing:1px;color:#FBBC05">★★★★★</div>
+      <div style="margin:26px auto 0;height:130px;border:3px solid #e2e5ea;border-radius:14px;text-align:left;padding:14px;font-size:21px">¡Trato de diez! Volveremos.</div></div>
   </div></div>
-<svg style="position:absolute;left:672px;top:760px" width="110" height="170" viewBox="0 0 110 170">
-  <path d="M15 50 a45 45 0 0 1 0 70" fill="none" stroke="#E9BC46" stroke-width="10" stroke-linecap="round"/>
-  <path d="M45 30 a75 75 0 0 1 0 110" fill="none" stroke="#E9BC46" stroke-width="10" stroke-linecap="round" opacity=".7"/>
-  <path d="M75 10 a105 105 0 0 1 0 150" fill="none" stroke="#E9BC46" stroke-width="10" stroke-linecap="round" opacity=".4"/></svg>
-<div style="position:absolute;left:0;right:0;top:1195px;text-align:center">
-  <span style="display:inline-block;background:#E9BC46;color:#100B00;font-weight:800;font-size:34px;padding:16px 34px;border-radius:44px">Comenta PLACA y te hacemos la tuya</span></div>'''
+<svg style="position:absolute;left:630px;top:760px;z-index:4" width="120" height="190" viewBox="0 0 120 190">
+  <path d="M15 60 a45 45 0 0 1 0 70" fill="none" stroke="#E9BC46" stroke-width="11" stroke-linecap="round"/>
+  <path d="M48 38 a78 78 0 0 1 0 114" fill="none" stroke="#E9BC46" stroke-width="11" stroke-linecap="round" opacity=".7"/>
+  <path d="M82 16 a110 110 0 0 1 0 158" fill="none" stroke="#E9BC46" stroke-width="11" stroke-linecap="round" opacity=".4"/></svg>'''
 
 D = 'DESLIZA PARA AGREGAR'
-diapo(1, D, 'TU NOMBRE', vidrio(), nota='Metacrilato de <b>4 mm</b> · 90 × 90 mm', vacia=True)
-diapo(2, D, 'TU LOGO', capa('paso1-nombre'), nota='El nombre de tu local, con tu lema')
-diapo(3, D, 'TUS COLORES', capa('paso2-logo'), LUPA, nota='Tu logo, tal cual lo tienes')
-diapo(4, D, 'EL CÓDIGO QR', capa('paso3-colores'), nota='Los colores de tu marca')
-diapo(5, D, 'EL CHIP NFC', capa('paso4-qr'), nota='Lleva a <b>tu ficha de Google</b>, directo a escribir')
-diapo(6, 'DESLIZA PARA', 'PROBARLA', f'<div style="position:absolute;inset:0;opacity:.55">{capa("paso5-nfc")}</div>', CHIP,
-      nota='El chip va dentro: se acerca el móvil y listo')
-diapo(7, '¡LISTA PARA TU MESA!', '5 ★ en 10 segundos', capa('paso5-nfc'), MOVIL, tam=104)
+diapo(1, D, 'TUS COLORES', vacia(), vacia_=True)
+diapo(2, D, 'TU MENSAJE', capa('paso1-colores'))
+diapo(3, D, 'TU LOGO Y NOMBRE', capa('paso2-mensaje'), sobre=marca(.28, .07, .72, .345, '+ mensaje'), tam=120)
+diapo(4, D, 'EL CÓDIGO QR', capa('paso3-cliente'), sobre=marca(.27, .755, .73, .875, '+ logo y nombre'))
+diapo(5, D, 'EL CHIP NFC', capa('paso4-qr'), sobre=marca(.29, .38, .83, .745, '+ código QR'))
+diapo(6, 'DESLIZA PARA', 'PROBARLA',
+      f'<div class="capa" style="opacity:.5">{capa("paso5-nfc")}</div>',
+      sobre=CHIP + marca(.17, .39, .52, .65, '+ chip NFC programado'))
+diapo(7, '¡LISTA PARA TU MESA!', '5 ★ en 10 segundos', capa('paso5-nfc'), MOVIL, tam=110)
 print('7 diapositivas')
