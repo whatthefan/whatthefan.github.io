@@ -1,6 +1,6 @@
 """Sonido de la placa girando (8,5 s): cae (golpe), se da la vuelta (whoosh) y
-aparece Estrellita ("bong"), vuelve, Estrellita se asoma, salta y cae de pie,
-y el boton (confirmacion). Ritmo suave debajo. Efectos ligeros.
+aparece Estrellita pegada ("bong"), se despega, salta y cae de pie, la placa
+vuelve y el boton (confirmacion). Ritmo suave debajo. Efectos ligeros.
 Desde la raiz del repo:  python3 marketing/instagram/carteles/video/musica.py
 """
 import sys
@@ -31,19 +31,20 @@ while t0 < DUR - 1:
     t0 += K
     c += 1
 a.poner(pads, a.pad(ACORDES[0][1], 1.2, 1600), DUR - 1, .6); a.poner(melodia, a.campana(69, 1.2, .7), DUR - 1)
-a.poner(fx, m('whoosh.mp3', -2), .1, .3)                      # cae
-a.poner(fx, m('impact-bass-1.mp3'), 1.0, .3)
 for i in range(5):
-    a.poner(fx, m('kenney-glass_004.wav', [0, 2, 4, 7, 9][i]), 1.3 + i * .12, .22, pan=-.4 + .2 * i)   # las cinco estrellas caen
-a.poner(fx, m('sparkle.mp3'), 1.5, .2)
-a.poner(fx, m('impact-bass-2.mp3'), 2.3, .3); a.poner(fx, m('pop.mp3', -3), 2.3, .3)                   # "Te toca." 
-a.poner(fx, m('whoosh-short.mp3'), 2.55, .35)                  # se da la vuelta
-a.poner(fx, m('kenney-bong_001.wav', 3), 3.0, .35)             # Estrellita, pillada
-a.poner(fx, m('whoosh-short.mp3', 2), 4.55, .3)                # vuelve
-a.poner(fx, m('kenney-tick_002.wav', -3), 5.0, .3)             # se asoma
-a.poner(fx, m('kenney-pluck_001.wav', 5), 5.5, .35)            # salta
-a.poner(fx, m('kenney-drop_002.wav', 3), 6.0, .35)             # cae de pie
-a.poner(fx, m('kenney-confirmation_002.wav'), 6.15, .4)        # el boton
+    a.poner(fx, m('pop.mp3', i), .25 + i * .1, .18)            # LLEVAS TODO EL CARRUSEL...
+a.poner(fx, m('impact-bass-1.mp3'), .75, .3)                    # PENSANDOLO.
+a.poner(fx, m('whoosh.mp3', -2), .3, .25)                       # cae la placa
+for i in range(5):
+    a.poner(fx, m('kenney-glass_004.wav', [0, 2, 4, 7, 9][i]), 1.6 + i * .12, .22, pan=-.4 + .2 * i)   # las cinco estrellas
+a.poner(fx, m('impact-bass-2.mp3'), 2.1, .3); a.poner(fx, m('pop.mp3', -3), 2.1, .3)                   # "Te toca."
+a.poner(fx, m('whoosh-short.mp3'), 2.45, .35)                   # se da la vuelta
+a.poner(fx, m('kenney-bong_001.wav', 3), 3.1, .3)               # Estrellita, pegada
+a.poner(fx, m('kenney-scratch_004.wav', 5), 3.85, .3)           # se despega
+a.poner(fx, m('kenney-pluck_001.wav', 5), 4.32, .35)            # salta
+a.poner(fx, m('kenney-drop_002.wav', 3), 4.95, .35)             # cae de pie
+a.poner(fx, m('whoosh-short.mp3', 2), 5.05, .3)                 # la placa vuelve de frente
+a.poner(fx, m('kenney-confirmation_002.wav'), 5.95, .4)         # el boton
 duck = a.compresion_al_bombo(golpes)
 bajos *= duck[:, None]
 pads *= (.4 + .6 * duck)[:, None]

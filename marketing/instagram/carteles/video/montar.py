@@ -1,8 +1,10 @@
-"""La ultima del carrusel, en video (8,5 s, 1080x1350): la placa baja girando,
-salen cinco estrellas talladas y "Llevas todo el carrusel pensandolo. Te toca.", se da la vuelta y por detras
-esta Estrellita con el pulgar arriba ("Aqui no hay nada... Comenta PLACA"). Al volver,
-Estrellita asoma la cabeza por detras de la placa, coge impulso, salta por
-encima y cae de pie al lado, con el pulgar arriba, junto al "Comenta PLACA". Muy poco texto.
+"""La ultima del carrusel, en video (8,5 s, 1080x1350). Arriba, en grande y en
+blanco (Anton): "LLEVAS TODO EL CARRUSEL PENSANDOLO.". La placa baja girando,
+caen cinco estrellas talladas y "Te toca.". La placa se da la vuelta: detras
+esta Estrellita pegada, con "Aqui no hay nada... Comenta PLACA". Estrellita se
+despega (se levanta de una esquina, como una pegatina), coge impulso, salta
+hacia delante y cae de pie al lado de la placa, que vuelve de frente. Cierra
+con Comenta PLACA.
 
 Desde la raiz del repo:
     python3 marketing/instagram/carteles/video/montar.py
@@ -24,7 +26,7 @@ CANTO = ''.join(f'<div class="cp" style="transform:translateZ(-{i * 2.2:.1f}px);
 PIEZA = f'''{CANTO}
   <div class="cara"><img src="{PLACA}" style="width:100%;height:100%;display:block">
     <div class="brillo" style="position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.4) 48%,transparent 56%)"></div></div>
-  <div class="cara detras"><img class="pegatina" src="{svg(E + 'pulgar.svg')}">
+  <div class="cara detras"><div class="hueco"></div><img class="pegatina" src="{svg(E + 'pulgar.svg')}">
     <div class="nota">Aquí no hay nada...<br><b style="color:#B8871F">Comenta PLACA</b></div></div>'''
 # el logotipo con sus brazos, pero mas cortos: las barras del centro llegan a 1900 en vez de a 2686,
 # los destellos se acercan lo mismo y las rayas de los extremos miden la mitad
@@ -57,105 +59,112 @@ CHISPA = '<svg viewBox="-10 -10 20 20" width="34" height="34"><path d="M0 -10Q1 
 
 html = f'''<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,{b64('fuente/montserrat-latin.woff2')})}}
+@font-face{{font-family:Anton;src:url(data:font/woff2;base64,{b64('fuente/anton-latin.woff2')})}}
 @font-face{{font-family:Caveat;font-weight:700;src:url(data:font/woff2;base64,{b64('fuente/caveat-latin.woff2')})}}
 *{{margin:0;padding:0;box-sizing:border-box}}
 html,body{{width:1080px;height:1350px;overflow:hidden;font-family:Mont,sans-serif;background:#06080E}}
 .abs{{position:absolute}}
 /* el fondo: un foco sobre la noche y la estrella de la marca enorme, en linea, girando despacio */
-#foco{{inset:0;background:radial-gradient(ellipse 60% 45% at 50% 44%,#1E2638 0%,#0C1019 60%,#06080E 100%)}}
-#estrellon{{left:90px;top:120px;width:900px;height:900px;opacity:.09}}
-#marca{{left:230px;top:22px;width:620px}}
-.escena{{position:absolute;width:600px;height:600px;perspective:2000px}}
+#foco{{inset:0;background:radial-gradient(ellipse 60% 45% at 50% 46%,#1E2638 0%,#0C1019 60%,#06080E 100%)}}
+#estrellon{{left:90px;top:150px;width:900px;height:900px;opacity:.09}}
+#titulo{{left:0;right:0;top:48px;text-align:center;font-family:Anton;color:#fff;text-transform:uppercase;line-height:1.1}}
+#titulo div{{white-space:nowrap}}
+#titulo span{{display:inline-block}}
+#t1{{font-size:98px;letter-spacing:.01em}}
+#t2{{font-size:142px;letter-spacing:.02em}}
+.escena{{position:absolute;width:540px;height:540px;perspective:2000px}}
 .pieza{{position:absolute;inset:0;transform-style:preserve-3d}}
 .cp{{position:absolute;inset:0;border-radius:4.2%;border:1px solid rgba(255,255,255,.5)}}
 .cara{{position:absolute;inset:0;border-radius:4.2%;backface-visibility:hidden;overflow:hidden}}
 .detras{{transform:translateZ(-24px) rotateY(180deg);background:#F4F0E6}}
 .pegatina{{position:absolute;left:23%;top:9%;width:54%}}
-.nota{{position:absolute;left:0;right:0;bottom:7%;text-align:center;font-family:Caveat;font-weight:700;font-size:64px;line-height:.95;color:#1E2638}}
-#suelo{{left:0;right:0;top:889px;height:2px;background:linear-gradient(90deg,transparent,rgba(233,188,70,.25),transparent)}}
-#estrellas{{left:0;right:0;top:893px;display:flex;justify-content:center;gap:14px}}
+.hueco{{position:absolute;left:23%;top:9%;width:54%;height:48%;border:4px dashed rgba(30,38,56,.18);border-radius:24px;opacity:0}}
+.nota{{position:absolute;left:0;right:0;bottom:7%;text-align:center;font-family:Caveat;font-weight:700;font-size:58px;line-height:.95;color:#1E2638}}
+#suelo{{left:0;right:0;top:895px;height:2px;background:linear-gradient(90deg,transparent,rgba(233,188,70,.25),transparent)}}
+#estrellas{{left:0;right:0;top:905px;display:flex;justify-content:center;gap:14px}}
 .est{{position:relative;display:block;filter:drop-shadow(0 8px 10px rgba(0,0,0,.5))}}
 .est svg{{display:block}}
 .chispa{{position:absolute;right:-8px;top:-8px;opacity:0}}
-#frase{{left:0;right:0;top:998px;text-align:center;white-space:nowrap}}
-#f1{{font-weight:800;font-size:44px;color:#C9CEDA}}
-#f1 span{{display:inline-block}}
-#f2{{margin-top:4px;font-weight:900;font-size:84px;letter-spacing:-.02em;color:#E9BC46;line-height:1}}
-#bicho{{width:340px;left:680px;transform-origin:50% 100%}}
-#cta{{left:0;right:0;top:1160px;display:flex;flex-direction:column;align-items:center;gap:22px}}
+#toca{{left:0;right:0;top:1010px;text-align:center;font-weight:900;font-size:84px;letter-spacing:-.02em;color:#E9BC46;line-height:1}}
+#bicho{{left:0;top:0;width:340px;transform-origin:50% 100%;filter:drop-shadow(0 14px 14px rgba(0,0,0,.45))}}
+#cta{{left:0;right:0;top:1128px;display:flex;flex-direction:column;align-items:center;gap:20px}}
 #boton{{background:#E9BC46;color:#06080E;font-weight:900;font-size:54px;padding:22px 58px;border-radius:70px}}
 #web{{font-weight:800;font-size:30px;letter-spacing:.16em;color:#8A93A6}}
 </style></head><body>
 <div class="abs" id="foco"></div>
 <svg class="abs" id="estrellon" viewBox="0 0 100 100"><path d="M50 3 L61.8 36.2 L97 36.9 L69 58.3 L79.4 92 L50 72 L20.6 92 L31 58.3 L3 36.9 L38.2 36.2 Z"
   fill="none" stroke="#E9BC46" stroke-width=".6" stroke-linejoin="round"/></svg>
-<img class="abs" id="marca" src="{LOGO}">
+<div class="abs" id="titulo"><div id="t1">{''.join(f'<span>{w}</span> ' for w in 'Llevas todo el carrusel'.split())}</div><div id="t2"><span>pensándolo.</span></div></div>
 <div class="abs" id="suelo"></div>
 <div class="escena" id="esc"><div class="pieza" id="placa">{PIEZA}</div></div>
-<img class="abs" id="bicho" src="{svg(E + 'curiosa-izq.svg')}">
+<img class="abs" id="bicho" src="{svg(E + 'pulgar.svg')}">
 <div class="abs" id="estrellas">{''.join(f'<span class="est" id="s{i}">{estrella_facetas(i)}<i class="chispa" id="ch{i}">{CHISPA}</i></span>' for i in range(5))}</div>
-<div class="abs" id="frase"><div id="f1">{''.join(f'<span>{w}</span> ' for w in 'Llevas todo el carrusel pensándolo.'.split())}</div><div id="f2">Te toca.</div></div>
+<div class="abs" id="toca">Te toca.</div>
 <div class="abs" id="cta"><div id="boton">Comenta PLACA</div><div id="web">PLEA5E.ES</div></div>
 <script>
-const P = {{ salta: '{svg(E + 'salta.svg')}', curiosa: '{svg(E + 'curiosa-izq.svg')}', pulgar: '{svg(E + 'pulgar-izq.svg')}' }};
+const P = {{ pegada: '{svg(E + 'pulgar.svg')}', salta: '{svg(E + 'salta.svg')}', pulgar: '{svg(E + 'pulgar-izq.svg')}' }};
 const $ = id => document.getElementById(id);
 const cl = x => Math.min(1, Math.max(0, x)), p = (t, a, b) => cl((t - a) / (b - a));
 const out = x => 1 - Math.pow(1 - x, 3), io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 const back = x => {{ const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }};
+const L = 540, X0 = 270, X1 = 110, Y = 330;                   // la placa: lado, sitio al principio y al final
 function render(t) {{
   $('estrellon').style.transform = `rotate(${{t * 4}}deg)`;
-  $('marca').style.opacity = p(t, .3, .7); $('marca').style.transform = `translateY(${{(1 - out(p(t, .3, .8))) * -30}}px)`;
-  // la placa: baja girando (1 s), de frente; a los 2,6 s se da la vuelta; a los 4,6 vuelve y se aparta a la izquierda
-  const cae = out(p(t, 0, 1.05));
-  let ry = -540 * (1 - cae) + 180 * io(p(t, 2.6, 3.3)) + 180 * io(p(t, 4.6, 5.3));
-  ry += 6 * Math.sin(t * 1.4) * p(t, 5.3, 6);
-  const x = 240 - 140 * io(p(t, 4.7, 5.4)), y = 262 + (1 - cae) * -900 + 8 * Math.sin(t * 2) * p(t, 1, 1.5);
-  const rx = 10 + 3 * Math.sin(t * .9);
+  // el titulo, palabra a palabra, y PENSANDOLO de golpe
+  [...$('t1').children].forEach((w, i) => {{ const e = back(p(t, .25 + i * .1, .6 + i * .1));
+    w.style.opacity = p(t, .25 + i * .1, .32 + i * .1); w.style.transform = `translateY(${{(1 - e) * 50}}px)`; }});
+  const tp = back(p(t, .75, 1.1)); $('t2').style.opacity = p(t, .75, .8); $('t2').style.transform = `scale(${{1.5 - .5 * tp}})`;
+  // la placa: baja girando; a los 2,5 s se da la vuelta (detras esta Estrellita pegada);
+  // Estrellita se despega y salta; la placa se aparta a la izquierda y vuelve de frente
+  const cae = out(p(t, .2, 1.25));
+  let ry = -540 * (1 - cae) + 180 * io(p(t, 2.5, 3.2)) + 180 * io(p(t, 5.1, 5.8));
+  ry += 5 * Math.sin(t * 1.4) * p(t, 5.8, 6.4);
+  const x = X0 - (X0 - X1) * io(p(t, 4.35, 5.0)), y = Y + (1 - cae) * -1000;
+  const rx = 8 + 3 * Math.sin(t * .9);
   $('esc').style.left = x + 'px'; $('esc').style.top = y + 'px';
   $('placa').style.transform = `rotateX(${{rx}}deg) rotateY(${{ry}}deg)`;
   const a = ((ry % 360) + 360) % 360;
   document.querySelectorAll('.brillo').forEach(b => b.style.transform = `translateX(${{-60 + (a > 180 ? a - 360 : a) * 1.1}}%)`);
-  // las cinco estrellas (una a una) y la frase
-  const va = 1;
+  // la pegatina de detras: esta hasta que se despega; queda el hueco marcado
+  document.querySelectorAll('#placa .pegatina').forEach(g => g.style.opacity = t < 3.85 ? 1 : 0);
+  document.querySelectorAll('#placa .hueco').forEach(g => g.style.opacity = t < 3.85 ? 0 : 1);
+  // las cinco estrellas
   for (let i = 0; i < 5; i++) {{
-    const a0 = 1.0 + i * .12, e = back(p(t, a0, a0 + .38)), st = $('s' + i);
-    // cae girando; luego, cada 1,6 s, una ola que las va levantando una detras de otra
-    const ola = t > 2.4 ? Math.max(0, Math.sin(((t - 2.4 - i * .09) % 1.6) / .35 * Math.PI)) * ((t - 2.4 - i * .09) % 1.6 < .35) : 0;
-    st.style.opacity = p(t, a0, a0 + .06) * va;
+    const a0 = 1.3 + i * .12, e = back(p(t, a0, a0 + .38)), st = $('s' + i);
+    const ola = t > 2.6 ? Math.max(0, Math.sin(((t - 2.6 - i * .09) % 1.6) / .35 * Math.PI)) * ((t - 2.6 - i * .09) % 1.6 < .35) : 0;
+    st.style.opacity = p(t, a0, a0 + .06);
     st.style.transform = `translateY(${{(1 - e) * -70 - 14 * ola}}px) scale(${{(.3 + .7 * e) * (1 + .06 * ola)}}) rotate(${{(1 - e) * -144}}deg)`;
-    // el brillo cruza cada estrella al caer y luego de vez en cuando
     const lz = ((t - a0 - .25) % 2.4) / .5;
     st.querySelector('.luz').setAttribute('x', -60 + 190 * cl(lz));
-    // la chispa al aterrizar
     const c = p(t, a0 + .28, a0 + .6); $('ch' + i).style.opacity = Math.sin(Math.PI * c);
     $('ch' + i).style.transform = `scale(${{.4 + c}}) rotate(${{c * 90}}deg)`;
   }}
-  // la frase: palabra a palabra, y "Te toca." de golpe
-  [...$('f1').children].forEach((w, i) => {{ const e = out(p(t, 1.75 + i * .08, 2.05 + i * .08));
-    w.style.opacity = e; w.style.transform = `translateY(${{(1 - e) * 24}}px)`; }});
-  const tt = back(p(t, 2.3, 2.6)); $('f2').style.opacity = p(t, 2.3, 2.36);
-  $('f2').style.transform = `scale(${{1.8 - .8 * tt}})`;
-  // Estrellita: se asoma por detras del borde de la placa, coge impulso, salta y cae de pie a su lado
+  const tt = back(p(t, 2.1, 2.4)); $('toca').style.opacity = p(t, 2.1, 2.16); $('toca').style.transform = `scale(${{1.8 - .8 * tt}})`;
+  // Estrellita: sale del sitio exacto de la pegatina, se despega (se levanta de una esquina y se suelta),
+  // coge impulso, salta hacia delante y cae de pie al lado de la placa
   const b = $('bicho'), h = b.offsetHeight || 300;
-  b.style.top = (889 - h) + 'px';
-  let dx = 0, dy = 0, sx = 1, sy = 1, rot = 0, z = 1, pose = P.curiosa;
-  // sale de detras de la placa: asoma la cabeza por arriba, coge impulso y salta por encima
-  const DX = -470, DY = -445;
-  if (t < 5.35) {{ dx = DX; dy = DY + 380 * (1 - out(p(t, 4.95, 5.3))); }}                          // se asoma
-  else if (t < 5.5) {{ const k = Math.sin(Math.PI * p(t, 5.35, 5.5) / 2); dx = DX; dy = DY; sx = 1 + .06 * k; sy = 1 - .09 * k; }}  // coge impulso
-  else if (t < 6.05) {{ const s = p(t, 5.5, 6.05); pose = P.salta; z = 3;                               // salta
-    dx = DX * (1 - io(s)); dy = DY * (1 - s) - 130 * Math.sin(Math.PI * s); rot = 12 * Math.sin(Math.PI * s);
-    sy = 1 + .06 * Math.sin(Math.PI * s); sx = 1 - .04 * Math.sin(Math.PI * s); }}
-  else {{ const s = p(t, 6.05, 6.3); z = 3; pose = t < 6.12 ? P.salta : P.pulgar;                     // cae y se queda con el pulgar arriba
-    const ap = Math.sin(Math.PI * s) * (1 - s); sy = 1 - .16 * ap; sx = 1 + .1 * ap;
-    sy *= 1 + .015 * Math.sin((t - 6.3) * 4) * p(t, 6.3, 6.5); }}
-  b.style.opacity = t > 4.95 ? 1 : 0; b.style.zIndex = z; $('esc').style.zIndex = 2;
+  const PX = X0 + .23 * L, PY = Y + .09 * L, PS = .54 * L / 340;     // donde esta pegada (arriba-izquierda y escala)
+  const FX = 690, FY = 895 - h;                                    // donde cae
+  let bx = PX - 340 * (1 - PS) / 2, by = PY - h * (1 - PS), sx = PS, sy = PS, rot = 0, pose = P.pegada;
+  if (t >= 3.85 && t < 4.2) {{ const k = out(p(t, 3.85, 4.2));                                  // se despega
+    rot = -14 * k; by -= 40 * k; sx = PS * (1 + .06 * k); sy = PS * (1 + .06 * k); }}
+  else if (t >= 4.2 && t < 4.32) {{ const k = Math.sin(Math.PI * p(t, 4.2, 4.32) / 2);           // coge impulso
+    rot = -14 * (1 - k); by -= 40; sx = PS * 1.06 * (1 + .06 * k); sy = PS * 1.06 * (1 - .1 * k); }}
+  else if (t >= 4.32 && t < 4.95) {{ const s = p(t, 4.32, 4.95); pose = P.salta;                // salta hacia delante
+    const x0 = bx, y0 = by - 40;
+    bx = x0 + (FX - x0) * io(s); by = y0 + (FY - y0) * s - 230 * Math.sin(Math.PI * s);
+    const e = PS * 1.06 + (1 - PS * 1.06) * io(s); sx = e * (1 - .04 * Math.sin(Math.PI * s)); sy = e * (1 + .06 * Math.sin(Math.PI * s));
+    rot = 360 * io(s) * .0 + 10 * Math.sin(Math.PI * s); }}
+  else if (t >= 4.95) {{ const s = p(t, 4.95, 5.2); pose = t < 5.02 ? P.salta : P.pulgar;         // cae de pie y pulgar arriba
+    bx = FX; by = FY; const ap = Math.sin(Math.PI * s) * (1 - s); sx = 1 + .1 * ap; sy = (1 - .16 * ap) * (1 + .015 * Math.sin((t - 5.2) * 4) * p(t, 5.2, 5.4)); }}
+  b.style.opacity = t >= 3.85 ? 1 : 0; b.style.zIndex = 3; $('esc').style.zIndex = 2;
   if (b.dataset.pose !== pose) {{ b.src = pose; b.dataset.pose = pose; }}
-  b.style.transform = `translate(${{dx}}px,${{dy}}px) rotate(${{rot}}deg) scale(${{sx}},${{sy}})`;
+  b.style.transformOrigin = t < 4.32 ? '100% 100%' : '50% 100%';
+  b.style.transform = `translate(${{bx}}px,${{by}}px) rotate(${{rot}}deg) scale(${{sx}},${{sy}})`;
   // la llamada
-  const c = back(p(t, 6.1, 6.6)); $('cta').style.opacity = p(t, 6.1, 6.25);
+  const c = back(p(t, 5.9, 6.4)); $('cta').style.opacity = p(t, 5.9, 6.05);
   $('cta').style.transform = `translateY(${{(1 - c) * 60}}px)`;
-  $('boton').style.transform = `scale(${{1 + .03 * Math.sin((t - 6.6) * 6) * p(t, 6.6, 6.8)}})`;
+  $('boton').style.transform = `scale(${{1 + .03 * Math.sin((t - 6.4) * 6) * p(t, 6.4, 6.6)}})`;
 }}
 window.render = render; render(0);
 </script></body></html>'''
