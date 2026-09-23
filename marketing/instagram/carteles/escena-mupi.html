@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+/* Escena 3D: el mupi de una parada al anochecer ("hora azul") con el cartel
+   png/mupi-te-buscan.png encendido. Dos pasadas: la calle del fondo (edificios con
+   ventanas encendidas, farolas, luces de coche) se pinta y se desenfoca como en una
+   foto con el fondo fuera de foco; encima va el mupi y la acera, nitidos.
+   Todo es geometria y texturas hechas con codigo (three.js, MIT).
+   Se hace la foto con:  node marketing/instagram/carteles/hacer-png.js escena-mupi */
+html,body{margin:0;width:1080px;height:1350px;overflow:hidden;background:#0b1220}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1350px}
+</style></head><body>
+<script>window.PINTANDO = true;</script>
+<script type="module">
+import * as THREE from './lib/three.module.min.js';
+const W = 1080, H = 1350, ESC = 2;
+let semilla = 11;
+const azar = () => (semilla = (semilla * 16807) % 2147483647) / 2147483647;
+const lienzo = document.createElement('canvas'); lienzo.width = W * ESC; lienzo.height = H * ESC; document.body.appendChild(lienzo);
+const g2 = lienzo.getContext('2d');
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+r.setPixelRatio(ESC); r.setSize(W, H);
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.0; r.outputColorSpace = THREE.SRGBColorSpace;
+const cam = new THREE.PerspectiveCamera(36, W / H, .05, 300);
+cam.position.set(2.3, 1.4, 4.6); cam.lookAt(-.1, 1.3, 0);
+const tex = (c) => { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
+
+// ───────── pasada 1: la calle del fondo, que va desenfocada ─────────
+{
+  const e = new THREE.Scene();
+  const c = document.createElement('canvas'); c.width = 4; c.height = 512; const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, 0, 0, 512);
+  gr.addColorStop(0, '#0E1A33'); gr.addColorStop(.55, '#26395E'); gr.addColorStop(.8, '#6C6A86'); gr.addColorStop(1, '#C98A62');
+  g.fillStyle = gr; g.fillRect(0, 0, 4, 512); e.background = tex(c);
+  e.add(new THREE.HemisphereLight('#41598A', '#15161c', .9));
+  // edificios al otro lado de la calle, con ventanas encendidas y locales abajo
+  for (let x = -40; x < 40;) {
+    const w = 6 + azar() * 8, h = 12 + azar() * 16, z = -30 - azar() * 6;
+    const cv = document.createElement('canvas'); cv.width = 256; cv.height = Math.round(256 * h / w); const q = cv.getContext('2d');
+    q.fillStyle = `hsl(${215 + 10 * azar()},18%,${9 + 5 * azar()}%)`; q.fillRect(0, 0, cv.width, cv.height);
+    const fil = Math.floor(h / 1.7), col = Math.floor(w / 1.2);
+    for (let f = 1; f < fil; f++) for (let k = 0; k < col; k++) {
+      if (azar() < .45) { q.fillStyle = azar() < .8 ? `hsl(${32 + 10 * azar()},${70 + 20 * azar()}%,${55 + 20 * azar()}%)` : '#9fc4ff';
+        q.fillRect((k + .25) * cv.width / col, cv.height - (f + 1) * cv.height / fil + 8, cv.width / col * .5, cv.height / fil * .55); }
+    }
+    q.fillStyle = `hsl(${30 + 20 * azar()},80%,60%)`; q.fillRect(10, cv.height - cv.height / fil * .9, cv.width - 20, cv.height / fil * .7);   // el local de abajo
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex(cv), color: '#bbbbbb' }));
+    m.position.set(x + w / 2, h / 2, z); e.add(m); x += w + .3;
+  }
+  // farolas y luces de coches: puntos de luz, que al desenfocar son los circulos del fondo
+  const luz = (col, rad) => new THREE.Mesh(new THREE.SphereGeometry(rad, 16, 12), new THREE.MeshBasicMaterial({ color: col }));
+  for (let x = -30; x < 30; x += 9) { const l = luz('#FFC77A', .25); l.position.set(x, 5.5, -12); e.add(l);
+    const l2 = luz('#FFC77A', .25); l2.position.set(x + 4, 5.5, -18); e.add(l2); }
+  for (let k = 0; k < 10; k++) { const x = -20 + azar() * 40, z = -7 - azar() * 6, roj = azar() < .5;
+    for (const dx of [0, 1.5]) { const l = luz(roj ? '#FF3A2E' : '#FFF1D8', .13); l.position.set(x + dx, .75, z); e.add(l); } }
+  // la calzada, oscura y humeda
+  const suelo = new THREE.Mesh(new THREE.PlaneGeometry(200, 60), new THREE.MeshStandardMaterial({ color: '#1a1d24', roughness: .35, metalness: .2 }));
+  suelo.rotation.x = -Math.PI / 2; suelo.position.z = -10; e.add(suelo);
+  const farola = new THREE.PointLight('#FFB566', 60, 30); farola.position.set(0, 6, -12); e.add(farola);
+  r.setClearColor(0x000000, 1); r.render(e, cam);
+  g2.filter = `blur(${11 * ESC}px)`; g2.drawImage(r.domElement, -40, -40, lienzo.width + 80, lienzo.height + 80); g2.filter = 'none';
+}
+
+// ───────── pasada 2: el mupi y la acera, nitidos ─────────
+const e = new THREE.Scene();
+e.add(new THREE.HemisphereLight('#3D5480', '#1b1a1e', .55));
+// la acera: baldosa gris de 20 cm, humeda (brilla un poco), que se funde con el fondo a lo lejos
+{
+  const N = 1024, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d');
+  const t = N / 10;
+  for (let i = 0; i < 10; i++) for (let j = 0; j < 10; j++) {
+    const l = 30 + 8 * azar(); g.fillStyle = `hsl(220,6%,${l}%)`; g.fillRect(i * t, j * t, t, t);
+    for (let k = 0; k < 40; k++) { g.fillStyle = `hsla(220,5%,${l + 12 * (azar() - .5)}%,.5)`; g.fillRect(i * t + azar() * t, j * t + azar() * t, 3, 3); }
+    g.strokeStyle = '#1c1d21'; g.lineWidth = 4; g.strokeRect(i * t, j * t, t, t);
+  }
+  const m = tex(c); m.wrapS = m.wrapT = THREE.RepeatWrapping; m.repeat.set(8, 8);
+  const a = document.createElement('canvas'); a.width = 4; a.height = 256; const ga = a.getContext('2d');
+  const gr = ga.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#000'); gr.addColorStop(.45, '#fff'); gr.addColorStop(1, '#fff'); ga.fillStyle = gr; ga.fillRect(0, 0, 4, 256);
+  const suelo = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), new THREE.MeshStandardMaterial({ map: m, roughness: .42, metalness: .15, alphaMap: new THREE.CanvasTexture(a), transparent: true }));
+  suelo.rotation.x = -Math.PI / 2; suelo.position.z = 1; suelo.receiveShadow = true; e.add(suelo);
+  // bordillo
+  const bord = new THREE.Mesh(new THREE.BoxGeometry(16, .14, .3), new THREE.MeshStandardMaterial({ color: '#5a5c62', roughness: .6 }));
+  bord.position.set(0, -.05, -3.2); e.add(bord);
+}
+// el mupi: caja de aluminio anodizado gris oscuro, el cartel iluminado detras de un cristal
+const cartel = await new THREE.TextureLoader().loadAsync('png/mupi-te-buscan.png');
+cartel.colorSpace = THREE.SRGBColorSpace; cartel.anisotropy = 16;
+const mupi = new THREE.Group(); mupi.rotation.y = -.28; e.add(mupi);
+const alu = new THREE.MeshStandardMaterial({ color: '#5b616b', roughness: .3, metalness: .7 });
+const CW = 1.2, CH = 1.76, BASE = .42;
+{
+  const caja = new THREE.Mesh(new THREE.BoxGeometry(CW + .16, CH + .2, .16), alu); caja.position.set(0, BASE + CH / 2, -.02); caja.castShadow = true; mupi.add(caja);
+  const cara = new THREE.Mesh(new THREE.PlaneGeometry(CW, CH), new THREE.MeshBasicMaterial({ map: cartel, color: '#e6e6e6' }));
+  cara.position.set(0, BASE + CH / 2, .062); mupi.add(cara);
+  // el cristal: un reflejo en diagonal muy suave
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256; const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, 256, 256, 0); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(.48, 'rgba(255,255,255,0)');
+  gr.addColorStop(.55, 'rgba(200,220,255,.10)'); gr.addColorStop(.62, 'rgba(255,255,255,0)'); gr.addColorStop(.8, 'rgba(200,220,255,.05)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+  const vidrio = new THREE.Mesh(new THREE.PlaneGeometry(CW, CH), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true }));
+  vidrio.position.set(0, BASE + CH / 2, .075); mupi.add(vidrio);
+  // el marco delante del cristal
+  for (const [w, h, x, y] of [[CW + .16, .08, 0, BASE + CH + .06], [CW + .16, .08, 0, BASE - .06], [.08, CH + .2, -CW / 2 - .04, BASE + CH / 2], [.08, CH + .2, CW / 2 + .04, BASE + CH / 2]]) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, .05), alu); m.position.set(x, y, .075); mupi.add(m);
+  }
+  // pie
+  const pie = new THREE.Mesh(new THREE.BoxGeometry(.5, BASE - .02, .14), alu); pie.position.set(0, (BASE - .02) / 2, -.02); pie.castShadow = true; mupi.add(pie);
+  const placa = new THREE.Mesh(new THREE.BoxGeometry(.7, .02, .4), alu); placa.position.set(0, .01, -.02); mupi.add(placa);
+}
+// la luz del cartel sobre la acera, la de la farola de detras y un reflejo frio de ambiente
+const brillo = new THREE.SpotLight('#EAF0FF', 14, 6, Math.PI / 2.4, .9, 1.4);
+mupi.add(brillo); brillo.position.set(0, 1.2, .25); mupi.add(brillo.target); brillo.target.position.set(0, 0, 2.2);
+const farola = new THREE.SpotLight('#FFB25E', 70, 25, .6, .6, 1.6); farola.position.set(-3.5, 6.5, -1.2); farola.target.position.set(-.3, 0, .6);
+farola.castShadow = true; farola.shadow.mapSize.set(2048, 2048); e.add(farola, farola.target);
+r.setClearColor(0x000000, 0); r.render(e, cam);
+g2.drawImage(r.domElement, 0, 0, lienzo.width, lienzo.height);
+// el halo del cartel encendido, como lo coge la camara
+g2.globalCompositeOperation = 'screen'; g2.globalAlpha = .35; g2.filter = `blur(${22 * ESC}px)`;
+g2.drawImage(r.domElement, 0, 0, lienzo.width, lienzo.height);
+g2.globalCompositeOperation = 'source-over'; g2.globalAlpha = 1; g2.filter = 'none';
+
+// acabado de foto: grano fino y bordes algo mas oscuros
+const vig = g2.createRadialGradient(lienzo.width / 2, lienzo.height / 2, lienzo.height * .3, lienzo.width / 2, lienzo.height / 2, lienzo.height * .75);
+vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(0,0,0,.35)'); g2.fillStyle = vig; g2.fillRect(0, 0, lienzo.width, lienzo.height);
+const im = g2.getImageData(0, 0, lienzo.width, lienzo.height), d = im.data;
+for (let i = 0; i < d.length; i += 4) { const n = (azar() - .5) * 10; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+g2.putImageData(im, 0, 0);
+r.domElement.remove();
+window.PINTANDO = false;
+</script></body></html>

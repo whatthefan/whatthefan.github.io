@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+/* Escena 3D: una mesa de madera de bar, a media tarde. El cafe, el ticket
+   (png/ticket-bar.png: "acerca el movil a la placa de la mesa") y la placa PLEA5E
+   de ejemplo. Luz de ventana por la izquierda y el fondo de la foto desenfocado.
+   Todo es geometria y texturas hechas con codigo (three.js, MIT).
+   Se hace la foto con:  node marketing/instagram/carteles/hacer-png.js escena-mesa */
+html,body{margin:0;width:1080px;height:1350px;overflow:hidden;background:#2a2019}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1350px}
+</style></head><body>
+<script>window.PINTANDO = true;</script>
+<script type="module">
+import * as THREE from './lib/three.module.min.js';
+const W = 1080, H = 1350, ESC = 2;
+let semilla = 23;
+const azar = () => (semilla = (semilla * 16807) % 2147483647) / 2147483647;
+const tex = (c) => { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 16; return t; };
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r.setPixelRatio(ESC); r.setSize(W, H);
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.1; r.outputColorSpace = THREE.SRGBColorSpace;
+const e = new THREE.Scene();
+e.background = new THREE.Color('#3b2e25');
+
+// ── la madera: tablones con veta, nudos y desgaste ──
+function madera() {
+  const N = 2048, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d');
+  const tablas = 5, alto = Math.ceil(N / tablas);
+  const img = g.createImageData(N, N), px = img.data;
+  const OSC = [52, 32, 19], CLA = [122, 82, 50];                 // la veta oscura y la madera clara (rgb)
+  for (let t = 0; t < tablas; t++) {
+    const fase = azar() * 100, tono = .85 + .25 * azar();
+    for (let y = 0; y < alto; y++) for (let x = 0; x < N; x++) {
+      const v = Math.sin((y + 40 * Math.sin(x * .004 + fase) + 12 * Math.sin(x * .013 + t)) * (.16 + .05 * Math.sin(y * .02 + fase)) + fase) * .5 + .5;
+      const fino = Math.sin((y + 20 * Math.sin(x * .006 + fase * 2)) * .6) * .5 + .5;
+      const fila = t * alto + y; if (fila >= N) continue;
+      const k = Math.min(1, Math.max(0, (1 - .28 * v - .14 * fino - .12 * Math.sin(x * .0011 + y * .003 + fase)) * tono)), i = (fila * N + x) * 4;
+      for (let c = 0; c < 3; c++) px[i + c] = OSC[c] + (CLA[c] - OSC[c]) * k;
+      px[i + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
+  for (let t = 0; t < tablas; t++) {
+    // nudo
+    if (azar() < .7) { const nx = azar() * N, ny = t * alto + alto * (.3 + .4 * azar());
+      for (let k = 12; k > 0; k--) { g.strokeStyle = `hsla(22,50%,${14 + k}%,.5)`; g.lineWidth = 3; g.beginPath(); g.ellipse(nx, ny, k * 9, k * 3.2, 0, 0, 7); g.stroke(); } }
+    g.fillStyle = 'rgba(20,10,5,.8)'; g.fillRect(0, t * alto, N, 5);                     // la junta entre tablas
+  }
+  const d = g.getImageData(0, 0, N, N); for (let i = 0; i < d.data.length; i += 4) { const n = (azar() - .5) * 10; d.data[i] += n; d.data[i + 1] += n; d.data[i + 2] += n; }
+  g.putImageData(d, 0, 0);
+  const t = tex(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+const mesa = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 2.4), new THREE.MeshStandardMaterial({ map: madera(), roughness: .55, metalness: 0 }));
+mesa.rotation.x = -Math.PI / 2; mesa.rotation.z = .08; mesa.receiveShadow = true; e.add(mesa);
+
+// ── la placa: metacrilato de 4 mm, la cara impresa encima ──
+const placaTex = await new THREE.TextureLoader().loadAsync('../carrusel-placa/capas/paso5-nfc.png');
+placaTex.colorSpace = THREE.SRGBColorSpace; placaTex.anisotropy = 16;
+{
+  const L = .2, G = .004;
+  const forma = new THREE.Shape(); const rr = .0085;
+  forma.moveTo(-L / 2 + rr, -L / 2); forma.lineTo(L / 2 - rr, -L / 2); forma.quadraticCurveTo(L / 2, -L / 2, L / 2, -L / 2 + rr);
+  forma.lineTo(L / 2, L / 2 - rr); forma.quadraticCurveTo(L / 2, L / 2, L / 2 - rr, L / 2); forma.lineTo(-L / 2 + rr, L / 2);
+  forma.quadraticCurveTo(-L / 2, L / 2, -L / 2, L / 2 - rr); forma.lineTo(-L / 2, -L / 2 + rr); forma.quadraticCurveTo(-L / 2, -L / 2, -L / 2 + rr, -L / 2);
+  const canto = new THREE.Mesh(new THREE.ExtrudeGeometry(forma, { depth: G, bevelEnabled: false }),
+    new THREE.MeshStandardMaterial({ color: '#dfeeed', roughness: .15, metalness: 0, transparent: true, opacity: .92 }));
+  const cara = new THREE.Mesh(new THREE.ShapeGeometry(forma), new THREE.MeshStandardMaterial({ map: placaTex, roughness: .22, transparent: true }));
+  // las UV de la forma van en metros: pasarlas a 0..1
+  const uv = cara.geometry.attributes.uv, pos = cara.geometry.attributes.position;
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, pos.getX(i) / L + .5, pos.getY(i) / L + .5);
+  cara.position.z = G + .0002;
+  const brillo = new THREE.Mesh(new THREE.ShapeGeometry(forma), new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: .05, transparent: true, opacity: .06, clearcoat: 1 }));
+  brillo.position.z = G + .0004;
+  const p = new THREE.Group(); p.add(canto, cara, brillo);
+  canto.castShadow = true; cara.receiveShadow = true;
+  p.rotation.x = -Math.PI / 2; p.rotation.z = .16; p.position.set(-.075, 0, -.01); e.add(p);
+}
+
+// ── el cafe: taza y plato de loza blanca (torneados), el cafe con su crema ──
+const loza = new THREE.MeshPhysicalMaterial({ color: '#f4f1ea', roughness: .18, clearcoat: .6, clearcoatRoughness: .2 });
+const torno = (pts, mat) => { const m = new THREE.Mesh(new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), 64), mat); m.castShadow = m.receiveShadow = true; return m; };
+const cafe = new THREE.Group();
+cafe.add(torno([[0, .002], [.05, .002], [.07, .006], [.075, .012], [.072, .014], [.05, .008], [0, .008]], loza));           // plato
+cafe.add(torno([[0, .009], [.022, .009], [.024, .014], [.033, .03], [.038, .06], [.037, .062], [.034, .061], [.03, .03], [.02, .016], [0, .016]], loza)); // taza
+{ const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128); gr.addColorStop(0, '#9a5f32'); gr.addColorStop(.7, '#7a4522'); gr.addColorStop(1, '#4a2710');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+  for (let k = 0; k < 400; k++) { g.fillStyle = `rgba(${200 + 40 * azar()},${150 + 40 * azar()},${100 + 30 * azar()},.25)`; g.beginPath(); g.arc(128 + (azar() - .5) * 180, 128 + (azar() - .5) * 180, 1 + 3 * azar(), 0, 7); g.fill(); }
+  const liq = new THREE.Mesh(new THREE.CircleGeometry(.0335, 48), new THREE.MeshStandardMaterial({ map: tex(c), roughness: .25 }));
+  liq.rotation.x = -Math.PI / 2; liq.position.y = .054; cafe.add(liq); }
+{ const asa = new THREE.Mesh(new THREE.TorusGeometry(.013, .0042, 12, 24, Math.PI * 1.2), loza); asa.position.set(.043, .038, 0); asa.rotation.z = -Math.PI * .6; asa.castShadow = true; cafe.add(asa); }
+// la cucharilla
+{ const acero = new THREE.MeshStandardMaterial({ color: '#d8d8d8', metalness: 1, roughness: .18 });
+  const mango = new THREE.Mesh(new THREE.BoxGeometry(.075, .0018, .006), acero); mango.position.set(.035, .014, .03); mango.rotation.y = -.5; mango.castShadow = true; cafe.add(mango);
+  const cazo = new THREE.Mesh(new THREE.SphereGeometry(.011, 16, 8), acero); cazo.scale.set(1.5, .25, 1); cazo.position.set(-.008, .013, .052); cazo.rotation.y = -.5; cafe.add(cazo); }
+cafe.position.set(.17, 0, -.16); e.add(cafe);
+
+// ── el ticket: papel termico que se abarquilla un poco ──
+const tick = await new THREE.TextureLoader().loadAsync('png/ticket-bar.png');
+tick.colorSpace = THREE.SRGBColorSpace; tick.anisotropy = 16;
+{ const TW = .08, TH = TW * 1180 / 600, geo = new THREE.PlaneGeometry(TW, TH, 20, 60), p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) { const x = p.getX(i) / TW, y = p.getY(i) / TH + .5;
+    p.setZ(i, .0035 * Math.pow(Math.abs(x) * 2, 2) + .012 * Math.pow(Math.max(0, y - .82) / .18, 2)); }   // los bordes y el final, levantados
+  geo.computeVertexNormals();
+  const t = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: tick, roughness: .85, side: THREE.DoubleSide }));
+  t.rotation.x = -Math.PI / 2; t.rotation.z = -.14; t.position.set(.16, .0008, .1); t.castShadow = t.receiveShadow = true; e.add(t); }
+
+// ── luz: ventana a la izquierda (sol suave de tarde) y el interior calido del bar ──
+const sol = new THREE.DirectionalLight('#FFE2BC', 3.2); sol.position.set(-1.2, 1.4, .4); sol.castShadow = true;
+sol.shadow.mapSize.set(4096, 4096); sol.shadow.radius = 5; sol.shadow.bias = -.0002; sol.shadow.normalBias = .002;
+Object.assign(sol.shadow.camera, { left: -.5, right: .5, top: .5, bottom: -.5, near: .1, far: 4 }); e.add(sol);
+e.add(new THREE.HemisphereLight('#E8D9C6', '#3a2a1e', .9));
+const calido = new THREE.PointLight('#FFB570', 1.2, 3); calido.position.set(.8, .8, -.8); e.add(calido);
+
+const cam = new THREE.PerspectiveCamera(30, W / H, .01, 20);
+cam.position.set(.02, .8, .6); cam.lookAt(.03, 0, -.02);
+r.render(e, cam);
+
+// acabado de foto: fondo (arriba) un poco desenfocado como con un 50 mm abierto, grano y vineta
+const lz = document.createElement('canvas'); lz.width = W * ESC; lz.height = H * ESC; document.body.appendChild(lz); const g = lz.getContext('2d');
+g.drawImage(r.domElement, 0, 0);
+const borroso = document.createElement('canvas'); borroso.width = lz.width; borroso.height = lz.height; const gb = borroso.getContext('2d');
+gb.filter = `blur(${7 * ESC}px)`; gb.drawImage(r.domElement, 0, 0); gb.filter = 'none';
+gb.globalCompositeOperation = 'destination-in';
+const m = gb.createLinearGradient(0, 0, 0, lz.height); m.addColorStop(0, 'rgba(0,0,0,1)'); m.addColorStop(.28, 'rgba(0,0,0,0)'); m.addColorStop(.85, 'rgba(0,0,0,0)'); m.addColorStop(1, 'rgba(0,0,0,.8)');
+gb.fillStyle = m; gb.fillRect(0, 0, lz.width, lz.height); g.drawImage(borroso, 0, 0);
+const vig = g.createRadialGradient(lz.width / 2, lz.height / 2, lz.height * .3, lz.width / 2, lz.height / 2, lz.height * .78);
+vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(20,10,0,.4)'); g.fillStyle = vig; g.fillRect(0, 0, lz.width, lz.height);
+const im = g.getImageData(0, 0, lz.width, lz.height), d = im.data;
+for (let i = 0; i < d.length; i += 4) { const n = (azar() - .5) * 9; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+g.putImageData(im, 0, 0);
+r.domElement.remove();
+window.PINTANDO = false;
+</script></body></html>
