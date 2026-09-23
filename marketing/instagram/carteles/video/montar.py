@@ -1,8 +1,8 @@
 """La ultima del carrusel, en video (8,5 s, 1080x1350): la placa baja girando,
 salen cinco estrellas talladas y "Llevas todo el carrusel pensandolo. Te toca.", se da la vuelta y por detras
 esta Estrellita con el pulgar arriba ("Aqui no hay nada... Comenta PLACA"). Al volver,
-Estrellita se asoma por el borde, coge impulso, salta fuera y cae de pie al
-lado, con el pulgar arriba, junto al "Comenta PLACA". Muy poco texto.
+Estrellita asoma la cabeza por detras de la placa, coge impulso, salta por
+encima y cae de pie al lado, con el pulgar arriba, junto al "Comenta PLACA". Muy poco texto.
 
 Desde la raiz del repo:
     python3 marketing/instagram/carteles/video/montar.py
@@ -26,12 +26,16 @@ PIEZA = f'''{CANTO}
     <div class="brillo" style="position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.4) 48%,transparent 56%)"></div></div>
   <div class="cara detras"><img class="pegatina" src="{svg(E + 'pulgar.svg')}">
     <div class="nota">Aquí no hay nada...<br><b style="color:#B8871F">Comenta PLACA</b></div></div>'''
-# el logotipo sin los brazos largos: fuera las barras y destellos de los lados, y las del centro, mas cortas
+# el logotipo con sus brazos, pero mas cortos: las barras del centro llegan a 1900 en vez de a 2686,
+# los destellos se acercan lo mismo y las rayas de los extremos miden la mitad
 LOGO = open('public/marca/marca-plea5e.svg').read()
-LOGO = re.sub(r'<rect [^>]+/>', '', LOGO)
-LOGO = re.sub(r'<path d="M-?2944[^"]+"/>', '', LOGO)
-LOGO = LOGO.replace('L2686.2 -760.0L2686.2 -659.4', 'L1480 -760.0L1480 -659.4').replace('L-2686.2 -659.4L-2686.2 -760.0', 'L-1480 -659.4L-1480 -760.0')
-LOGO = LOGO.replace('viewBox="-4200 -1290 8400 1680" width="1400" height="280"', 'viewBox="-1560 -1300 3120 1500" width="1040" height="500"')
+M = 786                                                             # lo que se acorta cada brazo
+LOGO = LOGO.replace('<rect x="-4200.0" y="-760.0" width="998.2" height="100.5"/>', '<rect x="-2915" y="-760.0" width="500" height="100.5"/>')
+LOGO = LOGO.replace('<rect x="3201.8" y="-760.0" width="998.2" height="100.5"/>', '<rect x="2415" y="-760.0" width="500" height="100.5"/>')
+LOGO = re.sub(r'(<path d="M677\.5 -1259[^"]+")', lambda g: g.group(1).replace('2686.2', '1900'), LOGO)
+LOGO = re.sub(r'(<path d="M-2944[^"]+"/>)', rf'<g transform="translate({M} 0)">\1</g>', LOGO)
+LOGO = re.sub(r'(<path d="M2944[^"]+"/>)', rf'<g transform="translate(-{M} 0)">\1</g>', LOGO)
+LOGO = LOGO.replace('viewBox="-4200 -1290 8400 1680" width="1400" height="280"', 'viewBox="-2960 -1300 5920 1520" width="1480" height="380"')
 LOGO = 'data:image/svg+xml;base64,' + base64.b64encode(LOGO.encode()).decode()
 def estrella_facetas(i):
     """estrella tallada: cada punta en dos caras (luz y sombra), filo oscuro y un brillo que la cruza"""
@@ -60,7 +64,7 @@ html,body{{width:1080px;height:1350px;overflow:hidden;font-family:Mont,sans-seri
 /* el fondo: un foco sobre la noche y la estrella de la marca enorme, en linea, girando despacio */
 #foco{{inset:0;background:radial-gradient(ellipse 60% 45% at 50% 44%,#1E2638 0%,#0C1019 60%,#06080E 100%)}}
 #estrellon{{left:90px;top:120px;width:900px;height:900px;opacity:.09}}
-#marca{{left:320px;top:22px;width:440px}}
+#marca{{left:230px;top:22px;width:620px}}
 .escena{{position:absolute;width:600px;height:600px;perspective:2000px}}
 .pieza{{position:absolute;inset:0;transform-style:preserve-3d}}
 .cp{{position:absolute;inset:0;border-radius:4.2%;border:1px solid rgba(255,255,255,.5)}}
@@ -135,13 +139,16 @@ function render(t) {{
   const b = $('bicho'), h = b.offsetHeight || 300;
   b.style.top = (889 - h) + 'px';
   let dx = 0, dy = 0, sx = 1, sy = 1, rot = 0, z = 1, pose = P.curiosa;
-  if (t < 5.35) {{ dx = -250 + 120 * out(p(t, 4.95, 5.3)); }}                              // se asoma
-  else if (t < 5.5) {{ const k = Math.sin(Math.PI * p(t, 5.35, 5.5) / 2); dx = -130; sx = 1 + .08 * k; sy = 1 - .14 * k; }}  // coge impulso
-  else if (t < 6.0) {{ const s = p(t, 5.5, 6.0); pose = P.salta; z = 3;                    // salta
-    dx = -130 + 130 * io(s); dy = -270 * Math.sin(Math.PI * s); rot = 10 * Math.sin(Math.PI * s); sy = 1 + .06 * Math.sin(Math.PI * s); sx = 1 - .04 * Math.sin(Math.PI * s); }}
-  else {{ const s = p(t, 6.0, 6.25); z = 3; pose = t < 6.1 ? P.salta : P.pulgar;             // cae y se queda con el pulgar arriba
+  // sale de detras de la placa: asoma la cabeza por arriba, coge impulso y salta por encima
+  const DX = -470, DY = -445;
+  if (t < 5.35) {{ dx = DX; dy = DY + 380 * (1 - out(p(t, 4.95, 5.3))); }}                          // se asoma
+  else if (t < 5.5) {{ const k = Math.sin(Math.PI * p(t, 5.35, 5.5) / 2); dx = DX; dy = DY; sx = 1 + .06 * k; sy = 1 - .09 * k; }}  // coge impulso
+  else if (t < 6.05) {{ const s = p(t, 5.5, 6.05); pose = P.salta; z = 3;                               // salta
+    dx = DX * (1 - io(s)); dy = DY * (1 - s) - 130 * Math.sin(Math.PI * s); rot = 12 * Math.sin(Math.PI * s);
+    sy = 1 + .06 * Math.sin(Math.PI * s); sx = 1 - .04 * Math.sin(Math.PI * s); }}
+  else {{ const s = p(t, 6.05, 6.3); z = 3; pose = t < 6.12 ? P.salta : P.pulgar;                     // cae y se queda con el pulgar arriba
     const ap = Math.sin(Math.PI * s) * (1 - s); sy = 1 - .16 * ap; sx = 1 + .1 * ap;
-    sy *= 1 + .015 * Math.sin((t - 6.25) * 4) * p(t, 6.25, 6.5); }}
+    sy *= 1 + .015 * Math.sin((t - 6.3) * 4) * p(t, 6.3, 6.5); }}
   b.style.opacity = t > 4.95 ? 1 : 0; b.style.zIndex = z; $('esc').style.zIndex = 2;
   if (b.dataset.pose !== pose) {{ b.src = pose; b.dataset.pose = pose; }}
   b.style.transform = `translate(${{dx}}px,${{dy}}px) rotate(${{rot}}deg) scale(${{sx}},${{sy}})`;
