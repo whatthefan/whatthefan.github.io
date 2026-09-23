@@ -77,10 +77,10 @@ def placa(x, y, lado, giro):
             f'rgba(255,255,255,.18) 32%,transparent 42%)"></div></div>')
 
 
-def diapo(num, palabra, cuerpo, frase=''):
+def diapo(num, palabra, cuerpo, frase='', arriba=250):
     html = f'''<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>
 {cuerpo}
-<div class="palabra">{palabra}</div>
+<div class="palabra" style="top:{arriba}px">{palabra}</div>
 {frase}
 <div class="pie">{SELLO}PLEA5E</div>
 </body></html>'''
@@ -100,11 +100,16 @@ ONDAS = '''<svg style="position:absolute;left:505px;top:745px" width="130" heigh
   <path d="M52 45 a80 80 0 0 1 0 110" fill="none" stroke="#B98B2E" stroke-width="11" stroke-linecap="round" opacity=".7"/>
   <path d="M88 20 a115 115 0 0 1 0 160" fill="none" stroke="#B98B2E" stroke-width="11" stroke-linecap="round" opacity=".4"/></svg>'''
 
+# el brazo con el movil: dado la vuelta para que entre por el borde derecho
+# (el codo queda fuera de la foto y la mano, delante de la placa)
+BRAZO = (f'<div style="position:absolute;left:237px;top:420px;width:900px;height:900px;transform:rotate(-48deg)">'
+         f'<img class="mano" src="{mano("resenas")[0]}" style="left:0;top:0;width:900px;transform:scaleX(-1)"></div>')
+
 # cinco estrellas en arco por encima de la placa y el movil
 ESTRELLAS = ''.join(
     f'<img src="{ESTRELLA}" style="position:absolute;left:{x}px;top:{y}px;width:{w}px;transform:rotate({r}deg);'
     f'filter:drop-shadow(0 10px 12px rgba(120,80,20,.35))">'
-    for x, y, w, r in ((150, 520, 96, -14), (285, 468, 112, -6), (440, 450, 124, 0), (605, 468, 112, 6), (755, 520, 96, 14)))
+    for x, y, w, r in ((150, 440, 96, -14), (285, 388, 112, -6), (440, 370, 124, 0), (605, 388, 112, 6), (755, 440, 96, 14)))
 
 diapo(1, 'Piedra', con_mano('piedra', 250, 560, 580))
 diapo(2, 'Papel', con_mano('papel', 240, 540, 600))
@@ -114,6 +119,6 @@ if foto3:
           '<div class="frase" style="top:1170px">…y esta <b>gana siempre</b></div>')
 else:
     diapo(3, 'Reseñas',
-          placa(70, 700, 440, -6) + ONDAS + con_mano('resenas', 330, 640, 580, -24) + ESTRELLAS,
-          '<div class="frase" style="top:1195px">…y esta <b>gana siempre</b></div>')
+          placa(70, 590, 440, -6) + BRAZO + ESTRELLAS,
+          '<div class="frase" style="top:1170px">…y esta <b>gana siempre</b></div>', arriba=160)
 print('3 diapositivas')

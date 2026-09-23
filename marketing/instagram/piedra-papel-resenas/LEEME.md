@@ -9,19 +9,36 @@ la mano en el centro.
 
 1. **Piedra**: el puño.
 2. **Papel**: la mano abierta.
-3. **Reseñas**: la mano con el móvil toca la placa, salen cinco estrellas · "…y esta gana siempre".
+3. **Reseñas**: la mano con el móvil (entra por el borde derecho) toca la placa, salen cinco estrellas · "…y esta gana siempre".
 
-## Vídeo (`video/PLEA5E-piedra-papel-resenas.mp4`, 9,5 s, 1080×1920)
+## Vídeo (`video/PLEA5E-piedra-papel-resenas.mp4`, 21 s, 1080×1920)
 
-"¿Jugamos?" · Piedra (golpe) · Papel (golpe) · ¿Tijera? (golpe, y se
-tacha con una ❌ y un "error") · **¡Reseñas!** (entra la placa, el móvil
-la toca, salen las cinco estrellas con su "ding") · "…y esta gana
-siempre" · Comenta PLACA. Hay versión `-solo-efectos` para ponerle una
-canción de Instagram; `video/portada.png` es la portada.
+1. **El juego (0–3,6 s):** "¿Jugamos?" · Piedra 👊 · Papel ✋ · ¿Tijera? ✌️.
+   Cada mano cae de golpe, con temblor y rayas. Abajo hay un marcador de
+   tres rondas que se va encendiendo. La tijera se tacha con una ❌ y se cae.
+2. **¡Reseñas! (3,6–7 s):** entra el ritmo, la placa y el brazo con el
+   móvil. El brazo entra por el borde derecho, con el codo fuera del
+   cuadro. El móvil toca la placa y saltan las 5 estrellas. En el
+   marcador, la tercera ronda pasa a ser una estrella y dice RESEÑAS.
+   "…y esta gana siempre".
+3. **Zoom al móvil (7–17 s):** dentro hay una nota ("Nota para ti") que
+   se escribe tecla a tecla. Suena siempre la misma tecla y cada tecla se
+   enciende en el teclado, mientras la música se queda de fondo:
+   *No tengas miedo. / Los que llegan arriba no se echaron para atrás. /*
+   **Sin riesgo, no hay reseñas.** (en oro)
+4. **Cierre:** baja el teclado y entra la notificación de PLEA5E ("Tu placa
+   te está esperando. ¿Te atreves?"). Vuelve el ritmo con el botón
+   **Comenta PLACA** · plea5e.es.
+
+El fondo tiene la frase "PIEDRA · PAPEL · RESEÑAS" pasando en líneas, para
+que la pantalla no quede vacía. Hay versión `-solo-efectos` (con el
+teclado incluido) para ponerle una canción de Instagram;
+`video/portada.png` es la portada.
 
 **Texto de la publicación:**
 
 > Piedra, papel o… ¿reseñas? 🤔
+> Sin riesgo no hay reseñas. Y sin reseñas no se llega arriba. 💪
 > Hay una jugada que gana siempre: que tu cliente acerque el móvil y te deje 5 ⭐ en 10 segundos.
 >
 > 👉 Comenta PLACA y te mandamos precios y ejemplos por privado.

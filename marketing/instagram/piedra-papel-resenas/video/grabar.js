@@ -5,8 +5,8 @@ const path = require('path');
 const { spawn, execSync } = require('child_process');
 const { chromium } = require(execSync('npm root -g').toString().trim() + '/playwright');
 const D = 'marketing/instagram/piedra-papel-resenas/video/';
-// VEL: el video va 1,5 veces mas rapido que la animacion (lo mismo en musica.py)
-const FPS = 30, VEL = 1, DUR = 9.5;
+// la duracion la pone ../video.py en tiempos.json
+const FPS = 30, VEL = 1, DUR = require(path.resolve(D + "tiempos.json")).dur;
 (async () => {
   const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-y',
     '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',

@@ -1,0 +1,214 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+/* Plantilla del video: ../video.py cambia los %NOMBRE% por las imagenes y la nota */
+@font-face{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,%MONT%)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;font-family:Mont,sans-serif;background:#CDBBA2}
+.abs{position:absolute}
+#mundo{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 45%,#E7DAC8 0%,#DCCBB4 60%,#CDBBA2 100%)}
+/* el texto de fondo que va pasando */
+.rio{position:absolute;left:0;white-space:nowrap;font-weight:900;font-size:150px;letter-spacing:-2px;color:transparent;
+  -webkit-text-stroke:2.5px rgba(138,101,52,.13)}
+#pastilla{left:340px;top:150px;width:400px;height:74px;border:4px solid #A58E6E;border-radius:40px;text-align:center;
+  font-weight:800;font-size:40px;line-height:66px;letter-spacing:6px;color:#8C7456;background:rgba(240,230,215,.55)}
+.palabra{position:absolute;left:0;right:0;top:275px;text-align:center;font-weight:800;font-size:200px;letter-spacing:-3px;color:#8A6534;white-space:nowrap}
+.palabra span{display:inline-block}
+.mano{position:absolute;filter:drop-shadow(0 40px 44px rgba(90,60,30,.3))}
+.est{position:absolute;filter:drop-shadow(0 12px 14px rgba(120,80,20,.35))}
+#rayas line{stroke:#8A6534;stroke-width:12;stroke-linecap:round}
+.hueco{position:absolute;top:1575px;width:200px;height:250px;text-align:center}
+.hueco .aro{position:absolute;left:15px;top:0;width:170px;height:170px;border-radius:50%;border:5px dashed #B6A084;background:rgba(240,230,215,.45)}
+.hueco img{position:absolute;left:45px;top:30px;width:110px;opacity:.35;filter:grayscale(1)}
+.hueco b{position:absolute;left:0;right:0;top:188px;font-weight:800;font-size:30px;letter-spacing:4px;color:#A58E6E}
+.frase{position:absolute;left:0;right:0;text-align:center;font-weight:700;font-size:62px;color:#6E5130}
+.frase b{color:#8A6534;font-weight:800}
+/* ───── el movil por dentro ───── */
+#tel{position:absolute;left:0;top:0;width:1080px;height:1920px;border-radius:120px;background:#1B2130;padding:22px;opacity:0;
+  box-shadow:0 0 0 4px #2A3448}
+#pantalla{position:relative;width:100%;height:100%;border-radius:100px;overflow:hidden;background:#06080E;color:#F4EDE0}
+#barra{position:absolute;left:0;right:0;top:0;height:120px;padding:44px 80px 0;display:flex;justify-content:space-between;font-weight:700;font-size:40px}
+#isla{position:absolute;left:390px;top:30px;width:256px;height:72px;border-radius:40px;background:#000}
+#cab{position:absolute;left:70px;right:70px;top:170px;display:flex;justify-content:space-between;align-items:center;color:#E9BC46;font-weight:700;font-size:40px}
+#nota{position:absolute;left:78px;right:70px;top:300px;font-weight:800;font-size:82px;line-height:1.16;letter-spacing:-1px}
+#nota p{margin-bottom:46px}
+#nota p.oro{color:#E9BC46;font-size:96px;line-height:1.1}
+#nota span{visibility:hidden}
+#cursor{position:absolute;width:9px;height:90px;border-radius:4px;background:#E9BC46}
+#fecha{position:absolute;left:78px;top:245px;font-weight:600;font-size:30px;color:#6B7385;letter-spacing:1px}
+#teclado{position:absolute;left:0;right:0;bottom:0;height:640px;background:#1C212C;padding:28px 10px 70px}
+.fila{display:flex;gap:12px;height:124px;margin-bottom:22px;padding:0 6px}
+.fila:nth-child(2){padding:0 12px}
+.fila i{flex:1;display:flex;align-items:center;justify-content:center;border-radius:14px;background:#4A5163;font-style:normal;
+  font-weight:600;font-size:50px;color:#fff;box-shadow:0 4px 0 #0E1118;position:relative}
+.fila i.gris{background:#30374A;font-size:34px}
+.fila i.esp{flex:4;font-size:34px}
+.fila i.on{background:#E9BC46;color:#06080E;transform:translateY(-8px) scale(1.12);z-index:2}
+#aviso{position:absolute;left:36px;right:36px;top:110px;border-radius:44px;background:#282E3C;padding:30px 34px;
+  display:flex;gap:26px;align-items:center;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+#aviso .ico{width:110px;height:110px;border-radius:26px;background:#06080E;border:3px solid #E9BC46;display:flex;align-items:center;justify-content:center;flex:none}
+#aviso .t1{font-weight:800;font-size:36px;color:#fff;display:flex;justify-content:space-between}
+#aviso .t1 small{font-weight:600;font-size:28px;color:#8A93A6}
+#aviso .t2{font-weight:600;font-size:34px;color:#D5D9E2;margin-top:6px}
+#final{position:absolute;left:0;right:0;bottom:300px;text-align:center}
+#boton{display:inline-block;padding:34px 70px;border-radius:80px;background:#E9BC46;color:#06080E;font-weight:900;font-size:66px}
+#web{margin-top:34px;font-weight:800;font-size:44px;letter-spacing:4px;color:#F4EDE0}
+#marca{margin-top:30px;display:flex;justify-content:center;align-items:center;gap:14px;font-weight:800;font-size:30px;letter-spacing:8px;color:#8A93A6}
+</style></head><body>
+<div id="mundo">
+%FONDO%
+<div class="abs" id="pastilla">¿JUGAMOS?</div>
+<div class="palabra" id="w0">Piedra</div>
+<div class="palabra" id="w1">Papel</div>
+<div class="palabra" id="w2">¿Tijera?</div>
+<div class="palabra" id="w3" style="font-size:180px">¡Reseñas!</div>
+<svg class="abs" id="rayas" style="left:0;top:0" width="1080" height="1920">%RAYAS%</svg>
+<img class="mano" id="h0" src="%PIEDRA%" style="left:150px;top:600px;width:780px">
+<img class="mano" id="h1" src="%PAPEL%" style="left:140px;top:590px;width:800px">
+<img class="mano" id="h2" src="%TIJERA%" style="left:150px;top:590px;width:780px">
+<svg class="abs" id="equis" style="left:130px;top:580px" width="820" height="820" viewBox="0 0 100 100">
+  <path id="x1" d="M14 14 L86 86" stroke="#D9383F" stroke-width="10" stroke-linecap="round" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+  <path id="x2" d="M86 14 L14 86" stroke="#D9383F" stroke-width="10" stroke-linecap="round" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
+<svg class="abs" id="onda" style="left:0;top:0" width="1080" height="1920"><circle id="anillo" cx="540" cy="1000" r="10" fill="none" stroke="#B98B2E" stroke-width="14"/></svg>
+<div class="abs" id="placa" style="left:40px;top:720px;width:640px;height:640px;filter:drop-shadow(0 34px 34px rgba(90,60,30,.35))">%CANTO%
+  <img src="%PLACA%" style="position:absolute;inset:0;width:100%;height:100%;border-radius:4.2%">
+  <div style="position:absolute;inset:0;border-radius:4.2%;background:linear-gradient(118deg,transparent 25%,rgba(255,255,255,.18) 32%,transparent 42%)"></div></div>
+<svg class="abs" id="ondas" style="left:0;top:0" width="1080" height="1920">
+  <g id="og" fill="none" stroke="#B98B2E" stroke-width="12" stroke-linecap="round">
+  <path id="o1" d="M0 -30 a45 45 0 0 1 0 60"/><path id="o2" d="M34 -55 a80 80 0 0 1 0 110"/><path id="o3" d="M70 -80 a115 115 0 0 1 0 160"/></g></svg>
+<div class="abs" id="brazo" style="width:1100px;height:1100px">
+  <img class="mano" src="%MOVIL%" style="left:0;top:0;width:1100px;transform:scaleX(-1)">
+  </div>
+%ESTRELLAS%
+<div class="frase" id="gana" style="top:1420px">…y esta <b>gana siempre</b></div>
+%HUECOS%
+<img class="abs" id="ganadora" src="%ESTRELLA%" style="left:778px;top:1600px;width:124px">
+</div>
+<div id="tel"><div id="pantalla">
+  <div id="barra"><span>9:41</span><span style="letter-spacing:6px">▮▮▮ ▰</span></div><div id="isla"></div>
+  <div id="cab"><span>‹ Notas</span><span>Hecho</span></div>
+  <div id="fecha">NOTA PARA TI</div>
+  <div id="nota">%NOTA%</div><div id="cursor"></div>
+  <div id="teclado">%TECLADO%</div>
+  <div id="final"><div id="boton">Comenta PLACA</div><div id="web">plea5e.es</div>
+    <div id="marca">%SELLO%PLEA5E</div></div>
+  <div id="aviso"><div class="ico">%SELLO%</div><div style="flex:1"><div class="t1">PLEA5E<small>ahora</small></div>
+    <div class="t2">Tu placa te está esperando. ¿Te atreves?</div></div></div>
+</div></div>
+<script>
+const $ = id => document.getElementById(id);
+const cl = x => Math.min(1, Math.max(0, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out = x => 1 - Math.pow(1 - x, 3);
+const io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function T(el, o) { el = typeof el == 'string' ? $(el) : el; el.style.transform = `translate(${o.x || 0}px,${o.y || 0}px) scale(${o.s ?? 1}) rotate(${o.r || 0}deg)`; el.style.opacity = o.o ?? 1; }
+// la palabra: cada letra cae por separado
+document.querySelectorAll('.palabra').forEach(w => { w.innerHTML = [...w.textContent].map(c => `<span>${c}</span>`).join(''); });
+function palabra(id, t, a, z) {
+  const f = z ? p(t, z, z + .15) : 0;
+  [...$(id).children].forEach((s, i) => {
+    const e = back(p(t, a + i * .025, a + i * .025 + .28));
+    T(s, { y: (1 - e) * -90 - f * 40, s: .7 + .3 * e, r: (1 - e) * (i % 2 ? 12 : -12), o: p(t, a + i * .025, a + i * .025 + .08) * (1 - f) });
+  });
+}
+function pop(el, t, a, z, dy = 60) {
+  const i = back(p(t, a, a + .3)), f = z ? p(t, z, z + .15) : 0;
+  T(el, { y: (1 - i) * dy, s: .6 + .4 * i + .1 * f, o: cl(p(t, a, a + .12)) * (1 - f) });
+}
+// cada mano: baja de un golpe (como al jugar), rebota y se va
+function golpe(el, t, a, z) {
+  const b = p(t, a - .18, a), r = back(p(t, a, a + .3)), f = z ? p(t, z, z + .15) : 0;
+  const alto = b < 1 ? -220 * Math.cos(Math.PI * b * .5) : 0;
+  T(el, { y: alto + (1 - r) * 30, s: (.9 + .1 * r) * (1 - .15 * f), r: -6 * (1 - r), o: cl(p(t, a - .18, a - .08)) * (1 - f) });
+}
+const GOLPES = [.3, 1.3, 2.3, 3.6];
+const TECLAS = %TECLAS%, CTA = %CTA%;
+const ZOOM = [7.0, 7.85];
+let zoomDe = null;                        // donde esta la pantalla del movil dibujado (se mide una vez)
+function render(t) {
+  // temblor al golpe
+  let sx = 0, sy = 0;
+  GOLPES.forEach((g, i) => { const d = t - g; if (d > 0 && d < .35) { const k = (1 - d / .35) * (i == 3 ? 22 : 12); sx += k * Math.sin(d * 90); sy += k * Math.cos(d * 70); } });
+  // fondo que pasa
+  for (let i = 0; i < 4; i++) $('r' + i).style.transform = `translateX(${(i % 2 ? -900 : -300) + (i % 2 ? 1 : -1) * t * 70}px)`;
+  pop('pastilla', t, .05, 3.45);
+  palabra('w0', t, .22, 1.15); golpe('h0', t, .3, 1.15);
+  palabra('w1', t, 1.22, 2.15); golpe('h1', t, 1.3, 2.15);
+  palabra('w2', t, 2.22, 3.45);
+  // la tijera: golpe, se tacha y se cae
+  const cae = p(t, 3.2, 3.6);
+  golpe('h2', t, 2.3, null);
+  if (t > 3.2) T('h2', { y: cae * cae * 1300, r: 40 * cae, o: 1 - p(t, 3.45, 3.6) });
+  $('x1').style.strokeDashoffset = 1 - out(p(t, 2.85, 3.0)); $('x2').style.strokeDashoffset = 1 - out(p(t, 3.0, 3.15));
+  T('equis', { y: cae * cae * 1300, r: 40 * cae, o: 1 - p(t, 3.45, 3.6) });
+  // rayas de golpe
+  const rg = GOLPES.slice(0, 3).map(g => t - g).find(d => d > 0 && d < .3);
+  $('rayas').style.opacity = rg === undefined ? 0 : 1 - rg / .3;
+  $('rayas').style.transform = `scale(${rg === undefined ? 1 : .9 + rg * .6})`; $('rayas').style.transformOrigin = '540px 1010px';
+  // ¡reseñas!
+  palabra('w3', t, 3.55, null);
+  const an = p(t, 3.6, 4.1); $('anillo').setAttribute('r', 20 + 900 * out(an)); $('anillo').style.opacity = an > 0 && an < 1 ? 1 - an : 0;
+  const pl = out(p(t, 3.62, 4.0)); T('placa', { x: (1 - pl) * -760, r: -5, o: pl });
+  const mv = out(p(t, 3.75, 4.2)), toca = Math.sin(Math.PI * p(t, 4.2, 4.5));
+  T('brazo', { x: BRAZO.x + (1 - mv) * 800 - 36 * toca, y: BRAZO.y + (1 - mv) * 300 + 10 * toca, r: BRAZO.r - 3 * toca, o: mv });
+  if (zoomDe) $('og').setAttribute('transform', `translate(${zoomDe.x - 190} ${zoomDe.y + 40}) rotate(180)`);
+  const onda = t > 4.3 && t < 5.5;
+  ['o1', 'o2', 'o3'].forEach((o, i) => { $(o).style.opacity = onda ? cl(Math.sin((t - 4.3 - i * .1) * 7)) : 0; });
+  for (let i = 0; i < 5; i++) {
+    const a = 4.5 + i * .16, e = back(p(t, a, a + .35));
+    T('e' + i, { y: (1 - e) * 360 + 8 * Math.sin((t - a) * 5), x: (1 - e) * (620 - 190 * i), s: .2 + .8 * e, r: (i - 2) * 8 * e, o: p(t, a, a + .1) });
+  }
+  pop('gana', t, 5.6, null);
+  // el marcador de abajo: cada ronda se enciende; la tercera, tijera tachada y luego estrella
+  [.3, 1.3, 2.3].forEach((g, i) => {
+    const s = $('s' + i), on = p(t, g, g + .2), img = s.children[1];
+    img.style.opacity = .35 + .65 * on; img.style.filter = `grayscale(${1 - on})`;
+    s.children[0].style.borderStyle = on > .5 ? 'solid' : 'dashed';
+    s.children[0].style.borderColor = on > .5 ? '#8A6534' : '#B6A084';
+    T(s, { s: 1 + .12 * Math.sin(Math.PI * on) });
+  });
+  const tx = p(t, 2.95, 3.2), gana = back(p(t, 3.62, 3.95));
+  $('s2').children[1].style.opacity = (.35 + .65 * p(t, 2.3, 2.5)) * (1 - p(t, 3.5, 3.62));
+  $('s2').children[2].innerHTML = t < 3.6 ? `<s style="text-decoration-thickness:${tx > 0 ? 5 : 0}px;text-decoration-color:#D9383F">TIJERA</s>` : '<span style="color:#8A6534">RESEÑAS</span>';
+  $('s2').children[0].style.background = t > 3.6 ? '#F2DDA0' : 'rgba(240,230,215,.45)';
+  T('ganadora', { s: .2 + .8 * gana, r: 20 * (1 - gana), o: p(t, 3.6, 3.68) });
+  // ── zoom al movil ──
+  if (!zoomDe) {                         // el punto (400,239) del brazo, girado sobre su centro
+    const a = BRAZO.r * Math.PI / 180, vx = 400 - 550, vy = 239 - 550;
+    zoomDe = { x: 550 + BRAZO.x + vx * Math.cos(a) - vy * Math.sin(a), y: 550 + BRAZO.y + vx * Math.sin(a) + vy * Math.cos(a) };
+  }
+  const z = io(p(t, ZOOM[0], ZOOM[1]));
+  const S = 1 + 7 * z, cx = zoomDe.x, cy = zoomDe.y;
+  $('mundo').style.transformOrigin = `${cx}px ${cy}px`;
+  $('mundo').style.transform = `translate(${sx + (540 - cx) * z}px,${sy + (960 - cy) * z}px) rotate(${-BRAZO.r * z}deg) scale(${S})`;
+  $('mundo').style.opacity = 1 - p(t, ZOOM[0] + .55, ZOOM[1]);
+  const k0 = .22, zt = k0 + (1 - k0) * z;
+  $('tel').style.transform = `translate(${(cx - 540) * (1 - z)}px,${(cy - 960) * (1 - z)}px) rotate(${BRAZO.r * (1 - z)}deg) scale(${zt})`;
+  $('tel').style.opacity = p(t, ZOOM[0] + .3, ZOOM[0] + .6);
+  // la nota, tecla a tecla
+  let n = 0; while (n < TECLAS.length && TECLAS[n][0] <= t) n++;
+  // las letras tienen el id de su tecla (c0, c1...; los saltos de linea no tienen span)
+  TECLAS.forEach((q, i) => { const s = $('c' + i); if (s) s.style.visibility = i < n ? 'visible' : 'hidden'; });
+  document.querySelectorAll('.fila i').forEach(k => k.classList.remove('on'));
+  if (n > 0 && t - TECLAS[n - 1][0] < .09) {
+    const c = TECLAS[n - 1][1].toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace('Ñ', 'Ñ');
+    const k = $('k' + (TECLAS[n - 1][1].toLowerCase() == 'ñ' ? 'Ñ' : c)); if (k) k.classList.add('on');
+  }
+  // el cursor: detras de la ultima letra, parpadeando cuando no se escribe
+  const nota = $('nota'), ult = n > 0 ? TECLAS[n - 1][0] : 0;
+  let cxr = 0, cyr = 0, oro = false;
+  if (n > 0 && TECLAS[n - 1][1] == '\n') { const q = $('c' + n).parentElement; cyr = q.offsetTop; oro = q.classList.contains('oro'); }
+  else if (n > 0) { const s = $('c' + (n - 1)); cxr = s.offsetLeft + s.offsetWidth; cyr = s.offsetTop; oro = s.parentElement.classList.contains('oro'); }
+  const alto = oro ? 104 : 92;
+  $('cursor').style.left = (nota.offsetLeft + cxr + 4) + 'px'; $('cursor').style.top = (nota.offsetTop + cyr + 4) + 'px';
+  $('cursor').style.height = alto + 'px';
+  $('cursor').style.opacity = t - ult < .5 ? 1 : (Math.floor((t - ult) * 2.2) % 2 ? 0 : 1);
+  // el final: baja el teclado, llega el aviso y el boton
+  $('teclado').style.transform = `translateY(${700 * io(p(t, CTA, CTA + .45))}px)`;
+  const av = back(p(t, CTA + .25, CTA + .6)); T('aviso', { y: (1 - av) * -300, o: p(t, CTA + .25, CTA + .35) });
+  pop('final', t, CTA + .55, null, 80);
+  if (t > CTA + 1) $('boton').style.transform = `scale(${1 + .035 * Math.sin((t - CTA - 1) * 6)})`;
+}
+// donde queda el brazo (la mano, fuera de la placa y el codo fuera del cuadro)
+const BRAZO = { x: 405, y: 592, r: -40 };
+window.render = render; render(0);
+</script></body></html>
