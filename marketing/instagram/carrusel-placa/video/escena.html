@@ -1,0 +1,163 @@
+<!doctype html>
+<!-- PLANTILLA del video "la placa, destripada". No se abre tal cual:
+     montar.py mete dentro letras, capas, sello y Estrellita y saca
+     escena-montada.html. render(t) pinta el segundo t del video (aqui no
+     hay VEL: los segundos son los del video).
+     Los momentos caen en compas de la musica (144 BPM, 1,667 s por compas):
+       0      cae la placa entera
+       2,5    se inclina y se abre en capas
+       3,33   una capa cada medio compas: se enciende y se dice que es
+       10     se juntan... 11,67 ¡golpe! (entra la parte fuerte)
+       13,33  se programa el chip
+       15     el movil la toca: cinco estrellas
+       18,33  cierre: Comenta PLACA                                       -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(data:font/woff2;base64,{{ANTON}})}
+@font-face{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,{{MONT}})}
+@font-face{font-family:Caveat;font-weight:700;src:url(data:font/woff2;base64,{{CAVEAT}})}
+:root{--noche:#06080E;--panel:#0F1522;--borde:#1C2536;--borde2:#2A3448;--oro:#E9BC46;--txt:#EAEDF4;--txt2:#8B95AB}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--noche);color:var(--txt);font-family:Mont,sans-serif}
+.abs{position:absolute}
+.tit{position:absolute;left:40px;right:40px;text-align:center;font-family:Anton;text-transform:uppercase;line-height:1.2;color:#fff}
+.tit b{color:var(--oro);font-weight:400}
+.mano{font-family:Caveat;font-weight:700;color:var(--oro)}
+.sub{position:absolute;left:40px;right:40px;text-align:center;font-weight:700;font-size:40px;color:var(--txt2);line-height:1.3}
+.sub b{color:var(--oro)}
+#escenario{position:absolute;left:200px;top:720px;width:680px;height:680px;perspective:2600px}
+#grupo{position:absolute;inset:0;transform-style:preserve-3d}
+.capa{position:absolute;inset:0;background-size:100% 100%;border-radius:4.2%}
+{{CSS_CAPAS}}
+.vidrio{background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 45%,rgba(255,255,255,.10));
+  border:3px solid rgba(255,255,255,.6);box-shadow:inset 0 0 30px rgba(255,255,255,.08)}
+.pastilla{position:absolute;background:var(--oro);color:#100B00;font-weight:800;font-size:38px;padding:16px 34px;border-radius:44px;white-space:nowrap}
+.movil{position:absolute;width:400px;height:800px;border-radius:58px;background:#10141d;border:13px solid var(--borde2)}
+.pantalla{position:absolute;inset:0;border-radius:45px;overflow:hidden;background:#fff;color:#1f1f1f}
+.est svg{width:100%;height:100%;display:block}
+.est svg .tinta{stroke:#D5DAE3}
+#barra{position:absolute;left:190px;top:1480px;width:700px;height:26px;border-radius:13px;background:var(--borde)}
+#barra i{position:absolute;left:0;top:0;bottom:0;border-radius:13px;background:var(--oro);width:0}
+</style></head><body>
+
+<div class="tit" id="t0" style="top:250px;font-size:100px">¿Qué lleva una<br><b>placa PLEA5E?</b></div>
+<div class="tit" id="t1" style="top:250px;font-size:92px">La abrimos<br><b>capa a capa</b></div>
+<div id="rotulos"></div>
+<div class="tit" id="t2" style="top:250px;font-size:100px">Y todo junto…</div>
+<div class="tit" id="t3" style="top:250px;font-size:100px">…es <b>tu placa</b></div>
+<div class="tit" id="t4" style="top:250px;font-size:92px">Programamos<br><b>el chip</b></div>
+<div class="tit" id="t5" style="top:250px;font-size:92px">Acercan el móvil…</div>
+<div class="tit" id="t6" style="top:250px;font-size:92px">…y <b>5 estrellas</b></div>
+
+<div id="escenario"><div id="grupo">{{CAPAS}}</div></div>
+
+<svg class="abs" id="ondas" style="left:820px;top:880px" width="200" height="360" viewBox="0 0 200 360">
+  <path id="o1" d="M20 120 a80 80 0 0 1 0 120" fill="none" stroke="#E9BC46" stroke-width="16" stroke-linecap="round"/>
+  <path id="o2" d="M70 80 a130 130 0 0 1 0 200" fill="none" stroke="#E9BC46" stroke-width="16" stroke-linecap="round"/>
+  <path id="o3" d="M120 40 a180 180 0 0 1 0 280" fill="none" stroke="#E9BC46" stroke-width="16" stroke-linecap="round"/></svg>
+<div id="barra"><i id="barraI"></i></div>
+<div class="sub" id="prog" style="top:1530px;font-size:38px"></div>
+
+<div class="movil" id="movil" style="left:600px;top:760px">
+  <div class="pantalla">
+    <div id="pvacia" class="abs" style="inset:0;background:#0b0e14;z-index:2"></div>
+    <div style="height:200px;background:#1F4D3A;padding:66px 32px 0">
+      <div style="font-weight:800;font-size:38px;color:#fff">Bar La Plaza</div>
+      <div style="font-weight:600;font-size:24px;color:#E9C46A;margin-top:6px">Reseña en Google</div></div>
+    <div style="padding:40px 26px;text-align:center">
+      <div style="font-weight:700;font-size:28px">¿Qué tal tu visita?</div>
+      <div id="estrellasMovil" style="margin-top:34px;font-size:62px;letter-spacing:2px;color:#d6d9df">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div id="texto" style="margin:36px auto 0;height:150px;border:3px solid #e2e5ea;border-radius:16px;text-align:left;padding:16px;font-size:25px;color:#9aa0aa">Cuéntanos tu experiencia…</div>
+      <div id="publicada" style="margin:30px auto 0;width:280px;padding:18px;border-radius:40px;background:#06080E;color:#E9BC46;font-weight:800;font-size:28px">✓ ¡Publicada!</div>
+    </div>
+  </div>
+</div>
+
+<div id="cierre">
+  <div class="tit" id="c0" style="top:260px;font-size:96px">Tu placa,<br><b>con tu marca</b></div>
+  <div class="est abs" id="estSaluda" style="left:340px;top:560px;width:400px;height:359px">{{EST_SALUDA}}</div>
+  <div class="abs" id="comenta" style="left:110px;top:990px;width:860px;padding:34px 0 30px;border-radius:28px;background:var(--oro);color:#100B00;text-align:center">
+    <div style="font-weight:800;font-size:40px;letter-spacing:2px">COMENTA</div>
+    <div style="font-family:Anton;font-size:150px;line-height:1">PLACA</div>
+    <div style="font-weight:700;font-size:34px;margin-top:8px">y te mandamos precios y ejemplos por privado</div></div>
+  <div class="sub" id="c1" style="top:1330px;font-size:42px">o escríbenos por <b>WhatsApp</b> · plea5e.es</div>
+  <div class="sub" id="c2" style="top:1400px;font-size:36px">Desde 25 € · diseño con tu marca, gratis</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cl = x => Math.min(1, Math.max(0, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out = x => 1 - Math.pow(1 - x, 3);
+const inOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function T(el, o) {
+  el = typeof el === 'string' ? $(el) : el;
+  el.style.transform = `translate(${o.x || 0}px,${o.y || 0}px) scale(${o.s ?? 1}) rotate(${o.r || 0}deg)` + (o.mas || '');
+  el.style.opacity = o.o ?? 1;
+}
+function pop(el, t, a, z, dy = 50) {
+  const i = back(p(t, a, a + .4)), f = z ? p(t, z, z + .25) : 0;
+  T(el, { y: (1 - i) * dy - f * 30, s: .7 + .3 * i, o: cl(p(t, a, a + .18)) * (1 - f) });
+}
+const K = 5 / 3;                                    // un compas
+const CAPAS = {{LISTA_CAPAS}};                       // [id, rotulo] de abajo arriba
+const SEP = 74;                                      // separacion entre capas abiertas
+$('rotulos').innerHTML = CAPAS.map(([id, r], i) =>
+  `<div class="tit" id="r${i}" style="top:230px;font-size:84px"><span class="mano" style="font-size:96px">${i + 1}.</span> ${r}</div>`).join('');
+
+function render(t) {
+  for (const a of document.getAnimations()) { a.pause(); a.currentTime = (t * 1000) % 60000; }
+  // ── titulos ──
+  pop('t0', t, .15, 2.3); pop('t1', t, 2.5, 3.2);
+  pop('t2', t, 10.05, 11.5); pop('t3', t, 11.75, 13.1); pop('t4', t, 13.4, 14.8);
+  pop('t5', t, 15.05, 16.3); pop('t6', t, 16.5, 18.1);
+  // ── la placa: cae, se inclina, se abre, se enciende capa a capa, se junta ──
+  const cae = back(p(t, 0, .45));
+  const inclina = inOut(p(t, 1.7, 2.5)) * (1 - inOut(p(t, 11.67, 12.4)));
+  // al juntarse no se usa el rebote: con el, las capas de arriba se hundian
+  // un momento por debajo del vinilo y solo se veia el chip
+  const abre = out(p(t, 2.5, 3.3)) * (1 - inOut(p(t, 10.3, 11.67)));
+  const sube = inOut(p(t, 12.4, 13.2));                         // tras juntarse, un poco mas arriba y mas grande
+  const fuera = inOut(p(t, 14.8, 15.4));                        // se aparta para el movil
+  const cierre = p(t, 18.2, 18.5);
+  $('grupo').style.transform = `rotateX(${52 * inclina}deg) rotateZ(${-35 * inclina}deg)`;
+  const baja = inclina * 260 - sube * 40;
+  T('escenario', { x: -fuera * 230, y: (1 - cae) * -900 + baja, s: (1 + .12 * sube) * (1 - .22 * fuera), o: 1 - cierre });
+  const foco = t > 3.33 && t < 10 ? Math.floor((t - 3.33) / (K / 2)) : -1;
+  CAPAS.forEach(([id], i) => {
+    const el = $('capa' + i);
+    el.style.transform = `translateZ(${i * SEP * abre + i * .6}px)`;
+    el.style.opacity = foco < 0 ? 1 : (i === foco ? 1 : i < foco ? .8 : .35);
+    el.style.filter = i === foco ? 'drop-shadow(0 0 22px rgba(233,188,70,.9))' : 'none';
+    pop('r' + i, t, 3.33 + i * K / 2, i === CAPAS.length - 1 ? 9.85 : 3.33 + (i + 1) * K / 2 - .2);
+  });
+  // ── programando ──
+  const pr = p(t, 13.5, 14.5);
+  $('barra').style.opacity = p(t, 13.35, 13.5) * (1 - p(t, 14.8, 15));
+  $('barraI').style.width = (inOut(pr) * 100) + '%';
+  $('prog').style.opacity = $('barra').style.opacity;
+  $('prog').innerHTML = pr < 1 ? `Chip NFC… <b>${Math.round(inOut(pr) * 100)} %</b>` : '<b>✓ Enlazado a tu ficha de Google</b>';
+  const onda = t > 14.1 && t < 14.9;
+  ['o1', 'o2', 'o3'].forEach((o, i) => { $(o).style.opacity = onda ? cl(Math.sin((t - 14.1 - i * .1) * 8)) : 0; });
+  // ── el movil ──
+  const entra = out(p(t, 15.0, 15.6)), toca = inOut(p(t, 15.7, 16.2)), va = inOut(p(t, 18.2, 18.5));
+  T('movil', { x: (1 - entra) * 600 - toca * 60 + va * 700, y: 40, r: -8 * toca * (1 - p(t, 16.4, 16.8)), o: entra });
+  $('pvacia').style.opacity = 1 - p(t, 16.2, 16.4);
+  const est = $('estrellasMovil').children;
+  for (let i = 0; i < 5; i++) { const on = p(t, 16.67 + i * .2, 16.72 + i * .2); est[i].style.color = on ? '#FBBC05' : '#d6d9df';
+    est[i].style.display = 'inline-block'; est[i].style.transform = `scale(${1 + .5 * Math.sin(Math.PI * p(t, 16.67 + i * .2, 16.9 + i * .2))})`; }
+  const txt = '¡Trato de diez! Volveremos.', nt = Math.floor(p(t, 17.6, 18.0) * txt.length);
+  $('texto').textContent = nt ? txt.slice(0, nt) : 'Cuéntanos tu experiencia…'; $('texto').style.color = nt ? '#1f1f1f' : '#9aa0aa';
+  pop('publicada', t, 18.0, null, 20);
+  // ── cierre ──
+  $('cierre').style.opacity = p(t, 18.33, 18.6);
+  pop('c0', t, 18.4); pop('estSaluda', t, 18.8, null, 150); pop('comenta', t, 19.4);
+  if (t > 20) $('comenta').style.transform += ` scale(${1 + .025 * Math.sin((t - 20) * 5)})`;
+  pop('c1', t, 19.9); pop('c2', t, 20.2);
+}
+window.render = render;
+render(0);
+</script>
+</body></html>

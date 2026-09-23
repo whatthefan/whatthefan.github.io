@@ -25,3 +25,7 @@ Para rehacer el generador despues de tocar gen/plantilla.html:
 anton-latin.woff2 es Anton (subconjunto latino), la letra del nombre en
 las pruebas de avatar de Instagram (marketing/instagram/avatar/ronda2).
 Tambien SIL Open Font License 1.1; su licencia va en ofl-anton.txt.
+
+caveat-latin.woff2 es Caveat (negrita, subconjunto latino), la letra de
+rotulador del carrusel "Desliza para agregar" (marketing/instagram/
+carrusel-placa). SIL Open Font License 1.1; su licencia va en ofl-caveat.txt.
