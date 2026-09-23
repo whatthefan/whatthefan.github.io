@@ -34,7 +34,9 @@ a.poner(pads, a.pad(ACORDES[0][1], 1.2, 1600), DUR - 1, .6); a.poner(melodia, a.
 a.poner(fx, m('whoosh.mp3', -2), .1, .3)                      # cae
 a.poner(fx, m('impact-bass-1.mp3'), 1.0, .3)
 for i in range(5):
-    a.poner(fx, m('kenney-glass_004.wav', [0, 2, 4, 7, 9][i]), 1.05 + i * .1, .22, pan=-.4 + .2 * i)   # las cinco estrellas
+    a.poner(fx, m('kenney-glass_004.wav', [0, 2, 4, 7, 9][i]), 1.3 + i * .12, .22, pan=-.4 + .2 * i)   # las cinco estrellas caen
+a.poner(fx, m('sparkle.mp3'), 1.5, .2)
+a.poner(fx, m('impact-bass-2.mp3'), 2.3, .3); a.poner(fx, m('pop.mp3', -3), 2.3, .3)                   # "Te toca." 
 a.poner(fx, m('whoosh-short.mp3'), 2.55, .35)                  # se da la vuelta
 a.poner(fx, m('kenney-bong_001.wav', 3), 3.0, .35)             # Estrellita, pillada
 a.poner(fx, m('whoosh-short.mp3', 2), 4.55, .3)                # vuelve
