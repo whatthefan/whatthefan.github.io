@@ -18,3 +18,18 @@ arriba y, en pequeño, la estrella parece partida).
 
 Se regeneran los SVG con `python3 marketing/instagram/avatar/generar.py`
 desde la raíz del repo.
+
+## avatar/ronda2/
+
+Segunda tanda, tras "no me convence": la estrella con el 5 más el nombre,
+y otros fondos y colores (noche, azul, crema, oro, verde, blanco, oro
+metálico) y dos ideas nuevas: la estrella dentro de un bocadillo (una
+reseña) y con las ondas de "acerca el móvil".
+
+`tablero.png` las enseña todas juntas, en grande y en pequeño. Cada una
+tiene su PNG de 1080×1080 con el número delante.
+
+Las letras son Anton (el nombre, de la misma familia que el 5 del sello)
+y Montserrat (los textos del aro), metidas en base64 desde `fuente/`.
+Se regenera con `python3 marketing/instagram/avatar/ronda2/generar.py`;
+los PNG se sacan haciendo captura de los `.html` sueltos que monta.

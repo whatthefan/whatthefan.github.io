@@ -21,3 +21,7 @@ Para rehacer el generador despues de tocar gen/plantilla.html:
 
     npm install
     python3 gen/construye.py
+
+anton-latin.woff2 es Anton (subconjunto latino), la letra del nombre en
+las pruebas de avatar de Instagram (marketing/instagram/avatar/ronda2).
+Tambien SIL Open Font License 1.1; su licencia va en ofl-anton.txt.
