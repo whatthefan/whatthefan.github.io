@@ -5,7 +5,8 @@ const path = require('path');
 const { spawn, execSync } = require('child_process');
 const { chromium } = require(execSync('npm root -g').toString().trim() + '/playwright');
 const D = 'marketing/instagram/video-como-topstar/';
-const FPS = 30, DUR = 67.5;
+// VEL: el video va 1,5 veces mas rapido que la animacion (lo mismo en musica.py)
+const FPS = 30, VEL = 1.5, DUR = 67.5 / VEL;
 (async () => {
   const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-y',
     '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
@@ -20,7 +21,7 @@ const FPS = 30, DUR = 67.5;
   await pg.waitForTimeout(500);
   const n = Math.round(FPS * DUR);
   for (let f = 0; f < n; f++) {
-    await pg.evaluate(t => render(t), f / FPS);
+    await pg.evaluate(t => render(t), f / FPS * VEL);
     const img = await pg.screenshot({ type: 'jpeg', quality: 95 });
     if (!ff.stdin.write(img)) await new Promise(r => ff.stdin.once('drain', r));
     if (f % 150 === 0) console.log(`${f}/${n}`);

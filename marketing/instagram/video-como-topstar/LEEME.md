@@ -1,6 +1,6 @@
 # Reel "Cómo funciona PLEA5E" (al estilo del anuncio de topStar)
 
-`PLEA5E-reel-como-funciona.mp4`: 67,5 s, vertical 1080×1920, 30 fps, con
+`PLEA5E-reel-como-funciona.mp4`: 45 s, vertical 1080×1920, 30 fps, con
 música y efectos. `portada.png` es la portada del reel (el gancho).
 
 `PLEA5E-reel-como-funciona-solo-efectos.mp4`: el mismo vídeo sin música,
@@ -8,6 +8,13 @@ solo con los efectos. Para ponerle encima una canción de la biblioteca
 de Instagram (las canciones de tendencia suelen dar más alcance): en el
 editor, añade la canción y deja el volumen del vídeo al 60-70 % para que
 se oigan los efectos.
+
+**Versión 3 (la actual):** 1,5 veces más rápida que la animación (45 s en
+vez de 67,5), con más interlineado en los títulos para que la tilde de
+la Ñ no choque con el renglón de arriba, efectos grabados de verdad (CC0,
+ver `../sonidos/`) y música nueva: trap-pop a 144 BPM con 808, charles
+rápidos, palmas y una melodía de campana. **Los segundos de las tablas
+de abajo son de la animación: en el vídeo, divídelos entre 1,5.**
 
 Versión 2. La idea sigue siendo la del anuncio de topStar (dos locales,
 gana el de más estrellas, cómo funciona), pero vendido como en el vídeo
