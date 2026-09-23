@@ -1,6 +1,6 @@
 """La ultima del carrusel, en video (8,5 s, 1080x1350): la placa baja girando,
 salen cinco estrellas y "Que hablen bien de ti.", se da la vuelta y por detras
-esta Estrellita con el pulgar arriba ("¡Me has dado la vuelta!"). Al volver,
+esta Estrellita con el pulgar arriba ("Aqui no hay nada... Comenta PLACA"). Al volver,
 Estrellita se asoma por el borde, coge impulso, salta fuera y cae de pie al
 lado, con el pulgar arriba, junto al "Comenta PLACA". Muy poco texto.
 
@@ -23,7 +23,7 @@ PIEZA = f'''{CANTO}
   <div class="cara"><img src="{PLACA}" style="width:100%;height:100%;display:block">
     <div class="brillo" style="position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.4) 48%,transparent 56%)"></div></div>
   <div class="cara detras"><img class="pegatina" src="{svg(E + 'pulgar.svg')}">
-    <div class="nota">¡Me has dado<br>la vuelta!</div></div>'''
+    <div class="nota">Aquí no hay nada...<br><b style="color:#B8871F">Comenta PLACA</b></div></div>'''
 ESTRELLA = ('<svg viewBox="0 0 100 96" width="84" height="80"><path d="M50 3 L61.8 36.2 L97 36.9 L69 58.3 L79.4 92 L50 72 '
             'L20.6 92 L31 58.3 L3 36.9 L38.2 36.2 Z" fill="#E9BC46" stroke="#E9BC46" stroke-width="5" stroke-linejoin="round"/></svg>')
 
