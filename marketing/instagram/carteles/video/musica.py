@@ -1,5 +1,6 @@
-"""Sonido de la placa girando (9 s): un golpe cuando cae, whoosh en la vuelta,
-un "tic" por cada motivo y la campana del boton, con un ritmo suave debajo.
+"""Sonido de la placa girando (8,5 s): cae (golpe), se da la vuelta (whoosh) y
+aparece Estrellita guinando ("bong"), vuelve, Estrellita salta (whoosh) y cae
+(pasito), y el boton (confirmacion). Ritmo suave debajo. Efectos ligeros.
 Desde la raiz del repo:  python3 marketing/instagram/carteles/video/musica.py
 """
 import sys
@@ -8,7 +9,7 @@ sys.path.insert(0, 'marketing/instagram')
 import audio as a  # noqa: E402
 
 V = 'marketing/instagram/carteles/video/'
-DUR = 9
+DUR = 8.5
 a.duracion(DUR)
 K = 5 / 3
 NEGRA = K / 4
@@ -30,13 +31,16 @@ while t0 < DUR - 1:
     t0 += K
     c += 1
 a.poner(pads, a.pad(ACORDES[0][1], 1.2, 1600), DUR - 1, .6); a.poner(melodia, a.campana(69, 1.2, .7), DUR - 1)
-a.poner(fx, m('whoosh.mp3', -2), .1, .35)                     # cae
-a.poner(fx, m('impact-bass-1.mp3'), .9, .4)
-a.poner(fx, m('whoosh-cinematic.mp3'), 1.6, .35)              # la vuelta
-a.poner(fx, m('sparkle.mp3'), 3.35, .3)
-for i in range(4):
-    a.poner(fx, m('pop.mp3', 2 * i), 3.6 + i * .45, .3)        # cada motivo
-a.poner(fx, m('kenney-confirmation_002.wav'), 5.7, .45)        # el boton
+a.poner(fx, m('whoosh.mp3', -2), .1, .3)                      # cae
+a.poner(fx, m('impact-bass-1.mp3'), 1.0, .3)
+for i in range(3):
+    a.poner(fx, m('pop.mp3', 2 * i), 1.1 + i * .24, .25)        # TOCA · 5★ · LISTO
+a.poner(fx, m('whoosh-short.mp3'), 2.55, .35)                  # se da la vuelta
+a.poner(fx, m('kenney-bong_001.wav', 3), 3.0, .35)             # Estrellita, pillada
+a.poner(fx, m('whoosh-short.mp3', 2), 4.55, .3)                # vuelve
+a.poner(fx, m('whoosh.mp3', 4), 4.75, .3)                      # salta
+a.poner(fx, m('kenney-drop_002.wav', 3), 5.45, .35)            # cae de pie
+a.poner(fx, m('kenney-confirmation_002.wav'), 5.65, .4)        # el boton
 duck = a.compresion_al_bombo(golpes)
 bajos *= duck[:, None]
 pads *= (.4 + .6 * duck)[:, None]

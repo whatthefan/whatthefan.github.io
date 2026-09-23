@@ -6,7 +6,7 @@ const { spawn, execSync } = require('child_process');
 const { chromium } = require(execSync('npm root -g').toString().trim() + '/playwright');
 const D = 'marketing/instagram/carteles/video/';
 // la duracion la pone ../video.py en tiempos.json
-const FPS = 30, VEL = 1, DUR = 9;
+const FPS = 30, VEL = 1, DUR = 8.5;
 (async () => {
   const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-y',
     '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
