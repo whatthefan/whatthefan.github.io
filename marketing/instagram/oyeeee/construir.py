@@ -1,12 +1,17 @@
 """Carrusel "OYEEEE" (6 fotos de 1080x1350), al estilo de la referencia del perro
-que cuchichea: fondo granate liso, una palabra en letra redonda y gorda (Fredoka
-Bold) repetida por toda la foto, en arco, girada, de varios tamanos y cortada por
-los bordes, y el personaje asomandose por un lado. Aqui el personaje es Estrellita.
+que cuchichea: fondo liso, una palabra gorda repetida por la foto (en arco,
+girada, de varios tamanos y cortada por los bordes) y el personaje asomandose.
+Aqui el personaje es Estrellita, y es el centro: grande, con un halo de luz
+detras, un brillo que le cruza y destellos alrededor.
+
+Todo con textura: el fondo (entre azul y verde) con grano de papel; las letras
+(Titan One) en 3D, con su volumen hacia abajo a la derecha, un filo, sombra en
+el suelo y un moteado fino, como impresas.
 
 La historia, en cotilleo:
-  1. OYEEEE                       (Estrellita se asoma)
+  1. OYEEEE                       (Estrellita se asoma, enorme)
   2. ¿SABES LO QUE DICEN DE TU BAR?
-  3. NADA.                        (cri... cri...)
+  3. NADA.
   4. SALEN ENCANTADOS... Y SE LES OLVIDA.
   5. TRANQUI, YO ME ENCARGO.      (la placa)
   6. COMENTA PLACA
@@ -23,57 +28,81 @@ E = 'public/marca/estrellita/'
 b64 = lambda f: base64.b64encode(open(f, 'rb').read()).decode()
 svg = lambda f: 'data:image/svg+xml;base64,' + b64(f)
 PLACA = 'data:image/png;base64,' + b64('marketing/instagram/carrusel-placa/capas/paso5-nfc.png')
-ROJO, BLANCO, ORO = '#1B3E9C', '#FFFFFF', '#F2C94C'          # fondo azul intenso (ROJO se queda de nombre)
 W, H = 1080, 1350
+# los colores de cada letra: cara, volumen (el lado) y filo
+BLANCO = ('#FFFFFF', '#0B3F4A', '#0A2F38')
+ORO = ('#F6CC4E', '#8A5A06', '#5E3C03')
+SUAVE = ('#BFE6E4', '#0B3F4A', '#0A2F38')
 
 CSS = f'''
-@font-face{{font-family:Fredoka;font-weight:700;src:url(data:font/woff2;base64,{b64('fuente/fredoka-latin-700.woff2')})}}
-@font-face{{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,{b64('fuente/montserrat-latin.woff2')})}}
+@font-face{{font-family:Titan;src:url(data:font/woff2;base64,{b64('fuente/titan-one-latin.woff2')})}}
 *{{margin:0;padding:0;box-sizing:border-box}}
-html,body{{width:{W}px;height:{H}px;overflow:hidden;background:{ROJO}}}
-/* textura de papel: grano fino y un poco de luz en el centro, como una foto impresa */
-body::after{{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;opacity:.5;
-  background:radial-gradient(ellipse 70% 60% at 50% 45%,rgba(255,255,255,.10),rgba(0,0,0,.28)),
-  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='300' height='300' filter='url(%23r)'/></svg>");mix-blend-mode:overlay}}
-svg text{{paint-order:stroke;stroke:rgba(0,0,0,.14);stroke-width:3px}}
-.bocadillo{{position:absolute;background:#fff;color:#16255E;font-family:Fredoka;font-weight:700;border-radius:40px;padding:14px 30px;
-  box-shadow:0 10px 0 rgba(0,0,0,.18);white-space:nowrap}}
-.bocadillo::after{{content:"";position:absolute;bottom:-22px;border:14px solid transparent;border-top:18px solid #fff}}
-.bocadillo.izq::after{{left:34px}} .bocadillo.der::after{{right:34px}}
+html,body{{width:{W}px;height:{H}px;overflow:hidden}}
+/* el fondo: petroleo, entre azul y verde, con luz en el centro */
+body{{background:radial-gradient(ellipse 75% 65% at 50% 45%,#16898F 0%,#0F6A76 45%,#0A4A5A 100%)}}
+/* grano de papel por encima de todo */
+body::after{{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;opacity:.55;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 0'/></filter><rect width='320' height='320' filter='url(%23r)'/></svg>")}}
 .abs{{position:absolute}}
-.bicho{{position:absolute;filter:drop-shadow(0 18px 24px rgba(0,0,0,.35))}}
+/* Estrellita: halo detras, sombra, y un brillo que le cruza (mascara con su propia silueta) */
+.foco{{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,236,160,.55) 0%,rgba(255,220,120,.18) 38%,transparent 68%)}}
+.bicho{{position:absolute}}
+.bicho img{{display:block;width:100%;filter:drop-shadow(0 22px 26px rgba(0,20,25,.5)) drop-shadow(0 0 22px rgba(255,214,90,.45))}}
+.bicho .luz{{position:absolute;inset:0;-webkit-mask-size:100% 100%;mix-blend-mode:overlay;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.75) 42%,transparent 52%,transparent 62%,rgba(255,255,255,.4) 68%,transparent 74%)}}
+.chispa{{position:absolute}}
 '''
 
 n = 0
 
 
 def palabra(texto, x, y, tam, giro=0, curva=0, color=BLANCO):
-    """una palabra en arco: curva > 0 la dobla como una sonrisa al reves (arco hacia arriba),
-    curva < 0 hacia abajo, 0 recta. (x, y) es el centro"""
+    """una palabra en 3D: el volumen (copias hacia abajo a la derecha), la cara con un filo y
+    un moteado encima. curva > 0: arco hacia arriba; < 0: hacia abajo; 0: recta"""
     global n
     n += 1
-    largo = tam * .62 * len(texto) * 1.15
+    cara, lado, filo = color
+    largo = tam * .68 * len(texto)
     if curva == 0:
         d = f'M{x - largo / 2:.0f} {y:.0f} L{x + largo / 2:.0f} {y:.0f}'
     else:
-        r = largo / (2 * math.sin(min(abs(curva), 1.3) / 2)) / 1.0
+        r = largo / (2 * math.sin(min(abs(curva), 1.3) / 2))
         d = f'M{x - largo / 2:.0f} {y:.0f} A{r:.0f} {r:.0f} 0 0 {1 if curva > 0 else 0} {x + largo / 2:.0f} {y:.0f}'
-    return (f'<path id="p{n}" d="{d}" fill="none"/>'
-            f'<text transform="rotate({giro} {x} {y})" font-family="Fredoka" font-weight="700" font-size="{tam}" fill="{color}" '
-            f'letter-spacing="{tam * -.01:.1f}"><textPath href="#p{n}" startOffset="50%" text-anchor="middle">{texto}</textPath></text>')
+
+    def t(fill, extra=''):
+        return (f'<text font-family="Titan" font-size="{tam}" fill="{fill}" {extra}>'
+                f'<textPath href="#p{n}" startOffset="50%" text-anchor="middle">{texto}</textPath></text>')
+    capas = max(6, int(tam * .085))
+    vol = ''.join(f'<g transform="translate({i * .55:.1f} {i * .8:.1f})">{t(lado)}</g>' for i in range(capas, 0, -1))
+    filo_attr = f'stroke="{filo}" stroke-width="{tam * .035:.1f}" paint-order="stroke"'
+    return (f'<g transform="rotate({giro} {x} {y})"><path id="p{n}" d="{d}" fill="none"/>'
+            f'<g filter="url(#sombra)">{vol}</g>{t(cara, filo_attr)}<g filter="url(#moteado)">{t(cara)}</g></g>')
+
+
+FILTROS = '''<defs>
+<filter id="sombra" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="6" dy="14" stdDeviation="8" flood-color="#032028" flood-opacity=".45"/></filter>
+<filter id="moteado"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="4"/>
+  <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.05"/><feComposite in2="SourceGraphic" operator="in"/>
+  <feComponentTransfer><feFuncA type="linear" slope=".22"/></feComponentTransfer></filter>
+</defs>'''
 
 
 def lienzo(*cosas):
-    return f'<svg class="abs" style="left:0;top:0" width="{W}" height="{H}" viewBox="0 0 {W} {H}">{"".join(cosas)}</svg>'
+    return f'<svg class="abs" style="left:0;top:0" width="{W}" height="{H}" viewBox="0 0 {W} {H}">{FILTROS}{"".join(cosas)}</svg>'
 
 
-def bicho(pose, x, y, ancho, giro=0, espejo=False):
-    return (f'<img class="bicho" src="{svg(E + pose + ".svg")}" style="left:{x}px;top:{y}px;width:{ancho}px;'
-            f'transform:rotate({giro}deg){" scaleX(-1)" if espejo else ""}">')
+CHISPA = ('<svg viewBox="-10 -10 20 20" width="{t}" height="{t}"><path d="M0 -10Q1.2 -1.2 10 0Q1.2 1.2 0 10Q-1.2 1.2 -10 0Q-1.2 -1.2 0 -10Z" '
+          'fill="#FFF4C8"/></svg>')
 
 
-def bocadillo(texto, x, y, tam, giro=0, cola='izq'):
-    return f'<div class="bocadillo {cola}" style="left:{x}px;top:{y}px;font-size:{tam}px;transform:rotate({giro}deg)">{texto}</div>'
+def bicho(pose, x, y, ancho, giro=0, chispas=((-.05, .1, 44), (1.0, .25, 30), (.9, .95, 38))):
+    """Estrellita con su halo, el brillo y unos destellos alrededor (en fracciones de su ancho)"""
+    src = svg(E + pose + '.svg')
+    halo = f'<div class="foco" style="left:{x - ancho * .35:.0f}px;top:{y - ancho * .3:.0f}px;width:{ancho * 1.7:.0f}px;height:{ancho * 1.6:.0f}px"></div>'
+    ch = ''.join(f'<div class="chispa" style="left:{x + fx * ancho:.0f}px;top:{y + fy * ancho:.0f}px">{CHISPA.format(t=t)}</div>'
+                 for fx, fy, t in chispas)
+    return (halo + f'<div class="bicho" style="left:{x}px;top:{y}px;width:{ancho}px;transform:rotate({giro}deg)">'
+            f'<img src="{src}"><div class="luz" style="-webkit-mask-image:url({src})"></div></div>' + ch)
 
 
 def diapo(num, cuerpo):
@@ -82,73 +111,61 @@ def diapo(num, cuerpo):
         f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>{cuerpo}</body></html>')
 
 
-# 1 · OYEEEE por todas partes; Estrellita, enorme, se asoma por la izquierda
-diapo(1, lienzo(
-    palabra('OYEEEE', 260, 110, 96, -3, .9),
-    palabra('OYEEEE', 870, 200, 124, 7, .7),
-    palabra('OYEEEE', 520, 420, 140, 34, .8),
-    palabra('OYE', 870, 760, 320, -12, .3),
-    palabra('OYEEEE', 700, 1130, 200, -8, .7),
-    palabra('OYEEEE', 1010, 1380, 130, 28, .8),
-    palabra('OYEEEE', 300, 1390, 120, -4, .9),
-) + bicho('curiosa', -330, 430, 900, 14) + bocadillo('psst...', 40, 250, 58, -8, 'izq'))
+# 1 · OYEEEE; Estrellita, enorme, se asoma por la izquierda
+diapo(1, bicho('curiosa', -300, 470, 880, 14, ((.55, .02, 48), (.72, .5, 30), (.6, .9, 36))) + lienzo(
+    palabra('OYEEEE', 300, 130, 96, -4, .8),
+    palabra('OYEEEE', 860, 300, 110, 8, .6),
+    palabra('OYE', 820, 720, 250, -10, .3),
+    palabra('OYEEEE', 720, 1080, 150, -6, .6),
+    palabra('OYEEEE', 360, 1320, 110, 3, .7),
+))
 
-# 2 · ¿SABES LO QUE DICEN DE TU BAR? · Estrellita apuntando en su libreta, entrando por la derecha
+# 2 · ¿SABES LO QUE DICEN DE TU BAR?  (Estrellita con su libreta, entrando por la derecha)
 diapo(2, lienzo(
-    palabra('PSST', 170, 120, 90, -14, .6),
-    palabra('PSST', 900, 110, 80, 16, .6),
-    palabra('PSST', 70, 1270, 110, 20, .6),
-    palabra('PSST', 560, 1330, 80, -6, .6),
-    palabra('¿SABES', 430, 330, 150, -4, .25),
-    palabra('LO QUE', 430, 515, 150, 3, .2),
-    palabra('DICEN', 420, 700, 180, -3, .2),
-    palabra('DE TU BAR?', 460, 880, 150, 2, .3, ORO),
-) + bicho('apunta-izq', 560, 780, 700, -8) + bocadillo('lo apunto todo', 330, 1010, 44, -4, 'der'))
+    palabra('PSST', 190, 110, 76, -12, .5, SUAVE),
+    palabra('PSST', 900, 120, 66, 14, .5, SUAVE),
+    palabra('¿SABES', 420, 320, 130, -4, .2),
+    palabra('LO QUE', 420, 500, 130, 3, .15),
+    palabra('DICEN', 400, 690, 150, -3, .15),
+    palabra('DE TU BAR?', 420, 880, 118, 2, .25, ORO),
+) + bicho('apunta-izq', 590, 800, 660, -8, ((.1, .05, 40), (.95, .3, 30))))
 
-# 3 · NADA. · Estrellita sentada, con la cara de circunstancias
+# 3 · NADA.  (Estrellita sentada, con cara de circunstancias)
 diapo(3, lienzo(
-    palabra('NADA.', 540, 500, 340, -4, .15),
-    palabra('NADA', 180, 140, 80, -12, .5, '#8FA3DA'),
-    palabra('NADA', 900, 230, 70, 10, .5, '#8FA3DA'),
-    palabra('nada de nada', 870, 820, 54, -8, .4, '#8FA3DA'),
-    palabra('cri...', 150, 760, 62, -10, 0, '#C7D2F2'),
-    palabra('cri...', 170, 1000, 50, 6, 0, '#C7D2F2'),
-    palabra('cri...', 960, 1000, 66, -6, 0, '#C7D2F2'),
-    palabra('ni una reseña', 540, 1320, 60, 0, .2, '#8FA3DA'),
-) + bicho('sentada', 200, 620, 680) + bocadillo('...', 700, 560, 70, 4, 'izq'))
+    palabra('NADA.', 540, 470, 300, -4, .12),
+    palabra('cri...', 170, 780, 60, -10, 0, SUAVE),
+    palabra('cri...', 920, 860, 64, 8, 0, SUAVE),
+    palabra('ni una reseña', 540, 1300, 62, 0, .15, SUAVE),
+) + bicho('sentada', 230, 590, 640, 0, ((.05, .15, 40), (.92, .1, 34))))
 
-# 4 · SALEN ENCANTADOS... Y SE LES OLVIDA. · Estrellita apoyada en las letras, resignada
+# 4 · SALEN ENCANTADOS... Y SE LES OLVIDA.  (Estrellita apoyada, resignada)
 diapo(4, lienzo(
-    palabra('SALEN', 540, 190, 180, -3, .2),
-    palabra('ENCANTADOS...', 540, 370, 122, 2, .35),
-    palabra('Y SE LES OLVIDA.', 540, 590, 106, -2, .3, ORO),
-    palabra('se les olvida', 230, 760, 62, -12, .5, '#C7D2F2'),
-    palabra('se les olvida', 860, 820, 54, 10, .5, '#9FB0E0'),
-    palabra('se les olvida', 220, 950, 46, 6, .5, '#7A8FCC'),
-    palabra('se les olvida', 870, 1010, 40, -8, .5, '#5C74BD'),
-    palabra('se les olvi...', 200, 1130, 34, 4, .5, '#4863B0'),
-    palabra('se le...', 900, 1200, 28, -6, .5, '#3A56A6'),
-) + bicho('apoyada-izq', 420, 690, 700, 0) + bocadillo('otra vez...', 180, 1180, 46, -4, 'der'))
+    palabra('SALEN', 540, 190, 160, -3, .15),
+    palabra('ENCANTADOS...', 540, 370, 104, 2, .3),
+    palabra('Y SE LES OLVIDA.', 540, 570, 90, -2, .25, ORO),
+    palabra('se les olvida', 230, 790, 50, -10, .4, SUAVE),
+    palabra('se les olv...', 250, 960, 40, 6, .4, ('#8FC9C6', '#0B3F4A', '#0A2F38')),
+    palabra('se le...', 240, 1110, 32, -4, .4, ('#62A9A7', '#0B3F4A', '#0A2F38')),
+) + bicho('apoyada-izq', 430, 690, 680, 0, ((.1, .05, 40), (.95, .4, 32))))
 
-# 5 · TRANQUI, YO ME ENCARGO. · la placa y Estrellita haciendo ¡tachan! desde la derecha
+# 5 · TRANQUI, YO ME ENCARGO.  (la placa y Estrellita haciendo ¡tachan!)
 diapo(5, lienzo(
-    palabra('TRANQUI,', 540, 170, 170, -3, .25),
-    palabra('YO ME ENCARGO.', 540, 330, 116, 2, .3, ORO),
-    palabra('Tu cliente la toca y te deja la reseña.', 540, 1300, 44, 0, 0, '#C7D2F2'),
-) + f'''<div class="abs" style="left:40px;top:430px;width:600px;height:600px;transform:rotate(-8deg);
-  filter:drop-shadow(0 30px 34px rgba(0,0,0,.45))">
+    palabra('TRANQUI,', 540, 170, 150, -3, .2),
+    palabra('YO ME ENCARGO.', 540, 330, 100, 2, .25, ORO),
+    palabra('la tocan y te dejan la reseña', 540, 1300, 44, 0, 0, SUAVE),
+) + f'''<div class="abs" style="left:40px;top:440px;width:580px;height:580px;transform:rotate(-8deg);
+  filter:drop-shadow(0 30px 34px rgba(0,20,25,.5))">
   {''.join(f'<div style="position:absolute;inset:0;border-radius:4.2%;transform:translateY({i}px);background:rgba({205 + 2 * i},{222 + i},{220 + i},.97)"></div>' for i in range(12, 0, -1))}
   <img src="{PLACA}" style="position:absolute;inset:0;width:100%;height:100%;border-radius:4.2%"></div>'''
-  + bicho('tachan', 560, 600, 640, 8) + bocadillo('¡TACHÁN!', 690, 500, 60, 6, 'izq'))
+  + bicho('tachan', 540, 560, 640, 8, ((-.02, .05, 46), (.95, .02, 40), (.98, .7, 30))))
 
-# 6 · COMENTA PLACA · Estrellita salta desde abajo a la izquierda
+# 6 · COMENTA PLACA  (Estrellita sale saltando desde abajo a la izquierda)
 diapo(6, lienzo(
-    palabra('PLACA', 230, 120, 100, -4, .8),
-    palabra('PLACA', 880, 210, 124, 8, .7),
-    palabra('PLACA', 90, 420, 80, -28, .7),
-    palabra('COMENTA', 600, 480, 180, -6, .35),
-    palabra('PLACA', 640, 720, 290, 4, .25, ORO),
-    palabra('PLACA', 960, 1000, 110, -22, .7),
-    palabra('plea5e.es', 820, 1290, 56, -4, 0, '#C7D2F2'),
-) + bicho('salta', -120, 760, 640, -12) + bocadillo('¡corre!', 390, 800, 52, -8, 'izq'))
+    palabra('PLACA', 250, 130, 90, -4, .6),
+    palabra('PLACA', 870, 230, 104, 8, .5),
+    palabra('COMENTA', 580, 480, 150, -5, .25),
+    palabra('PLACA', 620, 700, 240, 3, .2, ORO),
+    palabra('PLACA', 930, 1030, 90, -18, .5),
+    palabra('plea5e.es', 820, 1290, 52, -4, 0, SUAVE),
+) + bicho('salta', -110, 760, 640, -12, ((.95, .05, 44), (.2, -.02, 34), (1.0, .55, 30))))
 print('6 diapositivas')

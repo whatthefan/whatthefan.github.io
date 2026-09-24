@@ -33,3 +33,7 @@ carrusel-placa). SIL Open Font License 1.1; su licencia va en ofl-caveat.txt.
 fredoka-latin-700.woff2 (Fredoka Bold, letra redonda y gorda) es para el
 carrusel "OYEEEE" de Instagram (marketing/instagram/oyeeee/). Viene del
 paquete @fontsource/fredoka. SIL Open Font License 1.1: ofl-fredoka.txt.
+
+titan-one-latin.woff2 (Titan One) es la letra en 3D del carrusel "OYEEEE"
+(marketing/instagram/oyeeee/). Viene de @fontsource/titan-one. SIL Open Font
+License 1.1: ofl-titan-one.txt.

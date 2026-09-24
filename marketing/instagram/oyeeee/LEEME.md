@@ -1,19 +1,20 @@
 # Carrusel "OYEEEE" (6 fotos, 1080×1350)
 
-El estilo de la referencia del perro que cuchichea: fondo azul intenso liso, con grano de papel, una
-palabra en letra redonda y gorda repetida por toda la foto (en arco, girada,
-de varios tamaños y cortada por los bordes) y el personaje asomándose. Aquí el
-personaje es **Estrellita**, y la historia va de cotilleo:
+El estilo de la referencia del perro que cuchichea: fondo liso, una palabra gorda
+repetida por la foto (en arco, girada, de varios tamaños y cortada por los bordes)
+y el personaje asomándose. Aquí el personaje es **Estrellita**, y es el centro:
+grande, con un halo de luz detrás, un brillo que le cruza y destellos alrededor.
 
-1. **OYEEEE** por todas partes. Estrellita, enorme, se asoma por la izquierda: *"psst..."*
-2. **¿SABES LO QUE DICEN DE TU BAR?** Entra por la derecha con su libreta: *"lo apunto todo"*
-3. **NADA.** Sentada, cara de circunstancias, *"..."*, cri... cri... y *ni una reseña*
-4. **SALEN ENCANTADOS... Y SE LES OLVIDA.** Apoyada, resignada: *"otra vez..."*
-5. **TRANQUI, YO ME ENCARGO.** La placa y Estrellita: *"¡TACHÁN!"*
-6. **COMENTA PLACA.** Sale saltando: *"¡corre!"* · plea5e.es
+Todo con textura: el fondo petróleo (entre azul y verde) con grano de papel; las
+letras (**Titan One**, SIL OFL, en `fuente/`) en 3D, con volumen, filo, sombra y
+un moteado fino, como impresas. Sin bocadillos y con aire entre las palabras.
 
-Letra: Fredoka Bold (SIL OFL, en `fuente/`). Fondo azul #1B3E9C con grano, blanco y el oro de
-la marca en las palabras clave.
+1. **OYEEEE**: Estrellita, enorme, se asoma por la izquierda
+2. **¿SABES LO QUE DICEN DE TU BAR?**: entra por la derecha con su libreta
+3. **NADA.**: sentada, con cara de circunstancias · cri... cri... · *ni una reseña*
+4. **SALEN ENCANTADOS... Y SE LES OLVIDA.**: apoyada, resignada; el "se les olvida" se va borrando
+5. **TRANQUI, YO ME ENCARGO.**: la placa y Estrellita haciendo "¡tachán!"
+6. **COMENTA PLACA**: sale saltando · plea5e.es
 
 **Texto de la publicación:**
 
