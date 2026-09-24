@@ -13,7 +13,7 @@ const C = 'marketing/instagram/carrusel-placa/', D = 'marketing/instagram/produc
   const pon = async (sel, v) => { await pg.fill(sel, v); await pg.dispatchEvent(sel, 'input'); };
   const color = (sel, v) => pg.evaluate(([s, v]) => { const e = document.querySelector(s); e.value = v;
     e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); }, [sel, v]);
-  for (const formato of ['placa', 'stand']) {
+  for (const formato of ['placa', 'stand', 'tarjeta']) {
     await pg.click(`#fFormato button[data-v="${formato}"]`);
     await pg.setInputFiles('#fLogo', C + 'logo-ejemplo.png');
     await pg.waitForTimeout(800);
