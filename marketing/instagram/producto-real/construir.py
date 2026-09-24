@@ -42,7 +42,7 @@ def diapo(n, cuerpo):
 # 1 · la placa en la mano con el anillo de letras. La foto (1932x2576) se escala a 0,64 y se
 # coloca para que el centro de la placa (846, 1400 en la foto) caiga en el centro de la foto
 K = .64
-CX, CY, RAD = 540, 675, 480
+CX, CY = 540, 675
 IX, IY = CX - 846 * K, CY - 1400 * K
 anillo = ' • '.join(['5 estrellas'] * 5) + ' • '
 # el fondo se desenfoca mas (como un objetivo abierto), sin tocar la placa ni el centro
@@ -55,21 +55,23 @@ FOTO1 = f"""<div class="abs" style="inset:0;filter:contrast(1.1) saturate(1.22) 
 <div class="abs" style="inset:0;mix-blend-mode:soft-light;background:radial-gradient(ellipse 90% 70% at 85% 5%,rgba(255,190,110,.75),transparent 60%),
   linear-gradient(180deg,rgba(40,90,160,.35),transparent 35%)"></div>
 <div class="abs" style="inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 60%,rgba(10,14,22,.35) 100%)"></div>"""
-# el anillo es una elipse (mas alta que ancha) que pasa justo por el pulgar
-RX, RY, EY = 470, 600, 700
-largo = math.pi * (3 * (RX + RY) - math.sqrt((3 * RX + RY) * (RX + 3 * RY)))
-# el pulgar, dibujado a mano sobre la foto: lo que hay dentro va POR ENCIMA de las letras,
-# asi el anillo pasa por detras del dedo, como las letras de la hamburguesa por detras de la mano
-PULGAR = [(150, 150), (175, 152), (198, 168), (212, 215), (220, 290), (224, 350), (228, 420),
-          (60, 445), (78, 370), (95, 300), (108, 230), (122, 175)]
+# el anillo: un circulo perfecto alrededor de la placa, que pasa por el pulgar y la mano
+RAD = 492
+largo = 2 * math.pi * RAD
+# la mano (con la placa dentro, que da igual: las letras no la tocan), dibujada a mano sobre la
+# foto. Lo que hay dentro va POR ENCIMA de las letras: el anillo pasa por detras del pulgar y de
+# la mano, como las letras de la hamburguesa por detras del brazo
+MANO_CONTORNO = [(150, 150), (175, 152), (198, 168), (212, 215), (222, 300), (226, 345), (860, 345), (885, 1000),
+                 (880, 1040), (820, 1085), (650, 1120), (500, 1150), (380, 1185), (300, 1215), (200, 1270),
+                 (100, 1320), (40, 1350), (0, 1350), (0, 400), (45, 395), (78, 370), (95, 300), (108, 230), (122, 175)]
 MASCARA = ("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1080' height='1350'>"
            "<filter id='f'><feGaussianBlur stdDeviation='2.5'/></filter><polygon filter='url(%23f)' fill='white' points='"
-           + ' '.join(f'{x},{y}' for x, y in PULGAR) + "'/></svg>")
+           + ' '.join(f'{x},{y}' for x, y in MANO_CONTORNO) + "'/></svg>")
 diapo(1, f"""{FOTO1}
 <svg class="abs" style="left:0;top:0" width="1080" height="1350">
-  <defs><path id="aro" d="M{CX - RX} {EY} a{RX} {RY} 0 1 1 {2 * RX} 0 a{RX} {RY} 0 1 1 {-2 * RX} 0"/>
+  <defs><path id="aro" d="M{CX - RAD} {CY} a{RAD} {RAD} 0 1 1 {2 * RAD} 0 a{RAD} {RAD} 0 1 1 {-2 * RAD} 0"/>
   <filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#000" flood-opacity=".35"/></filter></defs>
-  <g filter="url(#s)"><text font-family="Mont" font-weight="500" font-size="44" fill="#fff" letter-spacing="9">
+  <g filter="url(#s)"><text font-family="Mont" font-weight="500" font-size="40" fill="#fff" letter-spacing="9">
     <textPath href="#aro" textLength="{largo - 30:.0f}" lengthAdjust="spacing">{anillo}</textPath></text></g>
 </svg>
 <div class="abs" style="inset:0;-webkit-mask-image:url(&quot;{MASCARA}&quot;);-webkit-mask-size:1080px 1350px">{FOTO1}</div>""")
