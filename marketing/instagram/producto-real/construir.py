@@ -48,7 +48,7 @@ anillo = ' • '.join(['5 estrellas'] * 5) + ' • '
 # el fondo se desenfoca mas (como un objetivo abierto), sin tocar la placa ni el centro
 # de la mano: una copia borrosa encima, con un agujero redondo alrededor de la placa
 FOCO = 'radial-gradient(ellipse 680px 780px at 500px 760px, transparent 70%, #000 100%)'
-FOTO1 = f"""<div class="abs" style="inset:0;filter:contrast(1.1) saturate(1.22) brightness(.96) sepia(.1)">
+FOTO1 = f"""<div class="abs" style="inset:0;filter:contrast(1.03) saturate(1.06)">
   <img class="abs" src="{MANO}" style="left:{IX:.0f}px;top:{IY:.0f}px;width:{1932 * K:.0f}px">
   <img class="abs" src="{MANO}" style="left:{IX:.0f}px;top:{IY:.0f}px;width:{1932 * K:.0f}px;filter:blur(4px);
     -webkit-mask-image:{FOCO}"></div>

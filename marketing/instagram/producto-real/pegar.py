@@ -94,7 +94,7 @@ def borrar(im, x0, y0, x1, y1, libre=None):
     return im * (1 - borde) + (grande + ruido) * borde
 
 
-def pegar(foto, diseno, esquinas, luz='placa', margen=0, salida=None, tapar=None):
+def pegar(foto, diseno, esquinas, luz='placa', margen=0, salida=None, tapar=None, revelar_foto=False):
     im = lee(R + 'fotos/' + foto)
     if tapar:
         im = borrar(im, *tapar[:4], libre=tapar[4] if len(tapar) > 4 else None)
@@ -129,18 +129,36 @@ def pegar(foto, diseno, esquinas, luz='placa', margen=0, salida=None, tapar=None
     tinte = np.array([np.percentile(trozo[..., c][a > .5], 95) for c in range(3)])
     tinte = tinte / tinte.max()
     color = color * (.35 + .65 * tinte)
-    color = nd.gaussian_filter(color, (.6, .6, 0))
+    color = nd.gaussian_filter(color, (.35, .35, 0))
     ruido = np.random.default_rng(1).normal(0, .012, color.shape[:2])[..., None]
     color = color + ruido
     im[y0:y1, x0:x1] = trozo * (1 - a[..., None]) + color * a[..., None]
+    if revelar_foto:
+        im = revelar(im)
     guarda(im, R + 'fotos/' + (salida or 'editada-' + foto))
+    return im
+
+
+def revelar(im):
+    """el 'revelado' de la foto a contraluz: le quita la neblina (niveles), le da
+    claridad (contraste local), la enfoca un poco y le sube el color. Es lo que hace que
+    la del expositor, con sol directo, se vea tan nitida: aqui se le da lo mismo"""
+    lo, hi = np.percentile(im, .3, axis=(0, 1)) * .6, np.percentile(im, 99.9, axis=(0, 1))
+    im = np.clip((im - lo) / (hi - lo), 0, 1)
+    L = im.mean(2, keepdims=True)
+    im = im + .18 * (L - nd.gaussian_filter(L, (40, 40, 0)))           # claridad
+    im = im + .45 * (im - nd.gaussian_filter(im, (1.2, 1.2, 0)))         # enfoque
+    L = im.mean(2, keepdims=True)
+    im = L + 1.1 * (im - L)                                            # color
+    im = im * np.array([1.02, 1.0, .97])                                # un punto calido
+    im = np.clip(im, 0, 1)                                      # sombras un poco mas hondas
     return im
 
 
 if __name__ == '__main__':
     # la placa de mesa (9x9) en la mano
     pegar('placa-en-mano.jpg', 'placa.png', [(337, 870), (1341, 892), (1351, 1891), (352, 1937)], 'placa', margen=6,
-          tapar=(1116, 2000, 1932, 2576, (900, 1850, 1440, 2000)))                     # la tarjeta de otra marca que asoma abajo
+          tapar=(1116, 2000, 1932, 2576, (900, 1850, 1440, 2000)), revelar_foto=True)                     # la tarjeta de otra marca que asoma abajo
     # el expositor de pie en la cornisa (la cara de delante, antes de la doblez)
     pegar('expositor-cornisa.jpg', 'stand.png', [(836, 173), (1437, 242), (1610, 1213), (941, 1332)], 'impresa', margen=4)
     print('fotos editadas')
