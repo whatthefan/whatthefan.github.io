@@ -7,9 +7,9 @@ notificaciones del móvil.
 - **Arriba:** la placa sobre la mesa de mármol (la foto de Flow
   `../producto-real/fotos/placa-marmol.jpg`), recortada sin el café, el azúcar
   ni la cuchara.
-- **Abajo:** un abanico de tarjetas de mano sobre el mismo mármol, con sombra y
+- **Abajo:** el expositor de pie al sol (la foto real editada) y, a un lado, tarjetas de mano en abanico en el suelo, con sombra y
   brillo. El diseño sale de `../producto-real/disenos.js`.
-- **Título:** *Las únicas notificaciones que quiero ver:*
+- **Título:** *Las únicas notificaciones que quiero ver:*, en 3D con sombra y textura. Se exporta a 2160×2700.
 - **Notificaciones:** Google, reseña ★★★★★ «¡Trato de diez! Volveremos.» ·
   Instagram, mención en una historia · Google, reseña ★★★★★ «Nos lo dijo la
   placa de la mesa.»
