@@ -9,9 +9,9 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;o
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 0'/></filter><rect width='320' height='320' filter='url(%23r)'/></svg>")}
 .abs{position:absolute}
 /* Estrellita: halo detras, sombra, y un brillo que le cruza (mascara con su propia silueta) */
-.foco{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,236,160,.55) 0%,rgba(255,220,120,.18) 38%,transparent 68%)}
+.foco{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,236,160,.28) 0%,rgba(255,220,120,.08) 38%,transparent 68%)}
 .bicho{position:absolute}
-.bicho img{display:block;width:100%;filter:drop-shadow(0 22px 26px rgba(0,20,25,.5)) drop-shadow(0 0 22px rgba(255,214,90,.45))}
+.bicho img{display:block;width:100%;filter:drop-shadow(0 22px 26px rgba(0,20,25,.5)) drop-shadow(0 0 14px rgba(255,214,90,.18))}
 .bicho .luz{position:absolute;inset:0;-webkit-mask-size:100% 100%;mix-blend-mode:overlay;
   background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.75) 42%,transparent 52%,transparent 62%,rgba(255,255,255,.4) 68%,transparent 74%)}
 .chispa{position:absolute}

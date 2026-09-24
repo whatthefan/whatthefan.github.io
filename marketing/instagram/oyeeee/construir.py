@@ -45,9 +45,9 @@ body::after{{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 0'/></filter><rect width='320' height='320' filter='url(%23r)'/></svg>")}}
 .abs{{position:absolute}}
 /* Estrellita: halo detras, sombra, y un brillo que le cruza (mascara con su propia silueta) */
-.foco{{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,236,160,.55) 0%,rgba(255,220,120,.18) 38%,transparent 68%)}}
+.foco{{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,236,160,.28) 0%,rgba(255,220,120,.08) 38%,transparent 68%)}}
 .bicho{{position:absolute}}
-.bicho img{{display:block;width:100%;filter:drop-shadow(0 22px 26px rgba(0,20,25,.5)) drop-shadow(0 0 22px rgba(255,214,90,.45))}}
+.bicho img{{display:block;width:100%;filter:drop-shadow(0 22px 26px rgba(0,20,25,.5)) drop-shadow(0 0 14px rgba(255,214,90,.18))}}
 .bicho .luz{{position:absolute;inset:0;-webkit-mask-size:100% 100%;mix-blend-mode:overlay;
   background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.75) 42%,transparent 52%,transparent 62%,rgba(255,255,255,.4) 68%,transparent 74%)}}
 .chispa{{position:absolute}}
@@ -85,6 +85,19 @@ FILTROS = '''<defs>
   <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.05"/><feComposite in2="SourceGraphic" operator="in"/>
   <feComponentTransfer><feFuncA type="linear" slope=".22"/></feComponentTransfer></filter>
 </defs>'''
+
+
+def CINCO_ESTRELLAS(x0, y, tam, hueco=18):
+    """cinco estrellas doradas en 3D, como las letras: volumen, filo y sombra"""
+    pt = lambda cx, cy, k, r: (cx + r * math.sin(math.pi * k / 5), cy - r * math.cos(math.pi * k / 5))
+    salida = ''
+    for i in range(5):
+        cx = x0 + i * (tam + hueco) + tam / 2
+        d = 'M' + 'L'.join(f'{a:.1f} {b:.1f}' for a, b in (pt(cx, y, j, tam / 2 if j % 2 == 0 else tam / 4.6) for j in range(10))) + 'Z'
+        vol = ''.join(f'<path d="{d}" fill="{ORO[1]}" transform="translate({k * .55:.1f} {k * .8:.1f})"/>' for k in range(8, 0, -1))
+        salida += (f'<g transform="rotate({(i - 2) * 6} {cx} {y})"><g filter="url(#sombra)">{vol}</g>'
+                   f'<path d="{d}" fill="{ORO[0]}" stroke="{ORO[2]}" stroke-width="3.5" stroke-linejoin="round"/></g>')
+    return salida
 
 
 def lienzo(*cosas):
@@ -137,6 +150,10 @@ diapo(2, lienzo(
     palabra('LO QUE', 420, 500, 130, 3, .15),
     palabra('DICEN', 400, 690, 150, -3, .15),
     palabra('DE TU BAR?', 420, 880, 118, 2, .25, ORO),
+    palabra('?', 170, 1080, 170, -14),
+    palabra('?', 350, 1180, 120, 10, 0, ORO),
+    palabra('?', 500, 1060, 90, 18, 0, SUAVE),
+    palabra('¿?', 280, 1300, 80, -6, 0, SUAVE),
 ) + bicho('palomitas-izq', 560, 690, 660, -6, ((.1, .12, 40), (.95, .35, 30))))
 
 # 3 · NADA.  (Estrellita sentada, con cara de circunstancias)
@@ -162,6 +179,7 @@ diapo(5, lienzo(
     palabra('TRANQUI,', 540, 170, 150, -3, .2),
     palabra('YO ME ENCARGO.', 540, 330, 100, 2, .25, ORO),
     palabra('la tocan y te dejan la reseña', 540, 1300, 44, 0, 0, SUAVE),
+    CINCO_ESTRELLAS(294, 1175, 84),
 ) + f'''<div class="abs" style="left:40px;top:440px;width:580px;height:580px;transform:rotate(-8deg);
   filter:drop-shadow(0 30px 34px rgba(0,20,25,.5))">
   {''.join(f'<div style="position:absolute;inset:0;border-radius:4.2%;transform:translateY({i}px);background:rgba({205 + 2 * i},{222 + i},{220 + i},.97)"></div>' for i in range(12, 0, -1))}
