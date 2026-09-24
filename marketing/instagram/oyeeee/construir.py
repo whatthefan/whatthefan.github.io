@@ -9,7 +9,7 @@ Todo con textura: el fondo (entre azul y verde) con grano de papel; las letras
 el suelo y un moteado fino, como impresas.
 
 La historia, en cotilleo:
-  1. OYEEEE                       (Estrellita se asoma, enorme)
+  1. OYEEEE                       (Estrellita cuchicheando, enorme)
   2. ¿SABES LO QUE DICEN DE TU BAR?
   3. NADA.
   4. SALEN ENCANTADOS... Y SE LES OLVIDA.
@@ -24,7 +24,7 @@ import math
 import os
 
 O = 'marketing/instagram/oyeeee/'
-E = 'public/marca/estrellita/'
+E = 'marketing/instagram/personaje/svg/'          # las poses de Instagram (guantes con dedos, cosas en la mano)
 b64 = lambda f: base64.b64encode(open(f, 'rb').read()).decode()
 svg = lambda f: 'data:image/svg+xml;base64,' + b64(f)
 PLACA = 'data:image/png;base64,' + b64('marketing/instagram/carrusel-placa/capas/paso5-nfc.png')
@@ -105,6 +105,14 @@ def bicho(pose, x, y, ancho, giro=0, chispas=((-.05, .1, 44), (1.0, .25, 30), (.
             f'<img src="{src}"><div class="luz" style="-webkit-mask-image:url({src})"></div></div>' + ch)
 
 
+# una rodadora (la bola de matojos de las pelis del oeste) cruzando: aqui no pasa nada
+RODADORA = ('<svg class="abs" style="left:60px;top:1000px" width="230" height="230" viewBox="-60 -60 120 120">'
+            '<ellipse cx="0" cy="58" rx="46" ry="8" fill="rgba(3,32,40,.35)"/>'
+            + ''.join(f'<ellipse cx="0" cy="0" rx="{48 - i * 3}" ry="{40 - i * 4}" transform="rotate({i * 37})" fill="none" '
+                      f'stroke="{c}" stroke-width="{3 + i % 2}"/>' for i, c in enumerate(['#A8773A', '#8A5C26', '#C4955A'] * 3))
+            + '<path d="M-70 10 L-100 10 M-66 -12 L-92 -16 M-64 30 L-88 36" stroke="#BFE6E4" stroke-width="5" stroke-linecap="round" opacity=".7"/></svg>')
+
+
 def diapo(num, cuerpo):
     os.makedirs(O + 'diapositivas', exist_ok=True)
     open(f'{O}diapositivas/{num}.html', 'w').write(
@@ -112,8 +120,9 @@ def diapo(num, cuerpo):
 
 
 # 1 · OYEEEE; Estrellita, enorme, se asoma por la izquierda
-diapo(1, bicho('curiosa', -300, 470, 880, 14, ((.55, .02, 48), (.72, .5, 30), (.6, .9, 36))) + lienzo(
+diapo(1, bicho('susurra', -290, 330, 880, 10, ((.55, .12, 48), (.75, .55, 30), (.62, .98, 36))) + lienzo(
     palabra('OYEEEE', 300, 130, 96, -4, .8),
+    palabra('OYE', 330, 330, 130, 10, .3),
     palabra('OYEEEE', 860, 300, 110, 8, .6),
     palabra('OYE', 820, 720, 250, -10, .3),
     palabra('OYEEEE', 720, 1080, 150, -6, .6),
@@ -128,7 +137,7 @@ diapo(2, lienzo(
     palabra('LO QUE', 420, 500, 130, 3, .15),
     palabra('DICEN', 400, 690, 150, -3, .15),
     palabra('DE TU BAR?', 420, 880, 118, 2, .25, ORO),
-) + bicho('apunta-izq', 590, 800, 660, -8, ((.1, .05, 40), (.95, .3, 30))))
+) + bicho('palomitas-izq', 560, 690, 660, -6, ((.1, .12, 40), (.95, .35, 30))))
 
 # 3 · NADA.  (Estrellita sentada, con cara de circunstancias)
 diapo(3, lienzo(
@@ -136,7 +145,7 @@ diapo(3, lienzo(
     palabra('cri...', 170, 780, 60, -10, 0, SUAVE),
     palabra('cri...', 920, 860, 64, 8, 0, SUAVE),
     palabra('ni una reseña', 540, 1300, 62, 0, .15, SUAVE),
-) + bicho('sentada', 230, 590, 640, 0, ((.05, .15, 40), (.92, .1, 34))))
+) + RODADORA + bicho('gota', 230, 520, 640, 0, ((.05, .2, 40), (.92, .18, 34))))
 
 # 4 · SALEN ENCANTADOS... Y SE LES OLVIDA.  (Estrellita apoyada, resignada)
 diapo(4, lienzo(
@@ -146,7 +155,7 @@ diapo(4, lienzo(
     palabra('se les olvida', 230, 790, 50, -10, .4, SUAVE),
     palabra('se les olv...', 250, 960, 40, 6, .4, ('#8FC9C6', '#0B3F4A', '#0A2F38')),
     palabra('se le...', 240, 1110, 32, -4, .4, ('#62A9A7', '#0B3F4A', '#0A2F38')),
-) + bicho('apoyada-izq', 430, 690, 680, 0, ((.1, .05, 40), (.95, .4, 32))))
+) + bicho('apoyada-izq', 430, 600, 680, 0, ((.1, .12, 40), (.95, .45, 32))))
 
 # 5 · TRANQUI, YO ME ENCARGO.  (la placa y Estrellita haciendo ¡tachan!)
 diapo(5, lienzo(
@@ -157,7 +166,7 @@ diapo(5, lienzo(
   filter:drop-shadow(0 30px 34px rgba(0,20,25,.5))">
   {''.join(f'<div style="position:absolute;inset:0;border-radius:4.2%;transform:translateY({i}px);background:rgba({205 + 2 * i},{222 + i},{220 + i},.97)"></div>' for i in range(12, 0, -1))}
   <img src="{PLACA}" style="position:absolute;inset:0;width:100%;height:100%;border-radius:4.2%"></div>'''
-  + bicho('tachan', 540, 560, 640, 8, ((-.02, .05, 46), (.95, .02, 40), (.98, .7, 30))))
+  + bicho('elegante', 470, 380, 700, 4, ((-.02, .2, 46), (.95, .12, 40), (.98, .8, 30))))
 
 # 6 · COMENTA PLACA  (Estrellita sale saltando desde abajo a la izquierda)
 diapo(6, lienzo(
@@ -167,5 +176,5 @@ diapo(6, lienzo(
     palabra('PLACA', 620, 700, 240, 3, .2, ORO),
     palabra('PLACA', 930, 1030, 90, -18, .5),
     palabra('plea5e.es', 820, 1290, 52, -4, 0, SUAVE),
-) + bicho('salta', -110, 760, 640, -12, ((.95, .05, 44), (.2, -.02, 34), (1.0, .55, 30))))
+) + bicho('megafono', -120, 700, 620, -6, ((.95, .1, 44), (.2, .08, 34), (1.0, .7, 30))))
 print('6 diapositivas')

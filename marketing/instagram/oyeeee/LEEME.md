@@ -9,12 +9,14 @@ Todo con textura: el fondo petróleo (entre azul y verde) con grano de papel; la
 letras (**Titan One**, SIL OFL, en `fuente/`) en 3D, con volumen, filo, sombra y
 un moteado fino, como impresas. Sin bocadillos y con aire entre las palabras.
 
-1. **OYEEEE**: Estrellita, enorme, se asoma por la izquierda
-2. **¿SABES LO QUE DICEN DE TU BAR?**: entra por la derecha con su libreta
-3. **NADA.**: sentada, con cara de circunstancias · cri... cri... · *ni una reseña*
+1. **OYEEEE**: Estrellita, enorme, cuchicheando por la izquierda
+2. **¿SABES LO QUE DICEN DE TU BAR?**: entra por la derecha con un cubo de palomitas
+3. **NADA.**: sentada, con una gota de sudor, una rodadora cruzando y cri... cri... · *ni una reseña*
 4. **SALEN ENCANTADOS... Y SE LES OLVIDA.**: apoyada, resignada; el "se les olvida" se va borrando
-5. **TRANQUI, YO ME ENCARGO.**: la placa y Estrellita haciendo "¡tachán!"
-6. **COMENTA PLACA**: sale saltando · plea5e.es
+5. **TRANQUI, YO ME ENCARGO.**: con chistera, monóculo y bastón, junto a la placa
+6. **COMENTA PLACA**: gritándolo con un megáfono · plea5e.es
+
+Las poses salen de `marketing/instagram/personaje/` (ver su LEEME).
 
 **Texto de la publicación:**
 
