@@ -9,6 +9,7 @@ Desde la raiz del repo:  python3 marketing/instagram/producto-real/construir.py
 y despues:               node marketing/instagram/producto-real/hacer-png.js
 """
 import base64
+import math
 import os
 
 R = 'marketing/instagram/producto-real/'
@@ -47,20 +48,31 @@ anillo = ' • '.join(['5 estrellas'] * 5) + ' • '
 # el fondo se desenfoca mas (como un objetivo abierto), sin tocar la placa ni el centro
 # de la mano: una copia borrosa encima, con un agujero redondo alrededor de la placa
 FOCO = 'radial-gradient(ellipse 680px 780px at 500px 760px, transparent 70%, #000 100%)'
-diapo(1, f'''<div class="abs" style="inset:0;filter:contrast(1.1) saturate(1.22) brightness(.96) sepia(.1)">
+FOTO1 = f"""<div class="abs" style="inset:0;filter:contrast(1.1) saturate(1.22) brightness(.96) sepia(.1)">
   <img class="abs" src="{MANO}" style="left:{IX:.0f}px;top:{IY:.0f}px;width:{1932 * K:.0f}px">
   <img class="abs" src="{MANO}" style="left:{IX:.0f}px;top:{IY:.0f}px;width:{1932 * K:.0f}px;filter:blur(4px);
     -webkit-mask-image:{FOCO}"></div>
 <div class="abs" style="inset:0;mix-blend-mode:soft-light;background:radial-gradient(ellipse 90% 70% at 85% 5%,rgba(255,190,110,.75),transparent 60%),
   linear-gradient(180deg,rgba(40,90,160,.35),transparent 35%)"></div>
-<div class="abs" style="inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 60%,rgba(10,14,22,.35) 100%)"></div>
+<div class="abs" style="inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 60%,rgba(10,14,22,.35) 100%)"></div>"""
+# el anillo es una elipse (mas alta que ancha) que pasa justo por el pulgar
+RX, RY, EY = 470, 600, 700
+largo = math.pi * (3 * (RX + RY) - math.sqrt((3 * RX + RY) * (RX + 3 * RY)))
+# el pulgar, dibujado a mano sobre la foto: lo que hay dentro va POR ENCIMA de las letras,
+# asi el anillo pasa por detras del dedo, como las letras de la hamburguesa por detras de la mano
+PULGAR = [(150, 150), (175, 152), (198, 168), (212, 215), (220, 290), (224, 350), (228, 420),
+          (60, 445), (78, 370), (95, 300), (108, 230), (122, 175)]
+MASCARA = ("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1080' height='1350'>"
+           "<filter id='f'><feGaussianBlur stdDeviation='2.5'/></filter><polygon filter='url(%23f)' fill='white' points='"
+           + ' '.join(f'{x},{y}' for x, y in PULGAR) + "'/></svg>")
+diapo(1, f"""{FOTO1}
 <svg class="abs" style="left:0;top:0" width="1080" height="1350">
-  <defs><path id="aro" d="M{CX - RAD:.0f} {CY:.0f} a{RAD} {RAD} 0 1 1 {2 * RAD} 0 a{RAD} {RAD} 0 1 1 {-2 * RAD} 0"/>
+  <defs><path id="aro" d="M{CX - RX} {EY} a{RX} {RY} 0 1 1 {2 * RX} 0 a{RX} {RY} 0 1 1 {-2 * RX} 0"/>
   <filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#000" flood-opacity=".35"/></filter></defs>
-  <g transform="rotate(-100 {CX:.0f} {CY:.0f})" filter="url(#s)">
-  <text font-family="Mont" font-weight="500" font-size="44" fill="#fff" letter-spacing="9">
-    <textPath href="#aro" textLength="{2 * 3.14159 * RAD - 30:.0f}" lengthAdjust="spacing">{anillo}</textPath></text></g>
-</svg>''')
+  <g filter="url(#s)"><text font-family="Mont" font-weight="500" font-size="44" fill="#fff" letter-spacing="9">
+    <textPath href="#aro" textLength="{largo - 30:.0f}" lengthAdjust="spacing">{anillo}</textPath></text></g>
+</svg>
+<div class="abs" style="inset:0;-webkit-mask-image:url(&quot;{MASCARA}&quot;);-webkit-mask-size:1080px 1350px">{FOTO1}</div>""")
 
 # 2 y 3 · la panoramica. La foto (2576x1932) se recorta 2400x1500 desde (20, 60) y se escala
 # a 2160x1350 (factor 0,9): el expositor (centro en x=1220 de la foto) cae en x=1080, el corte.

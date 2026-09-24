@@ -4,7 +4,7 @@ Con **fotos de verdad** (`fotos/`, hechas en persona con las piezas en blanco)
 y el diseño de PLEA5E pegado encima para que parezca impreso. Estilo de la
 referencia de la hamburguesa (`fotos/referencia-hamburguesa.jpg`).
 
-1. **La placa de mesa en la mano**, con un anillo de letras finas alrededor: *5 estrellas •*
+1. **La placa de mesa en la mano**, con un anillo de letras finas alrededor (*5 estrellas •*) que pasa por detrás del pulgar
 2. y 3. **Panorámica:** el expositor de pie en la cornisa, partido justo por la
    mitad entre las dos fotos. Al deslizar, la placa "sigue".
    *Tu bar, / en 5 estrellas.* · Comenta PLACA · PLEA5E.ES
