@@ -31,7 +31,7 @@ PLACA = 'data:image/png;base64,' + b64('marketing/instagram/carrusel-placa/capas
 W, H = 1080, 1350
 # los colores de cada letra: cara, volumen (el lado) y filo
 BLANCO = ('#FFFFFF', '#0B3F4A', '#0A2F38')
-ORO = ('#F6CC4E', '#8A5A06', '#5E3C03')
+ORO = ('#FFD93D', '#9A6A00', '#6A4800')
 SUAVE = ('#BFE6E4', '#0B3F4A', '#0A2F38')
 
 CSS = f'''

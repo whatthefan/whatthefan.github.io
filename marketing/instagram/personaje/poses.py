@@ -140,5 +140,7 @@ for nombre, (titulo, exp, cuerpo) in {**est.POSES, **NUEVAS}.items():
 for f in os.listdir(SALIDA):
     p = os.path.join(SALIDA, f)
     s = open(p).read().replace('viewBox="-190 -40 1404 1260"', 'viewBox="-190 -240 1404 1560"')
+    # en Instagram, un amarillo mas vivo que el oro de la web (la foto le quita color)
+    s = s.replace('fill="#E9BC46"', 'fill="#FFD23A"')
     open(p, 'w').write(s)
 print(f'{n} poses (x2 lados) en {SALIDA}, {total / 1024:.0f} KB')
