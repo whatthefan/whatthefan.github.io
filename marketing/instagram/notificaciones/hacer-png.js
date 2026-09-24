@@ -6,7 +6,9 @@ const N = 'marketing/instagram/notificaciones/';
 (async () => {
   const b = await chromium.launch();
   const pg = await b.newPage({ viewport: { width: 1080, height: 1350 }, deviceScaleFactor: 2 });   // sale a 2160x2700, mas nitida
-  await pg.goto('file://' + path.resolve(N + 'notificaciones.html')); await pg.waitForTimeout(600);
-  await pg.screenshot({ path: N + 'PLEA5E-notificaciones.png' });
+  for (const v of ['', '-b']) {
+    await pg.goto('file://' + path.resolve(N + 'notificaciones' + v + '.html')); await pg.waitForTimeout(600);
+    await pg.screenshot({ path: N + 'PLEA5E-notificaciones' + v + '.png' });
+  }
   await b.close();
 })();

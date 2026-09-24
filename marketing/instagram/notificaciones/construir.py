@@ -72,7 +72,28 @@ ABANICO = ''.join(
     f'<div class="tarjeta" style="left:{-TW / 2 + dx}px;top:{-TH / 2 + dy}px;transform:rotate({g}deg)"><img src="{TARJ}"><div class="brillo"></div></div>'
     for g, dx, dy in ((-38, -40, 30), (-19, -18, 8), (0, 0, 0), (19, 18, 8), (38, 40, 30)))
 
-html = f'''<!doctype html><html><head><meta charset="utf-8"><style>
+FOTOS_A = f'''<!-- arriba: la placa en el marmol -->
+<div class="panel" style="top:0;height:{STAND_T + 100}px">
+  <img class="abs" src="{MARMOL}" style="left:0;top:{PLACA_Y - 702 * KM:.0f}px;width:{W}px;filter:contrast(1.04) saturate(1.05)">
+</div>
+<!-- abajo: el expositor al sol, fundido por arriba con la de la placa -->
+<div class="panel" style="top:{STAND_T}px;height:{H - STAND_T}px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 100px)">
+  <img class="abs" src="{STAND}" style="left:{SX}px;top:-44px;width:{2576 * KS:.0f}px;filter:contrast(1.04) saturate(1.08)">
+</div>
+<div class="suelo">{ABANICO}</div>
+'''
+# la version B, al reves: el expositor arriba (grande, al sol) y la placa abajo en el marmol,
+# con las tarjetas en abanico encima del marmol, a la derecha
+FOTOS_B = f'''<img class="abs" src="{MARMOL}" style="left:0;top:-300px;width:{W}px;filter:blur(3px) brightness(1.05)">
+<div class="panel" style="top:0;height:880px;-webkit-mask-image:linear-gradient(180deg,transparent 60px,#000 190px)">
+  <img class="abs" src="{STAND}" style="left:-192px;top:70px;width:{2576 * .6:.0f}px;filter:contrast(1.04) saturate(1.08)">
+</div>
+<div class="panel" style="top:780px;height:{H - 780}px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 100px)">
+  <img class="abs" src="{MARMOL}" style="left:0;top:{880 - 780 - 545 * KM:.0f}px;width:{W}px;filter:contrast(1.04) saturate(1.05)">
+</div>
+<div class="suelo" style="left:130px;top:1290px;transform:perspective(900px) rotateX(58deg) rotateZ(-20deg) scale(.85)">{ABANICO}</div>'''
+for VAR, FOTOS in (('', FOTOS_A), ('-b', FOTOS_B)):
+  html = f'''<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{{font-family:Mont;font-weight:100 900;src:url(data:font/woff2;base64,{b64('fuente/montserrat-latin.woff2')})}}
 *{{margin:0;padding:0;box-sizing:border-box}}
 html,body{{width:{W}px;height:{H}px;overflow:hidden;font-family:Mont,sans-serif;background:#ddd6cc}}
@@ -101,15 +122,7 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;font-family:Mont,sans-serif;
 .grano{{position:absolute;inset:0;opacity:.3;mix-blend-mode:overlay;pointer-events:none;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='300' height='300' filter='url(%23r)'/></svg>")}}
 </style></head><body>
-<!-- arriba: la placa en el marmol -->
-<div class="panel" style="top:0;height:{STAND_T + 100}px">
-  <img class="abs" src="{MARMOL}" style="left:0;top:{PLACA_Y - 702 * KM:.0f}px;width:{W}px;filter:contrast(1.04) saturate(1.05)">
-</div>
-<!-- abajo: el expositor al sol, fundido por arriba con la de la placa -->
-<div class="panel" style="top:{STAND_T}px;height:{H - STAND_T}px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 100px)">
-  <img class="abs" src="{STAND}" style="left:{SX}px;top:-44px;width:{2576 * KS:.0f}px;filter:contrast(1.04) saturate(1.08)">
-</div>
-<div class="suelo">{ABANICO}</div>
+{FOTOS}
 {titulo(['Las únicas notificaciones', 'que quiero ver:'], 88, 58)}
 <div class="avisos">
   {aviso(ICO_G, 'Google', 'ahora', 'Google Maps · Nueva reseña', f'{EST} «¡Trato de diez! Volveremos.»')}
@@ -118,5 +131,5 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;font-family:Mont,sans-serif;
 </div>
 <div class="grano"></div>
 </body></html>'''
-open(N + 'notificaciones.html', 'w').write(html)
-print('notificaciones.html')
+  open(N + f'notificaciones{VAR}.html', 'w').write(html)
+  print(f'notificaciones{VAR}.html')

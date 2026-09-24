@@ -28,3 +28,9 @@ Las reseñas y el usuario (@lucia.gr) son **de ejemplo**, igual que Bar La Plaza
 > 📍 Córdoba · Envío a toda España · plea5e.es
 >
 > #reseñasgoogle #hosteleria #bares #restaurantes #cafeterias #comercioslocales #nfc #cordoba
+
+## Versión B (`PLEA5E-notificaciones-b.png`)
+
+Al revés: el **expositor arriba**, grande y al sol, y la **placa abajo** en el
+mármol, con las tarjetas en abanico en la esquina. El fondo de arriba es el
+mármol blanco, que se funde con el cielo de la foto del expositor.
