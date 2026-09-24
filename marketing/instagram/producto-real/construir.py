@@ -61,11 +61,11 @@ largo = 2 * math.pi * RAD
 # la mano (con la placa dentro, que da igual: las letras no la tocan), dibujada a mano sobre la
 # foto. Lo que hay dentro va POR ENCIMA de las letras: el anillo pasa por detras del pulgar y de
 # la mano, como las letras de la hamburguesa por detras del brazo
-MANO_CONTORNO = [(150, 150), (175, 152), (198, 168), (212, 215), (222, 300), (226, 345), (860, 345), (885, 1000),
-                 (880, 1040), (820, 1085), (650, 1120), (500, 1150), (380, 1185), (300, 1215), (200, 1270),
-                 (100, 1320), (40, 1350), (0, 1350), (0, 400), (45, 395), (78, 370), (95, 300), (108, 230), (122, 175)]
+MANO_CONTORNO = [(152, 164), (174, 165), (193, 178), (208, 218), (222, 300), (226, 345), (860, 345), (870, 995),
+                 (800, 1048), (700, 1078), (560, 1102), (470, 1113), (400, 1158), (360, 1180), (300, 1250),
+                 (230, 1330), (210, 1350), (0, 1350), (0, 400), (45, 395), (78, 370), (97, 300), (111, 232), (128, 185)]
 MASCARA = ("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1080' height='1350'>"
-           "<filter id='f'><feGaussianBlur stdDeviation='2.5'/></filter><polygon filter='url(%23f)' fill='white' points='"
+           "<filter id='f'><feGaussianBlur stdDeviation='1.2'/></filter><polygon filter='url(%23f)' fill='white' points='"
            + ' '.join(f'{x},{y}' for x, y in MANO_CONTORNO) + "'/></svg>")
 diapo(1, f"""{FOTO1}
 <svg class="abs" style="left:0;top:0" width="1080" height="1350">
@@ -74,7 +74,8 @@ diapo(1, f"""{FOTO1}
   <g filter="url(#s)"><text font-family="Mont" font-weight="500" font-size="40" fill="#fff" letter-spacing="9">
     <textPath href="#aro" textLength="{largo - 30:.0f}" lengthAdjust="spacing">{anillo}</textPath></text></g>
 </svg>
-<div class="abs" style="inset:0;-webkit-mask-image:url(&quot;{MASCARA}&quot;);-webkit-mask-size:1080px 1350px">{FOTO1}</div>""")
+<div class="abs" style="inset:0;filter:drop-shadow(0 0 6px rgba(0,0,0,.35))">
+  <div class="abs" style="inset:0;-webkit-mask-image:url(&quot;{MASCARA}&quot;);-webkit-mask-size:1080px 1350px">{FOTO1}</div></div>""")
 
 # 2 y 3 · la panoramica. La foto (2576x1932) se recorta 2400x1500 desde (20, 60) y se escala
 # a 2160x1350 (factor 0,9): el expositor (centro en x=1220 de la foto) cae en x=1080, el corte.
