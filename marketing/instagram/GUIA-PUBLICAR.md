@@ -9,8 +9,8 @@ Cada publicación trae su texto listo para copiar y pegar.
 
 1. **El texto es el nuevo buscador.** Instagram ya busca por lo que pones en
    el texto, así que las palabras importan más que los hashtags. Pon siempre
-   *reseñas en Google*, *bar* o *restaurante*, *Córdoba* y *placa NFC*, y
-   escríbelas de forma natural.
+   *reseñas en Google*, *placa NFC*, *tarjeta NFC* y *bar* o *restaurante*,
+   y escríbelas de forma natural.
 2. **Hashtags: sí, pero pocos.** Pon **3 a 5** al final del texto, no 30.
    Muchos parecen spam y no ayudan.
 3. **La primera línea es la que vende.** Es lo único que se ve antes del
@@ -57,13 +57,13 @@ una con el atajo `/placa` y este texto:
 Son las que busca tu cliente. Úsalas **siempre** en el texto, en la biografía
 y en el texto alternativo, escritas de forma natural:
 
-- **Principales:** reseñas en Google · placa NFC · placa QR · conseguir reseñas · más reseñas en Google
+- **Principales:** reseñas en Google · Google reviews · placa NFC · tarjeta NFC · placa QR · conseguir reseñas · más reseñas en Google
 - **A quién:** bar · restaurante · cafetería · peluquería · tienda · hostelería · negocio local
-- **Dónde:** Córdoba · Andalucía · toda España
+- **Dónde:** envío a toda España
 - **Cómo:** acercar el móvil · sin apps · 10 segundos · con tu logo
 
-En la web ya están en el título, en la descripción que sale en Google y en la
-portada ("Hechas en Córdoba, con envío a toda España").
+En la web ya están en el título ("Placas y tarjetas NFC para reseñas de
+Google") y en la descripción que sale en Google.
 
 **Lo que más sube en Google Maps** es tener la ficha de Google Business de
 PLEA5E completa: categoría, fotos, horario, enlace a la web y reseñas propias.
