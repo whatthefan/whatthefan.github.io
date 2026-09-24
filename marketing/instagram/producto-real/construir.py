@@ -43,7 +43,16 @@ def diapo(n, cuerpo):
 K = 1080 / 1932
 CX, CY, RAD = 846 * K, (1400 - 160) * K, 455
 anillo = ' • '.join(['5 estrellas'] * 5) + ' • '
-diapo(1, f'''<img class="foto" src="{MANO}" style="left:0;top:{-160 * K:.0f}px;width:1080px">
+# el fondo se desenfoca mas (como un objetivo abierto), sin tocar la placa ni el centro
+# de la mano: una copia borrosa encima, con un agujero redondo alrededor de la placa
+FOCO = 'radial-gradient(ellipse 620px 720px at 420px 860px, transparent 68%, #000 95%)'
+diapo(1, f'''<div class="abs" style="inset:0;filter:contrast(1.1) saturate(1.22) brightness(.96) sepia(.1)">
+  <img class="abs" src="{MANO}" style="left:0;top:{-160 * K:.0f}px;width:1080px">
+  <img class="abs" src="{MANO}" style="left:-20px;top:{-160 * K - 20:.0f}px;width:1120px;filter:blur(9px);
+    -webkit-mask-image:{FOCO}"></div>
+<div class="abs" style="inset:0;mix-blend-mode:soft-light;background:radial-gradient(ellipse 90% 70% at 85% 5%,rgba(255,190,110,.75),transparent 60%),
+  linear-gradient(180deg,rgba(40,90,160,.35),transparent 35%)"></div>
+<div class="abs" style="inset:0;background:radial-gradient(ellipse 65% 55% at 44% 52%,transparent 55%,rgba(10,14,22,.45) 100%)"></div>
 <svg class="abs" style="left:0;top:0" width="1080" height="1350">
   <defs><path id="aro" d="M{CX - RAD:.0f} {CY:.0f} a{RAD} {RAD} 0 1 1 {2 * RAD} 0 a{RAD} {RAD} 0 1 1 {-2 * RAD} 0"/>
   <filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#000" flood-opacity=".35"/></filter></defs>
