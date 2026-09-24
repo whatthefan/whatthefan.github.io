@@ -18,6 +18,9 @@ Poses nuevas:
 Desde la raiz del repo:  python3 marketing/instagram/personaje/poses.py
 """
 import importlib.util
+import sys
+
+sys.dont_write_bytecode = True        # que no deje gen/__pycache__ al importar el generador
 import os
 
 spec = importlib.util.spec_from_file_location('estrellita', 'gen/estrellita.py')

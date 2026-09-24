@@ -15,3 +15,6 @@ entrega/
 .DS_Store
 Thumbs.db
 marketing/instagram/descargas/
+
+# cache de Python (al importar gen/estrellita.py desde marketing/instagram/personaje/poses.py)
+__pycache__/
