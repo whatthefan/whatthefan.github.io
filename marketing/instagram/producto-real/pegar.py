@@ -50,29 +50,54 @@ def homografia(src, dst):
     return V[-1].reshape(3, 3) / V[-1, -1]
 
 
-def borrar(im, x0, y0, x1, y1):
+def borrar(im, x0, y0, x1, y1, libre=None):
     """tapa un trozo de la foto con el fondo de alrededor (el fondo esta desenfocado,
-    asi que basta con rellenarlo suave desde los bordes y ponerle el mismo grano)"""
+    asi que basta con rellenarlo suave desde los bordes y ponerle el mismo grano).
+    libre: otra caja que NO sirve de borde (p. ej. un dedo pegado al trozo: si no, el
+    relleno cogeria el color de la piel); se calcula pero no se toca."""
     h, w = im.shape[:2]
     m = np.zeros((h, w), bool); m[y0:y1, x0:x1] = True
-    k = 8                                                     # se rellena a 1/8 y se sube
-    peq = im[::k, ::k].copy(); mp = m[::k, ::k]
+    # el dedo que roza el borde de arriba del trozo se respeta: en la franja de arriba,
+    # lo que tiene color de piel (mas rojo que azul y mas oscuro que el suelo) no se tapa
+    r_, g_, b_ = im[..., 0], im[..., 1], im[..., 2]
+    piel = (r_ - b_ > .09) & (r_ - g_ > .03) & (im.mean(2) < .58)
+    franja = np.zeros_like(m); franja[y0:y0 + 45, x0:x1] = True
+    dedo = nd.binary_opening(piel & franja, iterations=2)
+    m &= ~dedo
+    suelto = m.copy()
+    if libre:
+        suelto[libre[1]:libre[3], libre[0]:libre[2]] = True
+    k = 4
+    peq = im[::k, ::k].copy(); mp = suelto[::k, ::k]
+    # solo vale de muestra el suelo (claro y sin color), no la mano ni lo oscuro
+    claro = (peq.mean(2) > .55) & (np.ptp(peq, axis=2) < .12)
+    conocido = ((~mp) & claro).astype(np.float32)
     for c in range(3):
         canal = peq[..., c]
-        canal[mp] = canal[~mp].mean()
-        for _ in range(400):
-            canal[mp] = nd.uniform_filter(canal, 5)[mp]
+        # primero, la media de lo que hay alrededor (convolucion normalizada: solo cuenta
+        # lo conocido), y despues se alisa para que no queden escalones
+        suelo = canal[conocido > 0].mean()
+        canal[mp] = suelo
+        for sg in (60, 25, 10):
+            peso = nd.gaussian_filter(conocido, sg)
+            cerca = nd.gaussian_filter(canal * conocido, sg) / np.maximum(peso, 1e-6)
+            # donde no llega ninguna muestra (muy lejos del borde), se queda el color medio del suelo
+            cerca = np.where(peso > .02, cerca, suelo)
+            canal[mp] = cerca[mp] if sg == 60 else .5 * canal[mp] + .5 * cerca[mp]
+        for _ in range(200):
+            canal[mp] = nd.uniform_filter(canal, 3)[mp]
     grande = np.stack([nd.zoom(peq[..., c], k, order=1)[:h, :w] for c in range(3)], -1)
-    grande = nd.gaussian_filter(grande, (6, 6, 0))
-    borde = nd.gaussian_filter(nd.binary_dilation(m, iterations=6).astype(np.float32), 8)[..., None]
-    ruido = np.random.default_rng(2).normal(0, .012, (h, w))[..., None]
+    grande = nd.gaussian_filter(grande, (4, 4, 0))
+    # la mezcla va solo hacia DENTRO del trozo: fuera no se toca nada (ni el dedo)
+    borde = nd.gaussian_filter(m.astype(np.float32), 2)[..., None] * m[..., None]
+    ruido = np.random.default_rng(2).normal(0, .01, (h, w))[..., None]
     return im * (1 - borde) + (grande + ruido) * borde
 
 
 def pegar(foto, diseno, esquinas, luz='placa', margen=0, salida=None, tapar=None):
     im = lee(R + 'fotos/' + foto)
     if tapar:
-        im = borrar(im, *tapar)
+        im = borrar(im, *tapar[:4], libre=tapar[4] if len(tapar) > 4 else None)
     d = lee(R + 'disenos/' + diseno, rgba=True)
     dh, dw = d.shape[:2]
     Hm = homografia([(0, 0), (dw, 0), (dw, dh), (0, dh)], esquinas)
@@ -115,7 +140,7 @@ def pegar(foto, diseno, esquinas, luz='placa', margen=0, salida=None, tapar=None
 if __name__ == '__main__':
     # la placa de mesa (9x9) en la mano
     pegar('placa-en-mano.jpg', 'placa.png', [(337, 870), (1341, 892), (1351, 1891), (352, 1937)], 'placa', margen=6,
-          tapar=(1140, 2004, 1932, 2576))                     # la tarjeta de otra marca que asoma abajo
+          tapar=(1116, 2000, 1932, 2576, (900, 1850, 1440, 2000)))                     # la tarjeta de otra marca que asoma abajo
     # el expositor de pie en la cornisa (la cara de delante, antes de la doblez)
     pegar('expositor-cornisa.jpg', 'stand.png', [(836, 173), (1437, 242), (1610, 1213), (941, 1332)], 'impresa', margen=4)
     print('fotos editadas')
