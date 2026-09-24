@@ -29,3 +29,7 @@ Tambien SIL Open Font License 1.1; su licencia va en ofl-anton.txt.
 caveat-latin.woff2 es Caveat (negrita, subconjunto latino), la letra de
 rotulador del carrusel "Desliza para agregar" (marketing/instagram/
 carrusel-placa). SIL Open Font License 1.1; su licencia va en ofl-caveat.txt.
+
+fredoka-latin-700.woff2 (Fredoka Bold, letra redonda y gorda) es para el
+carrusel "OYEEEE" de Instagram (marketing/instagram/oyeeee/). Viene del
+paquete @fontsource/fredoka. SIL Open Font License 1.1: ofl-fredoka.txt.
