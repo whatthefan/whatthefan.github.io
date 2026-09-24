@@ -52,6 +52,23 @@ una con el atajo `/placa` y este texto:
 
 ---
 
+## 1b. Palabras clave (Instagram y web)
+
+Son las que busca tu cliente. Úsalas **siempre** en el texto, en la biografía
+y en el texto alternativo, escritas de forma natural:
+
+- **Principales:** reseñas en Google · placa NFC · placa QR · conseguir reseñas · más reseñas en Google
+- **A quién:** bar · restaurante · cafetería · peluquería · tienda · hostelería · negocio local
+- **Dónde:** Córdoba · Andalucía · toda España
+- **Cómo:** acercar el móvil · sin apps · 10 segundos · con tu logo
+
+En la web ya están en el título, en la descripción que sale en Google y en la
+portada ("Hechas en Córdoba, con envío a toda España").
+
+**Lo que más sube en Google Maps** es tener la ficha de Google Business de
+PLEA5E completa: categoría, fotos, horario, enlace a la web y reseñas propias.
+Pídeles a tus primeros clientes que te dejen una reseña a ti también.
+
 ## 2. Orden recomendado de publicación
 
 | Semana | Día | Qué | Tipo |
