@@ -485,7 +485,6 @@ td .destaca{color:var(--oro);font-weight:700}
 #demo::after    {width:min(62%,540px);right:-8%;bottom:2%;transform:rotate(5deg)}
 #como::after    {width:min(46%,390px);left:-9%;top:8%;transform:rotate(-9deg)}
 #seguimiento::after{width:min(44%,380px);left:-8%;bottom:6%;transform:rotate(11deg)}
-#guia::after   {width:min(48%,410px);right:-9%;top:4%;transform:rotate(-6deg)}
 #ayuda::after   {width:min(54%,470px);right:-10%;top:14%;transform:rotate(6deg)}
 /* en la sección clara el dorado sobre blanco se pierde: ahí va más
    marcada, que si no directamente no está */
@@ -505,7 +504,6 @@ td .destaca{color:var(--oro);font-weight:700}
   #demo::after    {right:0}
   #como::after    {left:0}
   #seguimiento::after{left:0}
-  #guia::after   {right:0}
   #ayuda::after   {right:0}
 }
 
@@ -567,9 +565,6 @@ td .destaca{color:var(--oro);font-weight:700}
   var(--chispa)  4%  0%/var(--ch-m) var(--ch-m) no-repeat,
   var(--chispa) 90% 22%/var(--ch-s) var(--ch-s) no-repeat,
   var(--chispa)  4% 64%/var(--ch-s) var(--ch-s) no-repeat}
-#guia > .env::before{--chispas:
-  var(--chispa) 92% 10%/var(--ch-m) var(--ch-m) no-repeat,
-  var(--chispa) 86% 24%/var(--ch-s) var(--ch-s) no-repeat}
 #seguimiento > .env::before{--chispas:
   var(--chispa)  4% 50%/var(--ch-m) var(--ch-m) no-repeat,
   var(--chispa)  4% 72%/var(--ch-s) var(--ch-s) no-repeat,
