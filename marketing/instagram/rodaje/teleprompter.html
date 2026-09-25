@@ -1,0 +1,190 @@
+<title>Teleprompter PLEA5E</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  :root{
+    color-scheme:dark;
+    --noche:#06080E; --panel:#10151F; --borde:#232B3B;
+    --texto:#F3F1EA; --suave:#8C94A6; --oro:#E9BC46; --oro-os:#B8912C; --rojo:#E4574B;
+    --tam:54px; --vel:40;
+  }
+  html,body{height:100%}
+  body{background:var(--noche);color:var(--texto);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;overflow:hidden}
+  .app{height:100%;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--borde);background:var(--panel)}
+  header h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:20px;letter-spacing:.06em;margin:0;color:var(--oro)}
+  header h1 span{color:var(--texto)}
+  .pestanas{display:flex;gap:6px;flex-wrap:wrap}
+  .pestanas button{background:transparent;color:var(--suave);border:1px solid var(--borde);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+  .pestanas button[aria-pressed="true"]{background:var(--oro);color:var(--noche);border-color:var(--oro);font-weight:700}
+  .dur{margin-left:auto;font-size:12px;color:var(--suave);font-variant-numeric:tabular-nums}
+
+  .escena{position:relative;flex:1;overflow:hidden}
+  .rail{position:absolute;inset:0;overflow-y:scroll;scrollbar-width:none;padding:0 16px}
+  .rail::-webkit-scrollbar{display:none}
+  .texto{max-width:26ch;margin:0 auto;padding-block:32vh 80vh;font-size:var(--tam);line-height:1.32;font-weight:700;text-wrap:pretty}
+  .espejo .texto{transform:scaleX(-1)}
+  .bloque{margin-bottom:1.1em}
+  .etq{display:block;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:.34em;letter-spacing:.14em;color:var(--oro);margin-bottom:.35em}
+  .accion{display:block;font-weight:400;font-size:.42em;line-height:1.35;color:var(--oro-os);font-style:italic;margin-top:.3em}
+  .pausa{color:var(--suave);font-weight:400}
+  .nombre{color:var(--oro)}
+  /* la linea de lectura: los ojos van aqui */
+  .linea{position:absolute;left:0;right:0;top:32vh;height:0;pointer-events:none}
+  .linea::before,.linea::after{content:"";position:absolute;top:-14px;border:14px solid transparent}
+  .linea::before{left:0;border-left-color:var(--oro)}
+  .linea::after{right:0;border-right-color:var(--oro)}
+  .velo{position:absolute;left:0;right:0;pointer-events:none}
+  .velo.arriba{top:0;height:24vh;background:linear-gradient(var(--noche),transparent)}
+  .velo.abajo{bottom:0;height:30vh;background:linear-gradient(transparent,var(--noche))}
+  .cuenta{position:absolute;inset:0;display:grid;place-items:center;font-family:Anton,Impact,sans-serif;font-size:180px;color:var(--oro);background:rgba(6,8,14,.72)}
+  .cuenta[hidden]{display:none}
+
+  footer{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--borde);background:var(--panel)}
+  .play{background:var(--oro);color:var(--noche);border:0;border-radius:10px;padding:10px 18px;font:700 16px "Atkinson Hyperlegible",sans-serif;cursor:pointer;min-width:120px}
+  .play.on{background:var(--rojo);color:#fff}
+  .sec{background:transparent;color:var(--texto);border:1px solid var(--borde);border-radius:10px;padding:9px 14px;font:inherit;font-size:14px;cursor:pointer}
+  .sec[aria-pressed="true"]{border-color:var(--oro);color:var(--oro)}
+  label.ctrl{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--suave)}
+  label.ctrl output{min-width:2.5em;color:var(--texto);font-variant-numeric:tabular-nums}
+  input[type=range]{accent-color:var(--oro);width:120px}
+  .atajos{font-size:12px;color:var(--suave);margin-left:auto}
+  kbd{border:1px solid var(--borde);border-radius:4px;padding:1px 5px;font-size:11px}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--oro);outline-offset:2px}
+  @media (max-width:560px){ :root{--tam:34px} .atajos{display:none} input[type=range]{width:90px} }
+  @media (prefers-reduced-motion:reduce){ .cuenta{transition:none} }
+</style>
+
+<div class="app">
+  <header>
+    <h1>PLEA<span>5</span>E · PROMPTER</h1>
+    <div class="pestanas" role="group" aria-label="Guion">
+      <button type="button" id="g-largo" data-g="largo" aria-pressed="true">Quién soy y por qué nosotros · 75 s</button>
+      <button type="button" id="g-corto" data-g="corto" aria-pressed="false">Versión corta · 30 s</button>
+    </div>
+    <span class="dur" id="dur"></span>
+  </header>
+
+  <div class="escena" id="escena">
+    <div class="rail" id="rail"><div class="texto" id="texto"></div></div>
+    <div class="velo arriba"></div><div class="velo abajo"></div>
+    <div class="linea" aria-hidden="true"></div>
+    <div class="cuenta" id="cuenta" hidden></div>
+  </div>
+
+  <footer>
+    <button type="button" class="play" id="play">▶ Empezar</button>
+    <button type="button" class="sec" id="reinicio">↺ Al principio</button>
+    <label class="ctrl" for="vel">Velocidad <input type="range" id="vel" min="10" max="120" value="40"><output id="velo">40</output></label>
+    <label class="ctrl" for="tam">Letra <input type="range" id="tam" min="24" max="96" value="54"><output id="tamo">54</output></label>
+    <button type="button" class="sec" id="espejo" aria-pressed="false">Espejo</button>
+    <span class="atajos"><kbd>Espacio</kbd> empezar/parar · <kbd>↑</kbd><kbd>↓</kbd> velocidad · <kbd>R</kbd> al principio</span>
+  </footer>
+</div>
+
+<script>
+/* [etiqueta] | texto a leer | (accion) — "/" marca una pausa corta */
+var GUIONES = {
+  largo: [
+    ['GANCHO', '¿Ves esto? / Hace que tus clientes te dejen la reseña en Google… en diez segundos.', 'Enseña la placa a cámara, quieta, con las dos manos.'],
+    ['QUIÉN SOY', 'Me llamo <span class="nombre">[TU NOMBRE]</span> y tengo PLEA5E. / Hacemos placas para bares, restaurantes y tiendas.', 'Sonríe. Baja un poco la placa.'],
+    ['EL PROBLEMA', 'Tus clientes salen contentos… / pero casi nadie te escribe.', 'Pausa de un segundo.'],
+    ['', 'Y no es que no quieran. / Es que se les olvida, o les da pereza buscarte.', 'Encógete de hombros.'],
+    ['CÓMO FUNCIONA', 'Con la placa en la mesa, solo tienen que acercar el móvil…', 'Acerca el móvil a la placa, despacio.'],
+    ['', '…y se abre directamente la ventana para escribirte la reseña. / Sin buscarte y sin descargar nada.', ''],
+    ['', 'Y si alguien tiene un móvil antiguo, / tiene el QR.', 'Señala el QR.'],
+    ['POR QUÉ NOSOTROS', '¿Y por qué nosotros? / Tres cosas.', 'Levanta tres dedos.'],
+    ['1', 'La diseñamos con tu logo y tus colores. / El diseño es gratis, y no se imprime nada hasta que te guste.', ''],
+    ['2', 'No te mandamos una placa y ya. / Te enseñamos a ti y a tu equipo cuándo y cómo pedir la reseña. / Eso es lo que marca la diferencia.', 'Enseña la guía si la tienes impresa.'],
+    ['3', 'Las placas: pago único. / La pagas una vez y es tuya.', ''],
+    ['', 'Y hablas conmigo directamente, por WhatsApp. / Somos de Córdoba y enviamos a toda España.', ''],
+    ['CIERRE', '¿Quieres ver cómo quedaría la tuya? / Comenta PLACA… / y te mando el diseño gratis.', 'Señala hacia abajo, a los comentarios. Sonríe y aguanta 2 segundos.']
+  ],
+  corto: [
+    ['GANCHO', '¿Ves esto? / Hace que tus clientes te dejen la reseña en Google en diez segundos.', 'Enseña la placa a cámara.'],
+    ['', 'Soy <span class="nombre">[TU NOMBRE]</span>, de PLEA5E. / Tus clientes salen contentos… pero se les olvida escribirte.', ''],
+    ['', 'Con esto acercan el móvil / y se abre directamente la reseña. / Sin buscarte, sin apps.', 'Acerca el móvil, despacio.'],
+    ['', 'Con tu logo, diseño gratis, / y las placas: pago único.', ''],
+    ['CIERRE', 'Comenta PLACA / y te mando cómo quedaría la tuya.', 'Señala abajo y sonríe.']
+  ]
+};
+
+var $ = function(id){ return document.getElementById(id); };
+var rail = $('rail'), texto = $('texto'), escena = $('escena');
+var actual = 'largo', corriendo = false, ultimo = 0, bloqueo = null, pos = 0;
+
+function guardar(k, v){ try { localStorage.setItem('prompter-' + k, v); } catch (e) {} }
+function leer(k){ try { return localStorage.getItem('prompter-' + k); } catch (e) { return null; } }
+
+function pintar(){
+  var g = GUIONES[actual], html = '', palabras = 0;
+  g.forEach(function(b){
+    var t = b[1].replace(/ \/ /g, ' <span class="pausa">/</span> ');
+    palabras += b[1].replace(/<[^>]+>/g, '').split(/\s+/).length;
+    html += '<div class="bloque">' + (b[0] ? '<span class="etq">' + b[0] + '</span>' : '') + t +
+            (b[2] ? '<span class="accion">(' + b[2] + ')</span>' : '') + '</div>';
+  });
+  texto.innerHTML = html;
+  $('dur').textContent = palabras + ' palabras · unos ' + Math.round(palabras / 2.6) + ' s hablando';
+  document.querySelectorAll('.pestanas button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.g === actual); });
+  reiniciar();
+}
+function reiniciar(){ parar(); pos = 0; rail.scrollTop = 0; }
+
+function paso(t){
+  if (!corriendo) return;
+  var dt = ultimo ? (t - ultimo) / 1000 : 0; ultimo = t;
+  pos += dt * Number($('vel').value) * (parseFloat(getComputedStyle(texto).fontSize) / 54);
+  rail.scrollTop = pos;
+  if (rail.scrollTop + rail.clientHeight >= rail.scrollHeight - 2) { parar(); return; }
+  requestAnimationFrame(paso);
+}
+function empezar(){
+  if (corriendo) return;
+  var c = $('cuenta'), n = 3; c.hidden = false; c.textContent = n;
+  $('play').textContent = '■ Parar'; $('play').classList.add('on');
+  var iv = setInterval(function(){
+    n--; if (n > 0) { c.textContent = n; return; }
+    clearInterval(iv); c.hidden = true;
+    if (!$('play').classList.contains('on')) return;
+    pos = rail.scrollTop; corriendo = true; ultimo = 0; requestAnimationFrame(paso);
+    if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function(l){ bloqueo = l; }).catch(function(){});
+  }, 800);
+  empezar.iv = iv;
+}
+function parar(){
+  corriendo = false; clearInterval(empezar.iv); $('cuenta').hidden = true;
+  $('play').textContent = '▶ Empezar'; $('play').classList.remove('on');
+  if (bloqueo) { bloqueo.release().catch(function(){}); bloqueo = null; }
+}
+
+$('play').addEventListener('click', function(){ $('play').classList.contains('on') ? parar() : empezar(); });
+$('reinicio').addEventListener('click', reiniciar);
+rail.addEventListener('scroll', function(){ if (!corriendo) pos = rail.scrollTop; });
+document.querySelectorAll('.pestanas button').forEach(function(b){
+  b.addEventListener('click', function(){ actual = b.dataset.g; guardar('guion', actual); pintar(); });
+});
+function ajustar(){
+  $('velo').textContent = $('vel').value; $('tamo').textContent = $('tam').value;
+  document.documentElement.style.setProperty('--tam', $('tam').value + 'px');
+  guardar('vel', $('vel').value); guardar('tam', $('tam').value);
+}
+$('vel').addEventListener('input', ajustar); $('tam').addEventListener('input', ajustar);
+$('espejo').addEventListener('click', function(){
+  var on = escena.classList.toggle('espejo'); this.setAttribute('aria-pressed', on);
+});
+document.addEventListener('keydown', function(e){
+  if (e.target.tagName === 'INPUT' && e.key !== ' ') return;
+  if (e.key === ' ') { e.preventDefault(); $('play').click(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); $('vel').value = Math.min(120, +$('vel').value + 5); ajustar(); }
+  else if (e.key === 'ArrowDown') { e.preventDefault(); $('vel').value = Math.max(10, +$('vel').value - 5); ajustar(); }
+  else if (e.key === 'r' || e.key === 'R') { reiniciar(); }
+});
+
+if (leer('vel')) $('vel').value = leer('vel');
+if (leer('tam') && window.innerWidth > 560) $('tam').value = leer('tam');
+if (leer('guion') && GUIONES[leer('guion')]) actual = leer('guion');
+if (window.innerWidth <= 560) $('tam').value = 34;
+ajustar(); pintar();
+</script>
