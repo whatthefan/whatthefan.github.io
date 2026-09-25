@@ -10,3 +10,6 @@ Aquí quedan los scripts para volver a montarlo si cambia algo (en una carpeta d
 4. `final.py` → lo junta todo con los sonidos
 
 `fino.json` es la transcripción (Whisper small, en local) con sus tiempos.
+
+**Versión final publicada: la v6** (`plan.py` + `capa.py`). `capa2.py` es la prueba con el estilo
+de la skill edicion-pro: a Juan no le convenció para este vídeo; queda para los siguientes.
