@@ -33,3 +33,10 @@ OJO: estos NO son CC0. Son los memes que usa todo el mundo en TikTok e Instagram
 (nadie reclama por ellos en perfiles normales), pero no tienen licencia comercial:
 no usarlos en anuncios pagados. Se han dejado fuera los que son canciones con dueño
 (To be continued, Titanic, Shrek, Windows, Inception, «Oh no no no»).
+
+## `edicion/`: los de edición profesional
+
+woah drop, arrow swoosh (x2), camera screenshot, glitch, metallic riser, ding, mouse click,
+mac typing, camera shutter, punch riser y cinematic impact. Recortados de dos vídeos de
+TikTok de packs de sonidos («Sound Effects for your next video» y el de Dezzy) que pasó Juan.
+Tampoco son CC0: para vídeos del perfil sí, para anuncios pagados no.
