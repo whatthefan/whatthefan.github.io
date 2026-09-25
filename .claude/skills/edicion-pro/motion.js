@@ -87,5 +87,64 @@ const M = (() => {
     el.style.transform = `perspective(1600px) rotateX(${lerp(rx, 4, k) + f}deg) rotateY(${lerp(ry, -6, k)}deg) translateZ(0)`;
   }
 
-  return { cl, lerp, ease, p, vida, blurIO, palabras, whip, teclea, cuenta, cursor, tilt };
+  /* ---------- estilo DINÁMICO (referencia carlosdinamics) ---------- */
+
+  /* pop con rebote: escala 0 -> 1.12 -> 1 (iconos, palabras que golpean) */
+  function pop(el, t, t0, t1, o = {}) {
+    const { d = .35, rot = 0 } = o;
+    if (t < t0 || t >= t1) { el.style.opacity = 0; return; }
+    const k = ease.back(p(t, t0, d)), out = ease.inCubic(p(t, t1 - .15, .15));
+    el.style.opacity = 1 - out;
+    el.style.transform = `scale(${Math.max(0, k) * (1 - out * .3)}) rotate(${rot * (1 - k)}deg)`;
+  }
+
+  /* dibuja un SVG de líneas trazo a trazo (como los iconos que «se dibujan» solos).
+     Todos los path/rect/circle/line del svg se trazan en cascada.                    */
+  function dibuja(svg, t, t0, o = {}) {
+    const { d = .5, stagger = .12 } = o;
+    svg.querySelectorAll('path,rect,circle,line,polyline,ellipse').forEach((e, i) => {
+      if (!e._L) { try { e._L = e.getTotalLength(); } catch (_) { e._L = 400; } e.style.strokeDasharray = e._L; }
+      e.style.strokeDashoffset = e._L * (1 - ease.outCubic(p(t, t0 + i * stagger, d)));
+    });
+  }
+
+  /* flash de color a pantalla completa en un corte: 2-3 fotogramas.
+     cols: ['rgba(229,72,77,.55)', '#FFB23F'] = tinte rojo y luego destello naranja */
+  function flash(el, t, t0, cols = ['rgba(255,255,255,.9)'], fr = 2) {
+    const i = Math.floor((t - t0) * 30 / fr);
+    const on = t >= t0 && i >= 0 && i < cols.length;
+    el.style.opacity = on ? 1 : 0;
+    if (on) el.style.background = cols[i];
+  }
+
+  /* sacudida (golpe de cámara) que se amortigua */
+  function sacude(el, t, t0, o = {}) {
+    const { amp = 18, d = .35, extra = '' } = o;
+    const u = t - t0, k = u >= 0 && u < d ? (1 - u / d) : 0;
+    el.style.transform = `translate(${Math.sin(u * 90) * amp * k}px,${Math.cos(u * 70) * amp * .6 * k}px) ${extra}`;
+  }
+
+  /* haz de luz: un arco blanco que cruza la pantalla (transición). El el es un div con
+     border-top y border-radius:50%; se gira de ang0 a ang1 y se desvanece por los lados */
+  function arcoLuz(el, t, t0, o = {}) {
+    const { d = .45, ang0 = -70, ang1 = 40 } = o;
+    const k = p(t, t0, d);
+    el.style.opacity = t >= t0 && t < t0 + d ? Math.sin(k * Math.PI) : 0;
+    el.style.transform = `rotate(${lerp(ang0, ang1, ease.inOutCubic(k))}deg)`;
+  }
+
+  /* palabra que cruza DETRÁS de la persona (marquesina): x va de x0 a x1 */
+  function marquesina(el, t, t0, t1, x0 = 1100, x1 = -1400) {
+    el.style.opacity = t >= t0 && t < t1 ? Math.min(1, (t - t0) * 6, (t1 - t) * 6) : 0;
+    el.style.transform = `translateX(${lerp(x0, x1, p(t, t0, t1 - t0))}px)`;
+  }
+
+  /* fundido simple entre fondos */
+  const fundido = (t, t0, t1, d = .4) => t < t0 || t >= t1 ? 0 : Math.min(1, (t - t0) / d, (t1 - t) / d);
+
+  /* empuje (punch-in) seco en una palabra: escala 1 -> s en 2 fotogramas y vuelve suave */
+  const punch = (t, t0, s = 1.12, d = .5) => t < t0 || t > t0 + d ? 1 : (t - t0 < .066 ? lerp(1, s, (t - t0) / .066) : lerp(s, 1, ease.outCubic((t - t0 - .066) / (d - .066))));
+
+  return { cl, lerp, ease, p, vida, blurIO, palabras, whip, teclea, cuenta, cursor, tilt,
+           pop, dibuja, flash, sacude, arcoLuz, marquesina, fundido, punch };
 })();

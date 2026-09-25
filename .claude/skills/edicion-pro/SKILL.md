@@ -1,77 +1,135 @@
 ---
 name: edicion-pro
-description: Editar vídeos cortos (Reels, TikTok, Shorts) con motion design premium estilo SaaS/Apple — fondo casi negro, texto pequeño palabra a palabra con desenfoque, pantallas de app en 3D con borde de luz, cursores que pulsan, campos que se escriben, tarjetas que se apilan, diagramas de círculos, barridos con desenfoque de movimiento y un solo color de acento. Úsala siempre que haya que editar un vídeo de PLEA5E (persona a cámara, anuncio o motion graphics) o cuando Juan pida "edición profesional", "como el vídeo de referencia" o "transiciones así".
+description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profesional y hacer miniaturas trabajadas. Dos estilos — DINÁMICO (persona a cámara con cambios de fondo, persona recortada, iconos neón que se dibujan, palabras que golpean, flashes de color, texto detrás de la persona; el favorito de Juan) y PREMIUM SaaS (motion design oscuro y elegante). Incluye recorte de persona sin CapCut, capas, sonidos y lista de control. Úsala siempre que haya que editar un vídeo o hacer una miniatura/portada de PLEA5E, o cuando Juan pida «edición profesional», «como el vídeo de referencia», «estilo CapCut», «transiciones así» o «una miniatura currada».
 ---
 
-# Edición pro (motion design premium)
+# Edición pro
 
-Referencia: el anuncio de «Marz» que pasó Juan (un reaction de un vídeo de 500 $). No se copian sus
-diseños: se copia **cómo** está editado. Todo lo de abajo es lo que hace que parezca caro.
+Dos estilos. **Por defecto, en vídeos de persona a cámara, usa el DINÁMICO (A).** El PREMIUM (B) es para
+anuncios de producto sin persona. Todo lo que hace CapCut se hace aquí con código (tabla del apartado 4).
 
-## 1. El lenguaje visual
+## A. Estilo DINÁMICO (referencia: @carlosdinamics, «antes/después»)
 
-| Regla | Cómo se hace aquí |
+La idea: **la persona habla sin parar y la pantalla cambia cada 1,5-3 s**. Nunca más de 3 s con el mismo
+plano sin que pase algo. Cada frase importante tiene su «evento visual» justo en la palabra.
+
+### A1. Los recursos (lo que se ve en la referencia, con el tiempo exacto)
+
+| Recurso | Cómo es | Cuándo | Herramienta |
+|---|---|---|---|
+| **Cambio de fondo + persona pequeña** | el fondo de la habitación desaparece: fondo oscuro con **cuadrícula** fina y un resplandor; la persona recortada, **reducida al 60 %** y pegada abajo; arriba, iconos | para explicar un concepto (1-2,5 s) | `recorte.py` + capa `#detras` + `pequeno` en `compone.py` |
+| **Iconos de línea que se dibujan** | iconos blancos de trazo (sin relleno) con brillo, que se dibujan trazo a trazo; a veces 2 iconos y uno se mueve (sobre que entra con líneas de velocidad, manecilla que gira, hacha que golpea) | en el sustantivo que dice | `iconos.js` + `M.dibuja` + clase `.neon` |
+| **Iconos neón de color** | 2-3 iconos iguales con brillo de color (rosa en la ref., **oro** en PLEA5E) que salen con rebote uno detrás de otro + la palabra debajo en mayúsculas | enumeraciones («tres motivos») | `M.pop` con 0,1 s de desfase |
+| **Palabra que golpea** | una sola palabra ENORME (Anton) que aparece en blanco, pasa a color con una sacudida y luego se inclina | órdenes y palabras clave («PARA», «PEREZA») | `M.pop`/`M.sacude`, cambiar color a los 0,2 s |
+| **Flash de color** | 2 fotogramas de tinte rojo sobre la imagen + 2 fotogramas de destello naranja/oro casi opaco, y corte | antes de un cambio fuerte de escena | `M.flash(el, t, t0, ['rgba(229,72,77,.45)','rgba(255,190,70,.85)'])` + `glitch.mp3` |
+| **Haz de luz** | un arco blanco brillante que cruza la pantalla en 0,4 s | transición entre escenas | `M.arcoLuz` + `arrow-swoosh-2.mp3` |
+| **Texto detrás de la persona** | una palabra gigante (marca, concepto) cruza de derecha a izquierda POR DETRÁS de la cabeza; a la vez el fondo se funde a una imagen de IA a juego | al nombrar una herramienta o la marca | `M.marquesina` en `#detras` + mate |
+| **Barrido de cámara** | la imagen se desliza de lado, la persona sale de cuadro y queda la pared con una palabra en serif («TIEMPO») y un icono brillando | frases reflexivas | desplazar la base con `crop` en ffmpeg o recortar la persona y moverla |
+| **Fondo de rayos/energía** | fondo negro con rayos o chispas de color (morado en la ref.) y un icono gigante brillante («1h») encima de la persona pequeña | la cifra o el dato más fuerte | fondo en `#detras` (CSS o imagen de IA) |
+| **Subtítulos mínimos** | MAYÚSCULAS, Inter 800, 44-52 px, 1-3 palabras, blanco con sombra, a ~77 % de alto; la palabra clave en oro | siempre | `SUBS` del plan (Whisper) |
+
+### A2. Ritmo
+
+- Un evento visual cada **1,5-3 s**; entre medias, plano normal (la referencia vuelve siempre a la persona a pantalla completa, eso da respiro).
+- Los eventos van **en la palabra**, no antes ni después (tiempos palabra a palabra de Whisper).
+- Máximo 1 flash de color cada 10 s. Máximo 2 «palabras que golpean» por vídeo.
+- Los fondos nuevos duran lo que dura la frase y se van con **corte seco** o con el haz de luz.
+
+### A3. Capas (de atrás hacia delante)
+
+1. `base.mp4` — la persona (cortes, encuadre, voz limpia: ver apartado 5).
+2. `#detras` — fondos nuevos opacos (cuadrícula, rayos, imagen de IA) y texto que va detrás de la persona.
+3. **persona** — `base` + `mate.mp4` de `recorte.py`. En las ventanas `pequeno` se dibuja reducida y abajo, con los laterales difuminados (por si la toma es cerrada).
+4. `#delante` — iconos, palabras, subtítulos, flashes, haz de luz, marca `PLEA5E.es`.
+5. Sonidos.
+
+Una sola página HTML con `render(t)` pinta las dos capas (`#detras` y `#delante`, según `location.hash`).
+`ejemplo-dinamico.html` es un ejemplo completo y probado de 6 s: cópialo y cambia escenas y tiempos.
+
+### A4. Imágenes de IA (Grok, Flow…)
+
+Claude no tiene acceso a Grok ni a CapCut. Si una escena necesita una foto concreta («un camarero
+sirviendo», «un cliente mirando el móvil en una terraza»), **escribe el prompt** para que Juan la genere y la
+pase; mientras tanto usa fondos de CSS (cuadrícula, rayos, degradados) e iconos de línea, que es lo que más
+usa la referencia. Prompt tipo: *«fotografía vertical 9:16, [escena concreta], luz cálida de bar al
+atardecer, estilo cinematográfico, profundidad de campo, sin texto, sin logotipos, tonos oscuros con acentos
+dorados»*. Imágenes de IA en un vídeo → marcar el contenido como generado con IA en TikTok/Instagram.
+
+## B. Estilo PREMIUM SaaS (referencia: anuncio de «Marz»)
+
+| Regla | Cómo se hace |
 |---|---|
-| **Fondo casi negro**, nunca negro puro | `#0A0B0F` con un degradado radial apenas más claro en el centro y una viñeta |
-| **Un solo acento** | el oro de PLEA5E `#E9BC46` (en la referencia era verde). Rojo `#E5484D` SOLO para lo negativo («imposible», «0 reseñas») |
-| **Texto pequeño y fino** | Inter (fuente/inter-latin.woff2), 44-64 px en 1080 de ancho, peso 400-500, blanco al 90 %. Mucho aire alrededor. Nunca rótulos gigantes con borde gordo |
-| **Palabra a palabra** | cada palabra entra desde `blur(10px)` + 14 px abajo, con 70 ms de desfase (`M.palabras`) |
-| **Una palabra clave en color** | la que importa va en oro (`*palabra*` en `M.palabras`) |
-| **Luz, no sombras duras** | brillos suaves (`box-shadow: 0 0 60px rgba(233,188,70,.35)`), bordes de 1 px `rgba(255,255,255,.08)`, un arco de luz en el horizonte |
-| **Profundidad** | pantallas de app en perspectiva 3D que se enderezan (`M.tilt`), capas a distintas velocidades |
-| **Interfaces de verdad** | la pantalla de Google para escribir la reseña, un campo que se escribe (`M.teclea`), un cursor que pulsa un botón que brilla (`M.cursor`), notificaciones que se apilan |
-| **Nada estático** | todo flota un poco (1-2°, 4-6 px) o hace un empuje lento de cámara (escala 1 → 1.04) |
+| Fondo casi negro | `#0A0B0F` con degradado radial y viñeta |
+| Un solo acento | oro `#E9BC46`; rojo `#E5484D` solo para lo negativo |
+| Texto pequeño y fino | Inter 44-64 px, peso 400-500, mucho aire; palabra a palabra desde desenfoque (`M.palabras`), una palabra en oro |
+| Profundidad | pantallas de app en 3D que se enderezan (`M.tilt`), todo flota un poco |
+| Interfaces vivas | campo que se escribe (`M.teclea`), cursor que pulsa (`M.cursor`), contadores (`M.cuenta`) |
+| Transiciones | desenfoque cruzado (`M.blurIO`), barrido (`M.whip`), empuje hacia la interfaz, tarjetas apiladas |
 
-## 2. Transiciones (las que se usan)
+Curvas: entradas `outExpo` 0,4-0,6 s, salidas `inCubic` 0,25-0,3 s. Juan prefiere el DINÁMICO para vídeos con él.
 
-1. **Desenfoque cruzado**: sale con `blur(14px)` + escala 0.98, entra con `blur(14px)` + escala 0.96 → 1 (`M.blurIO`). Es la de por defecto.
-2. **Barrido (whip)**: el contenido cruza la pantalla en horizontal con desenfoque de movimiento (`M.whip`). Para cambiar de tema.
-3. **Empuje hacia la interfaz**: la cámara se mete dentro de una pantalla (escala 1 → 1.6 con desenfoque) y aparece la siguiente.
-4. **Apilado**: tarjetas que caen una encima de otra con un poco de giro (tarjetas de pago en la referencia → placas, expositores y tarjetas en PLEA5E).
-5. **Diagrama de órbitas**: palabras en círculos con líneas discontinuas que se van conectando hasta el logo.
-6. **Corte a negro seco** al final. Sin fundido.
+## C. Miniatura / portada trabajada
 
-Curvas: entradas `outExpo` (rápidas y suaves al final), salidas `inCubic`. Entradas de 0,4-0,6 s, salidas de 0,25-0,3 s.
+Nunca un fotograma del vídeo con un rótulo encima. Siempre:
 
-## 3. Sonido
+1. **Foto con gesto** (sorpresa, bajarse las gafas, señalar). Sacarla de la toma **más amplia** (el original sin recortar), para que la persona no quede cortada en recto por los lados.
+2. `python3 recorte.py foto.png persona.png` → persona recortada + `persona-borde.png` (contorno blanco de pegatina).
+3. `miniatura.html` (plantilla): fondo diseñado (noche, resplandor oro detrás de la cabeza, cuadrícula en perspectiva, rayos, arco de luz, polvo brillante, viñeta), persona con **sombra**, contorno y brillo oro, título en **Anton** con extrusión 3D y degradado dorado, etiqueta blanca, **placa real en 3D** (`public/producto/placa-recortada.png`) con sombra y reflejo, icono neón y flecha a mano.
+4. Todo lo importante entre y = 240 y 1680 (el perfil recorta la miniatura a 3:4) y nada en los 250 px de abajo.
+5. `node grabar.js miniatura.html prueba todo 0`.
 
-Sonidos de edición de `marketing/instagram/sonidos/edicion/`: `arrow-swoosh` en cada barrido,
-`woah-drop` en la revelación fuerte (máximo 2-3 por vídeo), `mouse-click` en cada clic de cursor,
-`mac-typing` cuando algo se escribe, `camera-shutter` cuando aparece un producto, `metallic-riser` +
-`cinematic-impact` antes y en el momento clave, `ding` en un acierto. **Nada de memes** en este estilo.
-Volumen de los efectos: 0,3-0,5 frente a la voz; la voz siempre manda.
+## 4. CapCut → aquí
 
-## 4. Montaje (persona a cámara)
-
-- **Pantalla partida**: la mitad de arriba es el motion design, la de abajo la persona. Es lo que da el look del vídeo de referencia.
-- Pantalla completa solo para frases con fuerza emocional, con subtítulo pequeño abajo.
-- Subtítulos **discretos**: Inter 600, 56-64 px, blanco con sombra suave, la palabra que se dice en oro. Nada de karaoke gordo con borde negro.
-- Quitar silencios y trozos flojos, cortar en los valles de energía de la voz (nunca a mitad de palabra).
-- Voz: filtro paso alto 85 Hz, reducción de ruido, compresor suave y `loudnorm` a -14 LUFS.
-- Si hay que sustituir una frase, se cambia **solo la voz** (con `atempo` ≤ 1,12 y el volumen igualado al trozo original) y la imagen se queda.
+| CapCut | Aquí |
+|---|---|
+| Eliminar fondo / recorte automático | `recorte.py` (RobustVideoMatting, 15 MB, CPU, ~6 fps) |
+| Fotogramas clave | `render(t)`: todo es función del tiempo |
+| Brillo / neón | `filter: drop-shadow(...)` en capas (clase `.neon`) |
+| Efectos «Flash», «Destello» | `M.flash` |
+| Sacudida | `M.sacude` |
+| Texto animado / plantillas | `M.palabras`, `M.pop`, `M.dibuja` |
+| Pegatinas / iconos | `iconos.js` (línea blanca, se dibujan solos) |
+| Superposición / capas | `compone.py` (detrás → persona → delante) |
 
 ## 5. Cómo se hace (herramientas)
 
-Carpeta de trabajo en `/tmp` (los vídeos de Juan NO van al repo, que es público). Scripts de ejemplo
-en `marketing/instagram/short-juan/`:
+Si la skill se usa fuera del repo de PLEA5E (versión global en zip), los sonidos están en `sonidos/` y las
+fuentes en `fuente/` dentro de la propia carpeta de la skill.
 
-1. **Transcribir** con Whisper local (sherpa-onnx + `sherpa-onnx-whisper-small`, se descarga de las
-   releases de GitHub de k2-fsa) → frases con tiempos.
-2. **plan.py**: cortes, layout (`full`/`split`), subtítulos palabra a palabra, escenas y sonidos en tiempo de salida.
-3. **base.py**: ffmpeg recorta, voltea si la cámara graba en espejo (Mac/Photo Booth: `hflip`), encuadra siguiendo la cara (OpenCV haar), empuje lento en los planos completos y limpia la voz.
-4. **Capa de motion** (HTML 1080×1920, fondo transparente) con `render(t)` usando `motion.js`
-   (incrustarlo en el HTML). Se graba con Playwright `omitBackground` a 30 fps → `capa.mov` (png con alfa).
-5. **final.py**: superpone la capa y mezcla los sonidos; comprimir a < 30 MB para mandarlo.
+Carpeta de trabajo en `/tmp` (los vídeos y fotos de Juan NO van al repo, que es público). ffmpeg: si no
+está en el PATH, usar el de `imageio-ffmpeg` (`python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"`).
+Scripts completos de un short real en `marketing/instagram/short-juan/`.
 
-Antes del render completo: renderizar 8-10 fotogramas clave, componer sobre la base y mirarlos.
+1. **Transcribir** con Whisper local (sherpa-onnx + `sherpa-onnx-whisper-small`, de las releases de GitHub de k2-fsa) → palabras con tiempos.
+2. **plan.py**: cortes en los valles de energía (nunca a mitad de palabra), escenas, eventos y sonidos en tiempo de salida.
+3. **base.py**: recorta, `hflip` si la cámara graba en espejo (Mac), encuadra siguiendo la cara (OpenCV haar), empuje lento y voz limpia (paso alto 85 Hz, reducción de ruido, compresor, `loudnorm` -14 LUFS).
+4. **Recorte**: `python3 recorte.py base.mp4 mate.mp4`.
+5. **Capas**: página HTML con `motion.js` + `iconos.js` → `node grabar.js pagina.html prueba todo 1.2 3.4` para revisar fotogramas; luego `node grabar.js pagina.html detras detras.mov` y `... delante delante.mov`.
+6. **Montaje**: `python3 compone.py montaje.json` (ver docstring: base, mate, capas, ventanas `pequeno`, escala, sonidos).
+7. Comprimir a < 30 MB para mandarlo (vídeo a 3400-3600k).
 
-## 6. Lista de control antes de entregar
+Si hay que sustituir una frase, se cambia **solo la voz** (`atempo` ≤ 1,12 y volumen igualado al original
+menos 1,5 dB); la imagen se queda.
 
-- [ ] ¿El texto es pequeño, con aire y entra palabra a palabra? ¿Una sola palabra en color?
-- [ ] ¿Cada escena tiene profundidad o movimiento (3D, flotar, empuje)?
-- [ ] ¿Hay al menos una interfaz «viva» (cursor, tecleo, estrellas que se rellenan)?
-- [ ] ¿Las transiciones son desenfoque/barrido, sin cortes secos salvo el final?
-- [ ] ¿Los sonidos son de edición (nada de memes) y a volumen por debajo de la voz?
-- [ ] ¿Nada importante en los 250 px de abajo (lo tapan los botones de TikTok/Instagram)?
-- [ ] ¿Final a negro seco, sin subtítulos ni barra encima?
-- [ ] ¿Nada inventado ni promesas de reseñas? («Las placas: pago único», nunca «sin cuotas»)
+## 6. Sonido
+
+Carpeta `marketing/instagram/sonidos/edicion/`: `arrow-swoosh`/`arrow-swoosh-2` en barridos y haz de luz,
+`glitch` en el flash de color, `woah-drop` en la revelación fuerte (máx. 2-3), `mouse-click` cuando se
+dibuja un icono, `ding` en un acierto, `cinematic-impact` en la palabra que golpea o en la cruz roja,
+`punch-riser` justo antes, `camera-shutter` cuando aparece el producto, `mac-typing` al escribir.
+**Nada de memes.** Efectos a 0,3-0,5 frente a la voz; la voz siempre manda. Nada de «sonido de cortar» en
+cada corte: los cortes van secos con 30-50 ms de fundido de audio.
+
+## 7. Lista de control antes de entregar
+
+- [ ] ¿Pasa algo en pantalla cada 1,5-3 s, clavado en la palabra?
+- [ ] ¿Hay al menos: un cambio de fondo con persona pequeña, iconos que se dibujan, una palabra que golpea y una transición de luz o flash?
+- [ ] ¿Subtítulos pequeños, en mayúsculas, 1-3 palabras, una clave en oro? ¿Nada de emojis?
+- [ ] ¿El recorte de la persona es limpio (pelo, gafas, manos)? ¿Sin bordes rectos visibles?
+- [ ] ¿Sonidos de edición a volumen por debajo de la voz?
+- [ ] ¿Nada importante en los 250 px de abajo? ¿Marca `PLEA5E.es` discreta?
+- [ ] ¿Final a negro seco (sin fundido lento), sin subtítulos ni barra encima, sin que se vea levantar la mano?
+- [ ] ¿Cámara en espejo corregida?
+- [ ] ¿Nada inventado ni promesas de reseñas? («Las placas: pago único», nunca «sin cuotas»). ¿La «5» de PLEA5E nunca en espejo?
+- [ ] ¿Miniatura trabajada (apartado C), no un fotograma?
+- [ ] Antes del render completo: 8-10 fotogramas clave compuestos y revisados.

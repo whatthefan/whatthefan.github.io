@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- Ejemplo completo del estilo dinámico (demo de 6 s). Capas #detras y #delante. Copiar y cambiar tiempos/escenas. --><html><head><meta charset="utf-8">
+<script src="motion.js"></script><script src="iconos.js"></script>
+<style>
+@font-face{font-family:Anton;src:url(anton-latin.woff2)}
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:transparent}
+.abs{position:absolute}.full{position:absolute;inset:0}
+/* fondo estudio: noche + cuadrícula + resplandor oro */
+.estudio{background:radial-gradient(700px 600px at 540px 520px,rgba(233,188,70,.22),transparent 70%),radial-gradient(1400px 1200px at 540px 700px,#151a28,#06080E 75%)}
+.cuad{background-image:linear-gradient(rgba(255,255,255,.08) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(255,255,255,.08) 1.5px,transparent 1.5px);background-size:90px 90px;
+  -webkit-mask:radial-gradient(900px 1100px at 540px 700px,#000 30%,transparent 85%)}
+.rayos{background:repeating-conic-gradient(from 0deg at 540px 420px,rgba(233,188,70,.12) 0 5deg,transparent 5deg 14deg);-webkit-mask:radial-gradient(800px 800px at 540px 420px,#000 5%,transparent 70%)}
+.marq{top:330px;left:0;white-space:nowrap;font:400 380px/1 Anton;color:#fff;letter-spacing:4px;text-shadow:0 20px 50px rgba(0,0,0,.6)}
+.marq b{color:#E9BC46;font-weight:400}
+.neon{color:#fff;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 16px rgba(233,188,70,.95)) drop-shadow(0 0 42px rgba(233,188,70,.7))}
+.neon.rojo{color:#FF5A5F;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 16px rgba(255,60,60,.95)) drop-shadow(0 0 42px rgba(255,60,60,.7))}
+.ico{display:flex;align-items:center;justify-content:center}
+.sub{left:0;right:0;top:1470px;text-align:center;font:800 50px Inter;letter-spacing:1.5px;color:#fff;text-transform:uppercase;
+  text-shadow:0 3px 10px rgba(0,0,0,.9),0 0 2px #000}
+.sub .k{color:#FFD86B}
+.golpe{left:0;right:0;top:230px;text-align:center;font:400 250px/1 Anton;letter-spacing:6px;color:#fff;
+  text-shadow:0 10px 0 rgba(0,0,0,.35),0 30px 60px rgba(0,0,0,.7)}
+.luz{left:-560px;top:260px;width:2200px;height:2200px;border-radius:50%;border-top:6px solid #fff;
+  filter:drop-shadow(0 0 14px #fff) drop-shadow(0 0 40px rgba(233,188,70,.9));-webkit-mask:linear-gradient(90deg,transparent 15%,#000 45%,#000 55%,transparent 85%)}
+.marca{left:0;right:0;top:1650px;text-align:center;font:700 34px Inter;color:rgba(255,255,255,.7);letter-spacing:2px;text-shadow:0 2px 8px #000}
+.marca b{color:#E9BC46}
+</style></head><body>
+<!-- capa DETRÁS -->
+<div id="detras" class="full">
+  <div id="fondo1" class="full"><div class="full estudio"></div><div class="full cuad"></div></div>
+  <div id="fondo2" class="full"><div class="full estudio"></div><div class="full cuad"></div><div class="full rayos"></div></div>
+  <div id="marq" class="abs marq">NO ES QUE NO <b>QUIERAN</b> · NO ES QUE NO <b>QUIERAN</b></div>
+</div>
+<!-- capa DELANTE -->
+<div id="delante" class="full">
+  <div id="mov" class="full">
+    <div id="e1" class="abs ico neon" style="left:700px;top:330px"></div>
+    <div id="e2" class="abs ico neon" style="left:820px;top:250px"></div>
+    <div id="e3" class="abs ico neon" style="left:900px;top:400px"></div>
+    <div id="bocad" class="abs ico neon" style="left:170px;top:190px"></div>
+    <div id="cruz" class="abs ico neon rojo" style="left:600px;top:200px"></div>
+    <div id="reloj" class="abs ico neon" style="left:340px;top:170px"></div>
+    <div id="golpe" class="abs golpe">PEREZA</div>
+    <div id="lupa" class="abs ico neon" style="left:390px;top:470px"></div>
+  </div>
+  <div id="luz" class="abs luz"></div>
+  <div id="sub" class="abs sub"></div>
+  <div class="abs marca">PLEA<b>5</b>E.es</div>
+  <div id="flash" class="full"></div>
+</div>
+<script>
+window.TOTAL = 6.0;
+const CAPA = location.hash.slice(1) || 'todo';
+const $ = id => document.getElementById(id);
+if (CAPA === 'detras') $('delante').style.visibility = 'hidden';
+if (CAPA === 'delante') $('detras').style.visibility = 'hidden';
+[['e1','estrella',150],['e2','estrella',120],['e3','estrella',100],['bocad','bocadillo',300],['cruz','cruz',270],['reloj','reloj',400],['lupa','lupa',270]]
+  .forEach(([id, n, px]) => $(id).innerHTML = ICONO(n, px, 3.4));
+const SUBS = __SUBS__; // [{t0,t1,w:[{w,t0}]}] del plan (Whisper)
+const CLAVE = /nadie|quieran|olvida|pereza|buscarte/i;
+const E2 = 1.633, E3 = 2.767, E4 = 3.80;
+
+function render(t) {
+  // --- detrás: fondos de estudio en las escenas con la persona pequeña
+  $('fondo1').style.opacity = t >= E2 && t < E3 ? 1 : 0;
+  $('fondo2').style.opacity = t >= E4 ? 1 : 0;
+  M.marquesina($('marq'), t, E3, E4 + .02, 250, -1700);
+
+  // --- escena 1: «contentos» -> tres estrellas neón con rebote
+  M.pop($('e1'), t, .98, E2, { rot: -20 }); M.pop($('e2'), t, 1.08, E2, { rot: 15 }); M.pop($('e3'), t, 1.18, E2, { rot: -10 });
+  // --- escena 2: bocadillo que se dibuja + cruz roja en «escribe»
+  $('bocad').style.opacity = t >= E2 && t < E3 ? 1 : 0; M.dibuja($('bocad').firstChild, t, E2 + .05, { d: .45 });
+  M.pop($('cruz'), t, 2.30, E3, { rot: -30 });
+  // --- escena 4: reloj que se dibuja («olvida»), PEREZA que golpea, lupa («buscarte»)
+  $('reloj').style.opacity = t >= 4.40 && t < 5.18 ? 1 : 0; M.dibuja($('reloj').firstChild, t, 4.40, { d: .4, stagger: .15 });
+  const gp = t >= 5.20 && t < TOTAL;
+  $('golpe').style.opacity = gp ? 1 : 0;
+  if (gp) {
+    const u = t - 5.20, k = M.ease.back(M.p(t, 5.20, .22));
+    $('golpe').style.color = u < .2 ? '#fff' : '#E9BC46';
+    $('golpe').style.transform = `scale(${.4 + .6 * k}) rotate(${u < .2 ? 0 : -6}deg) translate(${u < .45 ? Math.sin(u * 80) * 10 * (1 - u / .45) : 0}px,0)`;
+  }
+  $('lupa').style.opacity = t >= 5.50 ? 1 : 0; M.dibuja($('lupa').firstChild, t, 5.50, { d: .35 });
+  if (t >= 5.5) $('lupa').style.transform = `rotate(${Math.sin((t - 5.5) * 9) * 8}deg)`;
+
+  // --- golpes de cámara en los cortes fuertes
+  M.sacude($('mov'), t, t < 2.3 ? E2 : 2.30, { amp: 16 });
+  // --- flash de color en el corte (tinte rojo -> destello oro) y haz de luz antes de la escena 4
+  M.flash($('flash'), t, E2, ['rgba(229,72,77,.45)', 'rgba(255,190,70,.85)'], 2);
+  M.arcoLuz($('luz'), t, E4 - .3, { d: .45, ang0: -60, ang1: 50 });
+
+  // --- subtítulos pequeños, 1-3 palabras
+  const s = SUBS.find(s => t >= s.t0 && t < s.t1);
+  $('sub').innerHTML = s ? s.w.map(w => `<span class="${CLAVE.test(w.w) ? 'k' : ''}">${w.w.replace(/[…:.]/g, '')}</span>`).join(' ') : '';
+}
+render(0);
+</script></body></html>
