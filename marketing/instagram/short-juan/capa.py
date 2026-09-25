@@ -229,6 +229,7 @@ window.render = function(t) {{
   const s = segAt(t), split = s.lay === 'split';
   $('panel').style.opacity = split ? 1 : 0; $('costura').style.opacity = split ? 1 : 0;
   $('barra').style.width = (t / P.total * 1080) + 'px';
+  $('barra').style.opacity = t >= P.ev.find(e => e.k === 'final').t0 ? 0 : 1;
   // subtitulos
   const fin0 = P.ev.find(e => e.k === 'final').t0;
   const pg = t >= fin0 ? null : P.subs.find(p => t >= p.t0 && t < p.t1);
