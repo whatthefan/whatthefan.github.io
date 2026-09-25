@@ -3867,7 +3867,7 @@
      navegador 12 meses; despues se vuelve a preguntar. "Configurar
      cookies" (en el pie) vuelve a abrir el aviso. Cloudflare Web Analytics
      sigue funcionando siempre porque no usa cookies. -->
-<div class="galletas" id="galletas" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
+<div class="galletas" id="galletas" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
   <p><b>Cookies</b></p>
   <div class="galletas-bot">
     <button type="button" class="btn btn-fan btn-sm" id="galletasNo">Rechazar</button>
@@ -3875,7 +3875,7 @@
   </div>
 </div>
 <style>
-.galletas{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;width:min(620px,calc(100% - 32px));
+.galletas{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:2147483647;width:min(620px,calc(100% - 32px));
   background:var(--panel);border:1px solid var(--borde-claro);border-radius:12px;padding:16px 18px;
   display:flex;gap:14px 18px;align-items:center;flex-wrap:wrap;box-shadow:0 18px 50px rgba(0,0,0,.55);color:var(--txt);font-size:.88rem;line-height:1.5}
 .galletas[hidden]{display:none}
@@ -3915,7 +3915,9 @@
     });
   }
   var v = leer();
-  if (v === 'si') cargarGA(); else if (v === null) caja.hidden = false;
+  /* sale SIEMPRE por defecto (viene visible en el HTML); solo se esconde si ya eligieron */
+  if (v !== null) caja.hidden = true;
+  if (v === 'si') cargarGA();
   document.getElementById('galletasSi').addEventListener('click', function(){ guardar('si'); caja.hidden = true; cargarGA(); });
   document.getElementById('galletasNo').addEventListener('click', function(){
     var antes = leer(); guardar('no'); caja.hidden = true; borrarGA();
