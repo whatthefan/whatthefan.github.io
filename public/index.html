@@ -321,8 +321,8 @@
 }
 </script>
 <!-- Cloudflare Web Analytics: cuenta visitas, paginas vistas, de donde llegan (Instagram,
-     Google...) y desde que pais y aparato. Sin cookies y sin identificar a nadie, asi que no
-     hace falta banner de cookies. Los numeros se ven en el panel de Cloudflare > Web Analytics. -->
+     Google...) y desde que pais y aparato. Sin cookies: funciona aunque rechacen el aviso.
+     Google Analytics va aparte, al final del body, y solo se carga si aceptan las cookies. -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "2bf6eaf7c08548f4b6b28b96e46c4654"}'></script>
 </head>
 <body>
@@ -1022,6 +1022,7 @@
         <button type="button" class="enl" data-legal="aviso">Aviso legal</button>
         <button type="button" class="enl" data-legal="privacidad">Privacidad</button>
         <button type="button" class="enl" data-legal="cookies">Cookies</button>
+        <button type="button" class="enl" data-galletas>Configurar cookies</button>
       </div>
     </div>
 
@@ -2512,6 +2513,7 @@
       '<p>Los servicios que hacen falta para que esto funcione, y solo para eso:</p><ul>' +
       '<li><b>Cloudflare</b>, que aloja la web, guarda el pedido y cuenta las visitas de esta web y de las páginas de salto de nuestros clientes (las de <b>/r/</b>), sin cookies y sin identificar a nadie.</li>' +
       '<li><b>Resend</b>, que nos manda el aviso por correo.</li>' +
+      '<li><b>Google</b> (Google Analytics), solo si aceptas las cookies: estadísticas de visitas de la web.</li>' +
       '<li><b>Anthropic</b>, si está activada la propuesta automática de colores: en ese caso el texto de tu encargo pasa por ahí para sugerir la paleta. Sin esa opción, los colores los elige una tabla que corre en nuestro propio servidor y tu texto no sale de él.</li>' +
       '<li><b>Stripe</b>, si pagas la fianza. Nosotros no vemos tu tarjeta en ningún momento.</li>' +
       '<li>La imprenta y la empresa de transporte, cuando hace falta para servirte el pedido.</li></ul>' +
@@ -2522,14 +2524,13 @@
         (DATOS.email ? ' a ' + esc(DATOS.email) + ' o' : '') +
         ' al WhatsApp 661 40 32 19. Si crees que no te atendemos bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>'],
     cookies: ['Cookies',
-      '<h4>Esta web no usa cookies</h4>' +
-      '<p>No hay Google Analytics, ni píxel de Facebook, ni publicidad, ni nada que siga tus pasos por internet ni te reconozca de una visita a otra. Por eso no te sale ningún aviso de cookies.</p>' +
-      '<h4>Lo único que se cuenta, y dónde</h4>' +
-      '<p>Las páginas de salto de nuestros clientes (las direcciones que empiezan por <b>/r/</b>, a las que llevan el chip y el QR de sus placas) llevan el contador de <b>Cloudflare Web Analytics</b>. Sirve para decirle a cada local cuánta gente ha tocado su placa. No usa cookies, no guarda tu dirección IP entera ni construye un perfil tuyo: cuenta visitas, y nada más. Por eso no te pide permiso: no hay nada que permitir.</p>' +
-      '<p>Esta página también lo lleva, para saber cuánta gente nos visita y desde dónde llega (por ejemplo, desde Instagram). Es el mismo contador: sin cookies, sin guardar tu dirección IP y sin reconocerte de una visita a otra.</p>' +
-      '<h4>Lo único que se guarda en tu navegador</h4>' +
-      '<p>Una cosa, y solo si te vas a pagar la fianza: el pedido que llevabas montado. Es para que al volver de la pantalla de pago lo encuentres tal y como lo dejaste, en vez de tener que rellenarlo otra vez.</p>' +
-      '<p>Se guarda en tu propio aparato, no lo vemos nosotros, se borra en cuanto vuelves, y en cualquier caso caduca a las seis horas. No sirve para seguirte ni para identificarte: es una nota tuya para ti.</p>' +
+      '<h4>Qué cookies usamos</h4>' +
+      '<p>Solo una clase, y <b>solo si aceptas</b>: las de <b>Google Analytics</b> (<b>_ga</b> y <b>_ga_*</b>), de Google Ireland Ltd. Sirven para contar cuánta gente visita la web, desde dónde llega (Instagram, Google…) y qué páginas mira. Duran hasta 2 años. No hay publicidad, ni píxel de Facebook, ni nada para enseñarte anuncios.</p>' +
+      '<p>Si pulsas <b>Rechazar</b>, no se carga Google Analytics y no se guarda ninguna de esas cookies. Puedes cambiar de opinión cuando quieras en <b>Configurar cookies</b>, al pie de la página; si las rechazas después de haberlas aceptado, las borramos.</p>' +
+      '<h4>Lo que se cuenta sin cookies</h4>' +
+      '<p>Esta página y las páginas de salto de nuestros clientes (las que empiezan por <b>/r/</b>, a las que llevan el chip y el QR de sus placas) llevan el contador de <b>Cloudflare Web Analytics</b>. No usa cookies, no guarda tu dirección IP entera ni construye un perfil tuyo: cuenta visitas, y nada más. Por eso no necesita tu permiso.</p>' +
+      '<h4>Lo que se guarda en tu navegador</h4>' +
+      '<p>Tu respuesta al aviso de cookies (aceptar o rechazar), para no volver a preguntarte en un año. Y, solo si vas a pagar la fianza, el pedido que llevabas montado, para que al volver de la pantalla de pago lo encuentres tal y como lo dejaste. Se borra en cuanto vuelves y caduca a las seis horas.</p>' +
       '<h4>Al salir de aquí</h4>' +
       '<p>Los botones de WhatsApp y los enlaces a Google te llevan fuera de esta web. Ahí ya mandan sus propias políticas de cookies y privacidad.</p>']
   };
@@ -3859,5 +3860,71 @@
 })();
 </script>
 
+<!-- ============ aviso de cookies + Google Analytics ============
+     Google Analytics (G-JE35LMMF78) SI usa cookies, asi que NO se carga
+     hasta que la persona pulsa "Aceptar". "Rechazar" esta igual de a mano
+     y con el mismo tamano (lo pide la AEPD). La eleccion se guarda en el
+     navegador 12 meses; despues se vuelve a preguntar. "Configurar
+     cookies" (en el pie) vuelve a abrir el aviso. Cloudflare Web Analytics
+     sigue funcionando siempre porque no usa cookies. -->
+<div class="galletas" id="galletas" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
+  <p><b>¿Nos dejas medir las visitas?</b> Usamos cookies de Google Analytics solo para saber cuánta gente entra y qué le interesa. Nada de publicidad. <button type="button" class="enl" data-legal="cookies">Más información</button></p>
+  <div class="galletas-bot">
+    <button type="button" class="btn btn-fan btn-sm" id="galletasNo">Rechazar</button>
+    <button type="button" class="btn btn-oro btn-sm" id="galletasSi">Aceptar</button>
+  </div>
+</div>
+<style>
+.galletas{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;width:min(620px,calc(100% - 32px));
+  background:var(--panel);border:1px solid var(--borde-claro);border-radius:12px;padding:16px 18px;
+  display:flex;gap:14px 18px;align-items:center;flex-wrap:wrap;box-shadow:0 18px 50px rgba(0,0,0,.55);color:var(--txt);font-size:.88rem;line-height:1.5}
+.galletas[hidden]{display:none}
+.galletas p{flex:1 1 300px;margin:0;color:var(--txt-2)}
+.galletas p b{color:var(--txt)}
+.galletas .enl{color:var(--oro);text-decoration:underline;background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.galletas-bot{display:flex;gap:10px;flex:0 0 auto}
+.galletas-bot .btn{min-width:108px;justify-content:center}
+@media (max-width:560px){.galletas{bottom:12px}.galletas-bot{width:100%}.galletas-bot .btn{flex:1}}
+</style>
+<script>
+(function(){
+  var ID = 'G-JE35LMMF78', CLAVE = 'plea5e-cookies', DIAS = 365;
+  var caja = document.getElementById('galletas');
+  function leer(){ try { var d = JSON.parse(localStorage.getItem(CLAVE) || 'null');
+    if (d && (Date.now() - d.t) < DIAS * 864e5) return d.v; } catch (e) {} return null; }
+  function guardar(v){ try { localStorage.setItem(CLAVE, JSON.stringify({ v: v, t: Date.now() })); } catch (e) {} }
+  var cargado = false;
+  function cargarGA(){
+    if (cargado) return; cargado = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('consent', 'default', { ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied', analytics_storage:'granted' });
+    gtag('js', new Date());
+    gtag('config', ID);
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
+    document.head.appendChild(s);
+  }
+  function borrarGA(){
+    /* al rechazar despues de haber aceptado: fuera las cookies _ga */
+    document.cookie.split(';').forEach(function(c){
+      var n = c.split('=')[0].trim();
+      if (/^_ga/.test(n)) ['', '.' + location.hostname, location.hostname].forEach(function(d){
+        document.cookie = n + '=; Max-Age=0; path=/' + (d ? '; domain=' + d : '');
+      });
+    });
+  }
+  var v = leer();
+  if (v === 'si') cargarGA(); else if (v === null) caja.hidden = false;
+  document.getElementById('galletasSi').addEventListener('click', function(){ guardar('si'); caja.hidden = true; cargarGA(); });
+  document.getElementById('galletasNo').addEventListener('click', function(){
+    var antes = leer(); guardar('no'); caja.hidden = true; borrarGA();
+    if (antes === 'si') location.reload();
+  });
+  document.addEventListener('click', function(e){
+    if (e.target.closest('[data-galletas]')) { caja.hidden = false; }
+  });
+})();
+</script>
 </body>
 </html>
