@@ -91,12 +91,9 @@ si no ha cambiado, se cuenta igual. Eso es lo que hace que te crean.
 
 ---
 
-## La música de TikTok
+## Los sonidos
 
-Los **sonidos cortos** (boom, whoosh, pop, ding, disco rayado, caja registradora…) van ya
-metidos en el vídeo. Son de dominio público (CC0), así que no te pueden quitar el vídeo por ellos.
-Están en `sonidos/tiktok/` y en `MUESTRARIO-sonidos.mp4`.
-
-La **música de fondo en tendencia** ponla tú al subirlo, desde la app, al 5-10 % de volumen.
-Si tu cuenta es de **empresa**, TikTok solo te deja usar la **Biblioteca de música comercial**:
-elige de ahí una que ponga "Popular" o "Tendencia". En Instagram, lo mismo desde *Audio*.
+Los memes virales (vine boom, bruh, grillos, airhorn, ba dum tss, wait a minute…) van ya
+metidos en el vídeo: están en `sonidos/virales/` y en `MUESTRARIO-virales.mp4`.
+La **música en tendencia** ponla tú al subirlo, desde la app (con perfil normal puedes usar
+cualquiera), al 5-10 % de volumen para que no tape tu voz.

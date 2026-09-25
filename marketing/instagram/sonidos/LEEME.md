@@ -20,14 +20,16 @@ cada licencia tal cual.
 Antes de añadir un sonido nuevo: que sea CC0 y SOLO CC0. Un sonido con
 varias licencias a la vez (CC0 y además CC-BY-SA, GPL…) no vale.
 
-## `tiktok/`: los de enganche (boom, whoosh, disco rayado, caja registradora…)
 
-Sacados de [lavenderdotpet/CC0-Public-Domain-Sounds](https://github.com/lavenderdotpet/CC0-Public-Domain-Sounds),
-solo de packs que dicen CC0 en su propio archivo de licencia (copiados en `tiktok/LICENCIA-*.txt`):
-los packs de **bb/BB** (whoosh, pop, ding, palmada, silbato, disco rayado, boing, golpe, teclas, risa),
-**100-CC0-SFX** (campana, gong, plop), **80-CC0-RPG-SFX** (monedas) y los de **Kenney**
-(fichas, power-up, subida, fallo, jingles y las voces «congratulations», «level up»,
-«new highscore», «you win»). Todos normalizados al mismo volumen (-16 LUFS).
-`boom` es un bombo de bb bajado de tono y con eco (al estilo del *vine boom*, pero propio);
-`caja-registradora` es la campana más las monedas. `MUESTRARIO-sonidos.mp4` los enseña todos.
-NO se usa el pack de The Motion Monkey que viene en ese repositorio: su licencia no es CC0.
+## `virales/`: los memes de TikTok de siempre
+
+vine boom, bruh, airhorn, ba dum tss, grillos, violín triste, wow, huh, nope, wait a minute,
+tubo de metal, oof…, sacados de dos soundboards de GitHub
+([Thijzert123/meme-soundboard](https://github.com/Thijzert123/meme-soundboard) y
+[imsupercool123qwerty-pixel/soundboard2](https://github.com/imsupercool123qwerty-pixel/soundboard2)),
+recortados y al mismo volumen. `MUESTRARIO-virales.mp4` los enseña todos.
+
+OJO: estos NO son CC0. Son los memes que usa todo el mundo en TikTok e Instagram
+(nadie reclama por ellos en perfiles normales), pero no tienen licencia comercial:
+no usarlos en anuncios pagados. Se han dejado fuera los que son canciones con dueño
+(To be continued, Titanic, Shrek, Windows, Inception, «Oh no no no»).
