@@ -24,7 +24,7 @@ for s in P['seg']:
     D = b - a
     emp = (f",scale=w='trunc(1080*(1+0.06*t/{D:.3f})/2)*2':h=-2:eval=frame,crop=1080:1920:'(iw-1080)/2':'(ih-1920)*0.3'" if s['lay'] == 'full' else '')
     f.append(f'[v{i}]trim={a}:{b},setpts=PTS-STARTPTS,hflip,{crop},scale={tam}:flags=lanczos{emp}{pad},{grado},setsar=1,fps=30[V{i}]')
-    f.append(f'[a{i}]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.015,afade=t=out:st={b-a-0.02:.3f}:d=0.02[A{i}]')
+    f.append(f'[a{i}]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.03,afade=t=out:st={b-a-0.05:.3f}:d=0.05[A{i}]')
 f.append(''.join(f'[V{i}][A{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][ar]')
 f.append('[ar]highpass=f=85,lowpass=f=12500,afftdn=nf=-28,acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=2,'
          'equalizer=f=3200:t=q:w=1.2:g=2,loudnorm=I=-14:TP=-1.5:LRA=7,aresample=48000,aformat=channel_layouts=stereo[a]')

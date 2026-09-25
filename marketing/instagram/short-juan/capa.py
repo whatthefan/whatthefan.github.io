@@ -185,15 +185,15 @@ html,body{{width:1080px;height:1920px;overflow:hidden;background:transparent}}
 <img class="g bicho" id="g_megafono" src="{A['b_megafono-izq']}" style="left:760px;top:560px;width:300px">
 <!-- final: se oscurece -->
 <div class="g" id="g_final" style="left:0;top:0;width:1080px;height:1920px">
-  <div id="fnegro" style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 45%,rgba(20,26,48,.92),rgba(3,4,8,.98))"></div>
-  <div id="fglow" style="position:absolute;left:140px;top:420px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(233,188,70,.35),transparent 65%)"></div>
-  <img id="flogo" src="{A['logo']}" class="abs" style="left:190px;top:330px;width:700px">
-  <img id="fplaca" src="{A['placa']}" class="abs" style="left:330px;top:560px;width:420px;border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.7)">
-  <div id="fweb" class="tit abs" style="left:0;right:0;top:1080px;text-align:center;font-size:150px;text-transform:none"><span class="oro">PLEA5E</span>.es</div>
-  <div id="fest" class="abs" style="left:0;right:0;top:1270px;text-align:center;font-size:90px">{EST * 5}</div>
-  <div id="fcta" class="abs" style="left:0;right:0;top:1420px;text-align:center;font-family:Mont;font-weight:900;font-size:54px;color:#fff">Comenta <span style="color:#FFD23A">PLACA</span> · diseño gratis</div>
-  <img class="abs bicho" id="fb" src="{A['b_tachan-izq']}" style="left:60px;top:1500px;width:300px">
-  <img class="abs bicho" id="fb2" src="{A['b_guino']}" style="left:740px;top:1520px;width:280px">
+  <div id="fnegro" style="position:absolute;inset:0;background:#000"></div>
+  <div id="fglow" hidden style="position:absolute;left:140px;top:420px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(233,188,70,.35),transparent 65%)"></div>
+  <img id="flogo" hidden src="{A['logo']}" class="abs" style="left:190px;top:330px;width:700px">
+  <img id="fplaca" hidden src="{A['placa']}" class="abs" style="left:330px;top:560px;width:420px;border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.7)">
+  <div id="fweb" hidden class="tit abs" style="left:0;right:0;top:1080px;text-align:center;font-size:150px;text-transform:none"><span class="oro">PLEA5E</span>.es</div>
+  <div id="fest" hidden class="abs" style="left:0;right:0;top:1270px;text-align:center;font-size:90px">{EST * 5}</div>
+  <div id="fcta" hidden class="abs" style="left:0;right:0;top:1420px;text-align:center;font-family:Mont;font-weight:900;font-size:54px;color:#fff">Comenta <span style="color:#FFD23A">PLACA</span> · diseño gratis</div>
+  <img class="abs bicho" id="fb" hidden src="{A['b_tachan-izq']}" style="left:60px;top:1500px;width:300px">
+  <img class="abs bicho" id="fb2" hidden src="{A['b_guino']}" style="left:740px;top:1520px;width:280px">
 </div>
 <canvas id="confeti" width="1080" height="1920" style="position:absolute;inset:0"></canvas>
 <div id="flashB" style="position:absolute;inset:0;background:#fff;opacity:0"></div>
@@ -322,15 +322,7 @@ window.render = function(t) {{
   const fe = E('final')[0], uf = t - fe.t0;
   $('marca').style.opacity = uf > 0 ? 0 : 1;
   if (uf >= 0) {{ $('g_final').style.opacity = 1; $('g_final').style.transform = '';
-    $('fnegro').style.opacity = cl(uf / .7);
-    $('fglow').style.opacity = cl((uf - .3) / .5) * (.8 + .2 * Math.sin(uf * 4));
-    $('flogo').style.opacity = cl((uf - .35) / .3); $('flogo').style.transform = `scale(${{.6 + .4 * back((uf - .35) / .4)}})`;
-    $('fplaca').style.opacity = cl((uf - .55) / .3); $('fplaca').style.transform = `translateY(${{(1 - eo((uf - .55) / .45)) * 300}}px) rotate(${{-5 + Math.sin(uf * 2) * 2}}deg)`;
-    $('fweb').style.opacity = cl((uf - .8) / .2); $('fweb').style.transform = `scale(${{.3 + .7 * back((uf - .8) / .35)}})`;
-    [...$('fest').children].forEach((st, k) => {{ const v = uf - 1.05 - k * .08; st.style.transform = `scale(${{v < 0 ? 0 : back(v / .3)}})`; }});
-    $('fcta').style.opacity = cl((uf - 1.4) / .3);
-    $('fb').style.transform = `translateY(${{(1 - eo((uf - .9) / .4)) * 500 + Math.abs(Math.sin(uf * 5)) * -24}}px)`;
-    $('fb2').style.transform = `translateY(${{(1 - eo((uf - 1.05) / .4)) * 500}}px) rotate(${{Math.sin(uf * 3) * 6}}deg)`;
+    $('fnegro').style.opacity = cl(uf / 1.2);
   }} else $('g_final').style.opacity = 0;
 }};
 window.LISTO = true;

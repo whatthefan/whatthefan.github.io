@@ -108,66 +108,48 @@ ev = [
     dict(k='comenta', t0=T(28), t1=seg[28]['t1']),
     dict(k='final', t0=T(29, 1.95), t1=TOTAL),
 ]
-# emojis que saltan (x, y en la pantalla de 1080x1920)
-def emo(e, t, x, y, d=1.1): ev.append(dict(k='emoji', e=e, t0=round(t, 3), t1=round(t + d, 3), x=x, y=y))
-emo('👀', T(0, .05), 800, 120, .9)
-emo('⏱️', palabra(1, 'segundos'), 860, 470)
-emo('😊', T(5, .3), 820, 330)
-emo('🦗', palabra(6, 'nadie') + .2, 120, 380, 1.0)
-emo('😴', palabra(8, 'pereza'), 110, 420, 1.3)
-emo('🤯', palabra(11, 'BOOM') + .05, 780, 560, .9)
-emo('😍', palabra(13, 'ganas'), 110, 300, 1.4)
-emo('🤔', T(14), 780, 380, .8)
-emo('🔥', palabra(18, 'tres'), 800, 420, 1.2)
-emo('🎁', palabra(20, 'gratis'), 900, 690, 1.2)
-emo('🧠', palabra(21, 'enseñamos'), 880, 150, 1.4)
-emo('💸', palabra(24, 'tuya'), 900, 240, 1.2)
-emo('📲', T(25, .3), 900, 520, 1.3)
-emo('🇪🇸', palabra(26, 'España'), 820, 380, 1.2)
-emo('💬', T(28, .1), 880, 170, 1.2)
 # destellos al cambiar de pantalla completa a partida y al reves
 for a_, b_ in zip(seg[:-1], seg[1:]):
     if a_['lay'] != b_['lay']:
         ev.append(dict(k='flash', t0=round(b_['t0'], 3), t1=round(b_['t0'] + .16, 3)))
 # confeti
-for t_ in [palabra(20, 'gratis'), palabra(24, 'tuya'), T(29, 2.0)]:
+for t_ in [palabra(20, 'gratis'), palabra(24, 'tuya')]:
     ev.append(dict(k='confeti', t0=round(t_, 3), t1=round(t_ + 1.6, 3)))
 
 
-# sonidos: (archivo, tiempo, volumen)
-V = 'sonidos/virales/'; B = 'sonidos/'
+# sonidos: (archivo, tiempo, volumen)   E = sonidos de edicion (los de los videos de referencia)
+V = 'sonidos/virales/'; E_ = 'sonidos/edicion/'
+sw = lambda t, v=.45: (E_ + 'arrow-swoosh.mp3', t - .18, v)
 sfx = [
-    (V + 'vine-boom.mp3', T(0), .55),
-    (B + 'whoosh.mp3', T(1) - .12, .5),
-    (B + 'pop.mp3', palabra(1, 'menos'), .6),
-    (B + 'whoosh-short.mp3', T(2), .45),
-    (B + 'pop.mp3', palabra(4, 'restaurantes'), .5), (B + 'pop.mp3', palabra(4, 'bares'), .5), (B + 'pop.mp3', palabra(4, 'comercios'), .5),
-    (B + 'sparkle.mp3', T(5, .2), .45),
-    (V + 'grillos.mp3', palabra(6, 'nadie'), .35),
-    (V + 'bruh.mp3', palabra(8, 'pereza') + .25, .5),
-    (B + 'whoosh.mp3', T(9) - .12, .5),
-    (B + 'whoosh-cinematic.mp3', palabra(10, 'acercar'), .4),
-    (V + 'vine-boom.mp3', palabra(11, 'BOOM'), .6),
-    (V + 'ding.mp3', T(12, .1), .35),
-    (B + 'sparkle.mp3', T(13, 2.2), .4),
-    (V + 'huh.mp3', T(14), .45),
-    (B + 'glitch-1.mp3', palabra(15, 'descargar'), .5), (B + 'glitch-2.mp3', palabra(15, 'app'), .5), (B + 'glitch-3.mp3', palabra(15, 'buscarte'), .5),
-    (B + 'ping.mp3', T(17, .2), .5),
-    (B + 'riser.mp3', T(18) - .2, .35),
-    (B + 'impact-bass-1.mp3', palabra(18, 'tres'), .6),
-    (B + 'whoosh.mp3', T(19) - .12, .5),
-    (V + 'ding.mp3', palabra(20, 'gratis'), .35),
-    (B + 'whoosh.mp3', T(21) - .12, .5),
-    (B + 'whoosh.mp3', T(24) - .12, .5),
-    (B + 'chime.mp3', palabra(24, 'tuya'), .4),
-    (B + 'notification.mp3', T(25, .15), .55),
-    (B + 'pop.mp3', palabra(26, 'España'), .5),
-    (V + 'wait-a-minute.mp3', T(27), .0),   # reservado, apagado
-    (V + 'airhorn.mp3', T(28), .28),
-    (B + 'sparkle.mp3', T(29, 2.0), .45),
-    (B + 'riser.mp3', T(29, 1.0), .3),
-    (B + 'impact-bass-2.mp3', T(29, 1.95), .55),
-    (V + 'ding.mp3', palabra(24, 'tuya'), .3),
+    (E_ + 'woah-drop.mp3', T(0) - .05, .8),
+    (E_ + 'camera-shutter.mp3', T(0, .05), .5),
+    sw(T(1)),
+    (E_ + 'ding.mp3', palabra(1, 'menos'), .5),
+    sw(T(2), .35),
+    (E_ + 'mouse-click.mp3', palabra(4, 'restaurantes'), .7), (E_ + 'mouse-click.mp3', palabra(4, 'bares'), .7), (E_ + 'mouse-click.mp3', palabra(4, 'comercios'), .7),
+    (V + 'grillos.mp3', palabra(6, 'nadie'), .3),
+    (V + 'bruh.mp3', palabra(8, 'pereza') + .25, .45),
+    sw(T(9)),
+    (E_ + 'camera-shutter.mp3', T(9, .1), .45),
+    (E_ + 'arrow-swoosh-2.mp3', palabra(10, 'acercar') - .1, .4),
+    (E_ + 'woah-drop.mp3', palabra(11, 'BOOM') - .08, .85),
+    (E_ + 'ding.mp3', T(12, .1), .45),
+    (E_ + 'mac-typing.mp3', T(13, 2.3), .35),
+    (V + 'huh.mp3', T(14), .4),
+    (E_ + 'mouse-click.mp3', palabra(15, 'descargar'), .7), (E_ + 'mouse-click.mp3', palabra(15, 'app'), .7), (E_ + 'mouse-click.mp3', palabra(15, 'buscarte'), .7),
+    (E_ + 'camera-screenshot.mp3', T(17, .15), .5),
+    (E_ + 'metallic-riser.mp3', palabra(18, 'tres') - 1.3, .4),
+    (E_ + 'cinematic-impact.mp3', palabra(18, 'tres'), .55),
+    sw(T(19)),
+    (E_ + 'ding.mp3', palabra(20, 'gratis'), .5),
+    sw(T(21)),
+    sw(T(24)),
+    (E_ + 'woah-drop.mp3', palabra(24, 'tuya') - .05, .6),
+    (E_ + 'mouse-click.mp3', T(25, .15), .7),
+    (E_ + 'ding.mp3', palabra(26, 'España'), .4),
+    (E_ + 'punch-riser.mp3', T(28) - 1.1, .35),
+    (E_ + 'mac-typing.mp3', T(28, .25), .35),
+    (V + 'airhorn.mp3', T(28, .05), .2),
 ]
 sfx = [s for s in sfx if s[2] > 0]
 json.dump(dict(fps=FPS, total=TOTAL, seg=seg, subs=subs, ev=ev, sfx=sfx), open('plan.json', 'w'), ensure_ascii=False, indent=1)
