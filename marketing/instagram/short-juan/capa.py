@@ -299,7 +299,7 @@ window.render = function(t) {{
     el.style.opacity = Math.min(1, left / .15);
     el.style.transform = `translate(-50%,-50%) translateY(${{-u * 60}}px) scale(${{back(u / .3)}}) rotate(${{Math.sin(u * 9) * 10}}deg)`; }});
   // chispas alrededor de lo importante
-  const ch = [['placa', [[260,170],[800,230],[300,640],[790,600]]], ['motivo1', [[80,300],[1000,320],[520,250]]], ['qr', [[170,140],[900,160],[880,800]]], ['final', [[180,420],[900,470],[240,1250],[860,1260],[540,300]]]];
+  const ch = [['placa', [[260,170],[800,230],[300,640],[790,600]]], ['motivo1', [[80,300],[1000,320],[520,250]]], ['qr', [[170,140],[900,160],[880,800]]]];
   let n = 0;
   ch.forEach(([k, pts]) => {{ const e = E(k).find(e => t >= e.t0 && t < e.t1);
     pts.forEach((p, j) => {{ let el = document.getElementById('ch' + n);
