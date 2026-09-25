@@ -22,7 +22,7 @@ S = [
     (20.82, 22.42, 'solo tienen que acercar el móvil', 'split', 1.0),
     (22.68, 23.40, 'y… ¡BOOM!', 'full', 1.14),
     (23.92, 24.82, 'Ya se abre.', 'split', 1.0),
-    (10.52, 14.20, '¿Qué es lo que se abre? Las ganas del cliente para dejarte una reseña.', 'split', 1.0, 'nuevo-589238336.mov'),
+    (25.18, 28.85, '¿Qué es lo que se abre? Las ganas del cliente para dejarte una reseña.', 'split', 1.0, ('nuevo-589238336.mov', 10.52, 14.20)),
     (29.15, 29.75, '¿Por qué?', 'full', 1.1),
     (29.97, 35.10, 'Porque no tienen que descargar nada, ni tener una app, ni tener que buscarte.', 'split', 1.0),
     (35.10, 36.85, 'Y si alguien tiene un móvil antiguo…', 'full', 1.0),
@@ -31,9 +31,9 @@ S = [
     (41.42, 43.62, 'La diseñamos con tu logo y tus colores.', 'split', 1.0),
     (43.62, 47.12, 'El diseño es gratis y no se imprime nada hasta que te guste.', 'split', 1.0),
     (49.70, 51.22, 'No te mandamos una placa y ya.', 'split', 1.0),
-    (8.74, 13.36, 'Y te enseñamos a ti y a tu equipo cuándo y cómo pedir las reseñas,', 'split', 1.0, 'nuevo-589238853.mov'),
-    (13.92, 16.16, 'que es lo que de verdad marca la diferencia.', 'full', 1.12, 'nuevo-589238853.mov'),
-    (13.74, 18.62, 'Las placas son de pago único: las pagas una vez y son totalmente tuyas.', 'split', 1.0, 'nuevo-589239006.mov'),
+    (51.22, 55.30, 'Y te enseñamos a ti y a tu equipo cuándo y cómo pedir las reseñas,', 'split', 1.0, ('nuevo-589238853.mov', 8.74, 13.36)),
+    (55.30, 57.12, 'que es lo que de verdad marca la diferencia.', 'full', 1.12, ('nuevo-589238853.mov', 13.92, 16.16)),
+    (57.12, 61.40, 'Las placas son de pago único: las pagas una vez y son totalmente tuyas.', 'split', 1.0, ('nuevo-589239006.mov', 13.74, 18.62)),
     (61.40, 63.42, 'Y hablas conmigo directamente por WhatsApp.', 'split', 1.0),
     (63.74, 66.00, 'Somos de Córdoba y enviamos a toda España.', 'full', 1.0),
     (66.52, 67.85, '¿Quieres ver cómo quedaría la tuya?', 'full', 1.12),
@@ -44,7 +44,8 @@ S = [
 seg, t = [], 0.0
 CARAS = {}
 for i, (a, b, txt, lay, z, *src) in enumerate(S):
-    src = src[0] if src else 'original.mov'
+    voz = src[0] if src else None
+    src = 'original.mov'
     if src not in CARAS:
         cj = json.load(open('cara.json' if src == 'original.mov' else src.replace('.mov', '') + '-cara.json'))
         CARAS[src] = (np.array(cj['t']), 1620 - np.array(cj['x']))
@@ -52,8 +53,9 @@ for i, (a, b, txt, lay, z, *src) in enumerate(S):
     a, b = round(a * FPS) / FPS, round(b * FPS) / FPS
     m = (ct >= a - .3) & (ct <= b + .3)
     x = float(np.median(cx[m])) if m.sum() >= 2 else float(np.median(cx))
-    d = b - a
-    seg.append(dict(i=i, a=a, b=b, t0=round(t, 4), t1=round(t + d, 4), txt=txt, lay=lay, z=z, cx=x, src=src))
+    d = (voz[2] - voz[1]) if voz else (b - a)
+    d = round(d * FPS) / FPS
+    seg.append(dict(i=i, a=a, b=b, t0=round(t, 4), t1=round(t + d, 4), txt=txt, lay=lay, z=z, cx=x, src=src, voz=list(voz) if voz else None))
     t += d
 TOTAL = t
 
