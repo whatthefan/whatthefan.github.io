@@ -3868,7 +3868,7 @@
      cookies" (en el pie) vuelve a abrir el aviso. Cloudflare Web Analytics
      sigue funcionando siempre porque no usa cookies. -->
 <div class="galletas" id="galletas" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
-  <p><b>Cookies</b> · Usamos cookies de análisis. <button type="button" class="enl" data-legal="cookies">Más info</button></p>
+  <p><b>Cookies</b></p>
   <div class="galletas-bot">
     <button type="button" class="btn btn-fan btn-sm" id="galletasNo">Rechazar</button>
     <button type="button" class="btn btn-oro btn-sm" id="galletasSi">Aceptar</button>
@@ -3879,16 +3879,16 @@
   background:var(--panel);border:1px solid var(--borde-claro);border-radius:12px;padding:16px 18px;
   display:flex;gap:14px 18px;align-items:center;flex-wrap:wrap;box-shadow:0 18px 50px rgba(0,0,0,.55);color:var(--txt);font-size:.88rem;line-height:1.5}
 .galletas[hidden]{display:none}
-.galletas p{flex:1 1 300px;margin:0;color:var(--txt-2)}
+.galletas p{flex:1 1 auto;margin:0;color:var(--txt-2);font-size:1.05rem}
 .galletas p b{color:var(--txt)}
 .galletas .enl{color:var(--oro);text-decoration:underline;background:none;border:0;padding:0;font:inherit;cursor:pointer}
 .galletas-bot{display:flex;gap:10px;flex:0 0 auto}
 .galletas-bot .btn{min-width:108px;justify-content:center}
-@media (max-width:560px){.galletas{bottom:12px}.galletas-bot{width:100%}.galletas-bot .btn{flex:1}}
+@media (max-width:560px){.galletas{bottom:12px}}
 </style>
 <script>
 (function(){
-  var ID = 'G-JE35LMMF78', CLAVE = 'plea5e-cookies', DIAS = 365;
+  var ID = 'G-JE35LMMF78', CLAVE = 'plea5e-cookies-2', DIAS = 365;
   var caja = document.getElementById('galletas');
   function leer(){ try { var d = JSON.parse(localStorage.getItem(CLAVE) || 'null');
     if (d && (Date.now() - d.t) < DIAS * 864e5) return d.v; } catch (e) {} return null; }
