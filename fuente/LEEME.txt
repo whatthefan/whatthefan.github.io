@@ -37,3 +37,6 @@ paquete @fontsource/fredoka. SIL Open Font License 1.1: ofl-fredoka.txt.
 titan-one-latin.woff2 (Titan One) es la letra en 3D del carrusel "OYEEEE"
 (marketing/instagram/oyeeee/). Viene de @fontsource/titan-one. SIL Open Font
 License 1.1: ofl-titan-one.txt.
+
+inter-latin.woff2 — Inter (variable, 100-900), de @fontsource-variable/inter. Licencia OFL (ofl-inter.txt).
+Es la letra del estilo "edicion-pro" (motion design premium).
