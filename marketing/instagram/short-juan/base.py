@@ -32,7 +32,7 @@ for s in P['seg']:
     f.append(f'[v{i}]trim={a}:{b},setpts=(PTS-STARTPTS)*{k_:.5f},hflip,{crop},scale={tam}:flags=lanczos{emp}{pad},{grado},setsar=1,fps=30[V{i}]')
     if s['voz']:
         vf, va, vb = s['voz']
-        f.append(f'[{ENT[i]}:a]atrim={va}:{va + D_:.4f},asetpts=PTS-STARTPTS,afade=t=in:d=0.03,afade=t=out:st={D_-0.05:.3f}:d=0.05[A{i}]')
+        f.append(f"[{ENT[i]}:a]atrim={va}:{vb},asetpts=PTS-STARTPTS,atempo={s['tempo']},volume={s['gan']},apad,atrim=0:{D_:.4f},afade=t=in:d=0.03,afade=t=out:st={D_-0.06:.3f}:d=0.06[A{i}]")
     else:
         f.append(f'[a{i}]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.03,afade=t=out:st={b-a-0.05:.3f}:d=0.05[A{i}]')
 f.append(''.join(f'[V{i}][A{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][ar]')

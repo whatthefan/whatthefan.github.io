@@ -38,7 +38,7 @@ S = [
     (63.74, 66.00, 'Somos de Córdoba y enviamos a toda España.', 'full', 1.0),
     (66.52, 67.85, '¿Quieres ver cómo quedaría la tuya?', 'full', 1.12),
     (68.45, 69.35, 'Comenta PLACA', 'split', 1.0),
-    (70.25, 72.85, 'y te mandamos tu diseño.', 'full', 1.0),
+    (70.25, 72.30, 'y te mandamos tu diseño.', 'full', 1.0),
 ]
 
 seg, t = [], 0.0
@@ -53,9 +53,22 @@ for i, (a, b, txt, lay, z, *src) in enumerate(S):
     a, b = round(a * FPS) / FPS, round(b * FPS) / FPS
     m = (ct >= a - .3) & (ct <= b + .3)
     x = float(np.median(cx[m])) if m.sum() >= 2 else float(np.median(cx))
-    d = (voz[2] - voz[1]) if voz else (b - a)
+    tempo, gan = 1.0, 1.0
+    if voz:
+        lv = voz[2] - voz[1]; lo = b - a
+        tempo = min(1.12, max(1.0, lv / lo))      # la voz nueva, como mucho un 12 % mas rapida
+        d = lv / tempo                            # lo que falte, lo pone la imagen (un pelin mas lenta)
+        # volumen: que la voz nueva quede 1,5 dB por debajo de la original en ese mismo trozo
+        import soundfile as _sf
+        def rms(fw, t0, t1):
+            x, sr = _sf.read(fw, dtype='float32'); x = x[int(t0 * sr):int(t1 * sr)]
+            x = x[np.abs(x) > 0.01] if (np.abs(x) > 0.01).sum() > 100 else x
+            return float(np.sqrt(np.mean(x ** 2)) + 1e-9)
+        gan = rms('audio16.wav', a, b) / rms(voz[0].replace('.mov', '.wav'), voz[1], voz[2]) * 10 ** (-1.5 / 20)
+    else:
+        d = b - a
     d = round(d * FPS) / FPS
-    seg.append(dict(i=i, a=a, b=b, t0=round(t, 4), t1=round(t + d, 4), txt=txt, lay=lay, z=z, cx=x, src=src, voz=list(voz) if voz else None))
+    seg.append(dict(i=i, a=a, b=b, t0=round(t, 4), t1=round(t + d, 4), txt=txt, lay=lay, z=z, cx=x, src=src, voz=list(voz) if voz else None, tempo=round(tempo, 4), gan=round(gan, 4)))
     t += d
 TOTAL = t
 
@@ -114,7 +127,7 @@ ev = [
     dict(k='whatsapp', t0=T(25), t1=seg[25]['t1']),
     dict(k='espana', t0=palabra(26, 'Córdoba'), t1=seg[26]['t1']),
     dict(k='comenta', t0=T(28), t1=seg[28]['t1']),
-    dict(k='final', t0=T(29, 2.02), t1=TOTAL),
+    dict(k='final', t0=T(29, 1.53), t1=TOTAL),
 ]
 # destellos al cambiar de pantalla completa a partida y al reves
 for a_, b_ in zip(seg[:-1], seg[1:]):
