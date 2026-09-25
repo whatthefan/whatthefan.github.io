@@ -4,7 +4,7 @@ import json, numpy as np
 
 FPS = 30
 cara = json.load(open('cara.json'))
-ct, cx = np.array(cara['t']), np.array(cara['x'])
+ct, cx = np.array(cara['t']), 1620 - np.array(cara['x'])
 
 # (entra, sale, texto que se oye, layout, zoom)   layout: full = tu cara a pantalla completa
 #                                                  split = grafico arriba y tu abajo
@@ -38,7 +38,7 @@ S = [
     (63.74, 66.00, 'Somos de Córdoba y enviamos a toda España.', 'full', 1.0),
     (66.52, 67.85, '¿Quieres ver cómo quedaría la tuya?', 'full', 1.12),
     (68.45, 69.35, 'Comenta PLACA', 'split', 1.0),
-    (70.25, 72.26, 'y te mandamos tu diseño.', 'split', 1.0),
+    (70.25, 73.66, 'y te mandamos tu diseño.', 'full', 1.0),
 ]
 
 seg, t = [], 0.0
@@ -74,7 +74,7 @@ subs = [dict(t0=pg[0]['t0'], t1=pg[-1]['t1'], w=[dict(w=q['w'], t0=q['t0'], t1=q
 # que cada pagina dure hasta que empiece la siguiente (sin huecos)
 for k in range(len(subs) - 1):
     subs[k]['t1'] = subs[k + 1]['t0']
-subs[-1]['t1'] = TOTAL
+subs[-1]['t1'] = min(TOTAL, subs[-1]['t1'] + .3)
 
 T = lambda i, off=0.0: round(seg[i]['t0'] + off, 3)
 def palabra(i, trozo):
@@ -106,8 +106,33 @@ ev = [
     dict(k='whatsapp', t0=T(25), t1=seg[25]['t1']),
     dict(k='espana', t0=palabra(26, 'Córdoba'), t1=seg[26]['t1']),
     dict(k='comenta', t0=T(28), t1=seg[28]['t1']),
-    dict(k='final', t0=T(29), t1=TOTAL),
+    dict(k='final', t0=T(29, 1.95), t1=TOTAL),
 ]
+# emojis que saltan (x, y en la pantalla de 1080x1920)
+def emo(e, t, x, y, d=1.1): ev.append(dict(k='emoji', e=e, t0=round(t, 3), t1=round(t + d, 3), x=x, y=y))
+emo('👀', T(0, .05), 800, 120, .9)
+emo('⏱️', palabra(1, 'segundos'), 860, 470)
+emo('😊', T(5, .3), 820, 330)
+emo('🦗', palabra(6, 'nadie') + .2, 120, 380, 1.0)
+emo('😴', palabra(8, 'pereza'), 110, 420, 1.3)
+emo('🤯', palabra(11, 'BOOM') + .05, 780, 560, .9)
+emo('😍', palabra(13, 'ganas'), 110, 300, 1.4)
+emo('🤔', T(14), 780, 380, .8)
+emo('🔥', palabra(18, 'tres'), 800, 420, 1.2)
+emo('🎁', palabra(20, 'gratis'), 900, 690, 1.2)
+emo('🧠', palabra(21, 'enseñamos'), 880, 150, 1.4)
+emo('💸', palabra(24, 'tuya'), 900, 240, 1.2)
+emo('📲', T(25, .3), 900, 520, 1.3)
+emo('🇪🇸', palabra(26, 'España'), 820, 380, 1.2)
+emo('💬', T(28, .1), 880, 170, 1.2)
+# destellos al cambiar de pantalla completa a partida y al reves
+for a_, b_ in zip(seg[:-1], seg[1:]):
+    if a_['lay'] != b_['lay']:
+        ev.append(dict(k='flash', t0=round(b_['t0'], 3), t1=round(b_['t0'] + .16, 3)))
+# confeti
+for t_ in [palabra(20, 'gratis'), palabra(24, 'tuya'), T(29, 2.0)]:
+    ev.append(dict(k='confeti', t0=round(t_, 3), t1=round(t_ + 1.6, 3)))
+
 
 # sonidos: (archivo, tiempo, volumen)
 V = 'sonidos/virales/'; B = 'sonidos/'
@@ -139,8 +164,10 @@ sfx = [
     (B + 'pop.mp3', palabra(26, 'España'), .5),
     (V + 'wait-a-minute.mp3', T(27), .0),   # reservado, apagado
     (V + 'airhorn.mp3', T(28), .28),
-    (B + 'whoosh.mp3', T(29) - .12, .5),
-    (B + 'sparkle.mp3', T(29, .8), .45),
+    (B + 'sparkle.mp3', T(29, 2.0), .45),
+    (B + 'riser.mp3', T(29, 1.0), .3),
+    (B + 'impact-bass-2.mp3', T(29, 1.95), .55),
+    (V + 'ding.mp3', palabra(24, 'tuya'), .3),
 ]
 sfx = [s for s in sfx if s[2] > 0]
 json.dump(dict(fps=FPS, total=TOTAL, seg=seg, subs=subs, ev=ev, sfx=sfx), open('plan.json', 'w'), ensure_ascii=False, indent=1)

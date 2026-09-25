@@ -37,9 +37,12 @@ html,body{{width:1080px;height:1920px;overflow:hidden;background:transparent}}
 #barra{{position:absolute;left:0;top:0;height:10px;background:#E9BC46;box-shadow:0 0 12px rgba(233,188,70,.8)}}
 /* subtitulos */
 #sub{{position:absolute;left:40px;right:40px;text-align:center;font-family:Mont;font-weight:900;font-size:92px;line-height:1.05;text-transform:uppercase;letter-spacing:-1px}}
-#sub span{{display:inline-block;margin:0 10px;color:#fff;-webkit-text-stroke:14px #06080E;paint-order:stroke fill;
+#sub span{{display:inline-block;margin:0 24px;color:#fff;-webkit-text-stroke:14px #06080E;paint-order:stroke fill;
   text-shadow:0 10px 0 #06080E,0 14px 24px rgba(0,0,0,.55)}}
-#sub span.on{{color:#FFD23A}}
+#sub span.on{{color:#FFD23A;transform:scale(1.1) rotate(-2deg)}}
+#sub span{{transition:none}}
+.emo{{position:absolute;font-size:140px;line-height:1;filter:drop-shadow(0 12px 16px rgba(0,0,0,.5))}}
+.chis{{position:absolute;width:60px;height:60px}}
 .g{{position:absolute;opacity:0;will-change:transform,opacity}}
 .card{{background:#fff;border-radius:34px;box-shadow:0 30px 60px rgba(0,0,0,.45)}}
 .chip{{position:absolute;font-family:Mont;font-weight:900;font-size:54px;color:#06080E;background:#FFD23A;padding:14px 34px;border-radius:999px;box-shadow:0 12px 0 #9A6A00,0 24px 40px rgba(0,0,0,.4);white-space:nowrap}}
@@ -180,14 +183,24 @@ html,body{{width:1080px;height:1920px;overflow:hidden;background:transparent}}
   <div class="tit" style="font-size:84px;text-align:center;margin-top:70px">COMENTA <span class="oro">«PLACA»</span></div>
 </div>
 <img class="g bicho" id="g_megafono" src="{A['b_megafono-izq']}" style="left:760px;top:560px;width:300px">
-<!-- final -->
-<div class="g" id="g_final" style="left:0;top:0;width:1080px;height:960px">
-  <img src="{A['placa']}" class="abs" style="left:350px;top:170px;width:380px;border-radius:18px;transform:rotate(-5deg);box-shadow:0 40px 60px rgba(0,0,0,.55)">
-  <div class="tit abs" style="left:0;right:0;top:620px;text-align:center;font-size:88px">TE MANDO <span class="oro">TU DISEÑO</span></div>
-  <div class="abs" style="left:0;right:0;top:760px;text-align:center;font-family:Mont;font-weight:800;font-size:46px;color:#fff">plea5e.es</div>
-  <img class="abs bicho" id="fb" src="{A['b_tachan-izq']}" style="left:40px;top:360px;width:280px">
+<!-- final: se oscurece -->
+<div class="g" id="g_final" style="left:0;top:0;width:1080px;height:1920px">
+  <div id="fnegro" style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 45%,rgba(20,26,48,.92),rgba(3,4,8,.98))"></div>
+  <div id="fglow" style="position:absolute;left:140px;top:420px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(233,188,70,.35),transparent 65%)"></div>
+  <img id="flogo" src="{A['logo']}" class="abs" style="left:190px;top:330px;width:700px">
+  <img id="fplaca" src="{A['placa']}" class="abs" style="left:330px;top:560px;width:420px;border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.7)">
+  <div id="fweb" class="tit abs" style="left:0;right:0;top:1080px;text-align:center;font-size:150px;text-transform:none"><span class="oro">PLEA5E</span>.es</div>
+  <div id="fest" class="abs" style="left:0;right:0;top:1270px;text-align:center;font-size:90px">{EST * 5}</div>
+  <div id="fcta" class="abs" style="left:0;right:0;top:1420px;text-align:center;font-family:Mont;font-weight:900;font-size:54px;color:#fff">Comenta <span style="color:#FFD23A">PLACA</span> · diseño gratis</div>
+  <img class="abs bicho" id="fb" src="{A['b_tachan-izq']}" style="left:60px;top:1500px;width:300px">
+  <img class="abs bicho" id="fb2" src="{A['b_guino']}" style="left:740px;top:1520px;width:280px">
 </div>
-
+<canvas id="confeti" width="1080" height="1920" style="position:absolute;inset:0"></canvas>
+<div id="flashB" style="position:absolute;inset:0;background:#fff;opacity:0"></div>
+<div id="vineta" style="position:absolute;inset:0;background:radial-gradient(ellipse 75% 60% at 50% 42%,transparent 55%,rgba(0,0,0,.45) 100%);opacity:0"></div>
+<div id="marca" style="position:absolute;left:0;right:0;top:1818px;text-align:center"><span style="font-family:Mont;font-weight:900;font-size:38px;color:#fff;background:rgba(6,8,14,.55);padding:8px 26px;border-radius:999px;border:2px solid rgba(233,188,70,.7)"><span style="color:#FFD23A">PLEA5E</span>.es</span></div>
+<div id="emojis"></div>
+<div id="chispas"></div>
 <div id="sub"></div>
 <div id="barra"></div>
 <script>
@@ -217,7 +230,8 @@ window.render = function(t) {{
   $('panel').style.opacity = split ? 1 : 0; $('costura').style.opacity = split ? 1 : 0;
   $('barra').style.width = (t / P.total * 1080) + 'px';
   // subtitulos
-  const pg = P.subs.find(p => t >= p.t0 && t < p.t1);
+  const fin0 = P.ev.find(e => e.k === 'final').t0;
+  const pg = t > fin0 + .25 ? null : P.subs.find(p => t >= p.t0 && t < p.t1);
   const sub = $('sub');
   if (pg) {{
     sub.style.top = split ? '905px' : '1330px';
@@ -271,7 +285,53 @@ window.render = function(t) {{
   if ((r = one('comenta', 'pop'))) {{ const u = r[0]; const w = 'PLACA'; $('ctxt').textContent = w.slice(0, Math.floor(cl((u - .25) / .5) * w.length));
     $('ccur').style.opacity = (Math.floor(u * 3) % 2) ? 0 : 1; }}
   const cm = E('comenta')[0]; show($('g_megafono'), {{t0: cm.t0 + .2, t1: cm.t1}}, t, 'up');
-  if ((r = one('final', ''))) {{ $('fb').style.transform = `translateY(${{Math.abs(Math.sin(r[0] * 5)) * -30}}px)`; }}
+
+  // vineta suave en pantalla completa
+  $('vineta').style.opacity = split ? 0 : 1;
+  // destellos en los cambios de plano
+  const fl = E('flash').find(e => t >= e.t0 && t < e.t1); $('flashB').style.opacity = fl ? .55 * (1 - (t - fl.t0) / (fl.t1 - fl.t0)) : 0;
+  // emojis
+  E('emoji').forEach((e, k) => {{ let el = document.getElementById('emo' + k);
+    if (!el) {{ el = document.createElement('div'); el.className = 'emo'; el.id = 'emo' + k; el.textContent = e.e; $('emojis').appendChild(el); }}
+    const u = t - e.t0, left = e.t1 - t;
+    if (u < 0 || left < 0) {{ el.style.opacity = 0; return; }}
+    el.style.left = e.x + 'px'; el.style.top = e.y + 'px';
+    el.style.opacity = Math.min(1, left / .15);
+    el.style.transform = `translate(-50%,-50%) translateY(${{-u * 60}}px) scale(${{back(u / .3)}}) rotate(${{Math.sin(u * 9) * 10}}deg)`; }});
+  // chispas alrededor de lo importante
+  const ch = [['placa', [[260,170],[800,230],[300,640],[790,600]]], ['motivo1', [[80,300],[1000,320],[520,250]]], ['qr', [[170,140],[900,160],[880,800]]], ['final', [[180,420],[900,470],[240,1250],[860,1260],[540,300]]]];
+  let n = 0;
+  ch.forEach(([k, pts]) => {{ const e = E(k).find(e => t >= e.t0 && t < e.t1);
+    pts.forEach((p, j) => {{ let el = document.getElementById('ch' + n);
+      if (!el) {{ el = document.createElement('div'); el.className = 'chis'; el.id = 'ch' + n;
+        el.innerHTML = '<svg viewBox="-10 -10 20 20" width="60" height="60"><path d="M0 -10Q1.2 -1.2 10 0Q1.2 1.2 0 10Q-1.2 1.2 -10 0Q-1.2 -1.2 0 -10Z" fill="#FFF3C4"/></svg>'; $('chispas').appendChild(el); }}
+      if (!e) el.style.opacity = 0;
+      else {{ const u = t - e.t0 + j * .37; const s_ = Math.max(0, Math.sin(u * 4.2));
+        el.style.left = (p[0] - 30) + 'px'; el.style.top = (p[1] - 30) + 'px'; el.style.opacity = s_; el.style.transform = `scale(${{.4 + s_ * .9}}) rotate(${{u * 90}}deg)`; }}
+      n++; }}); }});
+  // confeti
+  const cv = $('confeti'), cx_ = cv.getContext('2d'); cx_.clearRect(0, 0, 1080, 1920);
+  E('confeti').forEach((e, q) => {{ const u = t - e.t0; if (u < 0 || u > e.t1 - e.t0) return;
+    const cols = ['#FFD23A', '#E9BC46', '#FFFFFF', '#4285F4', '#34A853', '#EA4335'];
+    for (let k = 0; k < 90; k++) {{ const r = x => {{ const v = Math.sin((k + 1) * 12.9898 + q * 78.233 + x) * 43758.5453; return v - Math.floor(v); }};
+      const ang = -Math.PI / 2 + (r(1) - .5) * 2.2, vel = 900 + r(2) * 900;
+      const x = 540 + Math.cos(ang) * vel * u, y = 900 + Math.sin(ang) * vel * u + 1400 * u * u;
+      cx_.save(); cx_.globalAlpha = Math.max(0, 1 - u / (e.t1 - e.t0)); cx_.translate(x, y); cx_.rotate(u * 8 * (r(3) - .5) * 4);
+      cx_.fillStyle = cols[k % cols.length]; cx_.fillRect(-9, -5, 18 + r(4) * 10, 10); cx_.restore(); }} }});
+  // final: se oscurece y sale PLEA5E.es
+  const fe = E('final')[0], uf = t - fe.t0;
+  $('marca').style.opacity = uf > 0 ? 0 : 1;
+  if (uf >= 0) {{ $('g_final').style.opacity = 1; $('g_final').style.transform = '';
+    $('fnegro').style.opacity = cl(uf / .7);
+    $('fglow').style.opacity = cl((uf - .3) / .5) * (.8 + .2 * Math.sin(uf * 4));
+    $('flogo').style.opacity = cl((uf - .35) / .3); $('flogo').style.transform = `scale(${{.6 + .4 * back((uf - .35) / .4)}})`;
+    $('fplaca').style.opacity = cl((uf - .55) / .3); $('fplaca').style.transform = `translateY(${{(1 - eo((uf - .55) / .45)) * 300}}px) rotate(${{-5 + Math.sin(uf * 2) * 2}}deg)`;
+    $('fweb').style.opacity = cl((uf - .8) / .2); $('fweb').style.transform = `scale(${{.3 + .7 * back((uf - .8) / .35)}})`;
+    [...$('fest').children].forEach((st, k) => {{ const v = uf - 1.05 - k * .08; st.style.transform = `scale(${{v < 0 ? 0 : back(v / .3)}})`; }});
+    $('fcta').style.opacity = cl((uf - 1.4) / .3);
+    $('fb').style.transform = `translateY(${{(1 - eo((uf - .9) / .4)) * 500 + Math.abs(Math.sin(uf * 5)) * -24}}px)`;
+    $('fb2').style.transform = `translateY(${{(1 - eo((uf - 1.05) / .4)) * 500}}px) rotate(${{Math.sin(uf * 3) * 6}}deg)`;
+  }} else $('g_final').style.opacity = 0;
 }};
 window.LISTO = true;
 </script></body></html>'''

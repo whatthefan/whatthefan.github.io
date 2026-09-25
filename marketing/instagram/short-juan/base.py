@@ -17,7 +17,13 @@ for s in P['seg']:
     x0 = min(max(x - w / 2, 0), W0 - w)
     crop = f'crop={int(w)//2*2}:{int(h)//2*2}:{int(x0)}:{int(y)}'
     pad = ',pad=1080:1920:0:960:black' if s['lay'] == 'split' else ''
-    f.append(f'[v{i}]trim={a}:{b},setpts=PTS-STARTPTS,{crop},scale={tam}:flags=lanczos{pad},{grado},setsar=1,fps=30[V{i}]')
+    if s['i'] == 11:   # BOOM: temblor
+        crop = crop.rsplit(':', 2)[0] + f":'{int(x0)}+14*sin(t*55)':'{int(y)}+10*cos(t*47)'"
+        x0 = max(14, min(x0, W0 - w - 14))
+    # empuje lento hacia dentro en los planos a pantalla completa
+    D = b - a
+    emp = (f",scale=w='trunc(1080*(1+0.06*t/{D:.3f})/2)*2':h=-2:eval=frame,crop=1080:1920:'(iw-1080)/2':'(ih-1920)*0.3'" if s['lay'] == 'full' else '')
+    f.append(f'[v{i}]trim={a}:{b},setpts=PTS-STARTPTS,hflip,{crop},scale={tam}:flags=lanczos{emp}{pad},{grado},setsar=1,fps=30[V{i}]')
     f.append(f'[a{i}]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.015,afade=t=out:st={b-a-0.02:.3f}:d=0.02[A{i}]')
 f.append(''.join(f'[V{i}][A{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][ar]')
 f.append('[ar]highpass=f=85,lowpass=f=12500,afftdn=nf=-28,acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=2,'
