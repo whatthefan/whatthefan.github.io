@@ -27,7 +27,19 @@
   .espejo .texto{transform:scaleX(-1)}
   .bloque{margin-bottom:1.1em}
   .etq{display:block;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:.34em;letter-spacing:.14em;color:var(--oro);margin-bottom:.35em}
-  .accion{display:block;font-weight:400;font-size:.42em;line-height:1.35;color:var(--oro-os);font-style:italic;margin-top:.3em}
+  .x-accion{display:block;font-weight:400;font-size:.42em;line-height:1.35;color:var(--oro-os);font-style:italic;margin-top:.3em}
+  .chips{display:flex;flex-wrap:wrap;gap:.25em .35em;margin-bottom:.4em}
+  .chip{display:inline-flex;gap:.4em;align-items:baseline;font-size:.3em;font-weight:700;line-height:1.3;padding:.35em .7em;border-radius:.5em;border:1px solid var(--borde);background:var(--panel)}
+  .chip i{font-style:normal}
+  .chip.tono{color:#9CC3FF;border-color:#2B3F63}
+  .chip.cara{color:#FFB3C7;border-color:#5A2F40}
+  .chip.gesto{color:var(--oro);border-color:#4F4222}
+  .inline{font-size:.46em;font-weight:400;font-style:italic;color:var(--oro);background:rgba(233,188,70,.1);border-radius:.3em;padding:.05em .4em;vertical-align:middle}
+  .fin{display:inline-block;margin-top:.45em;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:.36em;letter-spacing:.1em;padding:.2em .7em;border-radius:.4em}
+  .fin.para{background:var(--rojo);color:#fff}
+  .fin.seguido{background:#1F6B42;color:#DFF5E8}
+  .leyenda{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--suave)}
+  .leyenda b{font-weight:700}
   .pausa{color:var(--suave);font-weight:400}
   .nombre{color:var(--oro)}
   /* la linea de lectura: los ojos van aqui */
@@ -60,9 +72,10 @@
   <header>
     <h1>PLEA<span>5</span>E · PROMPTER</h1>
     <div class="pestanas" role="group" aria-label="Guion">
-      <button type="button" id="g-largo" data-g="largo" aria-pressed="true">Quién soy y por qué nosotros · 75 s</button>
-      <button type="button" id="g-corto" data-g="corto" aria-pressed="false">Versión corta · 30 s</button>
+      <button type="button" id="g-largo" data-g="largo" aria-pressed="true">Quién soy y por qué nosotros</button>
+      <button type="button" id="g-corto" data-g="corto" aria-pressed="false">Versión corta</button>
     </div>
+    <span class="leyenda"><b style="color:#9CC3FF">🎙 tono</b><b style="color:#FFB3C7">🙂 cara</b><b style="color:var(--oro)">✋ gesto / acción</b><b style="color:var(--rojo)">⏸ para</b><b style="color:#5BC08A">→ seguido</b><b>/ respira</b></span>
     <span class="dur" id="dur"></span>
   </header>
 
@@ -84,29 +97,37 @@
 </div>
 
 <script>
-/* [etiqueta] | texto a leer | (accion) — "/" marca una pausa corta */
+/* Cada bloque: e = etiqueta · t = lo que lees · tono · cara · gesto · fin ('para' o 'seguido')
+   Dentro del texto: " / " = respira sin parar · {algo} = una acción en mitad de la frase */
 var GUIONES = {
   largo: [
-    ['GANCHO', '¿Ves esto? / Hace que tus clientes te dejen la reseña en Google… en diez segundos.', 'Enseña la placa a cámara, quieta, con las dos manos.'],
-    ['QUIÉN SOY', 'Me llamo <span class="nombre">[TU NOMBRE]</span> y tengo PLEA5E. / Hacemos placas para bares, restaurantes y tiendas.', 'Sonríe. Baja un poco la placa.'],
-    ['EL PROBLEMA', 'Tus clientes salen contentos… / pero casi nadie te escribe.', 'Pausa de un segundo.'],
-    ['', 'Y no es que no quieran. / Es que se les olvida, o les da pereza buscarte.', 'Encógete de hombros.'],
-    ['CÓMO FUNCIONA', 'Con la placa en la mesa, solo tienen que acercar el móvil…', 'Acerca el móvil a la placa, despacio.'],
-    ['', '…y se abre directamente la ventana para escribirte la reseña. / Sin buscarte y sin descargar nada.', ''],
-    ['', 'Y si alguien tiene un móvil antiguo, / tiene el QR.', 'Señala el QR.'],
-    ['POR QUÉ NOSOTROS', '¿Y por qué nosotros? / Tres cosas.', 'Levanta tres dedos.'],
-    ['1', 'La diseñamos con tu logo y tus colores. / El diseño es gratis, y no se imprime nada hasta que te guste.', ''],
-    ['2', 'No te mandamos una placa y ya. / Te enseñamos a ti y a tu equipo cuándo y cómo pedir la reseña. / Eso es lo que marca la diferencia.', 'Enseña la guía si la tienes impresa.'],
-    ['3', 'Las placas: pago único. / La pagas una vez y es tuya.', ''],
-    ['', 'Y hablas conmigo directamente, por WhatsApp. / Somos de Córdoba y enviamos a toda España.', ''],
-    ['CIERRE', '¿Quieres ver cómo quedaría la tuya? / Comenta PLACA… / y te mando el diseño gratis.', 'Señala hacia abajo, a los comentarios. Sonríe y aguanta 2 segundos.']
+    {e:'ANTES DE EMPEZAR', t:'{No leas esto: colócate. Placa en la mano, debajo de la cámara, fuera de plano. Respira. Cuando acabe la cuenta atrás, cuenta dos segundos en silencio mirando a cámara y empieza.}', tono:'', cara:'', gesto:'', fin:''},
+    {e:'GANCHO', t:'{sube la placa de golpe hasta la cara} ¿Ves esto?', tono:'Seguro y rápido, como quien cuenta un secreto', cara:'Cejas arriba, media sonrisa', gesto:'Placa quieta, de frente, con las dos manos', fin:'para'},
+    {e:'', t:'Hace que tus clientes te dejen la reseña en Google… / {acerca un poco la placa a cámara} en diez segundos.', tono:'Baja la voz en «en diez segundos», como quien lo dice en confianza', cara:'Mirada fija a cámara', gesto:'', fin:'para'},
+    {e:'QUIÉN SOY', t:'{baja la placa al pecho} Me llamo <span class="nombre">[TU NOMBRE]</span> y tengo PLEA5E. / Hacemos placas para bares, restaurantes y tiendas.', tono:'Cercano, como con un amigo en la barra', cara:'Sonrisa de verdad (piensa en algo que te haga gracia)', gesto:'Mano abierta hacia ti al decir tu nombre', fin:'seguido'},
+    {e:'EL PROBLEMA', t:'Tus clientes salen contentos… {pausa corta} pero casi nadie te escribe.', tono:'Más lento, un poco serio', cara:'Frunce un poco el ceño en «casi nadie»', gesto:'Mano plana que baja en «casi nadie»', fin:'para'},
+    {e:'', t:'Y no es que no quieran. / Es que se les olvida… / {pon los ojos en blanco} o les da pereza buscarte.', tono:'Con humor, complicidad', cara:'Mueca de pereza exagerada en «pereza»', gesto:'Encoge los hombros', fin:'para'},
+    {e:'CÓMO FUNCIONA', t:'Con la placa en la mesa… / {sube la placa y acerca el móvil, DESPACIO} solo tienen que acercar el móvil…', tono:'Tranquilo, como enseñando un truco', cara:'Mira la placa, no a cámara', gesto:'El móvil toca la placa y se queda ahí 1 segundo', fin:'para'},
+    {e:'', t:'{vuelve a mirar a cámara} …y se abre directamente la ventana para escribirte la reseña. / Sin buscarte… / y sin descargar nada.', tono:'Sube la energía: esto es lo bueno', cara:'Cara de «¿a que mola?»', gesto:'Chasquea los dedos en «directamente»', fin:'seguido'},
+    {e:'', t:'Y si alguien tiene un móvil antiguo… / {señala el QR con el dedo} tiene el QR.', tono:'Rápido, como un «por si acaso»', cara:'Guiño', gesto:'Toca el QR con el dedo', fin:'para'},
+    {e:'POR QUÉ NOSOTROS', t:'{deja la placa, fuera de plano} ¿Y por qué nosotros? / Tres cosas.', tono:'Pregunta de verdad, ritmo marcado', cara:'Serio, confiado', gesto:'Levanta tres dedos en «tres cosas»', fin:'para'},
+    {e:'UNO', t:'{un dedo} La diseñamos con tu logo y tus colores. / El diseño es gratis… / y no se imprime nada hasta que te guste.', tono:'Claro y tranquilo', cara:'Sonrisa en «gratis»', gesto:'Un dedo arriba todo el rato', fin:'para'},
+    {e:'DOS', t:'{dos dedos} No te mandamos una placa y ya. / Te enseñamos a ti y a tu equipo cuándo y cómo pedir la reseña.', tono:'Más serio: esta es la importante', cara:'Mirada firme a cámara', gesto:'Dos dedos. Si tienes la guía impresa, levántala', fin:'seguido'},
+    {e:'', t:'Eso es lo que de verdad marca la diferencia.', tono:'Lento, palabra por palabra', cara:'Asiente con la cabeza una vez', gesto:'', fin:'para'},
+    {e:'TRES', t:'{tres dedos} Las placas: pago único. / La pagas una vez… / y es tuya.', tono:'Directo, sin rodeos', cara:'Cejas arriba en «es tuya»', gesto:'Palmada suave en la mesa en «es tuya»', fin:'para'},
+    {e:'', t:'Y hablas conmigo directamente, por WhatsApp. / Somos de Córdoba… / y enviamos a toda España.', tono:'Cercano otra vez, orgulloso', cara:'Sonrisa', gesto:'Señálate con el pulgar en «conmigo»', fin:'para'},
+    {e:'CIERRE', t:'¿Quieres ver cómo quedaría la tuya?', tono:'Pregunta con ganas, subiendo al final', cara:'Cabeza un poco ladeada', gesto:'Señala a cámara', fin:'para'},
+    {e:'', t:'Comenta PLACA… / {señala hacia abajo, a los comentarios} y te mando el diseño gratis.', tono:'Energía arriba, como despedida', cara:'Sonrisa grande', gesto:'Señala abajo con las dos manos', fin:'para'},
+    {e:'FIN', t:'{aguanta la sonrisa 2 segundos mirando a cámara. No pares de grabar todavía.}', tono:'', cara:'', gesto:'', fin:''}
   ],
   corto: [
-    ['GANCHO', '¿Ves esto? / Hace que tus clientes te dejen la reseña en Google en diez segundos.', 'Enseña la placa a cámara.'],
-    ['', 'Soy <span class="nombre">[TU NOMBRE]</span>, de PLEA5E. / Tus clientes salen contentos… pero se les olvida escribirte.', ''],
-    ['', 'Con esto acercan el móvil / y se abre directamente la reseña. / Sin buscarte, sin apps.', 'Acerca el móvil, despacio.'],
-    ['', 'Con tu logo, diseño gratis, / y las placas: pago único.', ''],
-    ['CIERRE', 'Comenta PLACA / y te mando cómo quedaría la tuya.', 'Señala abajo y sonríe.']
+    {e:'ANTES DE EMPEZAR', t:'{Placa en la mano, fuera de plano. Dos segundos en silencio mirando a cámara y empieza.}', tono:'', cara:'', gesto:'', fin:''},
+    {e:'GANCHO', t:'{sube la placa de golpe} ¿Ves esto? / Hace que tus clientes te dejen la reseña en Google en diez segundos.', tono:'Seguro y rápido', cara:'Cejas arriba, media sonrisa', gesto:'Placa quieta, de frente', fin:'para'},
+    {e:'', t:'{baja la placa} Soy <span class="nombre">[TU NOMBRE]</span>, de PLEA5E. / Tus clientes salen contentos… / {ojos en blanco} pero se les olvida escribirte.', tono:'Cercano, con humor al final', cara:'Mueca de «qué le vamos a hacer»', gesto:'Encoge los hombros', fin:'para'},
+    {e:'', t:'{acerca el móvil a la placa, despacio} Con esto acercan el móvil… / y se abre directamente la reseña. / Sin buscarte, sin apps.', tono:'Tranquilo y luego arriba', cara:'Cara de «¿a que mola?»', gesto:'Chasquea los dedos en «directamente»', fin:'para'},
+    {e:'', t:'Con tu logo… / diseño gratis… / y las placas: pago único.', tono:'Rápido, enumerando', cara:'Sonrisa', gesto:'Cuenta con los dedos: uno, dos, tres', fin:'para'},
+    {e:'CIERRE', t:'Comenta PLACA… / {señala abajo} y te mando cómo quedaría la tuya.', tono:'Energía arriba', cara:'Sonrisa grande', gesto:'Señala abajo con las dos manos', fin:'para'},
+    {e:'FIN', t:'{aguanta la sonrisa 2 segundos. No pares de grabar todavía.}', tono:'', cara:'', gesto:'', fin:''}
   ]
 };
 
@@ -120,13 +141,20 @@ function leer(k){ try { return localStorage.getItem('prompter-' + k); } catch (e
 function pintar(){
   var g = GUIONES[actual], html = '', palabras = 0;
   g.forEach(function(b){
-    var t = b[1].replace(/ \/ /g, ' <span class="pausa">/</span> ');
-    palabras += b[1].replace(/<[^>]+>/g, '').split(/\s+/).length;
-    html += '<div class="bloque">' + (b[0] ? '<span class="etq">' + b[0] + '</span>' : '') + t +
-            (b[2] ? '<span class="accion">(' + b[2] + ')</span>' : '') + '</div>';
+    var t = b.t.replace(/ \/ /g, ' <span class="pausa">/</span> ')
+               .replace(/\{([^}]+)\}/g, '<span class="inline">$1</span>');
+    palabras += b.t.replace(/\{[^}]+\}/g, '').replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
+    var chips = '';
+    if (b.tono)  chips += '<span class="chip tono"><i>🎙</i>' + b.tono + '</span>';
+    if (b.cara)  chips += '<span class="chip cara"><i>🙂</i>' + b.cara + '</span>';
+    if (b.gesto) chips += '<span class="chip gesto"><i>✋</i>' + b.gesto + '</span>';
+    var fin = b.fin === 'para' ? '<span class="fin para">⏸ PARA · 1 segundo en silencio</span>'
+            : b.fin === 'seguido' ? '<span class="fin seguido">→ SIGUE SIN PARAR</span>' : '';
+    html += '<div class="bloque">' + (b.e ? '<span class="etq">' + b.e + '</span>' : '') +
+            (chips ? '<div class="chips">' + chips + '</div>' : '') + '<div class="dice">' + t + '</div>' + fin + '</div>';
   });
   texto.innerHTML = html;
-  $('dur').textContent = palabras + ' palabras · unos ' + Math.round(palabras / 2.6) + ' s hablando';
+  $('dur').textContent = palabras + ' palabras · unos ' + Math.round(palabras / 2.4 + g.filter(function(b){return b.fin==='para';}).length) + ' s con las pausas';
   document.querySelectorAll('.pestanas button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.g === actual); });
   reiniciar();
 }
