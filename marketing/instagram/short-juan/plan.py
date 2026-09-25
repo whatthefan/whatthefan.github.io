@@ -12,7 +12,7 @@ S = [
     (1.00, 1.98, '¿Veis esto?', 'split', 1.0),
     (2.60, 5.55, 'Hace que tus clientes te dejen la reseña en menos de 10 segundos.', 'split', 1.0),
     (5.98, 6.88, 'Me llamo Juan', 'full', 1.0),
-    (7.18, 7.95, 'y tengo PLEA5E.', 'full', 1.12),
+    (7.18, 8.08, 'y tengo PLEA5E.', 'full', 1.12),
     (8.22, 11.78, 'Hacemos placas para restaurantes, bares y comercios locales.', 'split', 1.0),
     (12.10, 13.72, 'Tus clientes salen contentos…', 'full', 1.0),
     (13.98, 15.10, '…pero nadie te escribe.', 'full', 1.1),
@@ -22,7 +22,7 @@ S = [
     (20.82, 22.42, 'solo tienen que acercar el móvil', 'split', 1.0),
     (22.68, 23.40, 'y… ¡BOOM!', 'full', 1.14),
     (23.92, 24.82, 'Ya se abre.', 'split', 1.0),
-    (25.18, 28.85, '¿Qué es lo que se abre? Las ganas de tu cliente de dejarte la reseña.', 'split', 1.0),
+    (10.52, 14.20, '¿Qué es lo que se abre? Las ganas del cliente para dejarte una reseña.', 'split', 1.0, 'nuevo-589238336.mov'),
     (29.15, 29.75, '¿Por qué?', 'full', 1.1),
     (29.97, 35.10, 'Porque no tienen que descargar nada, ni tener una app, ni tener que buscarte.', 'split', 1.0),
     (35.10, 36.85, 'Y si alguien tiene un móvil antiguo…', 'full', 1.0),
@@ -30,24 +30,30 @@ S = [
     (38.82, 41.42, '¿Y por qué nosotros? Por tres simples motivos.', 'full', 1.1),
     (41.42, 43.62, 'La diseñamos con tu logo y tus colores.', 'split', 1.0),
     (43.62, 47.12, 'El diseño es gratis y no se imprime nada hasta que te guste.', 'split', 1.0),
-    (49.70, 53.62, 'No te mandamos una placa y ya. Te enseñamos a ti y a tu equipo cuándo y', 'split', 1.0),
-    (54.30, 54.90, 'cómo pedirla.', 'split', 1.0),
-    (55.30, 57.12, 'Y es lo que de verdad marca la diferencia.', 'full', 1.12),
-    (57.12, 60.80, 'Las placas: pago único. La pagas una vez y es tuya.', 'split', 1.0),
+    (49.70, 51.22, 'No te mandamos una placa y ya.', 'split', 1.0),
+    (8.74, 13.36, 'Y te enseñamos a ti y a tu equipo cuándo y cómo pedir las reseñas,', 'split', 1.0, 'nuevo-589238853.mov'),
+    (13.92, 16.16, 'que es lo que de verdad marca la diferencia.', 'full', 1.12, 'nuevo-589238853.mov'),
+    (13.74, 18.62, 'Las placas son de pago único: las pagas una vez y son totalmente tuyas.', 'split', 1.0, 'nuevo-589239006.mov'),
     (61.40, 63.42, 'Y hablas conmigo directamente por WhatsApp.', 'split', 1.0),
     (63.74, 66.00, 'Somos de Córdoba y enviamos a toda España.', 'full', 1.0),
     (66.52, 67.85, '¿Quieres ver cómo quedaría la tuya?', 'full', 1.12),
     (68.45, 69.35, 'Comenta PLACA', 'split', 1.0),
-    (70.25, 73.66, 'y te mandamos tu diseño.', 'full', 1.0),
+    (70.25, 72.85, 'y te mandamos tu diseño.', 'full', 1.0),
 ]
 
 seg, t = [], 0.0
-for i, (a, b, txt, lay, z) in enumerate(S):
+CARAS = {}
+for i, (a, b, txt, lay, z, *src) in enumerate(S):
+    src = src[0] if src else 'original.mov'
+    if src not in CARAS:
+        cj = json.load(open('cara.json' if src == 'original.mov' else src.replace('.mov', '') + '-cara.json'))
+        CARAS[src] = (np.array(cj['t']), 1620 - np.array(cj['x']))
+    ct, cx = CARAS[src]
     a, b = round(a * FPS) / FPS, round(b * FPS) / FPS
     m = (ct >= a - .3) & (ct <= b + .3)
     x = float(np.median(cx[m])) if m.sum() >= 2 else float(np.median(cx))
     d = b - a
-    seg.append(dict(i=i, a=a, b=b, t0=round(t, 4), t1=round(t + d, 4), txt=txt, lay=lay, z=z, cx=x))
+    seg.append(dict(i=i, a=a, b=b, t0=round(t, 4), t1=round(t + d, 4), txt=txt, lay=lay, z=z, cx=x, src=src))
     t += d
 TOTAL = t
 
@@ -106,7 +112,7 @@ ev = [
     dict(k='whatsapp', t0=T(25), t1=seg[25]['t1']),
     dict(k='espana', t0=palabra(26, 'Córdoba'), t1=seg[26]['t1']),
     dict(k='comenta', t0=T(28), t1=seg[28]['t1']),
-    dict(k='final', t0=T(29, 1.95), t1=TOTAL),
+    dict(k='final', t0=T(29, 2.02), t1=TOTAL),
 ]
 # destellos al cambiar de pantalla completa a partida y al reves
 for a_, b_ in zip(seg[:-1], seg[1:]):

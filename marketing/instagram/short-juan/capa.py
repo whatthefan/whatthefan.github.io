@@ -150,7 +150,7 @@ html,body{{width:1080px;height:1920px;overflow:hidden;background:transparent}}
 <div class="g" id="g_motivo2" style="left:0;top:0;width:1080px;height:960px">
   <div class="tit abs" style="left:70px;top:150px;font-size:74px"><span class="oro">2 ·</span> TE ENSEÑAMOS</div>
   <img id="m2g" class="abs" src="{A['guia']}" style="left:120px;top:290px;width:420px;border-radius:16px;transform:rotate(-6deg);box-shadow:0 40px 60px rgba(0,0,0,.6)">
-  <div class="abs" style="left:590px;top:360px;width:430px;font-family:Mont;font-weight:900;font-size:52px;line-height:1.15;color:#fff">A TI Y A TU EQUIPO:<br><span class="oro">CUÁNDO Y CÓMO PEDIRLA</span></div>
+  <div class="abs" style="left:590px;top:360px;width:430px;font-family:Mont;font-weight:900;font-size:52px;line-height:1.15;color:#fff">A TI Y A TU EQUIPO:<br><span class="oro">CUÁNDO Y CÓMO PEDIR LAS RESEÑAS</span></div>
   <img class="abs bicho" src="{A['b_guino']}" style="left:700px;top:640px;width:250px">
 </div>
 <!-- motivo 3 -->
@@ -198,7 +198,7 @@ html,body{{width:1080px;height:1920px;overflow:hidden;background:transparent}}
 <canvas id="confeti" width="1080" height="1920" style="position:absolute;inset:0"></canvas>
 <div id="flashB" style="position:absolute;inset:0;background:#fff;opacity:0"></div>
 <div id="vineta" style="position:absolute;inset:0;background:radial-gradient(ellipse 75% 60% at 50% 42%,transparent 55%,rgba(0,0,0,.45) 100%);opacity:0"></div>
-<div id="marca" style="position:absolute;left:0;right:0;top:1818px;text-align:center"><span style="font-family:Mont;font-weight:900;font-size:38px;color:#fff;background:rgba(6,8,14,.55);padding:8px 26px;border-radius:999px;border:2px solid rgba(233,188,70,.7)"><span style="color:#FFD23A">PLEA5E</span>.es</span></div>
+<div id="marca" style="position:absolute;left:0;right:0;top:1590px;text-align:center"><span style="font-family:Mont;font-weight:900;font-size:38px;color:#fff;background:rgba(6,8,14,.55);padding:8px 26px;border-radius:999px;border:2px solid rgba(233,188,70,.7)"><span style="color:#FFD23A">PLEA5E</span>.es</span></div>
 <div id="emojis"></div>
 <div id="chispas"></div>
 <div id="sub"></div>
@@ -231,7 +231,7 @@ window.render = function(t) {{
   $('barra').style.width = (t / P.total * 1080) + 'px';
   // subtitulos
   const fin0 = P.ev.find(e => e.k === 'final').t0;
-  const pg = t > fin0 + .25 ? null : P.subs.find(p => t >= p.t0 && t < p.t1);
+  const pg = t >= fin0 ? null : P.subs.find(p => t >= p.t0 && t < p.t1);
   const sub = $('sub');
   if (pg) {{
     sub.style.top = split ? '905px' : '1330px';
@@ -322,7 +322,7 @@ window.render = function(t) {{
   const fe = E('final')[0], uf = t - fe.t0;
   $('marca').style.opacity = uf > 0 ? 0 : 1;
   if (uf >= 0) {{ $('g_final').style.opacity = 1; $('g_final').style.transform = '';
-    $('fnegro').style.opacity = cl(uf / 1.2);
+    $('fnegro').style.opacity = 1;
   }} else $('g_final').style.opacity = 0;
 }};
 window.LISTO = true;

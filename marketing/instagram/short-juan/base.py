@@ -4,7 +4,14 @@ FF = '/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-lin
 P = json.load(open('plan.json'))
 W0, H0 = 1620, 1080
 n = len(P['seg'])
-f = [f'[0:v]split={n}' + ''.join(f'[v{i}]' for i in range(n)), f'[0:a]asplit={n}' + ''.join(f'[a{i}]' for i in range(n))]
+SRC = []
+for s in P['seg']:
+    if s['src'] not in SRC: SRC.append(s['src'])
+f = []
+for k, src in enumerate(SRC):
+    ids = [s['i'] for s in P['seg'] if s['src'] == src]
+    f.append(f'[{k}:v]split={len(ids)}' + ''.join(f'[v{i}]' for i in ids))
+    f.append(f'[{k}:a]asplit={len(ids)}' + ''.join(f'[a{i}]' for i in ids))
 grado = 'eq=contrast=1.06:saturation=1.12:brightness=0.01,colorbalance=rs=.03:gs=.01:bs=-.03,unsharp=5:5:0.6'
 for s in P['seg']:
     i, a, b, z, x = s['i'], s['a'], s['b'], s['z'], s['cx']
@@ -28,6 +35,6 @@ for s in P['seg']:
 f.append(''.join(f'[V{i}][A{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][ar]')
 f.append('[ar]highpass=f=85,lowpass=f=12500,afftdn=nf=-28,acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=2,'
          'equalizer=f=3200:t=q:w=1.2:g=2,loudnorm=I=-14:TP=-1.5:LRA=7,aresample=48000,aformat=channel_layouts=stereo[a]')
-subprocess.run([FF, '-loglevel', 'error', '-y', '-i', 'original.mov', '-filter_complex', ';'.join(f), '-map', '[v]', '-map', '[a]',
+subprocess.run([FF, '-loglevel', 'error', '-y', *sum([['-i', x] for x in SRC], []), '-filter_complex', ';'.join(f), '-map', '[v]', '-map', '[a]',
                 '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', 'base.mp4'], check=True)
 print('base.mp4 hecho')
