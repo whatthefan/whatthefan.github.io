@@ -1,3 +1,21 @@
+# FORMATO PLEA5E v5 — «como las referencias» (POR DEFECTO desde el 26-9 noche)
+
+Juan rechazó la v4 (collage de pegatinas, Montserrat, oro sobre oscuro, recorte de su cara): «se ve IA, tipografía fea,
+poco profesional». Lo que hacen de verdad las referencias (estudiado fotograma a fotograma):
+- **Cara real a pantalla completa**, SIN recortar (nada de «green screen»). Subtítulos pequeños blancos a la altura del
+  pecho (Inter Display 600, ~50 px), 1-4 palabras; «punch-in» (zoom seco 1,08-1,13) en la palabra fuerte.
+- **Escenas en gris claro** (degradado suave + textura de papel muy leve). Texto **gris oscuro**, Inter Display
+  (500 pequeño / 700 grande), centrado, sin cursivas ni colores. Letra a letra con desenfoque (@solazzox).
+- **Objetos en blanco y negro** sin borde (como los recortes de @johan.mttz). **Solo la placa real va en color.**
+- **Tipografía cinética 3D**: número o palabra gigante que gira en perspectiva (el «01» de @solazzox): `K.gira`.
+- **Transiciones de editor** (`K.escenas5` + `K.efectos`): tinta (manchas que crecen), látigo lateral con desenfoque,
+  estrobo blanco/negro + iris, zoom a través, corte con fuga de luz naranja. Una distinta en cada corte.
+- Nada de fondo oscuro con oro, nada de pegatinas de colores, nada de chispas/brillos: huele a IA.
+- Sonido: látigo = `whoosh-short`, estrobo = `edicion/glitch`, tinta/zoom = `ui/aire`, ¡pum! = `woah-drop`.
+Ejemplos: `mosca5.html`, `uber5.html`; kit: `kit5.css` + `kit5.js` (sobre kit + kit2 + kit3).
+
+---
+(Formato v4 anterior, descartado:)
 # FORMATO PLEA5E (v4) — la plantilla de todos los vídeos hablados
 
 Hoja visual: `identidad.html` (se renderiza con `grabar.js identidad.html prueba id 0`).
