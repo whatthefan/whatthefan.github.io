@@ -1,0 +1,85 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;font-family:Inter;color:#111}
+.p{position:absolute;inset:0;display:none;padding:90px 80px;background:radial-gradient(900px 1000px at 50% 40%,#f5f5f3 0%,#e6e6e3 60%,#cfcfcb 100%)}
+.p.on{display:block}
+.p.os{background:radial-gradient(900px 1000px at 50% 40%,#1c1d21,#08090b 75%);color:#fff}
+.marca{font-weight:800;font-size:30px;letter-spacing:9px}.marca b{color:#D39B16}
+.os .marca b{color:#E9BC46}
+.num{position:absolute;right:80px;top:90px;font-weight:600;font-size:24px;letter-spacing:3px;opacity:.45}
+.s{font-weight:600;font-size:44px;letter-spacing:-1.2px;margin-top:70px;opacity:.75}
+.b{font-weight:800;font-size:112px;letter-spacing:-5px;line-height:.95}
+.o{color:#D39B16}.os .o{color:#E9BC46}
+.foto{position:absolute;left:0;right:0;top:350px;height:560px;display:flex;justify-content:center;align-items:center}
+.foto img{height:560px;border-radius:40px;box-shadow:0 3px 6px rgba(0,0,0,.08),0 40px 60px rgba(0,0,0,.18)}
+.pie{position:absolute;left:80px;right:80px;bottom:80px}
+.precio{display:flex;align-items:baseline;gap:18px}
+.precio .n{font-weight:800;font-size:120px;letter-spacing:-5px;color:#D39B16;line-height:1}
+.precio s{font-weight:600;font-size:40px;opacity:.4}
+.precio small{font-weight:600;font-size:30px;opacity:.6}
+.dat{margin-top:18px;font-weight:600;font-size:30px;opacity:.7}
+.vol{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
+.vol span{font-weight:700;font-size:26px;padding:10px 18px;border-radius:30px;background:rgba(0,0,0,.07)}
+.vol b{color:#B8860B}
+.lin{display:flex;gap:20px;align-items:center;margin-top:30px;font-weight:700;font-size:40px;letter-spacing:-1px}
+.lin i{width:18px;height:18px;border-radius:50%;background:#E9BC46;flex:none}
+.abanico{position:absolute;left:0;right:0;top:470px;height:560px}
+.abanico img{position:absolute;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3)) drop-shadow(0 40px 50px rgba(0,0,0,.45))}
+</style></head><body>
+
+<div id="p1" class="p os">
+  <div class="marca">PLEA<b>5</b>E</div><div class="num">CATÁLOGO</div>
+  <div class="s" style="color:#bbb">Placas NFC y QR para</div>
+  <div class="b">reseñas<br>en <span class="o">Google</span></div>
+  <div class="abanico">
+    <img src="w-tarjeta.png" style="left:640px;top:70px;width:300px;transform:rotate(10deg)">
+    <img src="w-stand.png" style="left:110px;top:40px;width:320px;transform:rotate(-9deg)">
+    <img src="w-placa.png" style="left:300px;top:130px;width:470px;transform:rotate(1deg)">
+  </div>
+  <div class="pie" style="font-weight:600;font-size:32px;color:#bbb">Acercan el móvil y escriben. <span style="color:#fff">Con tu marca, diseño gratis.</span></div>
+</div>
+
+<div id="p2" class="p">
+  <div class="marca">PLEA<b>5</b>E</div><div class="num">01 · MESA</div>
+  <div class="s">Placa de mesa</div><div class="b">Para cada <span class="o">mesa</span></div>
+  <div class="foto"><img src="placa.jpg"></div>
+  <div class="pie"><div class="precio"><span class="n">25 €</span><s>33,50 €</s><small>por unidad</small></div>
+  <div class="dat">90 × 90 mm · metacrilato 4 mm · NFC + QR · se pega con 3M</div>
+  <div class="vol"><span>5+ <b>23 €</b></span><span>10+ <b>21 €</b></span><span>20+ <b>19 €</b></span><span>50+ <b>16,50 €</b></span><span>100+ <b>15,50 €</b></span></div></div>
+</div>
+
+<div id="p3" class="p">
+  <div class="marca">PLEA<b>5</b>E</div><div class="num">02 · BARRA</div>
+  <div class="s">Expositor de pie</div><div class="b">Para la <span class="o">barra</span></div>
+  <div class="foto"><img src="stand.jpg"></div>
+  <div class="pie"><div class="precio"><span class="n">28 €</span><s>37,50 €</s><small>por unidad</small></div>
+  <div class="dat">76 × 118 mm · metacrilato en L · NFC + QR</div>
+  <div class="vol"><span>5+ <b>26 €</b></span><span>10+ <b>23,50 €</b></span><span>20+ <b>21,50 €</b></span><span>50+ <b>18,50 €</b></span><span>100+ <b>17,50 €</b></span></div></div>
+</div>
+
+<div id="p4" class="p">
+  <div class="marca">PLEA<b>5</b>E</div><div class="num">03 · MANO</div>
+  <div class="s">Tarjeta de mano</div><div class="b">Para el <span class="o">delantal</span></div>
+  <div class="foto"><img src="tarjeta.jpg"></div>
+  <div class="pie"><div class="precio"><span class="n">15 €</span><s>20 €</s><small>por tarjeta</small></div>
+  <div class="dat">85 × 54 mm · PVC laminado · NFC + QR</div>
+  <div class="vol"><span>Pack 20 <b>15 €</b></span><span>Pack 30 <b>13 €</b></span><span>Pack 50 <b>11,50 €</b></span><span>Pack 100 <b>9,50 €</b></span></div></div>
+</div>
+
+<div id="p5" class="p os">
+  <div class="marca">PLEA<b>5</b>E</div><div class="num">INCLUIDO</div>
+  <div class="s" style="color:#bbb">En cada pedido</div><div class="b">Todo <span class="o">incluido</span></div>
+  <div style="margin-top:70px">
+    <div class="lin"><i></i>Diseño con tu logo y colores, gratis</div>
+    <div class="lin"><i></i>No se imprime hasta que te guste</div>
+    <div class="lin"><i></i>Chip programado a tu reseña de Google</div>
+    <div class="lin"><i></i>Guía para tu equipo: cuándo pedirla</div>
+    <div class="lin"><i></i>Garantía del chip por escrito</div>
+    <div class="lin"><i></i>Las placas: pago único</div>
+    <div class="lin"><i></i>Lista en 3-10 días</div>
+  </div>
+  <div class="pie" style="font-weight:600;font-size:30px;color:#999">Opcional: seguimiento de uso, 35 €/mes sin permanencia.<br><span style="color:#fff;font-size:40px;font-weight:800">PLEA<span style="color:#E9BC46">5</span>E.es · pídelo por WhatsApp</span></div>
+</div>
+<script>document.getElementById(location.hash.slice(1)||'p1').classList.add('on');window.TOTAL=0;window.render=()=>{};</script>
+</body></html>
