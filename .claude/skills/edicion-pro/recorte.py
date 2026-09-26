@@ -19,7 +19,17 @@ import numpy as np
 import onnxruntime as ort
 
 MODELO = os.environ.get("RVM", "/tmp/claude-0/modelos/rvm_mobilenetv3_fp32.onnx")
-FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
+def _ffmpeg():
+    import shutil
+    if os.environ.get("FFMPEG"):
+        return os.environ["FFMPEG"]
+    if shutil.which("ffmpeg"):
+        return "ffmpeg"
+    import imageio_ffmpeg  # pip install imageio-ffmpeg
+    return imageio_ffmpeg.get_ffmpeg_exe()
+
+
+FFMPEG = _ffmpeg()
 
 
 def sesion():
@@ -44,11 +54,21 @@ def foto(entrada, salida, ratio=0.4):
     for _ in range(6):  # el modelo es recurrente: repetir la misma foto estabiliza el mate
         pha, rec = paso(s, bgr[:, :, ::-1], rec, ratio)
     a = np.clip((np.clip(pha, 0, 1) * 255 - 20) * 1.15, 0, 255).astype(np.uint8)
-    cv2.imwrite(salida, np.dstack([bgr, a]))
-    # contorno blanco tipo pegatina para miniaturas: <salida>-borde.png
-    m = cv2.dilate((a > 110).astype(np.uint8) * 255, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25)))
+    # retoque para miniatura: menos ruido de webcam, más nitidez, algo de contraste y calidez
+    d = cv2.bilateralFilter(bgr, 7, 30, 7)
+    n = cv2.addWeighted(d, 1.6, cv2.GaussianBlur(d, (0, 0), 2.2), -.6, 0)
+    lut = (np.clip(.5 + (np.arange(256) / 255 - .5) * 1.12, 0, 1) * 255).astype(np.uint8)
+    n = cv2.LUT(n, lut).astype(float)
+    n[:, :, 2] *= 1.04
+    n[:, :, 0] *= .97
+    cv2.imwrite(salida, np.dstack([np.clip(n, 0, 255).astype(np.uint8), a]))
+    # contorno blanco tipo pegatina: <salida>-borde.png (suavizado para que el pelo no haga picos)
+    m = (a > 110).astype(np.uint8) * 255
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (31, 31)))
+    m = ((cv2.GaussianBlur(m, (0, 0), 6) > 127) * 255).astype(np.uint8)
+    m = cv2.dilate(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (23, 23)))
     b = np.zeros((*a.shape, 4), np.uint8)
-    b[:, :, :3], b[:, :, 3] = 255, cv2.GaussianBlur(m, (3, 3), 0)
+    b[:, :, :3], b[:, :, 3] = 255, cv2.GaussianBlur(m, (0, 0), 1.5)
     cv2.imwrite(salida.rsplit('.', 1)[0] + '-borde.png', b)
 
 

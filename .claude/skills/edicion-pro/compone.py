@@ -18,7 +18,17 @@ import os
 import subprocess
 import sys
 
-FF = os.environ.get("FFMPEG", "/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2")
+def _ffmpeg():
+    import shutil
+    if os.environ.get("FFMPEG"):
+        return os.environ["FFMPEG"]
+    if shutil.which("ffmpeg"):
+        return "ffmpeg"
+    import imageio_ffmpeg  # pip install imageio-ffmpeg
+    return imageio_ffmpeg.get_ffmpeg_exe()
+
+
+FF = _ffmpeg()
 C = json.load(open(sys.argv[1]))
 peq = C.get("pequeno", [])
 en_peq = "+".join(f"between(t,{a},{b - 0.001})" for a, b in peq) or "0"
