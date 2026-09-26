@@ -40,3 +40,11 @@ woah drop, arrow swoosh (x2), camera screenshot, glitch, metallic riser, ding, m
 mac typing, camera shutter, punch riser y cinematic impact. Recortados de dos vídeos de
 TikTok de packs de sonidos («Sound Effects for your next video» y el de Dezzy) que pasó Juan.
 Tampoco son CC0: para vídeos del perfil sí, para anuncios pagados no.
+
+## referencias/ y ui/ (estilo actual de edición)
+
+- `referencias/`: tics, clics y pops sacados de los 4 vídeos de referencia de Juan (@solazzox, @ruy_r.s,
+  @johan.mttz, @milah.edicion) quitando la voz con UVR MDX-Net (`separa.py` de la skill edicion-pro).
+  Mismo criterio que los de `edicion/`: bien para el perfil, no para anuncios de pago.
+- `ui/`: sintetizados por nosotros (`sintetiza.py`), sin derechos de terceros: `aire-corto` (transición),
+  `aire`, `pop`, `tic`, `golpe-suave`, `brillo`, `subida`.

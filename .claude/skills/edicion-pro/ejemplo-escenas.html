@@ -1,0 +1,263 @@
+<!-- EJEMPLO 3 (modelo actual): escenas con integridad, personajes Open Peeps, cursor y UI, sin fondos liminales ni mascota. Necesita al lado: escena.js, inter-latin.woff2, cast/ (personajes/reparto), placa-<color>.png (disenos/exporta.js), guia-01.png. -->
+<!doctype html>
+<!-- DEMO 3 estilo REFERENCIAS: escenas con integridad (entrada → acción → salida), personajes Open Peeps en
+     grises con acento oro, cursor y UI reales, cámara que empuja. Sin fondos liminales ni mascota. -->
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:transparent;font-family:Inter}
+.abs{position:absolute}.full{position:absolute;inset:0}
+.esc{position:absolute;inset:0;display:none;overflow:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 45%}
+.papel{background:radial-gradient(1000px 1250px at 50% 44%,#f3f3f1 0%,#e4e4e2 52%,#c3c3c1 100%)}
+.oscuro{background:radial-gradient(900px 1100px at 50% 45%,#1b1c20 0%,#0d0d10 62%,#060607 100%)}
+.grano{position:absolute;inset:0;opacity:.13;mix-blend-mode:multiply;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.oscuro .grano{mix-blend-mode:overlay;opacity:.08}
+.tb{position:absolute;left:0;right:0;text-align:center;z-index:5}
+.tb .s{font-weight:600;font-size:54px;letter-spacing:-1.6px;color:#1a1a1a;line-height:1.1}
+.tb .b{font-weight:800;font-size:134px;letter-spacing:-6px;color:#111;line-height:.98}
+.tb.claro .s{color:rgba(255,255,255,.78)}.tb.claro .b{color:#fff}
+.tb.sub .s{font-weight:700;font-size:46px;letter-spacing:-.8px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.tb.sub .b{font-weight:800;font-size:112px;letter-spacing:-4.5px;color:#E9BC46;text-shadow:0 4px 24px rgba(0,0,0,.45)}
+.tb .w{display:inline-block;white-space:nowrap}.tb .l{display:inline-block}
+.oro{color:#D39B16!important}.tb.claro .oro,.tb.sub .oro{color:#E9BC46!important}
+.sombra{filter:drop-shadow(0 3px 5px rgba(0,0,0,.14)) drop-shadow(0 34px 44px rgba(0,0,0,.22))}
+.pj{position:absolute}.pj img{position:absolute;inset:0;width:100%;height:100%}
+.pill{position:absolute;display:flex;align-items:center;gap:14px;padding:0 28px;height:78px;border-radius:40px;background:#111;color:#fff;font-weight:700;font-size:34px;letter-spacing:-.6px;white-space:nowrap}
+.pill i{width:14px;height:14px;border-radius:50%;background:#E9BC46}
+.carta{position:absolute;width:290px;height:400px;padding:36px 30px;color:#fff;border-radius:34px;background:linear-gradient(180deg,#2a2b30,#1b1c20);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.18),0 30px 60px rgba(0,0,0,.5)}
+.carta .n{font-weight:800;font-size:120px;letter-spacing:-6px;line-height:1;color:#E9BC46}
+.carta .t{margin-top:118px;font-weight:700;font-size:44px;letter-spacing:-1.2px;line-height:1.08}
+.lienzo{position:absolute;background:#fff;border-radius:22px;box-shadow:0 2px 4px rgba(0,0,0,.08),0 40px 70px rgba(0,0,0,.16)}
+.asa{position:absolute;width:16px;height:16px;background:#fff;border:3px solid #1a73e8;border-radius:3px}
+.muestra{position:absolute;left:57px;width:56px;height:56px;border-radius:50%}
+.telefono{position:absolute;border-radius:74px;background:#101114;padding:15px;box-shadow:inset 0 0 0 2.5px #3b3e45,inset 0 0 0 7px #15161a,0 50px 80px rgba(0,0,0,.55)}
+.telefono .pant{width:100%;height:100%;border-radius:60px;overflow:hidden;position:relative;background:#efeae2}
+.isla{position:absolute;left:50%;top:24px;width:30%;height:38px;transform:translateX(-50%);border-radius:24px;background:#000;z-index:3}
+.wa-top{position:absolute;left:0;right:0;top:0;height:176px;background:#075e54;color:#fff;display:flex;align-items:flex-end;gap:20px;padding:0 30px 24px}
+.wa-top .av{width:64px;height:64px;border-radius:50%;background:#E9BC46;color:#1a1204;font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center}
+.wa-top b{font-weight:600;font-size:34px}.wa-top small{display:block;font-size:24px;opacity:.75}
+.bur{position:absolute;max-width:360px;padding:12px 14px 14px;border-radius:22px;font-size:29px;line-height:1.3;color:#111;box-shadow:0 2px 3px rgba(0,0,0,.12)}
+.bur.yo{right:22px;background:#d9fdd3;border-top-right-radius:6px}.bur.el{left:22px;background:#fff;border-top-left-radius:6px}
+.bur img{display:block;width:210px;border-radius:12px;margin-bottom:8px}
+.bur small{display:block;text-align:right;font-size:19px;color:#667;margin-top:2px}
+.puntos{position:absolute;left:22px;padding:18px 22px;border-radius:22px;background:#fff;display:flex;gap:8px}
+.puntos i{width:12px;height:12px;border-radius:50%;background:#9aa0a6}
+.bocadillo{position:absolute;background:#fff;border-radius:34px;padding:30px 36px;font-weight:700;font-size:44px;letter-spacing:-1.2px;color:#111;line-height:1.15;
+  box-shadow:0 3px 6px rgba(0,0,0,.08),0 30px 50px rgba(0,0,0,.14)}
+.bocadillo:after{content:'';position:absolute;left:120px;bottom:-26px;border:14px solid transparent;border-top:18px solid #fff;border-left:18px solid #fff}
+#flash{position:absolute;inset:0;opacity:0;background:radial-gradient(900px 1300px at 60% 40%,#fff 0%,#fff5de 30%,#ffc46b 65%,#ff8a3d 100%);z-index:9}
+.marca{position:absolute;left:0;right:0;top:1660px;text-align:center;font-weight:700;font-size:30px;letter-spacing:6px;color:rgba(255,255,255,.6)}
+.marca b{color:#E9BC46}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs id="filtros"></defs></svg>
+
+<!-- 1 · QR: la clienta escanea la placa en la mesa -->
+<div id="sQR" class="esc papel"><div class="cam">
+  <div class="abs" style="left:0;right:0;top:1330px;bottom:0;background:linear-gradient(#dedcd6,#cfccc5)"></div>
+  <svg class="abs" style="left:0;top:0" width="1080" height="1920"><path id="mesa" d="M60 1330 H1020" stroke="#141414" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path id="rayo" d="M335 1105 C 520 960, 700 1000, 830 1180" stroke="#141414" stroke-width="5" stroke-dasharray="4 16" stroke-linecap="round" fill="none"/></svg>
+  <div id="qrPlaca" class="abs sombra" style="left:600px;top:961px;width:330px;height:369px;transform-origin:50% 100%"><img src="placa-azul.png" style="width:100%;height:100%;border-radius:18px"></div>
+  <div id="visor" class="abs" style="left:780px;top:1136px;width:108px;height:108px">
+    <svg width="108" height="108" viewBox="0 0 108 108" fill="none" stroke="#E9BC46" stroke-width="8" stroke-linecap="round"><path d="M4 30V10a6 6 0 0 1 6-6h20M78 4h20a6 6 0 0 1 6 6v20M104 78v20a6 6 0 0 1-6 6H78M30 104H10a6 6 0 0 1-6-6V78"/></svg>
+    <div id="visorL" class="abs" style="left:10px;right:10px;height:4px;background:#E9BC46;box-shadow:0 0 12px #E9BC46"></div>
+  </div>
+  <div class="abs" style="left:-40px;top:0;width:620px;height:1330px;overflow:hidden">
+    <div id="pjQR" class="pj" style="left:0;top:660px;width:580px;height:697px"><img src="cast/cliente-Calm.svg"><img src="cast/cliente-Smile.svg"></div>
+  </div>
+  <div id="pillQR" class="pill" style="left:560px;top:850px"><i></i>Reseña abierta</div>
+  <div class="grano"></div>
+</div></div>
+
+<!-- 2 · tres motivos: las cartas se reparten -->
+<div id="sMot" class="esc oscuro"><div class="cam">
+  <div id="k1" class="carta"><div class="n">01</div><div class="t">Tu diseño</div></div>
+  <div id="k2" class="carta"><div class="n">02</div><div class="t">Gratis hasta que te guste</div></div>
+  <div id="k3" class="carta"><div class="n">03</div><div class="t">Te enseñamos</div></div>
+  <div class="grano"></div>
+</div></div>
+
+<!-- 3 · logo y colores: el editor del diseño -->
+<div id="sCol" class="esc papel"><div class="cam">
+  <div id="lienzo" class="lienzo" style="left:110px;top:620px;width:640px;height:800px">
+    <div class="abs" style="left:28px;top:24px;font-weight:600;font-size:26px;color:#80868b">Placa · Bar Manolo</div>
+    <div id="colP" class="abs" style="left:110px;top:120px;width:420px;height:470px">
+      <img id="cA" class="abs" src="placa-azul.png" style="width:100%;height:100%;border-radius:14px"><img id="cV" class="abs" src="placa-verde.png" style="width:100%;height:100%;border-radius:14px">
+      <img id="cG" class="abs" src="placa-granate.png" style="width:100%;height:100%;border-radius:14px"><img id="cN" class="abs" src="placa-naranja.png" style="width:100%;height:100%;border-radius:14px">
+      <div id="selLogo" class="abs" style="left:92px;top:398px;width:236px;height:40px;border:4px dashed #E9BC46;border-radius:8px"></div>
+      <div id="tagLogo" class="pill" style="left:338px;top:388px;height:62px;font-size:28px;padding:0 22px">tu logo</div>
+    </div>
+    <div class="abs" style="left:28px;top:640px;right:28px;height:2px;background:#eee"></div>
+    <div class="abs" style="left:28px;top:670px;font-weight:600;font-size:26px;color:#80868b">Diseño gratis · se imprime cuando te guste</div>
+    <div class="asa" style="left:-8px;top:-8px"></div><div class="asa" style="right:-8px;top:-8px"></div><div class="asa" style="left:-8px;bottom:-8px"></div><div class="asa" style="right:-8px;bottom:-8px"></div>
+  </div>
+  <div id="barra" class="lienzo" style="left:790px;top:760px;width:170px;height:440px">
+    <div class="abs" style="left:0;right:0;top:26px;text-align:center;font-weight:700;font-size:24px;color:#80868b">Color</div>
+    <div id="m0" class="muestra" style="top:84px;background:#3a64b8"></div><div id="m1" class="muestra" style="top:170px;background:#2f8a57"></div>
+    <div id="m2" class="muestra" style="top:256px;background:#74202c"></div><div id="m3" class="muestra" style="top:342px;background:#ee6f3a"></div>
+  </div>
+  <svg id="cursor" class="abs" style="left:0;top:0;width:52px;height:64px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3));transform-origin:0 0" viewBox="0 0 52 64"><path d="M4 4 L4 50 L16 39 L25 58 L33 54 L24 36 L40 36 Z" fill="#111" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg>
+  <div class="grano"></div>
+</div></div>
+
+<!-- 4 · aprobación por WhatsApp: la dueña del bar reacciona -->
+<div id="sWa" class="esc oscuro"><div class="cam">
+  <div id="waT" class="telefono" style="left:430px;top:540px;width:540px;height:1110px">
+    <div class="isla"></div>
+    <div class="pant">
+      <div class="wa-top"><div class="av">P5</div><div><b>PLEA5E</b><small>en línea</small></div></div>
+      <div id="w1" class="bur yo" style="top:210px"><img src="placa-naranja.png">Aquí tienes tu diseño<small>10:41 ✓✓</small></div>
+      <div id="d1" class="puntos" style="top:590px"><i></i><i></i><i></i></div>
+      <div id="w2" class="bur el" style="top:590px">¿Y en verde?<small>10:42</small></div>
+      <div id="w3" class="bur yo" style="top:680px"><img src="placa-verde.png" style="width:150px">Hecho<small>10:42 ✓✓</small></div>
+      <div id="d2" class="puntos" style="top:955px"><i></i><i></i><i></i></div>
+      <div id="w4" class="bur el" style="top:955px"><b>¡Perfecta!</b> Adelante<small>10:43</small></div>
+    </div>
+  </div>
+  <div id="pjWa" class="pj" style="left:-120px;top:1150px;width:620px;height:745px"><img src="cast/duena-Suspicious.svg"><img src="cast/duena-Calm.svg"><img src="cast/duena-BigSmile.svg"></div>
+  <div class="abs" style="left:0;right:0;bottom:0;height:260px;background:linear-gradient(transparent,#060607)"></div>
+  <div class="grano"></div>
+</div></div>
+
+<!-- 5 · «no te mandamos una placa y ya» -->
+<div id="sSola" class="esc papel"><div class="cam">
+  <div id="solaP" class="abs sombra" style="left:350px;top:760px;width:380px;height:425px"><img src="placa-naranja.png" style="width:100%;height:100%;border-radius:18px"></div>
+  <svg class="abs" style="left:0;top:0;z-index:6" width="1080" height="1920"><path id="tacha" d="M0 0" stroke="#111" stroke-width="12" stroke-linecap="round" fill="none"/></svg>
+  <div class="grano"></div>
+</div></div>
+
+<!-- 6 · el equipo aprende a pedir la reseña -->
+<div id="sEq" class="esc papel"><div class="cam">
+  <img id="guia" class="abs sombra" src="guia-01.png" style="left:700px;top:540px;width:290px;border-radius:8px">
+  <div id="boca" class="bocadillo" style="left:120px;top:1030px;width:600px"><span id="bocaT"></span></div>
+  <div id="e1" class="pj" style="left:-60px;top:1330px;width:480px;height:577px"><img src="cast/camarero-Smile.svg"></div>
+  <div id="e3" class="pj" style="left:660px;top:1330px;width:480px;height:577px"><img src="cast/cocinero-Smile.svg"></div>
+  <div id="e2" class="pj" style="left:280px;top:1280px;width:520px;height:625px"><img src="cast/camarera-Smile.svg"><img src="cast/camarera-Explaining.svg"></div>
+  <div class="grano"></div>
+</div></div>
+
+<div id="textos"></div>
+<div id="marca" class="marca">PLEA<b>5</b>E.es</div>
+<div id="flash"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle, golpe, entra, camara, salida, traza, cursor, teclea, caras, flota } = E;
+const TOTAL = 19.4; window.TOTAL = TOTAL;
+// escenas: [id, entra, sale, sale con desenfoque (true) o corte seco]
+const ESC = [['sQR', 1.767, 3.433, false], ['sMot', 4.5, 6.033, true], ['sCol', 6.033, 8.233, true], ['sWa', 8.233, 11.733, true], ['sSola', 11.733, 13.267, true], ['sEq', 13.267, 17.4, false]];
+const FLASH = [1.767, 4.5];
+// filtro de salida por escena
+const FB = {};
+ESC.forEach(([id]) => { const f = document.createElementNS('http://www.w3.org/2000/svg', 'filter'); f.id = 'fx' + id;
+  f.setAttribute('x', '-10%'); f.setAttribute('y', '-30%'); f.setAttribute('width', '120%'); f.setAttribute('height', '160%');
+  f.innerHTML = '<feGaussianBlur stdDeviation="0 0"/>'; $('filtros').appendChild(f); FB[id] = f.firstChild; });
+
+const TX = [
+  { t0: 0, t1: 1.767, y: 1190, c: 'sub', s: [['si', .08], ['alguien', .24], ['tiene', .59], ['un', .87]], b: [['móvil', 1.02], ['antiguo', 1.3]] },
+  { t0: 1.8, t1: 3.433, y: 300, c: '', s: [['tenemos', 1.8], ['el', 2.28]], b: [['QR', 2.53, 'oro'], ['también', 2.77]] },
+  { t0: 3.433, t1: 4.5, y: 1190, c: 'sub', s: [['¿y', 3.39], ['por', 3.54], ['qué', 3.78]], b: [['nosotros?', 4.02]] },
+  { t0: 4.52, t1: 6.033, y: 400, c: 'claro', s: [['por', 4.52], ['tres', 4.74], ['simples', 5.02]], b: [['motivos', 5.46]] },
+  { t0: 6.05, t1: 8.233, y: 300, c: '', bs: 112, s: [['la', 6.05], ['diseñamos', 6.17], ['con', 6.67], ['tu', 6.89]], b: [['logo', 7.07], ['y', 7.34], ['tus', 7.48], ['colores', 7.7, 'oro']] },
+  { t0: 8.25, t1: 9.42, y: 280, c: 'claro', s: [['el', 8.25], ['diseño', 8.38], ['es', 8.74]], b: [['gratis', 8.93, 'oro']] },
+  { t0: 9.44, t1: 11.733, y: 280, c: 'claro', s: [['no', 9.44], ['se', 9.62], ['imprime', 9.8], ['nada', 10.22]], b: [['hasta', 10.49], ['que', 10.82], ['te', 11.05], ['guste', 11.23, 'oro']] },
+  { t0: 11.75, t1: 13.267, y: 330, c: '', s: [['no', 11.75], ['te', 11.85], ['mandamos', 12.01], ['una', 12.41]], b: [['placa', 12.61, 'oro'], ['y', 12.89], ['ya', 13.01]], id: 'txSola' },
+  { t0: 13.3, t1: 15.3, y: 300, c: '', s: [['te', 13.37], ['enseñamos', 13.57], ['a', 14.11], ['ti', 14.26], ['y', 14.45], ['a', 14.6], ['tu', 14.74]], b: [['equipo', 14.94, 'oro']] },
+  { t0: 15.33, t1: 17.4, y: 300, c: '', s: [['cuándo', 15.33], ['y', 15.73], ['cómo', 15.87], ['pedir', 16.17]], b: [['las', 16.51], ['reseñas', 16.75, 'oro']] },
+  { t0: 17.4, t1: TOTAL, y: 1190, c: 'sub', s: [['lo', 17.69], ['que', 17.83], ['de', 18.01], ['verdad', 18.16], ['marca', 18.45]], b: [['la', 18.7], ['diferencia', 18.84]] },
+];
+let nf = 0;
+TX.forEach(B => {
+  const el = document.createElement('div'); el.className = 'tb ' + B.c; el.style.top = B.y + 'px'; if (B.id) el.id = B.id;
+  const linea = (ws, cls) => '<div class="' + cls + '">' + ws.map(([w, t, x]) => `<span class="w ${x || ''}" data-t="${t}">` + [...w].map(ch => `<span class="l">${ch}</span>`).join('') + '</span>').join(' ') + '</div>';
+  el.innerHTML = (B.s.length ? linea(B.s, 's') : '') + (B.b.length ? linea(B.b, 'b') : '');
+  if (B.bs) el.querySelector('.b').style.fontSize = B.bs + 'px';
+  const f = document.createElementNS('http://www.w3.org/2000/svg', 'filter'); f.id = 'sm' + nf;
+  f.setAttribute('x', '-20%'); f.setAttribute('y', '-100%'); f.setAttribute('width', '140%'); f.setAttribute('height', '300%');
+  f.innerHTML = '<feGaussianBlur stdDeviation="0 0"/>'; $('filtros').appendChild(f);
+  B.el = el; B.fb = f.firstChild; B.fid = 'sm' + nf++; $('textos').appendChild(el);
+});
+function texto(B, t) {
+  const vis = t >= B.t0 - .02 && t < B.t1; B.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  const k = ease.inCubic(p(t, B.t1 - .16, .16));
+  B.fb.setAttribute('stdDeviation', `0 ${k * 26}`); B.el.style.filter = k > 0 ? `url(#${B.fid})` : 'none';
+  B.el.style.opacity = 1 - k; B.el.style.transform = `translateY(${-k * 40}px)`;
+  B.el.querySelectorAll('.w').forEach(w => { const tw = +w.dataset.t;
+    w.querySelectorAll('.l').forEach((l, i) => { const e = ease.outCubic(p(t, tw + i * .018, .24));
+      l.style.opacity = e; l.style.filter = `blur(${(1 - e) * 12}px)`; l.style.transform = `translateY(${(1 - e) * 10}px)`; }); });
+}
+function destello(t, t0) { const u = t - t0; if (u < -.07 || u > .22) return 0; return u < 0 ? ease.outCubic(1 + u / .07) : 1 - ease.outCubic(u / .22); }
+
+window.render = t => {
+  TX.forEach(B => texto(B, t));
+  ESC.forEach(([id, a, b, suave]) => {
+    const on = t >= a && t < b; $(id).style.display = on ? 'block' : 'none';
+    if (on) { camara($(id).firstElementChild, t, a, b, { empuje: .035 }); if (suave) salida($(id).firstElementChild, FB[id], t, b); }
+  });
+  $('marca').style.display = ['sQR', 'sCol', 'sSola', 'sEq'].some(id => $(id).style.display === 'block') ? 'none' : 'block';
+
+  // 1 · QR — entrada: mesa → placa → clienta · acción: rayo y visor en «QR» · remate: sonríe y «Reseña abierta»
+  if (t >= 1.767 && t < 3.433) {
+    traza($('mesa'), t, 1.78, .4);
+    const kp = muelle(t, 1.86, 2.2, .55); $('qrPlaca').style.opacity = t >= 1.86 ? 1 : 0;
+    $('qrPlaca').style.transform = `translateY(${(1 - kp) * 80}px) scaleY(${.9 + .1 * kp})`;
+    entra($('pjQR'), t, 1.96, { x: -260, y: 0, s: 1, blur: 10, tipo: 'muelle', f: 1.8, z: .7 });
+    traza($('rayo'), t, 2.38, .22); $('rayo').style.opacity = t >= 2.38 ? 1 - p(t, 3.0, .2) : 0;
+    const kv = muelle(t, 2.53, 3, .5); $('visor').style.opacity = t >= 2.53 ? 1 : 0; $('visor').style.transform = `scale(${1.5 - .5 * kv})`;
+    $('visorL').style.top = (10 + 84 * ease.inOut(p(t, 2.6, .35))) + 'px'; $('visorL').style.opacity = t < 2.95 ? 1 : 0;
+    caras([...$('pjQR').querySelectorAll('img')], t, [0, 2.95]);
+    entra($('pillQR'), t, 2.98, { y: 30, s: .8, tipo: 'muelle', f: 2.6, z: .5 });
+  }
+  // 2 · motivos — entrada: el mazo cae · acción: cada carta se reparte a su sitio en su palabra
+  if (t >= 4.5 && t < 6.033) {
+    const km = muelle(t, 4.56, 2, .6);
+    [['k1', 4.74, 75, -6], ['k2', 5.02, 395, 0], ['k3', 5.46, 715, 6]].forEach(([id, tc, x, r], i) => {
+      const k = muelle(t, tc, 2.4, .6), base = 395 + (i - 1) * 8;
+      const X = base + (x - base) * k, Y = 820 + (1 - km) * 500 - (i - 1) * 6 * (1 - k);
+      $(id).style.left = X + 'px'; $(id).style.top = Y + 'px'; $(id).style.opacity = t >= 4.56 ? 1 : 0;
+      $(id).style.transform = `rotate(${(i - 1) * 3 * (1 - k) + r * k}deg) scale(${golpe(t, tc, .04)})`; $(id).style.zIndex = 3 - Math.abs(i - 1);
+    });
+  }
+  // 3 · editor — entrada: lienzo → placa → barra · acción: marca el logo, el cursor cambia 3 colores
+  if (t >= 6.033 && t < 8.233) {
+    entra($('lienzo'), t, 6.08, { y: 60, s: .94 }); entra($('colP'), t, 6.2, { y: 30, s: .9 }); entra($('barra'), t, 6.32, { x: 80, y: 0, s: .96 });
+    const kl = muelle(t, 7.07, 2.6, .5); $('selLogo').style.opacity = t >= 7.07 ? 1 : 0; $('selLogo').style.transform = `scale(${1.15 - .15 * kl})`;
+    entra($('tagLogo'), t, 7.1, { y: 20, s: .8, tipo: 'muelle', f: 2.8, z: .5 });
+    const TC = [6.0, 7.34, 7.6, 7.85]; let c = 0; TC.forEach((tc, i) => { if (t >= tc) c = i; });
+    ['cA', 'cV', 'cG', 'cN'].forEach((id, i) => $(id).style.opacity = i === c ? 1 : i === c - 1 ? 1 - p(t, TC[c], .1) : 0);
+    $('colP').style.transform += ` scale(${t >= 7.34 ? golpe(t, TC[c], .05) : 1})`;
+    ['m0', 'm1', 'm2', 'm3'].forEach((id, i) => { $(id).style.boxShadow = i === c ? '0 0 0 5px #fff,0 0 0 9px #111' : '0 4px 10px rgba(0,0,0,.15)';
+      $(id).style.transform = `scale(${i === c && t >= 7.34 ? golpe(t, TC[c], .12) : 1})`; });
+    cursor($('cursor'), t, [[6.75, 640, 1560], [7.05, 470, 1160], [7.2, 470, 1160], [7.31, 905, 945], [7.5, 905, 945], [7.57, 905, 1031], [7.75, 905, 1031], [7.82, 905, 1117]], [7.34, 7.6, 7.85]);
+  }
+  // 4 · WhatsApp — entrada: móvil y dueña · acción: mensajes con «escribiendo…», la cara cambia · remate: «¡Perfecta!»
+  if (t >= 8.233 && t < 11.733) {
+    entra($('waT'), t, 8.28, { y: 90, s: .93 }); $('waT').style.transform += flota(t, 0, 5);
+    entra($('pjWa'), t, 8.45, { x: -200, y: 60, s: 1, tipo: 'muelle', f: 1.6, z: .7 });
+    [['w1', 8.6], ['w2', 10.1], ['w3', 10.5], ['w4', 11.1]].forEach(([id, t0]) => entra($(id), t, t0, { y: 24, s: .9, blur: 0, tipo: 'muelle', f: 3, z: .55 }));
+    [['d1', 9.65, 10.1], ['d2', 10.75, 11.1]].forEach(([id, a, b]) => { $(id).style.opacity = t >= a && t < b ? 1 : 0;
+      $(id).querySelectorAll('i').forEach((i, j) => i.style.transform = `translateY(${Math.sin((t - a) * 12 - j) * -4}px)`); });
+    caras([...$('pjWa').querySelectorAll('img')], t, [0, 10.5, 11.12]);
+    $('pjWa').style.transform += ` scale(${golpe(t, 11.12, .05)})`;
+  }
+  // 5 · una placa sola — entrada: la placa flota · acción: en «y ya» se tacha la frase y la placa se va
+  if (t >= 11.733 && t < 13.267) {
+    entra($('solaP'), t, 11.78, { y: 70, s: .9 }); $('solaP').style.transform += flota(t, 1, 6) + ` translateY(${ease.inCubic(p(t, 13.05, .22)) * 60}px)`;
+    $('solaP').style.opacity = Math.min(+$('solaP').style.opacity, 1 - p(t, 13.05, .2) * .75);
+    const b = $('txSola').querySelector('.b');
+    if (b && !b._r && t >= 12.9) { const ws = b.querySelectorAll('.w'), a = ws[0].getBoundingClientRect(), z = ws[ws.length - 1].getBoundingClientRect(); b._r = 1; $('tacha').setAttribute('d', `M${a.left - 18} ${a.top + a.height * .56} L${z.right + 18} ${a.top + a.height * .5}`); }
+    if (b && b._r) traza($('tacha'), t, 13.0, .2); $('tacha').style.opacity = t >= 13.0 ? 1 : 0;
+  }
+  // 6 · equipo — entrada: guía y equipo por orden · acción: la camarera pide la reseña (bocadillo que se escribe)
+  if (t >= 13.267 && t < 17.4) {
+    entra($('guia'), t, 13.57, { x: 60, y: 40, s: .9, r: 8 }); $('guia').style.transform += ` rotate(6deg)` + flota(t, 2, 5);
+    [['e1', 14.26, 0], ['e2', 14.45, 1], ['e3', 14.94, 2]].forEach(([id, t0, i]) => { entra($(id), t, t0, { y: 380, s: 1, blur: 0, tipo: 'muelle', f: 1.8, z: .62 }); });
+    caras([...$('e2').querySelectorAll('img')], t, [0, 15.87, 17.0]);
+    entra($('boca'), t, 15.8, { y: 30, s: .85, tipo: 'muelle', f: 2.6, z: .55 });
+    $('bocaT').textContent = teclea('¿Nos dejarías una reseña en Google?', t, 15.9, 30);
+  }
+  $('flash').style.opacity = Math.max(...FLASH.map(f => destello(t, f))) * .75;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

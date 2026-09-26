@@ -7,8 +7,7 @@ description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profes
 
 ## 0. Estilo REFERENCIAS (el que hay que usar por defecto)
 
-Aprendido fotograma a fotograma de los 4 vídeos que Juan considera «edición increíble». Ejemplo completo
-y aprobado como modelo: `ejemplo-referencias.html` + `monta-referencias.py` (demo de 20 s del short de la placa).
+Aprendido fotograma a fotograma de los 4 vídeos que Juan considera «edición increíble». Ejemplos: `ejemplo-escenas.html` (el modelo actual), `ejemplo-referencias.html` (demo 1) y `monta-referencias.py`.
 
 **Lo que NO se hace (Juan lo rechazó: «parece hecho con IA»)**: oro metálico, relieves, cromo, contornos
 de pegatina, neón, rayos, láseres, bokeh, destellos de estrella, polvo brillante, estrellas 3D, mesas 3D,
@@ -36,38 +35,52 @@ varios efectos a la vez, persona recortada con borde. Menos es más: una idea po
 | Móvil que se acerca | `inOutCubic` desde fuera de cuadro hasta junto al producto, anillo oro que se expande al «tocar» | 0,65 s + 0,45 s |
 | Cortes | persona ↔ persona y escena → persona: corte seco. Final: corte a negro seco | — |
 
-### Sonido
-Solo `marketing/instagram/sonidos/edicion/`, suaves (0,2-0,3; `woah-drop` 0,5 en el golpe fuerte):
-`arrow-swoosh`/`-2` en cada transición, `mouse-click` en cada pieza de UI que entra, `mac-typing` al
-escribir, `camera-shutter` cuando aparece el producto, `ding` al rellenarse las estrellas.
-
 ### Tú hablas, las representaciones mandan
 Juan no es el foco: la cara sale como mucho un 30-40 % del vídeo (gancho, preguntas, remate). El resto son
-**representaciones** de lo que dice. Para cada frase se decide una imagen concreta:
+**representaciones** de lo que dice, cada una una pequeña historia completa. Modelo actual:
+`ejemplo-escenas.html` (demo 3, aprobada como dirección). `anatomia-escena.png` lo explica en 4 fotogramas.
 
-| Si la frase habla de… | Escena | Cómo |
-|---|---|---|
-| cómo se usa (tocar, escanear, QR) | **Espacio liminal + personaje** | sala vacía infinita con un hueco de luz y su haz en el suelo (`.sala`, variante `.calida`), cámara que avanza despacio (escala +3 %/s), el producto sobre una peana, **Estrellita** entra andando (ciclo `anda-0…7` a 12 fps) y se queda en `senala`; UI encima (marco de escaneo, anillo de toque) |
-| personalización (logo, colores, nombre) | **Diseño del producto** | la placa real con el nombre del bar, flotando en papel; cambia de color en cada palabra y debajo las muestras de color con la activa marcada |
-| precio, gratis, aprobación, trato directo | **Chat** | móvil con conversación de WhatsApp: mandamos el diseño, el cliente pide un cambio, se lo mandamos, «¡Perfecta! Adelante» |
-| enumeraciones («tres motivos») | **Cartas de cristal** 01/02/03 | en oscuro, entran en la palabra de cada una |
-| lo que NO es («no te mandamos una placa y ya») | **Objeto que se va** | el producto flota solo y en «y ya» cae fuera con desenfoque |
-| formación, guía, equipo | **Sala cálida + guía** | las páginas reales de la guía se abren en abanico, Estrellita las señala |
-| un dato o un «cero» | **Número gigante** cortado por el borde | papel |
-| rapidez, que se abre solo | **Móvil con la reseña** | la pantalla de Google se enciende y las estrellas se rellenan en la palabra |
-| problema (nadie escribe, pereza) | **Cristal sobre la cara desenfocada** o **buscador** que se escribe solo | — |
+**Prohibido** (Juan lo rechazó): fondos «liminales» (salas vacías con haz de luz), la mascota Estrellita en
+las escenas, swooshes fuertes en cada corte, efectos decorativos sin historia.
 
-Personaje: siempre Estrellita (`public/marca/estrellita/*.svg`). Para cambiar de sentido se usan los
-archivos `-izq`, **nunca** un espejo con CSS (la «5» no se refleja). Poses útiles: `senala`, `apunta`,
-`pulgar`, `saluda`, `asombro`, `tachan`, `sentada`.
+### Anatomía de una escena (obligatoria)
+1. **Una idea, un foco.** Soporte (papel u oscuro) + UN objeto protagonista + como mucho un personaje + el texto arriba.
+2. **Entrada 0,3-0,6 s por jerarquía**: soporte (línea de mesa que se dibuja, lienzo) → objeto (cae con muelle) →
+   personaje (entra de lado con muelle amortiguado) → detalles. 80-120 ms entre piezas (`E.entra`, `E.muelle`).
+3. **Anticipación**: algo prepara el ojo justo antes (línea punteada que se traza, cursor que viaja, «escribiendo…»).
+4. **Acción clavada a la palabra**: UN suceso (visor que escanea en «QR», clic que cambia el color en «colores»,
+   burbuja en «verde», tachado en «y ya»). Solo una cosa se mueve a la vez. `E.golpe` para el pulso de clic.
+5. **Remate**: consecuencia visible (la cara del personaje cambia a sonrisa, píldora «Reseña abierta», «¡Perfecta!»).
+6. **Mantenimiento**: cámara que empuja 3-4 % (`E.camara`) y flote leve; nunca congelado.
+7. **Salida**: a otra escena → el contenido sube con desenfoque vertical 0,18 s y el fondo se queda (`E.salida`
+   sobre `.cam`); a la cara → corte seco.
 
-Diseños de producto: `node disenos/exporta.js "placa&color=verde&bar=Bar Manolo" placa-verde.png`
-(tipos: placa, tarjeta, pantalla de reseña con `t` para las estrellas, notificación; colores azul, verde,
-granate, naranja, magenta, negro).
-Material real que ya existe: `public/producto/*.png`, `public/tarjeta/tarjeta-plea5e.png`,
-`marketing/guia-resenas/paginas/*.png`, `marketing/guia-resenas/paginas-kit/*.png`.
+| Si la frase habla de… | Escena |
+|---|---|
+| cómo se usa (tocar, escanear, QR) | mesa + producto real + clienta con el móvil; trazo al QR, visor, «Reseña abierta», sonríe |
+| personalización (logo, colores, nombre) | **editor**: lienzo con asas, la placa, barra de colores; el cursor marca «tu logo» y hace clic en cada color |
+| precio, gratis, aprobación | móvil con WhatsApp + la dueña del bar reaccionando (desconfiada → tranquila → encantada) |
+| enumeraciones | cartas que caen en mazo y se reparten a su sitio en la palabra de cada una |
+| lo que NO es | el objeto flota y en la palabra se tacha la frase y el objeto se va |
+| formación, equipo | la guía real entra girando + el equipo sube desde abajo uno a uno + bocadillo que se escribe |
+| un dato / un cero | número gigante cortado por el borde |
+| rapidez, se abre solo | móvil con la pantalla de reseña: se enciende y las estrellas se rellenan en la palabra |
 
-Ejemplos completos: `ejemplo-referencias.html` (demo 1) y `ejemplo-liminal.html` (demo 2).
+### Personajes (cuando hay que enseñar algo que ocurre)
+Personas dibujadas a tinta (Open Peeps, CC0/MIT) en grises cálidos con **un solo acento oro** (el móvil, la taza,
+la camiseta). Reparto listo en `personajes/reparto/` (clienta, dueña, camarero, camarera, cocinero, de pie,
+sentado) con varias caras cada uno para el remate. Para nuevos: `personajes/registro.py` + `genera.mjs` (ver
+instrucciones dentro): tipo busto, de pie o sentado; 53 peinados, 33 caras, 27 bustos, 23 cuerpos de pie, 11
+sentados. Los bustos se cortan con el borde de la pantalla o con la línea de mesa, nunca flotando.
+
+### Sonido (lo que usan las referencias: sutil, de interfaz)
+- `sonidos/referencias/`: tics, clics y pops **extraídos** de los 4 vídeos (`separa.py` quita la voz con UVR
+  MDX-Net y se recorta cada golpe). Uso de perfil, no anuncios de pago.
+- `sonidos/ui/`: versiones limpias sintetizadas (`sintetiza.py`): `aire-corto` (transición), `pop`, `tic`,
+  `golpe-suave` (algo cae), `brillo` (acierto), `subida`.
+- Reparto: transición cara→escena `aire-corto` 0,2; escena→escena `aire-corto` 0,16; objeto o personaje que llega
+  `pop` 0,2-0,25; acción (visor, clic, carta) `tic` 0,3-0,35; remate `brillo` 0,2; burbujas de chat `pop` 0,22.
+  Nada de `woah-drop` ni swooshes largos en este estilo. La voz siempre por encima.
 
 ### Proceso
 1. Transcribir (Whisper) → palabras con tiempo. 2. Decidir escenas: qué frases van con persona y cuáles con escena gráfica (una idea visual por frase). 3. Copiar `ejemplo-referencias.html` y cambiar `ESC`, `BLUR`, `TX` y los objetos. 4. Revisar 12-14 fotogramas compuestos. 5. `node grabar.js pagina.html todo capa.mov`. 6. `monta-referencias.py` (tramos de desenfoque; si el tramo es pantalla partida, ampliar la mitad de abajo). 7. Comprimir < 30 MB.
@@ -179,7 +192,7 @@ Scripts completos de un short real en `marketing/instagram/short-juan/`.
 Si hay que sustituir una frase, se cambia **solo la voz** (`atempo` ≤ 1,12 y volumen igualado al original
 menos 1,5 dB); la imagen se queda.
 
-## 6. Sonido
+## 6. Sonido (solo estilos antiguos; el actual está en el apartado 0)
 
 Carpeta `marketing/instagram/sonidos/edicion/`: `arrow-swoosh`/`arrow-swoosh-2` en barridos y haz de luz,
 `glitch` en el flash de color, `woah-drop` en la revelación fuerte (máx. 2-3), `mouse-click` cuando se
