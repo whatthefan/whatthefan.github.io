@@ -1,0 +1,275 @@
+<!-- EJEMPLO 2 del estilo REFERENCIAS (aprobado): espacios liminales + personaje Estrellita + diseños de producto + chat de aprobación + guía, intercalados con la cara.
+     Necesita al lado: inter-latin.woff2, estrellita/ (public/marca/estrellita), placa-<color>.png (exportadas del diseño de placa con el nombre del bar), guia-01/06/08.png (marketing/guia-resenas/paginas). Graba: node grabar.js demo.html todo capa.mov; monta con monta-referencias.py (sin tramos de desenfoque). -->
+<!doctype html>
+<!-- DEMO 2 estilo REFERENCIAS: espacios liminales (salas vacías con luz), el personaje Estrellita usando el
+     producto, diseños de lo que vendemos (placa en colores, chat de aprobación, guía) intercalados con la cara. -->
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:transparent;font-family:Inter}
+.abs{position:absolute}.full{position:absolute;inset:0}
+.papel{background:radial-gradient(1000px 1250px at 50% 44%,#f3f3f1 0%,#e4e4e2 52%,#c3c3c1 100%)}
+.oscuro{background:radial-gradient(900px 1100px at 50% 45%,#1b1c20 0%,#0d0d10 62%,#060607 100%)}
+.grano{position:absolute;inset:0;opacity:.14;mix-blend-mode:multiply;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.oscuro .grano{mix-blend-mode:overlay;opacity:.08}
+/* ---- espacio liminal: sala vacía infinita con un hueco de luz ---- */
+.sala{position:absolute;inset:-60px;overflow:hidden}
+.sala .pared{position:absolute;left:0;right:0;top:0;height:62%;background:linear-gradient(#dcdad4,#e8e6e1 70%,#efede8)}
+.sala .suelo{position:absolute;left:0;right:0;top:62%;bottom:0;background:linear-gradient(#efede8,#e2dfd9 40%,#cfccc5)}
+.sala .curva{position:absolute;left:0;right:0;top:55%;height:14%;background:linear-gradient(transparent,rgba(239,237,232,.9) 50%,transparent);filter:blur(18px)}
+.sala .hueco{position:absolute;left:62%;top:17%;width:15%;height:44%;background:linear-gradient(#fffdf6,#fff6e2);
+  box-shadow:0 0 80px 30px rgba(255,246,222,.85),0 0 220px 90px rgba(255,236,200,.45)}
+.sala .haz{position:absolute;left:44%;top:61%;width:48%;height:32%;background:linear-gradient(rgba(255,244,215,.8),rgba(255,244,215,.25));
+  clip-path:polygon(38% 0,70% 0,100% 100%,0 100%);filter:blur(14px)}
+.sala .haz2{position:absolute;left:30%;top:0;width:70%;height:100%;background:linear-gradient(115deg,transparent 40%,rgba(255,248,230,.35) 55%,transparent 70%);filter:blur(30px)}
+.sala.calida .pared{background:linear-gradient(#d9d0c3,#e6dccd 70%,#ece3d6)}
+.sala.calida .suelo{background:linear-gradient(#ece3d6,#ddd1c0 40%,#c7b9a6)}
+.sala.calida .hueco{background:linear-gradient(#fff4dc,#ffe2b0);box-shadow:0 0 80px 30px rgba(255,226,170,.85),0 0 240px 100px rgba(255,200,120,.45)}
+.sala.calida .haz{background:linear-gradient(rgba(255,214,150,.75),rgba(255,214,150,.2))}
+.vin{position:absolute;inset:0;background:radial-gradient(1100px 1400px at 50% 48%,transparent 50%,rgba(40,36,30,.45));pointer-events:none}
+.peana{position:absolute;border-radius:18px;background:linear-gradient(90deg,#f6f5f1,#fdfcf9 45%,#e9e7e1);box-shadow:inset 0 3px 0 #fff,0 40px 60px -20px rgba(60,50,40,.35)}
+.sombra{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(60,50,40,.32),transparent)}
+/* ---- texto ---- */
+.tb{position:absolute;left:0;right:0;text-align:center}
+.tb .s{font-weight:600;font-size:54px;letter-spacing:-1.6px;color:#1a1a1a;line-height:1.1}
+.tb .b{font-weight:800;font-size:134px;letter-spacing:-6px;color:#111;line-height:.98}
+.tb.claro .s{color:rgba(255,255,255,.78)}.tb.claro .b{color:#fff}
+.tb.sub .s{font-weight:700;font-size:46px;letter-spacing:-.8px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.tb.sub .b{font-weight:800;font-size:112px;letter-spacing:-4.5px;color:#E9BC46;text-shadow:0 4px 24px rgba(0,0,0,.45)}
+.tb .w{display:inline-block;white-space:nowrap}.tb .l{display:inline-block}
+.oro{color:#D39B16!important}.tb.claro .oro,.tb.sub .oro{color:#E9BC46!important}
+/* ---- objetos ---- */
+.placaImg{position:absolute;border-radius:22px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,.12),0 40px 60px rgba(0,0,0,.25)}
+.placaImg img{position:absolute;inset:0;width:100%;height:100%}
+.cristal{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));border-radius:34px;
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.3),inset 0 0 0 1.5px rgba(255,255,255,.1),0 30px 60px rgba(0,0,0,.4)}
+.carta{position:absolute;top:820px;width:290px;height:400px;padding:36px 30px;color:#fff}
+.carta .n{font-weight:800;font-size:120px;letter-spacing:-6px;line-height:1;color:#E9BC46}
+.carta .t{margin-top:120px;font-weight:700;font-size:44px;letter-spacing:-1.2px;line-height:1.08}
+.muestra{position:absolute;width:64px;height:64px;border-radius:50%;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.telefono{position:absolute;border-radius:78px;background:#101114;padding:16px;box-shadow:inset 0 0 0 2.5px #3b3e45,inset 0 0 0 7px #15161a,0 50px 80px rgba(0,0,0,.55)}
+.telefono .pant{width:100%;height:100%;border-radius:64px;overflow:hidden;position:relative;background:#efeae2}
+.isla{position:absolute;left:50%;top:26px;width:30%;height:40px;transform:translateX(-50%);border-radius:24px;background:#000;z-index:3}
+.wa-top{position:absolute;left:0;right:0;top:0;height:190px;background:#075e54;color:#fff;display:flex;align-items:flex-end;gap:22px;padding:0 34px 26px}
+.wa-top .av{width:70px;height:70px;border-radius:50%;background:#E9BC46;color:#1a1204;font-weight:800;font-size:34px;display:flex;align-items:center;justify-content:center}
+.wa-top b{font-weight:600;font-size:38px}.wa-top small{display:block;font-size:26px;opacity:.75}
+.bur{position:absolute;max-width:400px;padding:14px 16px 16px;border-radius:24px;font-size:32px;line-height:1.3;color:#111;box-shadow:0 2px 3px rgba(0,0,0,.12)}
+.bur.yo{right:26px;background:#d9fdd3;border-top-right-radius:6px}.bur.el{left:26px;background:#fff;border-top-left-radius:6px}
+.bur img{display:block;width:240px;border-radius:14px;margin-bottom:10px}
+.bur small{display:block;text-align:right;font-size:20px;color:#667;margin-top:4px}
+.escaner{position:absolute;border:0}
+.escaner i{position:absolute;width:46px;height:46px;border-color:#E9BC46;border-style:solid;border-width:0}
+.pagina{position:absolute;width:420px;border-radius:10px;box-shadow:0 3px 6px rgba(0,0,0,.14),0 40px 60px rgba(40,30,20,.3)}
+.estre{position:absolute;width:380px;height:341px}
+.estre img{position:absolute;inset:0;width:100%;height:100%;display:none}
+#flash{position:absolute;inset:0;opacity:0;background:radial-gradient(900px 1300px at 60% 40%,#fff 0%,#fff5de 30%,#ffc46b 65%,#ff8a3d 100%)}
+.marca{position:absolute;left:0;right:0;top:1660px;text-align:center;font-weight:700;font-size:30px;letter-spacing:6px;color:rgba(255,255,255,.6)}
+.marca b{color:#E9BC46}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs id="filtros"></defs></svg>
+
+<!-- S3: sala liminal · Estrellita y el QR -->
+<div id="sQR" class="full" style="overflow:hidden">
+  <div id="camQR" class="full">
+    <div class="sala"><div class="pared"></div><div class="suelo"></div><div class="curva"></div><div class="hueco"></div><div class="haz"></div><div class="haz2"></div></div>
+    <div class="sombra" style="left:470px;top:1490px;width:420px;height:70px"></div>
+    <div class="peana" style="left:540px;top:1150px;width:280px;height:370px"></div>
+    <div id="qrPlaca" class="placaImg" style="left:560px;top:884px;width:240px;height:269px;transform:rotate(-3deg)"><img src="placa-azul.png"></div>
+    <div id="qrEsc" class="escaner" style="left:685px;top:1009px;width:80px;height:80px">
+      <i style="left:-14px;top:-14px;border-left-width:7px;border-top-width:7px;border-top-left-radius:14px"></i>
+      <i style="right:-14px;top:-14px;border-right-width:7px;border-top-width:7px;border-top-right-radius:14px"></i>
+      <i style="left:-14px;bottom:-14px;border-left-width:7px;border-bottom-width:7px;border-bottom-left-radius:14px"></i>
+      <i style="right:-14px;bottom:-14px;border-right-width:7px;border-bottom-width:7px;border-bottom-right-radius:14px"></i>
+      <div id="qrLinea" class="abs" style="left:-6px;right:-6px;height:4px;background:#E9BC46;box-shadow:0 0 16px #E9BC46"></div>
+    </div>
+    <div id="estQR" class="estre" style="top:1190px"></div>
+    <div class="vin"></div><div class="grano"></div>
+  </div>
+</div>
+
+<!-- S5: tres motivos -->
+<div id="sMot" class="full oscuro"><div class="grano"></div>
+  <div id="c1" class="carta cristal" style="left:75px"><div class="n">01</div><div class="t">Tu diseño</div></div>
+  <div id="c2" class="carta cristal" style="left:395px"><div class="n">02</div><div class="t">Gratis hasta que te guste</div></div>
+  <div id="c3" class="carta cristal" style="left:715px"><div class="n">03</div><div class="t">Te enseñamos</div></div>
+</div>
+
+<!-- S6: tu logo y tus colores -->
+<div id="sCol" class="full papel"><div class="grano"></div>
+  <div class="sombra" style="left:300px;top:1470px;width:480px;height:70px"></div>
+  <div id="colW" class="abs" style="left:290px;top:720px;width:500px;height:560px;perspective:1600px">
+    <div id="colP" class="placaImg" style="left:0;top:0;width:500px;height:560px">
+      <img id="cA" src="placa-azul.png"><img id="cV" src="placa-verde.png"><img id="cG" src="placa-granate.png"><img id="cN" src="placa-naranja.png">
+    </div>
+  </div>
+  <div id="m0" class="muestra" style="left:352px;top:1580px;background:#3a64b8"></div>
+  <div id="m1" class="muestra" style="left:452px;top:1580px;background:#2f8a57"></div>
+  <div id="m2" class="muestra" style="left:552px;top:1580px;background:#74202c"></div>
+  <div id="m3" class="muestra" style="left:652px;top:1580px;background:#ee6f3a"></div>
+</div>
+
+<!-- S7: el diseño se aprueba por WhatsApp -->
+<div id="sWa" class="full oscuro"><div class="grano"></div>
+  <div id="waT" class="telefono" style="left:250px;top:600px;width:580px;height:1190px">
+    <div class="isla"></div>
+    <div class="pant">
+      <div class="wa-top"><div class="av">P5</div><div><b>PLEA5E</b><small>en línea</small></div></div>
+      <div id="w1" class="bur yo" style="top:230px"><img src="placa-naranja.png">Aquí tienes tu diseño<small>10:41 ✓✓</small></div>
+      <div id="w2" class="bur el" style="top:660px">¿Y en verde?<small>10:42</small></div>
+      <div id="w3" class="bur yo" style="top:760px"><img src="placa-verde.png" style="width:170px">Hecho<small>10:42 ✓✓</small></div>
+      <div id="w4" class="bur el" style="top:1060px"><b>¡Perfecta!</b> Adelante<small>10:43</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- S8: una placa sola -->
+<div id="sSola" class="full papel"><div class="grano"></div>
+  <div id="solaSom" class="sombra" style="left:320px;top:1460px;width:440px;height:66px"></div>
+  <div id="solaW" class="abs" style="left:320px;top:760px;width:440px;height:493px;perspective:1600px">
+    <div id="solaP" class="placaImg" style="left:0;top:0;width:440px;height:493px"><img src="placa-naranja.png"></div>
+  </div>
+</div>
+
+<!-- S9: sala cálida · la guía y el equipo -->
+<div id="sGuia" class="full" style="overflow:hidden">
+  <div id="camG" class="full">
+    <div class="sala calida"><div class="pared"></div><div class="suelo"></div><div class="curva"></div><div class="hueco" style="left:14%"></div><div class="haz" style="left:6%;clip-path:polygon(30% 0,62% 0,100% 100%,0 100%)"></div><div class="haz2" style="left:0;background:linear-gradient(65deg,transparent 30%,rgba(255,236,200,.35) 45%,transparent 60%)"></div></div>
+    <div class="sombra" style="left:330px;top:1500px;width:620px;height:80px"></div>
+    <div id="gW" class="abs" style="left:0;top:0;width:1080px;height:1920px;perspective:1800px">
+      <img id="g3" class="pagina" src="guia-08.png" style="left:560px;top:720px">
+      <img id="g2" class="pagina" src="guia-06.png" style="left:470px;top:690px">
+      <img id="g1" class="pagina" src="guia-01.png" style="left:380px;top:660px">
+    </div>
+    <div id="estG" class="estre" style="top:1270px"></div>
+    <div class="vin"></div><div class="grano"></div>
+  </div>
+</div>
+
+<div id="textos"></div>
+<div id="marca" class="marca">PLEA<b>5</b>E.es</div>
+<div id="flash"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, t0, d) => cl((t - t0) / d);
+const oExpo = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);
+const oCub = x => 1 - Math.pow(1 - x, 3), iCub = x => x * x * x;
+const ioCub = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const TOTAL = 19.4; window.TOTAL = TOTAL;
+
+const ESC = [['sQR', 1.767, 3.433], ['sMot', 4.5, 6.033], ['sCol', 6.033, 8.233], ['sWa', 8.233, 11.733], ['sSola', 11.733, 13.267], ['sGuia', 13.267, 17.4]];
+const FLASH = [1.767, 4.5, 13.267];
+
+/* personaje: Estrellita (el 5 nunca en espejo: se usan los SVG -izq, no transform) */
+const POSES = ['anda-0', 'anda-1', 'anda-2', 'anda-3', 'anda-4', 'anda-5', 'anda-6', 'anda-7', 'senala', 'pulgar', 'saluda'];
+['estQR', 'estG'].forEach(id => $(id).innerHTML = POSES.map(n => `<img data-p="${n}" src="estrellita/${n}.svg">`).join(''));
+function pose(el, n) { el.querySelectorAll('img').forEach(i => i.style.display = i.dataset.p === n ? 'block' : 'none'); }
+/* camina de x0 a x1 entre t0 y t1 y luego se queda en «final» */
+function personaje(el, t, t0, t1, x0, x1, final) {
+  if (t < t0) { el.style.opacity = 0; return; }
+  el.style.opacity = 1;
+  const k = p(t, t0, t1 - t0);
+  el.style.left = (x0 + (x1 - x0) * k) + 'px';
+  if (t < t1) { pose(el, 'anda-' + (Math.floor((t - t0) * 12) % 8)); el.style.transform = `translateY(${Math.abs(Math.sin((t - t0) * Math.PI * 3)) * -8}px)`; }
+  else { pose(el, final); const b = oExpo(p(t, t1, .3)); el.style.transform = `scale(${1 + (1 - b) * .06})`; }
+}
+
+const TX = [
+  { t0: 0, t1: 1.767, y: 1190, c: 'sub', s: [['si', .08], ['alguien', .24], ['tiene', .59], ['un', .87]], b: [['móvil', 1.02], ['antiguo', 1.3]] },
+  { t0: 1.8, t1: 3.433, y: 300, c: '', s: [['tenemos', 1.8], ['el', 2.28]], b: [['QR', 2.53, 'oro'], ['también', 2.77]] },
+  { t0: 3.433, t1: 4.5, y: 1190, c: 'sub', s: [['¿y', 3.39], ['por', 3.54], ['qué', 3.78]], b: [['nosotros?', 4.02]] },
+  { t0: 4.52, t1: 6.033, y: 400, c: 'claro', s: [['por', 4.52], ['tres', 4.74], ['simples', 5.02]], b: [['motivos', 5.46]] },
+  { t0: 6.05, t1: 8.233, y: 300, c: '', s: [['la', 6.05], ['diseñamos', 6.17], ['con', 6.67], ['tu', 6.89]], b: [['logo', 7.07], ['y', 7.34], ['tus', 7.48], ['colores', 7.7, 'oro']], bs: 112 },
+  { t0: 8.25, t1: 9.42, y: 280, c: 'claro', s: [['el', 8.25], ['diseño', 8.38], ['es', 8.74]], b: [['gratis', 8.93, 'oro']] },
+  { t0: 9.44, t1: 11.733, y: 280, c: 'claro', s: [['no', 9.44], ['se', 9.62], ['imprime', 9.8], ['nada', 10.22]], b: [['hasta', 10.49], ['que', 10.82], ['te', 11.05], ['guste', 11.23, 'oro']] },
+  { t0: 11.75, t1: 13.267, y: 330, c: '', s: [['no', 11.69], ['te', 11.85], ['mandamos', 12.01], ['una', 12.41]], b: [['placa', 12.61, 'oro'], ['y', 12.89], ['ya', 13.01]] },
+  { t0: 13.3, t1: 15.3, y: 300, c: '', s: [['te', 13.37], ['enseñamos', 13.57], ['a', 14.11], ['ti', 14.26], ['y', 14.45], ['a', 14.6], ['tu', 14.74]], b: [['equipo', 14.94, 'oro']] },
+  { t0: 15.33, t1: 17.4, y: 300, c: '', s: [['cuándo', 15.33], ['y', 15.73], ['cómo', 15.87], ['pedir', 16.17]], b: [['las', 16.51], ['reseñas', 16.75, 'oro']] },
+  { t0: 17.4, t1: TOTAL, y: 1190, c: 'sub', s: [['lo', 17.69], ['que', 17.83], ['de', 18.01], ['verdad', 18.16], ['marca', 18.45]], b: [['la', 18.7], ['diferencia', 18.84]] },
+];
+const cont = $('textos'); let nf = 0;
+TX.forEach(B => {
+  const el = document.createElement('div'); el.className = 'tb ' + B.c; el.style.top = B.y + 'px';
+  const linea = (ws, cls) => '<div class="' + cls + '">' + ws.map(([w, t, x]) =>
+    `<span class="w ${x || ''}" data-t="${t}">` + [...w].map(ch => `<span class="l">${ch}</span>`).join('') + '</span>').join(' ') + '</div>';
+  el.innerHTML = (B.s.length ? linea(B.s, 's') : '') + (B.b.length ? linea(B.b, 'b') : '');
+  if (B.bs) el.querySelector('.b').style.fontSize = B.bs + 'px';
+  const f = document.createElementNS('http://www.w3.org/2000/svg', 'filter'); f.id = 'sm' + nf;
+  f.setAttribute('x', '-20%'); f.setAttribute('y', '-100%'); f.setAttribute('width', '140%'); f.setAttribute('height', '300%');
+  f.innerHTML = '<feGaussianBlur stdDeviation="0 0"/>'; $('filtros').appendChild(f);
+  B.el = el; B.fb = f.firstChild; B.fid = 'sm' + nf++; cont.appendChild(el);
+});
+function texto(B, t) {
+  const vis = t >= B.t0 - .02 && t < B.t1; B.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  const k = p(t, B.t1 - .16, .16);
+  B.fb.setAttribute('stdDeviation', `0 ${iCub(k) * 26}`);
+  B.el.style.filter = k > 0 ? `url(#${B.fid})` : 'none';
+  B.el.style.opacity = 1 - iCub(k); B.el.style.transform = `translateY(${-iCub(k) * 40}px)`;
+  B.el.querySelectorAll('.w').forEach(w => { const tw = +w.dataset.t;
+    w.querySelectorAll('.l').forEach((l, i) => { const e = oCub(p(t, tw + i * .018, .24));
+      l.style.opacity = e; l.style.filter = `blur(${(1 - e) * 12}px)`; l.style.transform = `translateY(${(1 - e) * 10}px)`; }); });
+}
+function entra(el, t, t0, d = .45) { const e = oExpo(p(t, t0, d)); el.style.opacity = t < t0 ? 0 : e; el.style.filter = `blur(${(1 - e) * 16}px)`; return e; }
+function destello(t, t0) { const u = t - t0; if (u < -.07 || u > .2) return 0; return u < 0 ? oCub(1 + u / .07) : 1 - oCub(u / .2); }
+
+window.render = t => {
+  ESC.forEach(([id, a, b]) => $(id).style.display = t >= a && t < b ? 'block' : 'none');
+  $('marca').style.display = ['sQR', 'sCol', 'sSola', 'sGuia'].some(id => $(id).style.display === 'block') ? 'none' : 'block';
+
+  // S3 sala liminal: cámara que avanza despacio, Estrellita llega y el QR se escanea
+  if (t >= 1.767 && t < 3.433) {
+    const u = t - 1.767;
+    $('camQR').style.transform = `scale(${1.02 + u * .035}) translateX(${-u * 10}px)`;
+    const e = oExpo(p(t, 1.8, .5)); $('qrPlaca').style.transform = `rotate(-2deg) translateY(${(1 - e) * -40}px)`;
+    personaje($('estQR'), t, 1.8, 2.5, -420, 170, 'senala');
+    const s = p(t, 2.53, .7); $('qrEsc').style.opacity = t >= 2.53 ? oExpo(p(t, 2.53, .2)) : 0;
+    $('qrEsc').style.transform = `scale(${1.25 - .25 * oExpo(p(t, 2.53, .3))})`;
+    $('qrLinea').style.top = (ioCub(s) * 76) + 'px'; $('qrLinea').style.opacity = s < 1 ? 1 : 0;
+  }
+  // S5 tres cartas de cristal
+  if (t >= 4.5 && t < 6.033) [['c1', 4.74], ['c2', 5.02], ['c3', 5.46]].forEach(([id, t0], i) => {
+    const e = entra($(id), t, t0, .42);
+    $(id).style.transform = `perspective(1400px) rotateY(${(i - 1) * -8}deg) translateY(${(1 - e) * 50 + Math.sin(t * 1.3 + i) * 5}px) scale(${.94 + .06 * e})`;
+  });
+  // S6 la placa cambia de color con la voz
+  if (t >= 6.033 && t < 8.233) {
+    const e = entra($('colW'), t, 6.1, .55);
+    $('colP').style.transform = `rotateY(${-22 + 10 * e + (t - 6.1) * 2}deg) rotateX(${6 + Math.sin(t) * 1}deg) translateY(${(1 - e) * 60 + Math.sin(t * 1.5) * 6}px)`;
+    const cambios = [6.0, 7.34, 7.6, 7.85];
+    let c = 0; cambios.forEach((tc, i) => { if (t >= tc) c = i; });
+    ['cA', 'cV', 'cG', 'cN'].forEach((id, i) => $(id).style.opacity = i === c ? 1 : i === c - 1 ? 1 - p(t, cambios[c], .12) : 0);
+    const bump = t >= 7.34 ? 1 + .03 * (1 - p(t, cambios[c], .2)) : 1;
+    $('colW').style.transform = `scale(${bump})`;
+    ['m0', 'm1', 'm2', 'm3'].forEach((id, i) => { const k = oExpo(p(t, 7.07 + i * .07, .35)); $(id).style.opacity = k;
+      $(id).style.transform = `translateY(${(1 - k) * 20}px) scale(${i === c ? 1.18 : 1})`;
+      $(id).style.outline = i === c && t >= 7.34 ? '5px solid #111' : 'none'; $(id).style.outlineOffset = '6px'; });
+  }
+  // S7 chat de aprobación
+  if (t >= 8.233 && t < 11.733) {
+    const e = entra($('waT'), t, 8.26, .5);
+    $('waT').style.transform = `perspective(1800px) rotateY(${-14 + 8 * e + (t - 8.3) * 1}deg) rotateX(${4 + Math.sin(t) * .8}deg) translateY(${(1 - e) * 80 + Math.sin(t * 1.3) * 6}px) scale(${.92 + .08 * e})`;
+    [['w1', 8.6], ['w2', 10.1], ['w3', 10.5], ['w4', 11.1]].forEach(([id, t0]) => { const k = oExpo(p(t, t0, .35));
+      $(id).style.opacity = t < t0 ? 0 : k; $(id).style.transform = `translateY(${(1 - k) * 24}px) scale(${.94 + .06 * k})`; });
+  }
+  // S8 una placa sola que al decir «y ya» se va
+  if (t >= 11.733 && t < 13.267) {
+    const e = entra($('solaW'), t, 11.76, .5), fuera = iCub(p(t, 12.95, .3));
+    $('solaP').style.transform = `rotateY(${-20 + 8 * e + (t - 11.8) * 3}deg) rotateX(6deg) translateY(${(1 - e) * 60 + fuera * 900}px) rotateZ(${fuera * 25}deg)`;
+    $('solaW').style.filter = `blur(${(1 - e) * 16 + fuera * 10}px)`; $('solaSom').style.opacity = e * (1 - fuera);
+  }
+  // S9 sala cálida: la guía se abre en abanico y Estrellita la señala
+  if (t >= 13.267 && t < 17.4) {
+    const u = t - 13.267;
+    $('camG').style.transform = `scale(${1.02 + u * .02}) translateX(${u * 8}px)`;
+    [['g1', 13.57, -10], ['g2', 14.94, 0], ['g3', 15.87, 10]].forEach(([id, t0, r], i) => {
+      const e = entra($(id), t, t0, .5);
+      $(id).style.transform = `rotateY(${-18 + 6 * e}deg) rotateZ(${r * e - 4}deg) translate(${(1 - e) * 60}px,${(1 - e) * 60 + Math.sin(t * 1.2 + i) * 5}px)`;
+    });
+    personaje($('estG'), t, 13.4, 14.1, -420, 20, 'senala');
+  }
+  TX.forEach(B => texto(B, t));
+  $('flash').style.opacity = Math.max(...FLASH.map(f => destello(t, f))) * .92;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

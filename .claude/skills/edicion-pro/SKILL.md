@@ -41,6 +41,33 @@ Solo `marketing/instagram/sonidos/edicion/`, suaves (0,2-0,3; `woah-drop` 0,5 en
 `arrow-swoosh`/`-2` en cada transición, `mouse-click` en cada pieza de UI que entra, `mac-typing` al
 escribir, `camera-shutter` cuando aparece el producto, `ding` al rellenarse las estrellas.
 
+### Tú hablas, las representaciones mandan
+Juan no es el foco: la cara sale como mucho un 30-40 % del vídeo (gancho, preguntas, remate). El resto son
+**representaciones** de lo que dice. Para cada frase se decide una imagen concreta:
+
+| Si la frase habla de… | Escena | Cómo |
+|---|---|---|
+| cómo se usa (tocar, escanear, QR) | **Espacio liminal + personaje** | sala vacía infinita con un hueco de luz y su haz en el suelo (`.sala`, variante `.calida`), cámara que avanza despacio (escala +3 %/s), el producto sobre una peana, **Estrellita** entra andando (ciclo `anda-0…7` a 12 fps) y se queda en `senala`; UI encima (marco de escaneo, anillo de toque) |
+| personalización (logo, colores, nombre) | **Diseño del producto** | la placa real con el nombre del bar, flotando en papel; cambia de color en cada palabra y debajo las muestras de color con la activa marcada |
+| precio, gratis, aprobación, trato directo | **Chat** | móvil con conversación de WhatsApp: mandamos el diseño, el cliente pide un cambio, se lo mandamos, «¡Perfecta! Adelante» |
+| enumeraciones («tres motivos») | **Cartas de cristal** 01/02/03 | en oscuro, entran en la palabra de cada una |
+| lo que NO es («no te mandamos una placa y ya») | **Objeto que se va** | el producto flota solo y en «y ya» cae fuera con desenfoque |
+| formación, guía, equipo | **Sala cálida + guía** | las páginas reales de la guía se abren en abanico, Estrellita las señala |
+| un dato o un «cero» | **Número gigante** cortado por el borde | papel |
+| rapidez, que se abre solo | **Móvil con la reseña** | la pantalla de Google se enciende y las estrellas se rellenan en la palabra |
+| problema (nadie escribe, pereza) | **Cristal sobre la cara desenfocada** o **buscador** que se escribe solo | — |
+
+Personaje: siempre Estrellita (`public/marca/estrellita/*.svg`). Para cambiar de sentido se usan los
+archivos `-izq`, **nunca** un espejo con CSS (la «5» no se refleja). Poses útiles: `senala`, `apunta`,
+`pulgar`, `saluda`, `asombro`, `tachan`, `sentada`.
+
+Diseños de producto: exportar la placa con el nombre del bar y el color (plantilla de texturas guardada en
+el scratchpad de la sesión o rehacerla en HTML; colores azul, verde, granate, naranja, magenta, negro).
+Material real que ya existe: `public/producto/*.png`, `public/tarjeta/tarjeta-plea5e.png`,
+`marketing/guia-resenas/paginas/*.png`, `marketing/guia-resenas/paginas-kit/*.png`.
+
+Ejemplos completos: `ejemplo-referencias.html` (demo 1) y `ejemplo-liminal.html` (demo 2).
+
 ### Proceso
 1. Transcribir (Whisper) → palabras con tiempo. 2. Decidir escenas: qué frases van con persona y cuáles con escena gráfica (una idea visual por frase). 3. Copiar `ejemplo-referencias.html` y cambiar `ESC`, `BLUR`, `TX` y los objetos. 4. Revisar 12-14 fotogramas compuestos. 5. `node grabar.js pagina.html todo capa.mov`. 6. `monta-referencias.py` (tramos de desenfoque; si el tramo es pantalla partida, ampliar la mitad de abajo). 7. Comprimir < 30 MB.
 
