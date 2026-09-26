@@ -1,3 +1,22 @@
+# FORMATO PLEA5E v6 — estilo JoeEditor (POR DEFECTO, referencia que mandó Juan el 26-9)
+Juan: «este es el estilo que quiero» (vídeo de @JoeEditor). Rechazó v5 (gris/Inter, «fatal») y el bocadillo de comentario («se ve IA»);
+v4 le parecía «más currado» pero con emojis de móvil. Lo que hay que hacer:
+- **Metraje real** siempre que se pueda: su cara, fotos reales del producto (empuje + giro lento), grabaciones de pantalla,
+  el momento real del móvil acercándose. Nada de emojis 3D.
+- **Cara con texto detrás** (el «green screen» de CapCut, pero con su fondo real): plano completo abajo (960×1080 → 1080×1215,
+  top 705) + el mismo fotograma desenfocado arriba; palabra grande entre el fondo y la persona (`#detras`), a la altura del pelo.
+- **Tipografía**: subtítulos Poppins 600 blancos con sombra (1-4 palabras, aparecen palabra a palabra con «pop»); títulos
+  **Noto Serif Display condensada 900 en oro #F2C230** (MAYÚSCULAS, estilo «MOSTRÁNDOTE»); acento manuscrito **Yellowtail** oro
+  (palabra grande, se «escribe» con barrido) o **Mrs Saint Delafield** rojo #E0342B (detalle); números en serif cursiva roja («40»).
+- **Transiciones**: fuga de luz cálida (naranja/blanca) en casi cada corte + whoosh; zoom de entrada; látigo; flash blanco en el ¡pum!.
+- **Fondos**: negro con viñeta para títulos; **patrón de marca** verde placa #123D2D con estrellas grandes #195340 para pantallas
+  (como el fondo azul con estrellas de JoeEditor); fotos reales oscurecidas para que se lean los subtítulos.
+- Dibujo en línea blanca (urinario, diana) solo cuando no hay metraje; nada de pegatinas de colores.
+- Sonido: whoosh en fugas, cinematic-impact en títulos, golpe suave en palabras detrás de la cabeza, woah-drop en el ¡pum!.
+  JoeEditor lleva además **música de fondo** ~8 dB bajo la voz: añadir una canción en Instagram al publicar (volumen bajo).
+Kit: `kit6.css` + `kit6.js` (independiente). Ejemplos: `mosca6.html`, `uber6.html`.
+
+---
 # FORMATO PLEA5E v5 — «como las referencias» (POR DEFECTO desde el 26-9 noche)
 
 Juan rechazó la v4 (collage de pegatinas, Montserrat, oro sobre oscuro, recorte de su cara): «se ve IA, tipografía fea,
