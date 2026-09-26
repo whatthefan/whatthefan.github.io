@@ -1,9 +1,59 @@
 ---
 name: edicion-pro
-description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profesional y hacer miniaturas trabajadas. Dos estilos — DINÁMICO (persona a cámara con cambios de fondo, persona recortada, iconos neón que se dibujan, palabras que golpean, flashes de color, texto detrás de la persona; el favorito de Juan) y PREMIUM SaaS (motion design oscuro y elegante). Incluye recorte de persona sin CapCut, capas, sonidos y lista de control. Úsala siempre que haya que editar un vídeo o hacer una miniatura/portada de PLEA5E, o cuando Juan pida «edición profesional», «como el vídeo de referencia», «estilo CapCut», «transiciones así» o «una miniatura currada».
+description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profesional y hacer miniaturas. Estilo por defecto REFERENCIAS (aprendido de @solazzox, @ruy_r.s, @johan.mttz y @milah.edicion) — fondo papel gris u oscuro, una sola tipografía, texto que entra letra a letra desde desenfocado y sale con desenfoque vertical, capturas y producto real flotando en perspectiva, destello cálido en las transiciones y cristal sobre la persona desenfocada. Incluye recorte de persona, grabación de capas, montaje con ffmpeg, sonidos y lista de control. Úsala siempre que haya que editar un vídeo o hacer una miniatura/portada de PLEA5E, o cuando Juan pida «edición profesional», «como las referencias», «motion», «transiciones así» o «una miniatura».
 ---
 
 # Edición pro
+
+## 0. Estilo REFERENCIAS (el que hay que usar por defecto)
+
+Aprendido fotograma a fotograma de los 4 vídeos que Juan considera «edición increíble». Ejemplo completo
+y aprobado como modelo: `ejemplo-referencias.html` + `monta-referencias.py` (demo de 20 s del short de la placa).
+
+**Lo que NO se hace (Juan lo rechazó: «parece hecho con IA»)**: oro metálico, relieves, cromo, contornos
+de pegatina, neón, rayos, láseres, bokeh, destellos de estrella, polvo brillante, estrellas 3D, mesas 3D,
+varios efectos a la vez, persona recortada con borde. Menos es más: una idea por escena.
+
+### Lenguaje visual
+- **Fondos**: papel gris claro (`radial-gradient` #f3f3f1 → #c3c3c1 con viñeta + grano muy suave) u oscuro casi negro (#1b1c20 → #060607). Nada más.
+- **Tipografía**: UNA sola (Inter). Estructura fija: línea pequeña (600, ~54 px, -1,6 px) encima de línea grande (800, ~134 px, -6 px, interlineado 0,98). Texto negro en papel, blanco en oscuro. Solo una palabra de color plano (oro #D39B16 en papel, #E9BC46 en oscuro). Sin sombras duras ni degradados.
+- **Subtítulos sobre la persona**: minúscula, blancos, 700 ~46 px con sombra suave, a la altura del pecho (y≈1190); la palabra clave debajo en grande y en oro. Nada de mayúsculas ni cajas.
+- **Objetos reales**: capturas de UI (buscador de Google, pantalla de reseña, notificación), el producto real (foto de la placa), un móvil sencillo. Siempre flotando en perspectiva (rotateY -26→-10, rotateX 6-8), con sombra suave doble y deriva lenta (se giran 1-2°/s y suben/bajan 4-6 px).
+- **Números gigantes** (900-1000 px) cortados por el borde, con el texto a su lado.
+- **Cristal**: sobre la persona desenfocada (gblur fuerte + velo negro 40 %), tarjetas y pastillas de cristal (blanco 10-20 % con borde de luz arriba) que entran escalonadas. Un detalle de color (pastilla oro).
+- **Ritmo**: se alterna persona ↔ escena gráfica cada 1-3 s. Las escenas gráficas tapan la pantalla entera mientras la voz sigue. Se vuelve siempre a la persona.
+
+### Animaciones (medidas de las referencias)
+| Animación | Cómo | Tiempos |
+|---|---|---|
+| Entrada de texto | cada letra: opacidad 0→1, `blur(12px)`→0, 10 px abajo→0, desfase 18 ms por letra, cada palabra en su tiempo de Whisper | 0,24 s por letra, `outCubic` |
+| Salida de texto | todo el bloque: desenfoque SOLO vertical (filtro SVG `feGaussianBlur stdDeviation="0 N"`, N 0→26) + sube 40 px + se desvanece | 0,16 s, `inCubic` |
+| Entrada de objeto | desde `blur(16px)`, escala 0,92→1, opacidad, enderezando la perspectiva | 0,4-0,6 s, `outExpo` |
+| Deriva | giro y flote lentos mientras está en pantalla | continuo |
+| Destello de transición | capa radial blanco→crema→naranja: sube en 2 fotogramas, baja en 6 (opacidad máx. 0,92). Persona → escena gráfica | 0,27 s |
+| Desenfoque de fondo | la persona se desenfoca (fundido del gblur en 0,2 s) y encima entra el cristal escalonado (90 ms entre piezas) | 0,2 s + 0,35 s |
+| Escalonado de UI | tarjetas, filas y pastillas entran una a una en la palabra que las nombra | 0,35-0,42 s cada una |
+| Móvil que se acerca | `inOutCubic` desde fuera de cuadro hasta junto al producto, anillo oro que se expande al «tocar» | 0,65 s + 0,45 s |
+| Cortes | persona ↔ persona y escena → persona: corte seco. Final: corte a negro seco | — |
+
+### Sonido
+Solo `marketing/instagram/sonidos/edicion/`, suaves (0,2-0,3; `woah-drop` 0,5 en el golpe fuerte):
+`arrow-swoosh`/`-2` en cada transición, `mouse-click` en cada pieza de UI que entra, `mac-typing` al
+escribir, `camera-shutter` cuando aparece el producto, `ding` al rellenarse las estrellas.
+
+### Proceso
+1. Transcribir (Whisper) → palabras con tiempo. 2. Decidir escenas: qué frases van con persona y cuáles con escena gráfica (una idea visual por frase). 3. Copiar `ejemplo-referencias.html` y cambiar `ESC`, `BLUR`, `TX` y los objetos. 4. Revisar 12-14 fotogramas compuestos. 5. `node grabar.js pagina.html todo capa.mov`. 6. `monta-referencias.py` (tramos de desenfoque; si el tramo es pantalla partida, ampliar la mitad de abajo). 7. Comprimir < 30 MB.
+
+## C. Miniatura
+
+Plantilla aprobada: `miniatura.html` (estilo REFERENCIAS). Foto real de Juan SIN recortar (quieta, mirando a
+cámara, sin gafas), a lo ancho arriba y fundida a negro; debajo línea pequeña «reseñas en Google en» + grande
+«**10** segundos» (10 en oro) + línea gris pequeña. Marca PLEA5E arriba, discreta. Nada más: sin contornos, sin
+brillos, sin collage. Si la foto es pequeña, ampliar a 1080 con LANCZOS + nitidez suave + grano ligero.
+
+---
+
+## Estilos antiguos (solo si Juan los pide expresamente)
 
 Dos estilos. **Por defecto, en vídeos de persona a cámara, usa el DINÁMICO (A).** El PREMIUM (B) es para
 anuncios de producto sin persona. Todo lo que hace CapCut se hace aquí con código (tabla del apartado 4).
@@ -68,18 +118,6 @@ dorados»*. Imágenes de IA en un vídeo → marcar el contenido como generado c
 
 Curvas: entradas `outExpo` 0,4-0,6 s, salidas `inCubic` 0,25-0,3 s. Juan prefiere el DINÁMICO para vídeos con él.
 
-## C. Miniatura / portada
-
-Plantilla aprobada: `miniatura.html`. Qué la hace funcionar:
-
-1. **Foto buena de verdad**: cara quieta, mirando a cámara, nítida y sin gafas (Juan no quiere gafas ni caras en movimiento). Mejor una foto que un fotograma de webcam; si es pequeña, ampliar x1,7 con LANCZOS antes de recortar.
-2. `python3 recorte.py foto.png persona.png` → recorte + `persona-borde.png`. Quitar manchas sueltas (quedarse con la mancha más grande del alfa).
-3. Composición: título arriba (y 300-830), cabeza desde y≈880 y el cuerpo hasta abajo, placa real a la derecha sobre el hombro (nunca tapando la cara), icono NFC y «1 toque» con flecha a los lados sin tocar el pelo.
-4. Todo lo importante entre y = 240 y 1680.
-5. `node grabar.js miniatura.html prueba x 0`.
-
-Si el recorte deja halo en el pelo (fondo claro detrás), no recortar: dejar la foto con su fondo desenfocado y oscurecido.
-
 ## 4. CapCut → aquí
 
 | CapCut | Aquí |
@@ -133,5 +171,6 @@ cada corte: los cortes van secos con 30-50 ms de fundido de audio.
 - [ ] ¿Final a negro seco (sin fundido lento), sin subtítulos ni barra encima, sin que se vea levantar la mano?
 - [ ] ¿Cámara en espejo corregida?
 - [ ] ¿Nada inventado ni promesas de reseñas? («Las placas: pago único», nunca «sin cuotas»). ¿La «5» de PLEA5E nunca en espejo?
-- [ ] ¿Miniatura trabajada (apartado C), no un fotograma?
+- [ ] ¿Miniatura como la plantilla (apartado C): foto real sin recortar, texto limpio, nada de brillos?
+- [ ] ¿Parece editado por una persona y no «hecho con IA»? (una tipografía, un color, una idea por escena)
 - [ ] Antes del render completo: 8-10 fotogramas clave compuestos y revisados.

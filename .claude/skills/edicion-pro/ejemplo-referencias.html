@@ -1,0 +1,250 @@
+<!-- EJEMPLO COMPLETO del estilo REFERENCIAS (demo de 20 s aprobada como modelo). Capa única con fondo transparente en las escenas de persona.
+     Necesita al lado: inter-latin.woff2, placa-recortada.png y pan/pantalla-*.png (3 tomas de la pantalla de reseña de Google). Graba: node grabar.js demo.html todo capa.mov ; monta: python3 monta-referencias.py -->
+<!doctype html>
+<!-- DEMO estilo referencias (ruy / solazzo / johan / milah): papel gris u oscuro, una tipografía,
+     texto que entra letra a letra desde desenfocado y sale con desenfoque vertical, UI real flotando
+     en perspectiva, destello cálido en las transiciones, cristal sobre la persona desenfocada. -->
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:transparent;font-family:Inter}
+.abs{position:absolute}.full{position:absolute;inset:0}
+.papel{background:radial-gradient(1000px 1250px at 50% 44%,#f3f3f1 0%,#e4e4e2 52%,#c3c3c1 100%)}
+.oscuro{background:radial-gradient(900px 1100px at 50% 45%,#1b1c20 0%,#0d0d10 62%,#060607 100%)}
+.grano{position:absolute;inset:0;opacity:.14;mix-blend-mode:multiply;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.oscuro .grano{mix-blend-mode:overlay;opacity:.08}
+/* texto */
+.tb{position:absolute;left:0;right:0;text-align:center}
+.tb .s{font-weight:600;font-size:54px;letter-spacing:-1.6px;color:#1a1a1a;line-height:1.1}
+.tb .b{font-weight:800;font-size:134px;letter-spacing:-6px;color:#111;line-height:.98}
+.tb.claro .s{color:rgba(255,255,255,.78)}.tb.claro .b{color:#fff}
+.tb.sub .s{font-weight:700;font-size:46px;letter-spacing:-.8px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.tb.sub .b{font-weight:800;font-size:112px;letter-spacing:-4.5px;color:#E9BC46;text-shadow:0 4px 24px rgba(0,0,0,.45)}
+.tb .w{display:inline-block;white-space:nowrap}
+.tb .l{display:inline-block}
+.oro{color:#D39B16!important}
+/* UI */
+.flota{filter:drop-shadow(0 4px 6px rgba(0,0,0,.12)) drop-shadow(0 40px 50px rgba(0,0,0,.24))}
+.cristal{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.1));border-radius:34px;
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.35),inset 0 0 0 1.5px rgba(255,255,255,.14),0 30px 60px rgba(0,0,0,.35)}
+.tile{position:absolute;border-radius:22px;background:rgba(255,255,255,.2);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.3)}
+.pill{position:absolute;left:170px;width:740px;height:128px;border-radius:40px;display:flex;align-items:center;gap:26px;padding:0 44px;
+  font-weight:700;font-size:52px;letter-spacing:-1.5px;color:#fff}
+.pill i{width:18px;height:18px;border-radius:50%;background:#E9BC46;box-shadow:0 0 18px rgba(233,188,70,.8)}
+.pill b{color:#E9BC46;font-weight:800}
+.telefono{position:absolute;border-radius:78px;background:#101114;padding:16px;
+  box-shadow:inset 0 0 0 2.5px #3b3e45,inset 0 0 0 7px #15161a}
+.telefono .pant{width:100%;height:100%;border-radius:64px;overflow:hidden;position:relative;background:#000}
+.telefono .pant img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.telefono .isla{position:absolute;left:50%;top:26px;width:30%;height:40px;transform:translateX(-50%);border-radius:24px;background:#000;z-index:3}
+.bloqueo{position:absolute;inset:0;background:linear-gradient(160deg,#27324f,#0b0e17);color:#fff;text-align:center}
+.bloqueo div{margin-top:24%;font-weight:600;font-size:150px;letter-spacing:-4px}
+.buscador{position:absolute;left:130px;top:960px;width:820px;height:150px;border-radius:75px;background:#fff;display:flex;align-items:center;gap:30px;padding:0 50px;
+  font-weight:500;font-size:50px;color:#202124}
+.caret{display:inline-block;width:4px;height:56px;background:#1a73e8;margin-left:4px;vertical-align:middle}
+.anillo{position:absolute;border-radius:50%;border:5px solid #E9BC46}
+#flash{position:absolute;inset:0;opacity:0;background:radial-gradient(900px 1300px at 60% 40%,#fff 0%,#fff5de 30%,#ffc46b 65%,#ff8a3d 100%)}
+.marca{position:absolute;left:0;right:0;top:1660px;text-align:center;font-weight:700;font-size:30px;letter-spacing:6px;color:rgba(255,255,255,.6)}
+.marca b{color:#E9BC46}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs id="filtros"></defs></svg>
+
+<!-- velo oscuro sobre la persona desenfocada (el desenfoque lo pone ffmpeg) -->
+<div id="velo" class="full" style="background:rgba(8,8,10,.42)"></div>
+
+<!-- B: tarjeta de cristal «Reseñas nuevas: 0» -->
+<div id="sB" class="full">
+  <div id="card" class="abs cristal" style="left:150px;top:560px;width:780px;height:560px">
+    <div id="cardPill" class="abs" style="left:44px;top:44px;height:72px;padding:0 34px;border-radius:24px;background:#E9BC46;color:#1a1204;font-weight:800;font-size:38px;letter-spacing:-1px;display:flex;align-items:center">Reseñas nuevas</div>
+    <div id="card0" class="abs" style="right:56px;top:18px;font-weight:800;font-size:130px;letter-spacing:-6px;color:#fff">0</div>
+    <div id="t1" class="tile" style="left:44px;top:190px;width:692px;height:92px"></div>
+    <div id="t2" class="tile" style="left:44px;top:302px;width:692px;height:92px"></div>
+    <div id="t3" class="tile" style="left:44px;top:414px;width:692px;height:92px"></div>
+  </div>
+</div>
+
+<!-- D + E: papel -->
+<div id="sPapel" class="full papel"><div class="grano"></div>
+  <div id="busc" class="buscador flota" style="top:1000px">
+    <svg width="64" height="64" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.8-.4-4.1H24v7.4h12.1c-.2 1.8-1.6 4.6-4.5 6.5l6.9 5.3c4.1-3.8 6.6-9.4 6.6-15.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-6.9-5.3c-1.8 1.3-4.3 2.2-7.6 2.2-5.8 0-10.7-3.8-12.5-9.1l-7.1 5.5C8 41 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.5 28.5c-.5-1.4-.8-2.9-.8-4.5s.3-3.1.7-4.5l-7.1-5.5C2.8 17 2 20.4 2 24s.8 7 2.3 10z"/><path fill="#EA4335" d="M24 10.2c4.1 0 6.9 1.8 8.5 3.3l6.2-6C34.9 4 29.9 2 24 2 15.4 2 8 7 4.3 14l7.1 5.5c1.8-5.3 6.8-9.3 12.6-9.3z"/></svg>
+    <span id="buscTxt"></span>
+  </div>
+  <div id="sombraPlaca" class="abs" style="left:300px;top:1440px;width:520px;height:70px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.28),transparent)"></div>
+  <div id="placaW" class="abs" style="left:290px;top:760px;width:500px;height:550px;perspective:1600px">
+    <img id="placa" src="placa-recortada.png" class="flota" style="width:100%;height:100%">
+  </div>
+  <div id="tel1" class="telefono flota" style="left:0;top:0;width:300px;height:617px"><div class="isla"></div><div class="pant"><div class="bloqueo"><div style="font-size:84px">9:41</div></div></div></div>
+  <div id="ani" class="anillo"></div>
+</div>
+
+<!-- G: oscuro con el móvil y la reseña -->
+<div id="sOsc" class="full oscuro"><div class="grano"></div>
+  <div class="abs" style="left:190px;top:700px;width:700px;height:900px;background:radial-gradient(closest-side,rgba(233,188,70,.14),transparent)"></div>
+  <div id="tel2W" class="abs" style="left:290px;top:600px;width:500px;height:1030px;perspective:1800px">
+    <div id="tel2" class="telefono" style="left:0;top:0;width:500px;height:1030px;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))">
+      <div class="isla"></div><div class="pant"><img id="pantImg" src="pan/pantalla-0.png"><div id="lock" class="bloqueo"><div>9:41</div></div></div></div>
+  </div>
+</div>
+
+<!-- I: el cero gigante -->
+<div id="sCero" class="full papel"><div class="grano"></div>
+  <div id="cero" class="abs" style="left:-150px;top:470px;font-weight:800;font-size:980px;letter-spacing:-40px;line-height:.8;color:#111">0</div>
+</div>
+
+<!-- J: pastillas de cristal sobre la persona desenfocada -->
+<div id="sJ" class="full">
+  <div id="p1" class="pill cristal" style="top:640px"><i></i><span><b>0</b> descargas</span></div>
+  <div id="p2" class="pill cristal" style="top:800px"><i></i><span><b>0</b> apps</span></div>
+  <div id="p3" class="pill cristal" style="top:960px"><i></i><span><b>0</b> búsquedas</span></div>
+</div>
+
+<div id="textos"></div>
+<div id="marca" class="marca">PLEA<b>5</b>E.es</div>
+<div id="flash"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, t0, d) => cl((t - t0) / d);
+const oExpo = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);
+const oCub = x => 1 - Math.pow(1 - x, 3), iCub = x => x * x * x;
+const ioCub = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const TOTAL = 19.833; window.TOTAL = TOTAL;
+
+/* ---------- escenas ---------- */
+const ESC = [ // [id, t0, t1]
+  ['sB', 1.633, 2.767], ['sPapel', 4.87, 8.8], ['sOsc', 9.533, 14.1], ['sCero', 14.7, 17.0], ['sJ', 17.0, TOTAL]];
+const BLUR = [[1.633, 2.767], [17.0, TOTAL]];   // la persona está desenfocada (ffmpeg)
+
+/* ---------- bloques de texto: palabras con su tiempo (del Whisper) ----------
+   s = línea pequeña, b = línea grande. Entran letra a letra desde desenfocado; salen con desenfoque vertical. */
+const TX = [
+  { t0: 0, t1: 1.6, y: 1190, c: 'sub', s: [['tus', -.04], ['clientes', .2], ['salen', .67]], b: [['contentos', 1.01]] },
+  { t0: 1.633, t1: 2.767, y: 1210, c: 'sub', s: [['pero', 1.63], ['nadie', 1.84], ['te', 2.14]], b: [['escribe', 2.3]] },
+  { t0: 2.767, t1: 3.74, y: 1190, c: 'sub', s: [['y', 2.73], ['no', 2.83], ['es', 2.97], ['que', 3.1], ['no', 3.27]], b: [['quieran', 3.41]] },
+  { t0: 3.76, t1: 4.87, y: 1190, c: 'sub', s: [['es', 3.76], ['que', 3.91], ['se', 4.1], ['les', 4.26]], b: [['olvida', 4.45]] },
+  { t0: 4.9, t1: 5.95, y: 600, c: '', s: [['les', 4.9], ['da', 5.06]], b: [['pereza', 5.21]] },
+  { t0: 5.99, t1: 7.12, y: 330, c: '', s: [['con', 5.99], ['la', 6.18], ['placa', 6.33]], b: [['en', 6.59], ['la', 6.74], ['mesa', 6.89]] },
+  { t0: 7.16, t1: 8.8, y: 330, c: '', s: [['solo', 7.16], ['tienen', 7.4], ['que', 7.71]], b: [['acercar', 7.91], ['el', 8.26], ['móvil', 8.42, 'oro']] },
+  { t0: 8.8, t1: 9.533, y: 1190, c: 'sub', s: [['y…', 8.8]], b: [['BOOM', 8.99]] },
+  { t0: 9.6, t1: 10.36, y: 250, c: 'claro', s: [['ya', 9.6], ['se', 9.74]], b: [['abre', 9.99, 'oro']] },
+  { t0: 10.39, t1: 11.58, y: 250, c: 'claro', s: [['¿qué', 10.39], ['es', 10.61], ['lo', 10.78], ['que', 10.95]], b: [['se', 11.17], ['abre?', 11.34]] },
+  { t0: 11.6, t1: 14.1, y: 250, c: 'claro', s: [['las', 11.6], ['ganas', 11.81], ['del', 12.11], ['cliente', 12.32]], b: [['una', 13.36], ['reseña', 13.57, 'oro']] },
+  { t0: 14.1, t1: 14.7, y: 1200, c: 'sub', s: [], b: [['¿por', 14.06], ['qué?', 14.35]] },
+  { t0: 15.1, t1: 17.0, y: 800, x: 515, c: '', bs: 108, s: [['apps', 15.1], ['que', 15.77]], b: [['descargar', 16.04]] },
+];
+const cont = $('textos');
+let nf = 0;
+TX.forEach(B => {
+  const el = document.createElement('div'); el.className = 'tb ' + B.c; el.style.top = B.y + 'px';
+  if (B.x) { el.style.left = B.x + 'px'; el.style.textAlign = 'left'; el.style.right = 'auto'; }
+  const linea = (ws, cls) => '<div class="' + cls + '">' + ws.map(([w, t, x]) =>
+    `<span class="w ${x || ''}" data-t="${t}">` + [...w].map(ch => `<span class="l">${ch}</span>`).join('') + '</span>').join(' ') + '</div>';
+  el.innerHTML = (B.s.length ? linea(B.s, 's') : '') + (B.b.length ? linea(B.b, 'b') : '');
+  if (B.bs) el.querySelector('.b').style.fontSize = B.bs + 'px';
+  const f = document.createElementNS('http://www.w3.org/2000/svg', 'filter'); f.id = 'sm' + nf;
+  f.setAttribute('x', '-20%'); f.setAttribute('y', '-100%'); f.setAttribute('width', '140%'); f.setAttribute('height', '300%');
+  f.innerHTML = '<feGaussianBlur stdDeviation="0 0"/>'; $('filtros').appendChild(f);
+  B.el = el; B.fb = f.firstChild; B.fid = 'sm' + nf++; cont.appendChild(el);
+});
+
+function texto(B, t) {
+  const vis = t >= B.t0 - .02 && t < B.t1;
+  B.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  // salida: desenfoque vertical + sube + se desvanece (0,16 s)
+  const k = p(t, B.t1 - .16, .16);
+  B.fb.setAttribute('stdDeviation', `0 ${iCub(k) * 26}`);
+  B.el.style.filter = k > 0 ? `url(#${B.fid})` : 'none';
+  B.el.style.opacity = 1 - iCub(k);
+  B.el.style.transform = `translateY(${-iCub(k) * 40}px)`;
+  B.el.querySelectorAll('.w').forEach(w => {
+    const tw = +w.dataset.t;
+    w.querySelectorAll('.l').forEach((l, i) => {
+      const e = oCub(p(t, tw + i * .018, .24));
+      l.style.opacity = e; l.style.filter = `blur(${(1 - e) * 12}px)`;
+      l.style.transform = `translateY(${(1 - e) * 10}px)`;
+    });
+  });
+}
+
+/* entrada de un objeto desde desenfocado (como las capturas de las referencias) */
+function entra(el, t, t0, o = {}) {
+  const { d = .45, esc = .92, dy = 30 } = o;
+  const e = oExpo(p(t, t0, d));
+  el.style.opacity = t < t0 ? 0 : e;
+  el.style.filter = (o.sombra || '') + ` blur(${(1 - e) * 16}px)`;
+  return e;
+}
+function destello(t, t0) {  // destello cálido: 2 fotogramas arriba, 4 abajo
+  const u = t - t0; if (u < -.07 || u > .2) return 0;
+  return u < 0 ? oCub(1 + u / .07) : 1 - oCub(u / .2);
+}
+
+window.render = t => {
+  // escenas
+  ESC.forEach(([id, a, b]) => $(id).style.display = t >= a && t < b ? 'block' : 'none');
+  $('velo').style.opacity = BLUR.some(([a, b]) => t >= a && t < b) ? cl((t - (t < 10 ? 1.633 : 17)) / .2) : 0;
+  $('marca').style.display = ['sPapel', 'sCero'].some(id => $(id).style.display === 'block') ? 'none' : 'block';
+
+  // B: tarjeta de cristal
+  if (t >= 1.633 && t < 2.767) {
+    const e = entra($('card'), t, 1.66, { d: .4 });
+    $('card').style.transform = `perspective(1600px) rotateX(${8 - 6 * e}deg) scale(${.94 + .06 * e}) translateY(${(1 - e) * 40 + Math.sin(t * 1.4) * 4}px)`;
+    ['cardPill', 't1', 't2', 't3'].forEach((id, i) => { const k = oExpo(p(t, 1.8 + i * .09, .35)); $(id).style.opacity = k; $(id).style.transform = `scale(${.9 + .1 * k})`; });
+    const k0 = oExpo(p(t, 2.3, .3)); $('card0').style.opacity = k0; $('card0').style.transform = `translateY(${(1 - k0) * 30}px)`;
+  }
+
+  // D: buscador que se escribe solo (buscarte)
+  if (t >= 4.87 && t < 5.99) {
+    $('busc').style.display = 'flex';
+    const e = entra($('busc'), t, 5.45, { d: .4, sombra: 'drop-shadow(0 30px 40px rgba(0,0,0,.18))' });
+    $('busc').style.transform = `perspective(1600px) rotateX(${14 - 4 * e + Math.sin(t) * 1}deg) rotateY(${-8 + 3 * e}deg) scale(${.92 + .08 * e})`;
+    const txt = 'bar cerca de mí'; const n = Math.floor(cl((t - 5.55) * 32, 0, txt.length));
+    $('buscTxt').innerHTML = txt.slice(0, n) + (Math.floor(t * 4) % 2 ? '' : '<span class="caret"></span>');
+  } else $('busc').style.display = 'none';
+
+  // E: placa flotando y móvil que se acerca
+  const enE = t >= 5.99 && t < 8.8;
+  ['placaW', 'sombraPlaca', 'tel1', 'ani'].forEach(id => $(id).style.display = enE ? 'block' : 'none');
+  if (enE) {
+    const e = oExpo(p(t, 6.25, .55));
+    $('placaW').style.opacity = e; $('sombraPlaca').style.opacity = e;
+    $('placa').style.transform = `rotateY(${-26 + 10 * e + (t - 6.2) * 2.2}deg) rotateX(${7 + Math.sin(t * 1.2) * 1.2}deg) translateY(${(1 - e) * 60 + Math.sin(t * 1.5) * 6}px) scale(${.9 + .1 * e})`;
+    $('placa').style.filter = `drop-shadow(0 4px 6px rgba(0,0,0,.12)) drop-shadow(0 40px 50px rgba(0,0,0,.24)) blur(${(1 - e) * 14}px)`;
+    const m = ioCub(p(t, 7.9, .65));
+    $('tel1').style.opacity = t >= 7.85 ? 1 : 0;
+    $('tel1').style.transform = `translate(${1180 - 400 * m}px, ${960 - 40 * m}px) rotate(${-14 + 6 * m}deg)`;
+    const r = p(t, 8.55, .45);
+    $('ani').style.opacity = t >= 8.55 ? 1 - r : 0;
+    const R = 40 + r * 260; Object.assign($('ani').style, { left: 800 - R / 2 + 'px', top: 1060 - R / 2 + 'px', width: R + 'px', height: R + 'px' });
+  }
+
+  // G: móvil con la reseña
+  if (t >= 9.533 && t < 14.1) {
+    const e = entra($('tel2W'), t, 9.56, { d: .5 });
+    $('tel2').style.transform = `rotateY(${-20 + 12 * e + (t - 9.6) * 1.3}deg) rotateX(${6 - 2 * e + Math.sin(t) * .8}deg) translateY(${(1 - e) * 80 + Math.sin(t * 1.3) * 6}px) scale(${.9 + .1 * e})`;
+    $('lock').style.opacity = 1 - oCub(p(t, 9.99, .25));
+    const u = (t - 13.05) / .75, PS = ['0', '0.5', '0.7', '0.9', '1.1'];
+    $('pantImg').src = 'pan/pantalla-' + PS[Math.floor(cl(u, 0, .999) * 5 * (u >= 0))] + '.png';
+    if (u >= 1) $('pantImg').src = 'pan/pantalla-1.1.png';
+  }
+
+  // I: el cero entra desde la izquierda
+  if (t >= 14.7 && t < 17) {
+    const e = oExpo(p(t, 14.78, .6));
+    $('cero').style.opacity = e;
+    $('cero').style.transform = `translateX(${(1 - e) * -420}px)`;
+    $('cero').style.filter = `blur(${(1 - e) * 20}px)`;
+  }
+
+  // J: pastillas de cristal escalonadas
+  if (t >= 17) [['p1', 17.08], ['p2', 17.87], ['p3', 19.03]].forEach(([id, t0]) => {
+    const e = entra($(id), t, t0, { d: .42 });
+    $(id).style.transform = `translateY(${(1 - e) * 40}px) scale(${.95 + .05 * e})`;
+  });
+
+  TX.forEach(B => texto(B, t));
+  $('flash').style.opacity = Math.max(destello(t, 4.87), destello(t, 9.533), destello(t, 14.7)) * .92;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>
