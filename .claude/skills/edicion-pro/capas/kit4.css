@@ -1,0 +1,51 @@
+/* FORMATO PLEA5E (v4) — collage editorial sobre papel. Una idea por escena, mucho aire, titular arriba a la izquierda. */
+@import url(kit2.css);
+@font-face{font-family:MS;src:url(fuentes/montserrat-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:MS;src:url(fuentes/montserrat-latin-800-normal.woff2);font-weight:800}
+@font-face{font-family:MS;src:url(fuentes/montserrat-latin-900-normal.woff2);font-weight:900}
+@font-face{font-family:MS;src:url(fuentes/montserrat-latin-900-italic.woff2);font-weight:900;font-style:italic}
+@font-face{font-family:MS;src:url(fuentes/montserrat-latin-800-italic.woff2);font-weight:800;font-style:italic}
+:root{--papel:#ECEAE5;--tinta:#141414;--oro:#D39B16;--oro2:#E9BC46;--noche:#06080E;--rojo:#E5484D}
+body{font-family:MS}
+/* papel con fibra */
+.papel{background:radial-gradient(1100px 1300px at 45% 40%,#F4F2EE 0%,#ECEAE5 55%,#D9D6CF 100%)}
+.oscuro{background:radial-gradient(900px 1100px at 50% 45%,#16171B 0%,#0B0C10 62%,#06080E 100%)}
+.fibra{position:absolute;inset:0;opacity:.35;mix-blend-mode:multiply;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .08' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .52 0 0 0 0 .47 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23f)'/%3E%3C/svg%3E")}
+.oscuro .fibra{display:none}
+/* TITULAR: pequeño 700 + grande 900, palabra clave 900 cursiva en oro. Alineado a la izquierda, margen 90. */
+.tb{left:90px;right:120px;text-align:left}
+.tb .s{font-family:MS;font-weight:700;font-size:52px;letter-spacing:-.03em;line-height:1.08;color:var(--tinta)}
+.tb .b{font-family:MS;font-weight:900;font-size:128px;letter-spacing:-.05em;line-height:.9;color:var(--tinta);margin-top:4px}
+.tb .b .oro,.tb .b .w.oro{font-style:italic;color:var(--oro)!important}
+.tb .b .rojo{font-style:italic}
+.tb.claro .s{color:rgba(255,255,255,.72)}.tb.claro .b{color:#fff}.tb.claro .b .oro{color:var(--oro2)!important}
+.tb.centro{left:60px;right:60px;text-align:center}
+.tb .w{position:relative}
+.subraya{height:14px;bottom:-4px;background:var(--oro2);opacity:.9;border-radius:8px}
+#detras .tb .b{font-size:230px;letter-spacing:-.055em;line-height:.84}
+/* PEGATINAS (objeto troquelado con borde blanco + sombra) */
+.peg{position:absolute;filter:url(#troquel) drop-shadow(0 18px 22px rgba(0,0,0,.22)) drop-shadow(0 2px 3px rgba(0,0,0,.12))}
+.peg img{width:100%;height:100%;object-fit:contain;display:block}
+/* cinta de carrocero */
+.cinta{position:absolute;width:190px;height:54px;background:rgba(236,226,198,.82);box-shadow:0 2px 4px rgba(0,0,0,.08);
+  clip-path:polygon(0 8%,4% 0,9% 10%,14% 0,20% 8%,25% 0,100% 0,100% 92%,95% 100%,90% 90%,85% 100%,80% 92%,74% 100%,0 100%)}
+/* papel rasgado con texto */
+.rasgado{position:absolute;background:#fff;color:var(--tinta);font:800 44px MS;letter-spacing:-.02em;padding:26px 40px 30px;box-shadow:0 12px 24px rgba(0,0,0,.14);
+  clip-path:polygon(0 6%,5% 0,12% 5%,20% 0,28% 6%,36% 1%,45% 5%,55% 0,63% 6%,72% 1%,80% 5%,88% 0,95% 6%,100% 2%,100% 94%,94% 100%,86% 95%,77% 100%,69% 94%,60% 100%,51% 95%,42% 100%,33% 94%,24% 100%,15% 95%,7% 100%,0 96%)}
+.polaroid{position:absolute;background:#fff;padding:22px 22px 90px;box-shadow:0 20px 40px rgba(0,0,0,.22)}
+.polaroid img{display:block;width:100%;height:100%;object-fit:cover}
+.polaroid b{position:absolute;left:0;right:0;bottom:24px;text-align:center;font:800 italic 40px MS;color:var(--tinta)}
+/* sello (NUNCA, ✓) */
+.sello{position:absolute;font:900 italic 150px MS;letter-spacing:-.04em;color:var(--rojo);border:12px solid var(--rojo);border-radius:26px;padding:6px 36px 14px;line-height:1;background:rgba(255,255,255,.0)}
+.pill,.bocadillo,.coment,.card,.marcaTop,.fila h4,.fila small,.demo,.letra{font-family:MS!important}
+.pill{font-weight:800;letter-spacing:-.02em}
+.bocadillo{font-weight:800;letter-spacing:-.02em}
+.marcaTop{font-weight:900;letter-spacing:-.03em;font-size:38px;top:190px}
+.letra{font-weight:900!important;letter-spacing:-.05em!important}
+/* persona recortada como pegatina */
+#persona{position:absolute;left:30px;top:800px;width:1020px;height:1147px;transform-origin:50% 100%}
+#persona img{position:absolute;inset:0;width:100%;height:100%;filter:url(#troquelP) drop-shadow(0 26px 30px rgba(0,0,0,.25));
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}
+#detras,#delante{position:absolute;inset:0;pointer-events:none}
+.demo{position:absolute;padding:8px 18px;border-radius:12px;background:rgba(17,17,17,.8);color:#fff;font-weight:700;font-size:26px;letter-spacing:.3px}
+.trazo{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}

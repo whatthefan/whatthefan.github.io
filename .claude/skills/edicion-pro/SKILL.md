@@ -5,6 +5,10 @@ description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profes
 
 # Edición pro
 
+## ★★ FORMATO PLEA5E v4 (POR DEFECTO desde el 26-9) → `capas/FORMATO.md`
+Collage editorial sobre papel, Montserrat 900 con clave en cursiva oro, pegatinas troqueladas (fotos reales recortadas u
+objetos 3D), cara solo en gancho y CTA, 1 s quieto por elemento, voz con RNNoise. Todo lo de abajo es historia/base técnica.
+
 ## ★ Estilo PLEA5E = la MEZCLA (el de por defecto)
 
 No se copia un vídeo: se mezcla lo mejor de todas las referencias que ha pasado Juan.
