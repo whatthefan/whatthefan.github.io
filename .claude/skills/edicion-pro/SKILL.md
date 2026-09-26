@@ -73,6 +73,15 @@ sentado) con varias caras cada uno para el remate. Para nuevos: `personajes/regi
 instrucciones dentro): tipo busto, de pie o sentado; 53 peinados, 33 caras, 27 bustos, 23 cuerpos de pie, 11
 sentados. Los bustos se cortan con el borde de la pantalla o con la línea de mesa, nunca flotando.
 
+### Diseños de producto (siempre los originales)
+Las placas, expositores y tarjetas que salen en los vídeos son **los diseños reales de la web**, sacados del
+generador (`public/taller/generador.html`) con
+`node disenos/desde-web.js salida/ '[{"f":"placa","negocio":"Bar Manolo","lema":"Bar · Tapas","banda":"#7A1E2B","n":"placa-granate"}]'`
+(f: placa | stand | tarjeta; banda, fondo y acento opcionales). Nunca recreaciones hechas a mano.
+`disenos/exporta.js` solo para la pantalla de reseña del móvil y la notificación.
+Precios: los de la web en ese momento (hoy: placa de mesa 25 €, expositor 28 €, tarjeta de mano 15 € en packs de 20 a 100).
+Si un vídeo cuenta una visita que no ha pasado, va con la etiqueta «Demostración»; «caso real» solo si lo es.
+
 ### Sonido (lo que usan las referencias: sutil, de interfaz)
 - `sonidos/referencias/`: tics, clics y pops **extraídos** de los 4 vídeos (`separa.py` quita la voz con UVR
   MDX-Net y se recorta cada golpe). Uso de perfil, no anuncios de pago.
