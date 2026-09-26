@@ -1,4 +1,4 @@
-<!-- Plantilla de miniatura 1080x1920. Poner al lado: persona.png y persona-borde.png (recorte.py con una foto AMPLIA, que no corte a la persona por los lados), placa.png (public/producto/placa-recortada.png), marca-plea5e-claro.svg y las fuentes (fuente/). Cambiar textos y ajustar .juan (left/top/width/height) y .escena. Foto: node grabar.js miniatura.html prueba todo 0  -> prueba-todo-0.png -->
+<!-- MINIATURA 1080x1920 aprobada por Juan (short de la placa, foto de traje). En la carpeta de trabajo: persona.png y persona-borde.png (python3 recorte.py foto.png persona.png; si la foto es pequeña, ampliarla antes x1,7 con LANCZOS), placa-recortada.png (public/producto/) y las fuentes anton, inter y caveat (fuente/). Ajustar .juan (left/top/width/height) para que la cabeza empiece en y≈880 y el cuerpo llegue abajo. Foto: node grabar.js miniatura.html prueba x 0 -->
 <!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Anton;src:url(anton-latin.woff2)}
 @font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
@@ -6,47 +6,44 @@
 *{margin:0;box-sizing:border-box}
 body{width:1080px;height:1920px;overflow:hidden;background:#06080E;position:relative;font-family:Inter}
 .capa{position:absolute;inset:0}
-/* fondo: resplandor oro detras de la cabeza + cuadricula que se desvanece + haces de luz */
 .glow{background:
-  radial-gradient(520px 520px at 540px 1180px,rgba(233,188,70,.55),rgba(233,188,70,.12) 45%,transparent 70%),
-  radial-gradient(1100px 600px at 540px 1950px,rgba(233,188,70,.42),transparent 70%),
+  radial-gradient(560px 560px at 470px 1230px,rgba(233,188,70,.50),rgba(233,188,70,.12) 45%,transparent 70%),
+  radial-gradient(1100px 600px at 540px 1950px,rgba(233,188,70,.30),transparent 70%),
   radial-gradient(1200px 900px at 540px 700px,#141826,#06080E 75%)}
-.grid{background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);
-  background-size:72px 72px;-webkit-mask:radial-gradient(700px 800px at 540px 950px,#000 20%,transparent 75%);transform:perspective(900px) rotateX(18deg) scale(1.25);transform-origin:50% 100%}
-.rayos{background:repeating-conic-gradient(from 0deg at 540px 1000px,rgba(233,188,70,.10) 0 4deg,transparent 4deg 13deg);
-  -webkit-mask:radial-gradient(760px 760px at 540px 1000px,#000 10%,transparent 70%);mix-blend-mode:screen}
-.arco{position:absolute;left:-260px;top:520px;width:1600px;height:1600px;border-radius:50%;border-top:4px solid rgba(255,230,160,.9);
-  filter:drop-shadow(0 0 18px rgba(233,188,70,.9)) drop-shadow(0 0 60px rgba(233,188,70,.6));transform:rotate(-8deg);
+.grid{background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:72px 72px;-webkit-mask:radial-gradient(700px 800px at 540px 1000px,#000 20%,transparent 75%);transform:perspective(900px) rotateX(18deg) scale(1.25);transform-origin:50% 100%}
+.rayos{background:repeating-conic-gradient(from 0deg at 470px 1150px,rgba(233,188,70,.09) 0 4deg,transparent 4deg 13deg);
+  -webkit-mask:radial-gradient(760px 760px at 470px 1150px,#000 10%,transparent 70%);mix-blend-mode:screen}
+.arco{position:absolute;left:-260px;top:560px;width:1600px;height:1600px;border-radius:50%;border-top:3px solid rgba(255,230,160,.8);
+  filter:drop-shadow(0 0 14px rgba(233,188,70,.8)) drop-shadow(0 0 50px rgba(233,188,70,.5));transform:rotate(-8deg);
   -webkit-mask:linear-gradient(90deg,transparent 5%,#000 35%,#000 65%,transparent 95%)}
-.polvo i{position:absolute;border-radius:50%;background:#FFE7A3;box-shadow:0 0 12px 3px rgba(233,188,70,.8)}
-/* persona */
-.juan{position:absolute;left:-340px;top:840px;width:1620px;height:1080px;-webkit-mask:linear-gradient(#0000 0,#000 70px)}
+.polvo i{position:absolute;border-radius:50%;background:#FFE7A3;box-shadow:0 0 10px 2px rgba(233,188,70,.7)}
+.juan{position:absolute;left:-120px;top:835px;width:1088px;height:1088px}
 .juan img{position:absolute;inset:0;width:100%;height:100%}
-.juan .sombra{filter:brightness(0) blur(30px);opacity:.85;transform:translate(26px,40px)}
-.juan .bord{filter:drop-shadow(0 0 22px rgba(233,188,70,.95)) drop-shadow(0 0 4px #fff)}
-.juan .per{filter:contrast(1.1) saturate(1.12) brightness(1.06)}
-/* titulo */
-.tit{position:absolute;left:0;right:0;top:330px;text-align:center;font-family:Anton;line-height:.92;transform:rotate(-4deg)}
+.juan .sombra{filter:brightness(0) blur(30px);opacity:.85;transform:translate(22px,34px)}
+.juan .bord{filter:drop-shadow(0 0 20px rgba(233,188,70,.9)) drop-shadow(0 0 3px #fff)}
+.juan .per{filter:contrast(1.06) saturate(1.06) brightness(1.04)}
+.tit{position:absolute;left:0;right:0;top:300px;text-align:center;font-family:Anton;line-height:.92;transform:rotate(-4deg)}
 .l1{font-size:150px;color:#fff;letter-spacing:2px;
   text-shadow:0 5px 0 #c9ccd6,0 10px 0 #9da1ad,0 15px 0 #6d717c,0 22px 30px rgba(0,0,0,.9),0 0 80px rgba(0,0,0,.6)}
-.l2{font-size:205px;letter-spacing:1px;color:#FFD86B;background:linear-gradient(180deg,#FFF1BF 0%,#FFD86B 38%,#E9BC46 62%,#B98A17 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;position:relative;display:inline-block;
-  filter:drop-shadow(0 6px 0 #9A6F0C) drop-shadow(0 6px 0 #7A5608) drop-shadow(0 6px 0 #573C03) drop-shadow(0 26px 30px rgba(0,0,0,.9)) drop-shadow(0 0 40px rgba(233,188,70,.45))}
-.l2 .n{font-size:250px}
+.l2{font-size:205px;letter-spacing:1px;background:linear-gradient(180deg,#FFF1BF 0%,#FFD86B 38%,#E9BC46 62%,#B98A17 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;
+  filter:drop-shadow(0 6px 0 #9A6F0C) drop-shadow(0 6px 0 #7A5608) drop-shadow(0 6px 0 #573C03) drop-shadow(0 26px 30px rgba(0,0,0,.9)) drop-shadow(0 0 40px rgba(233,188,70,.4))}
 .pill{display:inline-block;margin-top:34px;font:800 46px Inter;letter-spacing:6px;color:#06080E;background:#fff;padding:14px 34px;border-radius:14px;
   transform:rotate(2deg);box-shadow:0 14px 30px rgba(0,0,0,.7),0 0 0 6px rgba(233,188,70,.9)}
-/* placa 3D */
-.escena{position:absolute;left:735px;top:1235px;width:335px;height:368px;perspective:1300px}
-.placa{position:absolute;inset:0;transform:rotateY(-26deg) rotateX(6deg) rotateZ(9deg);transform-style:preserve-3d}
+.escena{position:absolute;left:715px;top:1280px;width:345px;height:380px;perspective:1300px}
+.placa{position:absolute;inset:0;transform:rotateY(-24deg) rotateX(6deg) rotateZ(8deg)}
 .placa img{position:absolute;inset:0;width:100%;height:100%;
-  filter:drop-shadow(-8px 0 0 #cfd3dc) drop-shadow(-4px 3px 0 #9aa0ad) drop-shadow(-30px 50px 40px rgba(0,0,0,.95)) drop-shadow(0 0 50px rgba(233,188,70,.55))}
-.brillo{position:absolute;inset:0;border-radius:26px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 42%,transparent 52%);mix-blend-mode:screen}
-.nota{position:absolute;left:835px;top:1050px;font:700 66px Caveat;color:#fff;transform:rotate(-8deg);text-shadow:0 4px 14px #000}
-.flecha{position:absolute;left:900px;top:1110px;width:120px;height:110px}
-.marca{position:absolute;left:50%;top:92px;transform:translateX(-50%);height:80px;filter:drop-shadow(0 4px 12px #000)}
+  filter:drop-shadow(-7px 0 0 #cfd3dc) drop-shadow(-3px 3px 0 #9aa0ad) drop-shadow(-26px 44px 36px rgba(0,0,0,.95)) drop-shadow(0 0 44px rgba(233,188,70,.5))}
+.brillo{position:absolute;inset:0;border-radius:24px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.4) 42%,transparent 52%);mix-blend-mode:screen}
+.nota{position:absolute;left:800px;top:1105px;font:700 66px Caveat;color:#fff;transform:rotate(-8deg);text-shadow:0 4px 14px #000}
+.flecha{position:absolute;left:880px;top:1160px;width:120px;height:110px}
+.neon{position:absolute;left:44px;top:800px;width:150px;height:150px;transform:rotate(-10deg);filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 20px rgba(233,188,70,.95)) drop-shadow(0 0 46px rgba(233,188,70,.7))}
+.marca{position:absolute;left:0;right:0;top:130px;text-align:center;font:800 40px Inter;letter-spacing:12px;color:#fff;text-shadow:0 3px 14px #000}
+.marca b{color:#E9BC46}
+.marca:before,.marca:after{content:'';display:inline-block;width:90px;height:2px;background:linear-gradient(90deg,transparent,#E9BC46);vertical-align:middle;margin:0 22px 8px}
+.marca:after{background:linear-gradient(90deg,#E9BC46,transparent)}
 .vin{background:radial-gradient(1300px 1500px at 540px 900px,transparent 55%,rgba(0,0,0,.75))}
-.neon{position:absolute;left:58px;top:905px;width:190px;height:190px;transform:rotate(-10deg);filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 22px rgba(233,188,70,.95)) drop-shadow(0 0 50px rgba(233,188,70,.7))}
-.juan .per{filter:contrast(1.1) saturate(1.12) brightness(1.06) drop-shadow(0 0 2px rgba(255,220,140,.6))}
 </style></head><body>
 <div class="capa glow"></div>
 <div class="capa grid"></div>
@@ -54,18 +51,17 @@ body{width:1080px;height:1920px;overflow:hidden;background:#06080E;position:rela
 <div class="arco"></div>
 <div class="capa polvo" id="polvo"></div>
 <div class="juan"><img class="sombra" src="persona.png"><img class="bord" src="persona-borde.png"><img class="per" src="persona.png"></div>
-<div class="escena"><div class="placa"><img src="placa.png"><div class="brillo"></div></div></div>
+<div class="escena"><div class="placa"><img src="placa-recortada.png"><div class="brillo"></div></div></div>
 <div class="nota">1 toque</div>
 <svg class="flecha" viewBox="0 0 150 130" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 3px 8px #000)">
  <path d="M20 12 C70 10 120 40 118 104"/><path d="M96 86 L118 108 L136 82"/></svg>
-<div class="capa vin"></div>
 <svg class="neon" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
- <rect x="30" y="18" width="34" height="62" rx="7"/><path d="M42 72h10"/>
- <path d="M72 38a14 14 0 0 1 0 20"/><path d="M79 31a24 24 0 0 1 0 34"/><path d="M86 24a34 34 0 0 1 0 48"/></svg>
-<div class="tit"><div class="l1">RESEÑAS EN</div><div class="l2"><span class="n">10</span> SEGUNDOS</div><br><div class="pill">SIN APPS · SIN LÍOS</div></div>
-<img class="marca" src="marca-plea5e-claro.svg">
+ <rect x="30" y="18" width="34" height="62" rx="7"/><path d="M42 72h10"/><path d="M72 38a14 14 0 0 1 0 20"/><path d="M79 31a24 24 0 0 1 0 34"/><path d="M86 24a34 34 0 0 1 0 48"/></svg>
+<div class="capa vin"></div>
+<div class="tit"><div class="l1">RESEÑAS EN</div><div class="l2">10 SEGUNDOS</div><br><div class="pill">SIN APPS · SIN LÍOS</div></div>
+<div class="marca">PLEA<b>5</b>E</div>
 <script>
 const P=document.getElementById('polvo');let s=7;const r=()=>(s=(s*9301+49297)%233280)/233280;
-for(let i=0;i<46;i++){const e=document.createElement('i');const z=2+r()*7;e.style.cssText=`width:${z}px;height:${z}px;left:${r()*1080}px;top:${300+r()*1500}px;opacity:${.25+r()*.6}`;P.appendChild(e)}
-window.render = () => {}; window.TOTAL = 0;
+for(let i=0;i<40;i++){const e=document.createElement('i');const z=2+r()*6;e.style.cssText=`width:${z}px;height:${z}px;left:${r()*1080}px;top:${300+r()*1400}px;opacity:${.2+r()*.5}`;P.appendChild(e)}
+window.TOTAL=0;window.render=()=>{};
 </script></body></html>

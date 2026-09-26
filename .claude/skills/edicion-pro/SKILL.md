@@ -68,15 +68,17 @@ dorados»*. Imágenes de IA en un vídeo → marcar el contenido como generado c
 
 Curvas: entradas `outExpo` 0,4-0,6 s, salidas `inCubic` 0,25-0,3 s. Juan prefiere el DINÁMICO para vídeos con él.
 
-## C. Miniatura / portada trabajada
+## C. Miniatura / portada
 
-Nunca un fotograma del vídeo con un rótulo encima. Siempre:
+Plantilla aprobada: `miniatura.html`. Qué la hace funcionar:
 
-1. **Foto con gesto** (sorpresa, bajarse las gafas, señalar). Sacarla de la toma **más amplia** (el original sin recortar), para que la persona no quede cortada en recto por los lados.
-2. `python3 recorte.py foto.png persona.png` → persona recortada + `persona-borde.png` (contorno blanco de pegatina).
-3. `miniatura.html` (plantilla): fondo diseñado (noche, resplandor oro detrás de la cabeza, cuadrícula en perspectiva, rayos, arco de luz, polvo brillante, viñeta), persona con **sombra**, contorno y brillo oro, título en **Anton** con extrusión 3D y degradado dorado, etiqueta blanca, **placa real en 3D** (`public/producto/placa-recortada.png`) con sombra y reflejo, icono neón y flecha a mano.
-4. Todo lo importante entre y = 240 y 1680 (el perfil recorta la miniatura a 3:4) y nada en los 250 px de abajo.
-5. `node grabar.js miniatura.html prueba todo 0`.
+1. **Foto buena de verdad**: cara quieta, mirando a cámara, nítida y sin gafas (Juan no quiere gafas ni caras en movimiento). Mejor una foto que un fotograma de webcam; si es pequeña, ampliar x1,7 con LANCZOS antes de recortar.
+2. `python3 recorte.py foto.png persona.png` → recorte + `persona-borde.png`. Quitar manchas sueltas (quedarse con la mancha más grande del alfa).
+3. Composición: título arriba (y 300-830), cabeza desde y≈880 y el cuerpo hasta abajo, placa real a la derecha sobre el hombro (nunca tapando la cara), icono NFC y «1 toque» con flecha a los lados sin tocar el pelo.
+4. Todo lo importante entre y = 240 y 1680.
+5. `node grabar.js miniatura.html prueba x 0`.
+
+Si el recorte deja halo en el pelo (fondo claro detrás), no recortar: dejar la foto con su fondo desenfocado y oscurecido.
 
 ## 4. CapCut → aquí
 
