@@ -82,6 +82,9 @@
       <button type="button" id="g-proceso" data-g="proceso" aria-pressed="false">Así hacemos tu placa</button>
       <button type="button" id="g-desnudo" data-g="desnudo" aria-pressed="false">Mesas desnudas</button>
       <button type="button" id="g-pesado" data-g="pesado" aria-pressed="false">El camarero pesado</button>
+      <button type="button" id="g-mosca" data-g="mosca" aria-pressed="false">La mosca del urinario</button>
+      <button type="button" id="g-uber" data-g="uber" aria-pressed="false">Por qué Uber pregunta</button>
+      <button type="button" id="g-reto" data-g="reto" aria-pressed="false">El reto del cronómetro</button>
     </div>
     <span class="leyenda"><b style="color:#9CC3FF">🎙 tono</b><b style="color:#FFB3C7">🙂 cara</b><b style="color:var(--oro)">✋ gesto / acción</b><b style="color:var(--rojo)">⏸ para</b><b style="color:#5BC08A">→ seguido</b><b>/ respira</b></span>
     <span class="dur" id="dur"></span>
@@ -213,6 +216,36 @@ var GUIONES = {
     {"e": "", "t": "{mira a un lado y sonríe} Gracias, crack.", "tono": "Natural", "cara": "Sonrisa", "gesto": "Pulgar arriba", "fin": "para"},
     {"e": "4 · CIERRE", "t": "{tú, normal} La diferencia no es pedirla más. / Es pedirla en el buen momento… / y ponérselo fácil.", "tono": "Seguro, más lento", "cara": "Mirada firme", "gesto": "", "fin": "seguido"},
     {"e": "", "t": "Las placas te las diseñamos con tu logo, / y te enseñamos a tu equipo a pedirla. / Comenta PLACA y te mando la tuya.", "tono": "Energía arriba", "cara": "Sonrisa", "gesto": "Señala abajo", "fin": "para"},
+    {"e": "FIN", "t": "{aguanta 2 segundos.}", "tono": "", "cara": "", "gesto": "", "fin": ""}
+  ],
+  mosca: [
+    {"e": "ANTES", "t": "{Sin placa en plano. Placa y móvil fuera de cámara, a mano. Dos segundos en silencio mirando a cámara.}", "tono": "", "cara": "", "gesto": "", "fin": ""},
+    {"e": "GANCHO", "t": "En un aeropuerto de Ámsterdam… / dibujaron una mosca / dentro de los urinarios.", "tono": "Misterioso, bajito, como contando un secreto", "cara": "Cejas arriba, media sonrisa", "gesto": "Te acercas un poco a cámara", "fin": "para"},
+    {"e": "", "t": "Y los baños empezaron a estar mucho más limpios.", "tono": "Como si fuera lo más lógico del mundo", "cara": "Asientes", "gesto": "", "fin": "para"},
+    {"e": "HISTORIA", "t": "Nadie les pidió nada. / Solo les pusieron algo… / a lo que apuntar.", "tono": "Más lento, marcando cada frase", "cara": "Mirada firme", "gesto": "Señalas con el dedo hacia abajo en «apuntar»", "fin": "para"},
+    {"e": "", "t": "Eso se llama «nudge»: / no obligas a nadie… / solo se lo pones fácil.", "tono": "Explicando, cercano", "cara": "", "gesto": "Mano abierta", "fin": "seguido"},
+    {"e": "¡PUM!", "t": "Con tus clientes pasa igual. / No hace falta insistirles con la reseña… / {sube la placa de golpe} hace falta ponerles algo delante.", "tono": "Sube la energía en «algo delante»", "cara": "Sonrisa", "gesto": "La placa aparece de golpe delante de ti", "fin": "para"},
+    {"e": "", "t": "{acerca el móvil a la placa} Acercan el móvil… / y ya están escribiendo tu reseña.", "tono": "Tranquilo", "cara": "Mira la placa", "gesto": "El móvil toca la placa 1 segundo", "fin": "para"},
+    {"e": "CIERRE", "t": "Esto es PLEA5E. / Comenta PLACA y te mando la tuya.", "tono": "Seguro, energía arriba", "cara": "Sonrisa", "gesto": "Señala abajo", "fin": "para"},
+    {"e": "FIN", "t": "{aguanta 2 segundos.}", "tono": "", "cara": "", "gesto": "", "fin": ""}
+  ],
+  uber: [
+    {"e": "ANTES", "t": "{Móvil en la mano. Placa fuera de plano. Dos segundos en silencio.}", "tono": "", "cara": "", "gesto": "", "fin": ""},
+    {"e": "GANCHO", "t": "¿Te has fijado… / en que Uber te pide la valoración / justo al bajarte del coche?", "tono": "Curioso, como si acabaras de darte cuenta", "cara": "Cabeza ladeada", "gesto": "Levantas el móvil y lo miras", "fin": "para"},
+    {"e": "HISTORIA", "t": "Y Glovo, cuando llega la comida. / Y Airbnb, el día que te vas. / Nunca a la semana siguiente.", "tono": "Rápido, enumerando", "cara": "", "gesto": "Cuenta con los dedos", "fin": "para"},
+    {"e": "", "t": "Porque en ese momento todavía lo tienes fresco… / y te cuesta cero.", "tono": "Más lento", "cara": "Asientes", "gesto": "", "fin": "para"},
+    {"e": "¡PUM!", "t": "¿Y tu bar? / {pausa} ¿Cuándo pide la reseña? / Nunca. / O cuando el cliente ya está en la calle.", "tono": "Con guasa, pinchando", "cara": "Cara de «¿a que sí?»", "gesto": "Señalas hacia la puerta", "fin": "para"},
+    {"e": "", "t": "{sube la placa} Con esto la pides en el momento exacto… / sin que nadie tenga que acordarse. / Acercan el móvil y listo.", "tono": "Seguro", "cara": "Sonrisa", "gesto": "La placa delante; acercas el móvil", "fin": "para"},
+    {"e": "CIERRE", "t": "Esto es PLEA5E. / Comenta PLACA.", "tono": "Energía arriba", "cara": "Sonrisa", "gesto": "Señala abajo", "fin": "para"},
+    {"e": "FIN", "t": "{aguanta 2 segundos.}", "tono": "", "cara": "", "gesto": "", "fin": ""}
+  ],
+  reto: [
+    {"e": "ANTES", "t": "{Grábalo de verdad: móvil con Google abierto y la placa cerca. Pon un cronómetro visible o déjame a mí contarlo en edición. No cortes las partes lentas: yo las acelero.}", "tono": "", "cara": "", "gesto": "", "fin": ""},
+    {"e": "GANCHO", "t": "Te reto. / ¿Cuánto tardas en dejarle una reseña a un bar… / desde cero?", "tono": "Retador, rápido", "cara": "Ceja levantada", "gesto": "Señalas a cámara", "fin": "para"},
+    {"e": "A LA ANTIGUA", "t": "Venga. / {abre Google} Abro Google… / {escribe} busco el bar… / {baja} bajo… / busco «escribir reseña»… / {suspira} ¿dónde estaba?", "tono": "Cada vez más cansado, con humor", "cara": "Cara de pereza creciente", "gesto": "Lo haces de verdad en el móvil", "fin": "para"},
+    {"e": "", "t": "Esto… / tu cliente no lo hace.", "tono": "Seco", "cara": "Mirada a cámara", "gesto": "", "fin": "para"},
+    {"e": "¡PUM!", "t": "Ahora con esto. / {sube la placa} Acerco el móvil… / {acerca} ya está. / Ya estoy escribiendo.", "tono": "Rápido y seguro", "cara": "Sonrisa de «ya está»", "gesto": "Acercas el móvil y giras la pantalla a cámara", "fin": "para"},
+    {"e": "CIERRE", "t": "Sin buscar, sin apps. / Esto es PLEA5E. / Comenta PLACA.", "tono": "Energía arriba", "cara": "Sonrisa", "gesto": "Señala abajo", "fin": "para"},
     {"e": "FIN", "t": "{aguanta 2 segundos.}", "tono": "", "cara": "", "gesto": "", "fin": ""}
   ]
 };
