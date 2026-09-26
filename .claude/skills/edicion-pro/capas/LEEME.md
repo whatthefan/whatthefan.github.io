@@ -11,7 +11,7 @@
 - **Motion**: `K.mueve` (desenfoque de movimiento según velocidad), `K.sacude`, `K.chispas` (oro o polvo), palabra grande que golpea y subrayado oro.
 - **Placa en la mano**: `placa_quad.py` sigue la placa blanca (máscara azulada, bordes rectos, completa lados fuera de cuadro,
   filtra saltos) y `placa_pinta.py` mete `w-placa.png` con homografía, respeta los dedos (piel) y copia la luz.
-- **Sonido**: `mezcla2.py` alinea cada efecto por su golpe y lo iguala a -24 dB (+ dB relativos). Reparto: `edicion/` (swoosh
+- **Sonido**: `mezcla2.py` alinea cada efecto por su golpe y lo iguala a -14 dB (+ dB relativos). Reparto: `edicion/` (swoosh
   en los 2 flashes, woah-drop en el ¡pum!, cinematic-impact en aciertos, mouse-click en toques, ding en estrellas, mac-typing en
   el comentario, camera-shutter al enseñar el producto), `virales/` con cuentagotas (vine-boom en «Nunca»/«nada», nope, grillos 0,6 s),
   `ui/mosca*.mp3` sintetizados.
