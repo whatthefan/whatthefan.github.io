@@ -55,8 +55,8 @@ brillos, sin collage. Si la foto es pequeña, ampliar a 1080 con LANCZOS + nitid
 
 ## Estilos antiguos (solo si Juan los pide expresamente)
 
-Dos estilos. **Por defecto, en vídeos de persona a cámara, usa el DINÁMICO (A).** El PREMIUM (B) es para
-anuncios de producto sin persona. Todo lo que hace CapCut se hace aquí con código (tabla del apartado 4).
+Estos estilos quedan como referencia; el de por defecto es REFERENCIAS (apartado 0). Las herramientas
+(apartados 4 y 5) sirven para todos.
 
 ## A. Estilo DINÁMICO (referencia: @carlosdinamics, «antes/después»)
 
