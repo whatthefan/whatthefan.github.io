@@ -104,6 +104,9 @@ Si un vídeo cuenta una visita que no ha pasado, va con la etiqueta «Demostraci
 - **Nada del sello de la estrella**: la marca va en letras PLEA5E.
 - Sonidos: los de `edicion/` y algún viral puntual, alineados por el golpe (`capas/mezcla2.py`).
 - Motion más currado: `capas/kit2.js` (ver `capas/LEEME.md`).
+- **Actualización (v3, la que más le gusta)**: vídeo en espejo; Juan RECORTADO sobre papel, más lejos, con las letras
+  alrededor por niveles (palabra grande detrás de la cabeza, frase delante, pegatinas). Tipografía: Bricolage Grotesque +
+  Instrument Serif cursiva (no Inter en las frases). Base: `capas/kit3.*`, ejemplos `mosca3.html` y `uber3.html`.
 
 ### Sonido (lo que usan las referencias: sutil, de interfaz)
 - `sonidos/referencias/`: tics, clics y pops **extraídos** de los 4 vídeos (`separa.py` quita la voz con UVR

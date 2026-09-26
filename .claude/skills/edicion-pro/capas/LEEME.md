@@ -16,3 +16,12 @@
   el comentario, camera-shutter al enseñar el producto), `virales/` con cuentagotas (vine-boom en «Nunca»/«nada», nope, grillos 0,6 s),
   `ui/mosca*.mp3` sintetizados.
 - **Sin el sello de la estrella**: la marca va en letras (PLEA5E con el 5 en oro).
+
+## v3 (lo que pidió Juan: espejo, cara no tan cerca con letras alrededor por niveles, tipografía llamativa)
+- **Vídeo en espejo** (como lo ve Juan en la cámara): `hflip` de la base; la placa se re-encaja con las esquinas espejadas
+  (`placa_pinta_f.py`, así el diseño se lee bien).
+- **Persona recortada** (RVM, `recorte.py` → `persona.py` → webp con alfa) sobre papel gris, más pequeña y abajo.
+- **Letras por niveles**: frase pequeña delante, palabra grande DETRÁS de la cabeza (`capa: 'detras'`), pegatinas que se
+  estampan delante (`K.pegatina`: «¿Por qué?», «Nunca.»), garabatos en oro (`K.garabato`: flecha a la placa).
+- **Tipografía**: Bricolage Grotesque 600 (frase) + Instrument Serif cursiva (palabra grande). Licencia OFL, en `fuentes/`.
+- Detalles: mosca volando alrededor de la cabeza, etiqueta «Demostración» en la pantalla de reseña, bordes laterales del recorte difuminados.
