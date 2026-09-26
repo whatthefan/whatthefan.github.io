@@ -97,6 +97,14 @@ generador (`public/taller/generador.html`) con
 Precios: los de la web en ese momento (hoy: placa de mesa 25 €, expositor 28 €, tarjeta de mano 15 € en packs de 20 a 100).
 Si un vídeo cuenta una visita que no ha pasado, va con la etiqueta «Demostración»; «caso real» solo si lo es.
 
+
+### Vídeo hablado v2 (preferencias de Juan, 26-9)
+- Cara **más lejos**: dentro de una tarjeta redondeada sobre papel, NO a pantalla completa. Sin espejo.
+- Si enseña la placa física en blanco: **meterle el diseño dentro** (`capas/placa_quad.py` + `placa_pinta.py`).
+- **Nada del sello de la estrella**: la marca va en letras PLEA5E.
+- Sonidos: los de `edicion/` y algún viral puntual, alineados por el golpe (`capas/mezcla2.py`).
+- Motion más currado: `capas/kit2.js` (ver `capas/LEEME.md`).
+
 ### Sonido (lo que usan las referencias: sutil, de interfaz)
 - `sonidos/referencias/`: tics, clics y pops **extraídos** de los 4 vídeos (`separa.py` quita la voz con UVR
   MDX-Net y se recorta cada golpe). Uso de perfil, no anuncios de pago.
