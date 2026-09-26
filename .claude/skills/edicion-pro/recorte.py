@@ -61,7 +61,17 @@ def foto(entrada, salida, ratio=0.4):
     n = cv2.LUT(n, lut).astype(float)
     n[:, :, 2] *= 1.04
     n[:, :, 0] *= .97
-    cv2.imwrite(salida, np.dstack([np.clip(n, 0, 255).astype(np.uint8), a]))
+    n = np.clip(n, 0, 255).astype(np.uint8)
+    # quitar el halo del fondo antiguo en los bordes (pelo): el color del borde se toma del interior
+    af = a.astype(np.float32)[..., None] / 255
+    nucleo = (af > .9).astype(np.float32)
+    num = cv2.GaussianBlur(n.astype(np.float32) * nucleo, (0, 0), 9)
+    den = cv2.GaussianBlur(nucleo, (0, 0), 9)[..., None] + 1e-4
+    interior = num / den
+    borde = ((af > .02) & (af < .9)).astype(np.float32)
+    n = (n * (1 - borde) + interior * borde).clip(0, 255).astype(np.uint8)
+    a = (np.clip((af[..., 0] - .06) / .94, 0, 1) * 255).astype(np.uint8)
+    cv2.imwrite(salida, np.dstack([n, a]))
     # contorno blanco tipo pegatina: <salida>-borde.png (suavizado para que el pelo no haga picos)
     m = (a > 110).astype(np.uint8) * 255
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (31, 31)))
