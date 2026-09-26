@@ -1,0 +1,150 @@
+<!doctype html>
+<!-- Texturas planas (vector) de los productos PLEA5E para los modelos 3D y la UI.
+     node grabar.js 3d/texturas.html prueba placa 0   (la capa es el tipo: placa | tarjeta | pantalla | notificacion)
+     Parámetros opcionales tras el tipo: #placa&bar=Bar%20Manolo&color=verde
+     colores: azul | verde | granate | magenta | naranja | negro                                        -->
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(fuente/montserrat-latin.woff2);font-weight:100 900}
+@font-face{font-family:Inter;src:url(fuente/inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{background:transparent;overflow:hidden}
+.t{position:absolute;left:0;top:0;display:none!important;font-family:Mont}
+.t.on{display:block!important}#notificacion.on{display:flex!important}
+/* ---------- PLACA 1000x1120 ---------- */
+#placa{width:1000px;height:1120px;background:#fff;overflow:hidden}
+#placa .cab{position:absolute;left:0;right:0;top:0;height:470px;background:linear-gradient(170deg,var(--c1),var(--c2));
+  clip-path:ellipse(95% 100% at 50% 0%)}
+#placa .linea{position:absolute;top:58px;left:40px;right:40px;display:flex;align-items:center;gap:22px}
+#placa .linea i{flex:1;height:7px;background:linear-gradient(90deg,transparent,#F5D34C 30%,#F5D34C)}
+#placa .linea i:last-child{background:linear-gradient(90deg,#F5D34C,#F5D34C 70%,transparent)}
+.est{width:54px;height:54px;fill:#F5D34C}
+#placa h1{position:absolute;top:150px;left:0;right:0;text-align:center;color:#fff;font:900 66px/1.1 Mont;letter-spacing:-1px;text-shadow:0 4px 0 rgba(0,0,0,.15)}
+#placa .g{position:absolute;left:50%;top:380px;width:150px;height:150px;margin-left:-75px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+#placa .g svg{width:92px;height:92px}
+#placa .nfc{position:absolute;left:120px;top:590px;width:310px;height:207px}
+#placa .qr{position:absolute;left:580px;top:565px;width:260px;height:260px}
+#placa .toca{position:absolute;top:850px;left:0;right:0;text-align:center;font:700 42px/1.3 Mont;color:#2b2b2b;letter-spacing:3px}
+#placa .bar{position:absolute;top:972px;left:0;right:0;text-align:center;font:800 54px Mont;color:#2b2b2b}
+#placa .pie{position:absolute;bottom:0;left:0;right:0;height:0}
+/* ---------- TARJETA NFC 1712x1080 (85,6 x 54 mm) ---------- */
+#tarjeta{width:1712px;height:1080px;background:#fff;overflow:hidden;border-radius:0}
+#tarjeta .izq{position:absolute;left:0;top:0;bottom:0;width:790px;background:linear-gradient(160deg,var(--c1),var(--c2))}
+#tarjeta .izq .e{position:absolute;top:150px;left:0;right:0;display:flex;justify-content:center;gap:16px}
+#tarjeta .izq h2{position:absolute;top:300px;left:60px;right:60px;text-align:center;color:#fff;font:900 104px/1.05 Mont}
+#tarjeta .izq .n{position:absolute;bottom:130px;left:0;right:0;text-align:center;color:#fff;font:700 54px Mont;opacity:.95}
+#tarjeta .g{position:absolute;left:1180px;top:90px;width:120px;height:120px}
+#tarjeta .nfc{position:absolute;left:880px;top:330px;width:330px;height:220px}
+#tarjeta .qr{position:absolute;left:1270px;top:290px;width:340px;height:340px}
+#tarjeta .toca{position:absolute;left:830px;right:40px;top:720px;text-align:center;font:700 50px/1.3 Mont;color:#2b2b2b;letter-spacing:3px}
+#tarjeta .marca{position:absolute;left:830px;right:40px;top:900px;text-align:center;font:900 50px Mont;color:#1a1a1a;letter-spacing:1px}
+.marca b{color:#E9BC46}
+/* ---------- PANTALLA de móvil 1170x2532: Google, escribir reseña ---------- */
+#pantalla{width:1170px;height:2532px;background:#fff;font-family:Inter;color:#202124}
+#pantalla .barra{height:150px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 80px 20px;font:600 44px Inter}
+#pantalla .top{display:flex;align-items:center;gap:30px;padding:60px 60px 30px}
+#pantalla .top .x{font:300 90px Inter;color:#5f6368}
+#pantalla .top .n{font:600 58px Inter}
+#pantalla .top .s{font:400 40px Inter;color:#5f6368;margin-top:6px}
+#pantalla .usr{display:flex;align-items:center;gap:36px;padding:60px 70px}
+#pantalla .av{width:130px;height:130px;border-radius:50%;background:linear-gradient(135deg,#f4b400,#e37400);display:flex;align-items:center;justify-content:center;color:#fff;font:700 64px Inter}
+#pantalla .usr b{font:600 48px Inter;display:block}
+#pantalla .usr span{font:400 38px Inter;color:#5f6368}
+#pantalla .estrellas{display:flex;justify-content:center;gap:40px;padding:40px 0 70px}
+#pantalla .estrellas svg{width:150px;height:150px}
+#pantalla .caja{margin:0 60px;height:620px;border:3px solid #dadce0;border-radius:24px;padding:44px;font:400 46px/1.45 Inter;color:#3c4043}
+#pantalla .caja .ph{color:#80868b}
+#pantalla .fotos{margin:50px 60px;height:130px;border-radius:65px;border:3px solid #dadce0;display:flex;align-items:center;justify-content:center;gap:24px;font:500 44px Inter;color:#1a73e8}
+#pantalla .pub{position:absolute;right:60px;bottom:120px;padding:40px 90px;border-radius:80px;background:#1a73e8;color:#fff;font:600 50px Inter}
+/* ---------- NOTIFICACIÓN iOS 1100x260 ---------- */
+#notificacion{width:1100px;height:260px;border-radius:60px;background:rgba(245,245,247,.92);display:flex;align-items:center;gap:36px;padding:0 44px;font-family:Inter}
+#notificacion .ic{width:140px;height:140px;border-radius:34px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+#notificacion .ic svg{width:90px;height:90px}
+#notificacion .tx{flex:1}
+#notificacion .tx .a{display:flex;justify-content:space-between;font:600 42px Inter;color:#111}
+#notificacion .tx .a span{font:400 36px Inter;color:#8a8a8e}
+#notificacion .tx .b{font:400 40px/1.3 Inter;color:#222;margin-top:8px}
+</style></head><body>
+
+<div id="placa" class="t">
+  <div class="cab"></div>
+  <div class="linea"><i></i><svg class="est" viewBox="0 0 24 24"><use href="#estrella"/></svg><svg class="est" viewBox="0 0 24 24"><use href="#estrella"/></svg><svg class="est" viewBox="0 0 24 24"><use href="#estrella"/></svg><svg class="est" viewBox="0 0 24 24"><use href="#estrella"/></svg><svg class="est" viewBox="0 0 24 24"><use href="#estrella"/></svg><i></i></div>
+  <h1>¡NOS ENCANTARÍA<br>TU RESEÑA EN GOOGLE!</h1>
+  <div class="g"><svg viewBox="0 0 48 48"><use href="#glogo"/></svg></div>
+  <svg class="nfc" viewBox="0 0 330 220"><use href="#nfcico"/></svg>
+  <svg class="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"><use href="#qrcode"/></svg>
+  <div class="toca">TOCA O ESCANEA<br>PARA VALORARNOS</div>
+  <div class="bar" id="barP">Bar Nombre</div>
+  <svg style="position:absolute;left:30px;right:30px;bottom:6px;width:940px;height:60px" viewBox="0 0 940 60">
+    <defs><linearGradient id="lp" x1="0" x2="1"><stop offset="0" stop-color="#F5E27A" stop-opacity="0"/><stop offset=".3" stop-color="#F5E27A"/><stop offset=".7" stop-color="#F5E27A"/><stop offset="1" stop-color="#F5E27A" stop-opacity="0"/></linearGradient></defs>
+    <rect x="0" y="12" width="940" height="4" fill="url(#lp)"/>
+    <text x="470" y="56" text-anchor="middle" font-family="Mont" font-weight="900" font-size="40" fill="#1a1a1a">PLEA<tspan fill="#E9BC46">5</tspan>E</text></svg>
+</div>
+
+<div id="tarjeta" class="t">
+  <div class="izq"><div class="e"></div><h2>¡TU RESEÑA<br>EN GOOGLE!</h2><div class="n" id="barT">Restaurante</div></div>
+  <svg class="g" viewBox="0 0 48 48"><use href="#glogo"/></svg>
+  <svg class="nfc" viewBox="0 0 330 220"><use href="#nfcico"/></svg>
+  <svg class="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"><use href="#qrcode"/></svg>
+  <div class="toca">TOCA O ESCANEA</div>
+  <div class="marca">PLEA<b>5</b>E</div>
+</div>
+
+<div id="pantalla" class="t">
+  <div class="barra"><span>9:41</span><span>●●● ▮</span></div>
+  <div class="top"><div class="x">×</div><div><div class="n" id="barS">Bar Nombre</div><div class="s">Valorar y escribir una reseña</div></div></div>
+  <div class="usr"><div class="av">L</div><div><b>Lucía M.</b><span>Publicando en público</span></div></div>
+  <div class="estrellas" id="estS"></div>
+  <div class="caja"><span id="txtS" class="ph">Comparte detalles de tu experiencia en este lugar</span></div>
+  <div class="fotos">＋ Añadir fotos</div>
+  <div class="pub">Publicar</div>
+</div>
+
+<div id="notificacion" class="t">
+  <div class="ic"><svg viewBox="0 0 48 48"><use href="#glogo"/></svg></div>
+  <div class="tx"><div class="a">Google Maps<span>ahora</span></div><div class="b" id="txtN">Nueva reseña de 5 estrellas en <b>Bar Nombre</b></div></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="estrella" viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.6l-6.4 3.6 1.5-7.1L1.7 9.2l7.2-.8z"/></symbol>
+  <symbol id="glogo" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.8-.4-4.1H24v7.4h12.1c-.2 1.8-1.6 4.6-4.5 6.5l6.9 5.3c4.1-3.8 6.6-9.4 6.6-15.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-6.9-5.3c-1.8 1.3-4.3 2.2-7.6 2.2-5.8 0-10.7-3.8-12.5-9.1l-7.1 5.5C8 41 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.5 28.5c-.5-1.4-.8-2.9-.8-4.5s.3-3.1.7-4.5l-7.1-5.5C2.8 17 2 20.4 2 24s.8 7 2.3 10z"/><path fill="#EA4335" d="M24 10.2c4.1 0 6.9 1.8 8.5 3.3l6.2-6C34.9 4 29.9 2 24 2 15.4 2 8 7 4.3 14l7.1 5.5c1.8-5.3 6.8-9.3 12.6-9.3z"/></symbol>
+  <symbol id="nfcico" viewBox="0 0 330 220"><g fill="none" stroke="#2b2b2b" stroke-width="7" stroke-linecap="round">
+    <ellipse cx="150" cy="110" rx="140" ry="98"/><path d="M92 80a40 40 0 0 1 0 60M114 62a64 64 0 0 1 0 96M138 46a88 88 0 0 1 0 128"/>
+    <rect x="198" y="58" width="58" height="100" rx="10" fill="#fff"/><path d="M200 150c-10 6-6 24 8 30l40 20c14 4 30-6 30-22v-40c0-10-14-12-18-2"/></g></symbol>
+  <symbol id="qrcode" viewBox="0 0 29 29"><g id="qrg" fill="#1a1a1a"></g></symbol>
+</defs></svg>
+
+<script>
+const COL = { azul: ['#4d7fd6', '#1f3a78'], verde: ['#3fa36b', '#1d5c3a'], granate: ['#8a2433', '#5a1320'], magenta: ['#c2267a', '#7d1250'],
+  naranja: ['#f58a4b', '#e2562a'], negro: ['#2a2d36', '#0b0d12'] };
+const q = new URLSearchParams(location.hash.slice(1).split('&').slice(1).join('&'));
+const tipo = location.hash.slice(1).split('&')[0] || 'placa';
+const col = COL[q.get('color') || (tipo === 'tarjeta' ? 'naranja' : 'azul')];
+document.documentElement.style.setProperty('--c1', col[0]); document.documentElement.style.setProperty('--c2', col[1]);
+if (q.get('bar')) ['barP', 'barS'].forEach(i => document.getElementById(i).textContent = q.get('bar'));
+if (q.get('bar')) document.getElementById('txtN').innerHTML = `Nueva reseña en <b>${q.get('bar')}</b>`;
+document.getElementById(tipo).classList.add('on');
+document.querySelector('#tarjeta .e').innerHTML = '<svg class="est" viewBox="0 0 24 24"><use href="#estrella"/></svg>'.repeat(5);
+// QR decorativo (no se puede escanear): patrones de esquina + módulos pseudoaleatorios
+let s = 11; const r = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+let h = '';
+const fin = (x, y) => { h += `<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" fill="#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`; };
+fin(0, 0); fin(22, 0); fin(0, 22);
+for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) {
+  const enFin = (x < 8 && y < 8) || (x > 20 && y < 8) || (x < 8 && y > 20);
+  if (!enFin && r() < .48) h += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+}
+document.getElementById('qrg').innerHTML = h;
+// estrellas de la pantalla: se rellenan con render(t) (0..1 por estrella)
+const est = document.getElementById('estS');
+est.innerHTML = [0, 1, 2, 3, 4].map(i => `<svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.6l-6.4 3.6 1.5-7.1L1.7 9.2l7.2-.8z" fill="none" stroke="#5f6368" stroke-width="1.3"/></svg>`).join('');
+window.TOTAL = 3;
+window.render = t => {
+  // animación de la pantalla: estrellas que se rellenan y texto que se escribe
+  est.querySelectorAll('path').forEach((p, i) => { const on = t > .3 + i * .18; p.setAttribute('fill', on ? '#FBBC04' : 'none'); p.setAttribute('stroke', on ? '#FBBC04' : '#5f6368'); });
+  const frase = q.get('texto') || 'Todo buenísimo y el trato de diez. ¡Volveremos!';
+  const n = Math.max(0, Math.floor((t - 1.4) * 22));
+  const el = document.getElementById('txtS');
+  if (n > 0) { el.className = ''; el.textContent = frase.slice(0, n); } else { el.className = 'ph'; el.textContent = 'Comparte detalles de tu experiencia en este lugar'; }
+};
+window.render(0);
+</script></body></html>

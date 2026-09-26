@@ -61,8 +61,9 @@ Personaje: siempre Estrellita (`public/marca/estrellita/*.svg`). Para cambiar de
 archivos `-izq`, **nunca** un espejo con CSS (la «5» no se refleja). Poses útiles: `senala`, `apunta`,
 `pulgar`, `saluda`, `asombro`, `tachan`, `sentada`.
 
-Diseños de producto: exportar la placa con el nombre del bar y el color (plantilla de texturas guardada en
-el scratchpad de la sesión o rehacerla en HTML; colores azul, verde, granate, naranja, magenta, negro).
+Diseños de producto: `node disenos/exporta.js "placa&color=verde&bar=Bar Manolo" placa-verde.png`
+(tipos: placa, tarjeta, pantalla de reseña con `t` para las estrellas, notificación; colores azul, verde,
+granate, naranja, magenta, negro).
 Material real que ya existe: `public/producto/*.png`, `public/tarjeta/tarjeta-plea5e.png`,
 `marketing/guia-resenas/paginas/*.png`, `marketing/guia-resenas/paginas-kit/*.png`.
 
