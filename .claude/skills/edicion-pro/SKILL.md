@@ -5,7 +5,22 @@ description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profes
 
 # Edición pro
 
-## 0. Estilo REFERENCIAS (el que hay que usar por defecto)
+## ★ Estilo PLEA5E = la MEZCLA (el de por defecto)
+
+No se copia un vídeo: se mezcla lo mejor de todas las referencias que ha pasado Juan.
+- **Base (estilo 0, referencias)**: papel gris u oscuro, una tipografía (Inter), texto pequeño + grande palabra a
+  palabra, salida con desenfoque vertical, destello cálido en los cortes, cristal sobre la cara desenfocada.
+- **Escenas con historia (anatomía de escena)**: personajes a tinta, producto REAL de la web, cursor, chat, visor QR;
+  entrada → anticipación → acción clavada a la palabra → remate.
+- **Ritmo de las tarjetas (estilo 1)**: cambio cada 1,5-2,5 s; objetos que entran con muelle, abanicos de productos,
+  capturas que hacen scroll, tachados en rojo.
+- **Energía de @carlosdinamics (con medida)**: una palabra que golpea y un icono que se dibuja como mucho 1-2 veces por vídeo.
+- **Elemento de marca**: la estrella PLEA5E (negra o dorada) como detalle que gira en una esquina en las escenas de papel, no en todas.
+- **Cara**: 30-40 % como mucho; si Juan no graba cara, voz en off con las mismas escenas.
+- **Sonido**: tics/pops/aire de `sonidos/referencias` y `sonidos/ui`, suaves.
+- **Verdad**: diseños y precios reales; «Demostración» si no es un caso real.
+
+## 0. Estilo REFERENCIAS (base de la mezcla)
 
 Aprendido fotograma a fotograma de los 4 vídeos que Juan considera «edición increíble». Ejemplos: `ejemplo-escenas.html` (el modelo actual), `ejemplo-referencias.html` (demo 1) y `monta-referencias.py`.
 
@@ -94,7 +109,7 @@ Si un vídeo cuenta una visita que no ha pasado, va con la etiqueta «Demostraci
 ### Proceso
 1. Transcribir (Whisper) → palabras con tiempo. 2. Decidir escenas: qué frases van con persona y cuáles con escena gráfica (una idea visual por frase). 3. Copiar `ejemplo-referencias.html` y cambiar `ESC`, `BLUR`, `TX` y los objetos. 4. Revisar 12-14 fotogramas compuestos. 5. `node grabar.js pagina.html todo capa.mov`. 6. `monta-referencias.py` (tramos de desenfoque; si el tramo es pantalla partida, ampliar la mitad de abajo). 7. Comprimir < 30 MB.
 
-## 1. Estilo TARJETAS (voz en off, sin cara) — ejemplo `ejemplo-tarjetas.html`
+## 1. Estilo TARJETAS (voz en off, sin cara; solo como ingrediente de la mezcla) — ejemplo `ejemplo-tarjetas.html`
 
 Aprendido de un reel viral de tutorial (voz en off, 34 s, ~20 cortes). Útil cuando Juan no quiere salir o para
 explicar un proceso. Mismo criterio de sobriedad que el estilo 0.
