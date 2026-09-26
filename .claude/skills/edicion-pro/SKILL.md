@@ -1,6 +1,6 @@
 ---
 name: edicion-pro
-description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profesional y hacer miniaturas. Estilo por defecto REFERENCIAS (aprendido de @solazzox, @ruy_r.s, @johan.mttz y @milah.edicion) — fondo papel gris u oscuro, una sola tipografía, texto que entra letra a letra desde desenfocado y sale con desenfoque vertical, capturas y producto real flotando en perspectiva, destello cálido en las transiciones y cristal sobre la persona desenfocada. Incluye recorte de persona, grabación de capas, montaje con ffmpeg, sonidos y lista de control. Úsala siempre que haya que editar un vídeo o hacer una miniatura/portada de PLEA5E, o cuando Juan pida «edición profesional», «como las referencias», «motion», «transiciones así» o «una miniatura».
+description: Editar vídeos cortos (Reels, TikTok, Shorts) como un editor profesional y hacer miniaturas. Incluye también el estilo TARJETAS (voz en off sin cara, cuadrícula crema, tarjetas que entran con muelle). Estilo por defecto REFERENCIAS (aprendido de @solazzox, @ruy_r.s, @johan.mttz y @milah.edicion) — fondo papel gris u oscuro, una sola tipografía, texto que entra letra a letra desde desenfocado y sale con desenfoque vertical, capturas y producto real flotando en perspectiva, destello cálido en las transiciones y cristal sobre la persona desenfocada. Incluye recorte de persona, grabación de capas, montaje con ffmpeg, sonidos y lista de control. Úsala siempre que haya que editar un vídeo o hacer una miniatura/portada de PLEA5E, o cuando Juan pida «edición profesional», «como las referencias», «motion», «transiciones así» o «una miniatura».
 ---
 
 # Edición pro
@@ -93,6 +93,22 @@ Si un vídeo cuenta una visita que no ha pasado, va con la etiqueta «Demostraci
 
 ### Proceso
 1. Transcribir (Whisper) → palabras con tiempo. 2. Decidir escenas: qué frases van con persona y cuáles con escena gráfica (una idea visual por frase). 3. Copiar `ejemplo-referencias.html` y cambiar `ESC`, `BLUR`, `TX` y los objetos. 4. Revisar 12-14 fotogramas compuestos. 5. `node grabar.js pagina.html todo capa.mov`. 6. `monta-referencias.py` (tramos de desenfoque; si el tramo es pantalla partida, ampliar la mitad de abajo). 7. Comprimir < 30 MB.
+
+## 1. Estilo TARJETAS (voz en off, sin cara) — ejemplo `ejemplo-tarjetas.html`
+
+Aprendido de un reel viral de tutorial (voz en off, 34 s, ~20 cortes). Útil cuando Juan no quiere salir o para
+explicar un proceso. Mismo criterio de sobriedad que el estilo 0.
+
+- **Fondo fijo** todo el vídeo: crema `#FBF4DC` con cuadrícula fina (54 px, negro al 4,5 %).
+- **Elemento de marca en las esquinas**: formas negras grandes con brillo 3D (aquí la estrella de PLEA5E) cortadas por
+  los bordes, girando despacio; en cada corte aceleran con desenfoque de movimiento. Es lo único que se mueve siempre.
+- **Texto**: UNA línea arriba (y≈300), Inter 800 ~58 px, palabra a palabra con la voz, palabra clave en oro. No hay subtítulos abajo.
+- **Cada frase = una tarjeta** (esquinas 34 px, sombra suave cálida) en el centro: captura de la web, el producto real,
+  la pantalla del móvil, un buscador, un personaje. Entra con muelle desde abajo/lado (girada 6-8° que se endereza) y
+  sale subiendo con desenfoque. Cambio de tarjeta cada 1,5-2,5 s.
+- **Recursos**: abanico de productos (3 tarjetas que se abren en la palabra), capturas largas que hacen scroll solas,
+  un objeto que entra a la tarjeta (móvil hacia la placa), chips negros que se tachan en rojo, un golpe (estrella que cae en «¡boom!»).
+- **Sonido**: la voz manda; pop en cada tarjeta, tic en cada acción, aire corto en cada corte, brillo en el acierto.
 
 ## C. Miniatura
 

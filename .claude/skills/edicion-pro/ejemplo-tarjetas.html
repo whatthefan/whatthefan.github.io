@@ -1,0 +1,123 @@
+<!-- EJEMPLO estilo TARJETAS (voz en off, sin cara). Necesita: escena.js, inter-latin.woff2, w-placa*.png (disenos/desde-web.js), pan/pantalla-*.png, cast/, web.png (captura de public/index.html). Graba: node grabar.js demo.html todo capa.mov; mezcla con la voz. -->
+<!doctype html>
+<!-- ESTILO «TARJETAS» (voz en off, sin cara): cuadrícula crema, estrella negra girando cortada por las esquinas,
+     una línea de texto arriba palabra a palabra, y cada frase = una tarjeta (captura, producto, pantalla) que entra
+     con muelle y se apila / se abre en abanico. -->
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;font-family:Inter}
+body{background:#FBF4DC;background-image:linear-gradient(rgba(0,0,0,.045) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.045) 2px,transparent 2px);background-size:54px 54px}
+.abs{position:absolute}
+.est{position:absolute;width:760px;height:760px;filter:blur(var(--mb,0px))}
+.tx{position:absolute;left:60px;right:60px;top:300px;text-align:center;font-weight:800;font-size:58px;letter-spacing:-1.8px;color:#111;z-index:8}
+.tx .w{display:inline-block;margin:0 .12em}
+.tx .o{color:#D39B16}
+.tarj{position:absolute;border-radius:34px;overflow:hidden;background:#fff;box-shadow:0 2px 3px rgba(0,0,0,.08),0 30px 50px rgba(60,45,10,.22)}
+.tarj img{display:block;width:100%;height:100%;object-fit:cover}
+.tarj.os{background:#15161a;color:#fff}
+.chip{position:absolute;display:flex;align-items:center;gap:12px;padding:0 26px;height:74px;border-radius:38px;background:#111;color:#fff;font-weight:700;font-size:32px;white-space:nowrap}
+.chip i{width:14px;height:14px;border-radius:50%;background:#E9BC46}
+.busc{position:absolute;left:40px;right:40px;top:170px;height:120px;border-radius:60px;background:#fff;box-shadow:0 0 0 3px #eee;display:flex;align-items:center;gap:24px;padding:0 40px;font-size:44px;color:#202124}
+.caret{display:inline-block;width:4px;height:48px;background:#1a73e8;vertical-align:middle}
+.tache{position:absolute;height:10px;border-radius:5px;background:#E5484D;transform-origin:0 50%}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <radialGradient id="brillo" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".35" stop-color="#151515"/><stop offset="1" stop-color="#000"/></radialGradient>
+  <symbol id="estrella" viewBox="-110 -110 220 220"><path d="M0-100 L26-32 99-31 42 14 62 83 0 43 -62 83 -42 14 -99-31 -26-32Z" fill="url(#brillo)" stroke="#000" stroke-width="10" stroke-linejoin="round"/></symbol>
+</defs></svg>
+<svg id="e1" class="est" style="left:-380px;top:-330px"><use href="#estrella"/></svg>
+<svg id="e2" class="est" style="left:700px;top:-420px"><use href="#estrella"/></svg>
+<svg id="e3" class="est" style="left:-420px;top:1500px"><use href="#estrella"/></svg>
+<svg id="e4" class="est" style="left:720px;top:1420px"><use href="#estrella"/></svg>
+
+<div id="tx" class="tx"></div>
+
+<!-- tarjetas -->
+<div id="t1" class="tarj" style="left:310px;top:620px;width:460px;height:560px;background:#f3f1ea"><img src="cast/cliente-Smile.svg" style="object-fit:contain;object-position:50% 100%"></div>
+<div id="t2" class="tarj os" style="left:190px;top:660px;width:700px;height:420px;padding:44px">
+  <div style="font-weight:600;font-size:34px;opacity:.6">Reseñas nuevas esta semana</div>
+  <div id="cero" style="font-weight:800;font-size:230px;letter-spacing:-10px;line-height:1;color:#E9BC46">0</div></div>
+<div id="t3" class="tarj" style="left:150px;top:640px;width:780px;height:560px;background:#f1f3f4">
+  <div class="busc"><svg width="56" height="56" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.8-.4-4.1H24v7.4h12.1c-.2 1.8-1.6 4.6-4.5 6.5l6.9 5.3c4.1-3.8 6.6-9.4 6.6-15.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-6.9-5.3c-1.8 1.3-4.3 2.2-7.6 2.2-5.8 0-10.7-3.8-12.5-9.1l-7.1 5.5C8 41 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.5 28.5c-.5-1.4-.8-2.9-.8-4.5s.3-3.1.7-4.5l-7.1-5.5C2.8 17 2 20.4 2 24s.8 7 2.3 10z"/><path fill="#EA4335" d="M24 10.2c4.1 0 6.9 1.8 8.5 3.3l6.2-6C34.9 4 29.9 2 24 2 15.4 2 8 7 4.3 14l7.1 5.5c1.8-5.3 6.8-9.3 12.6-9.3z"/></svg><span id="bt"></span></div>
+  <div style="position:absolute;left:40px;right:40px;top:340px;display:grid;gap:22px"><div style="height:34px;border-radius:10px;background:#dfe1e5;width:80%"></div><div style="height:34px;border-radius:10px;background:#dfe1e5;width:60%"></div><div style="height:34px;border-radius:10px;background:#dfe1e5;width:70%"></div></div></div>
+<div id="p1" class="tarj" style="left:340px;top:680px;width:400px;height:400px"><img src="w-placa-azul.png"></div>
+<div id="p2" class="tarj" style="left:340px;top:680px;width:400px;height:400px"><img src="w-placa-granate.png"></div>
+<div id="p3" class="tarj" style="left:340px;top:680px;width:400px;height:400px"><img src="w-placa.png"></div>
+<div id="tel" class="tarj" style="left:380px;top:560px;width:330px;height:700px;border-radius:50px;background:#101114;padding:12px">
+  <div style="width:100%;height:100%;border-radius:40px;overflow:hidden;position:relative"><img id="pan" src="pan/pantalla-0.png"></div></div>
+<div id="t6" class="tarj" style="left:290px;top:540px;width:500px;height:980px"><img src="web.png" style="height:auto;object-fit:initial"></div>
+<div id="c1" class="chip" style="left:70px;top:1570px"><i></i>Descargar app</div>
+<div id="c2" class="chip" style="left:520px;top:1570px"><i></i>Buscarte en Google</div>
+<div id="x1" class="tache" style="left:60px;top:1602px;width:330px"></div>
+<div id="x2" class="tache" style="left:510px;top:1602px;width:390px"></div>
+<div id="chipOk" class="chip" style="left:350px;top:1310px"><i></i>Reseña abierta</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle, golpe } = E;
+const TOTAL = 19.8; window.TOTAL = TOTAL;
+const W = [["tus",-.04],["clientes",.2],["salen",.67],["contentos",1.01,1],["pero",1.63],["nadie",1.84,1],["te",2.14],["escribe",2.3],["y",2.73],["no",2.83],["es",2.97],["que",3.1],["no",3.27],["quieran",3.41],["se",4.1],["les",4.26],["olvida",4.45,1],["o",4.76],["les",4.87],["da",5.06],["pereza",5.21,1],["buscarte",5.52],["con",5.99],["la",6.18],["placa",6.33,1],["en",6.59],["la",6.74],["mesa",6.89],["solo",7.16],["acercan",7.4],["el",8.26],["móvil",8.42,1],["y…",8.76],["¡boom!",8.99,1],["ya",9.49],["se",9.74],["abre",9.99,1],["las",11.6],["ganas",11.81],["de",12.11],["dejarte",12.97],["una",13.36],["reseña",13.57,1],["¿por",14.06],["qué?",14.35],["no",15.1],["descargan",16.04],["nada",16.65,1],["ni",16.99],["app",17.87,1],["ni",18.15],["buscarte",19.03,1]];
+// grupos de texto: [desde, hasta)
+const G = [[0,1.6],[1.6,2.72],[2.72,3.76],[3.76,5.95],[5.95,7.14],[7.14,8.74],[8.74,9.47],[9.47,11.5],[11.5,14.0],[14.0,15.0],[15.0,TOTAL]];
+function texto(t) {
+  const g = G.find(([a, b]) => t >= a && t < b); if (!g) { $('tx').innerHTML = ''; return; }
+  const ws = W.filter(w => w[1] >= g[0] - .06 && w[1] < g[1]);
+  if ($('tx')._g !== g[0]) { $('tx')._g = g[0]; $('tx').innerHTML = ws.map(w => `<span class="w ${w[2] ? 'o' : ''}" data-t="${w[1]}">${w[0]}</span>`).join(''); }
+  $('tx').querySelectorAll('.w').forEach(s => { const k = ease.outCubic(p(t, +s.dataset.t, .2));
+    s.style.opacity = k; s.style.filter = `blur(${(1 - k) * 8}px)`; s.style.transform = `translateY(${(1 - k) * 14}px)`; });
+}
+// tarjeta: entra con muelle desde abajo/lado en a, sale en b (sube y se desenfoca)
+function tarj(el, t, a, b, o = {}) {
+  const { dx = 0, dy = 220, r = 0, s0 = .8 } = o;
+  if (t < a || t >= b) { el.style.opacity = 0; return 0; }
+  const k = muelle(t, a, 2.3, .62), out = ease.inCubic(p(t, b - .2, .2));
+  el.style.opacity = Math.min(1, (t - a) * 8) * (1 - out);
+  el.style.filter = `blur(${out * 14}px)`;
+  el.style.transform = `translate(${(1 - k) * dx}px,${(1 - k) * dy - out * 120}px) rotate(${(1 - k) * r + (o.rot || 0)}deg) scale(${s0 + (1 - s0) * k})`;
+  return k;
+}
+window.render = t => {
+  // estrellas de fondo: giran siempre; en los cortes aceleran (con desenfoque de movimiento)
+  const cortes = [1.6, 3.76, 5.95, 8.74, 9.47, 14.0];
+  let ac = 0; cortes.forEach(c => { ac += Math.max(0, Math.min(1, (t - c) / .35)) * 70; });
+  const vel = cortes.some(c => t > c && t < c + .35) ? 8 : 0;
+  ['e1', 'e2', 'e3', 'e4'].forEach((id, i) => { const el = $(id); el.style.transform = `rotate(${(i % 2 ? -1 : 1) * (t * 14 + ac) + i * 30}deg)`; el.style.setProperty('--mb', vel + 'px'); });
+  texto(t);
+  tarj($('t1'), t, 0, 1.6, { r: -6 });
+  tarj($('t2'), t, 1.62, 3.76, { dx: 300, dy: 0, r: 8 });
+  $('cero').style.transform = `scale(${golpe(t, 2.3, .12)})`;
+  tarj($('t3'), t, 3.78, 5.95, { dy: 260 });
+  $('bt').innerHTML = E.teclea('bar cerca de mí', t, 5.25, 22) + (Math.floor(t * 4) % 2 ? '' : '<span class="caret"></span>');
+  // abanico de placas en «placa»
+  [['p1', -34, -300, 40], ['p2', 34, 300, 40], ['p3', 0, 0, 0]].forEach(([id, rot, x, y], i) => {
+    const k = tarj($(id), t, 6.1 + i * .08, 8.74, { dy: 260, s0: .7 });
+    const ab = ease.outExpo(p(t, 6.33, .5));
+    if (t >= 6.1 && t < 8.74) $(id).style.transform += ` translate(${x * ab}px,${y * ab}px) rotate(${rot * ab}deg)`;
+    $(id).style.zIndex = i === 2 ? 3 : 2;
+  });
+  // móvil que se acerca a la placa central
+  const km = tarj($('tel'), t, 7.9, 8.74, { dx: 600, dy: 200, r: 25, s0: .9 });
+  if (t >= 7.9 && t < 8.74) $('tel').style.zIndex = 4;
+  // ¡boom! la estrella grande cae en el centro
+  // ya se abre: móvil con la reseña
+  if (t >= 9.47 && t < 14.0) {
+    tarj($('tel'), t, 9.47, 14.0, { dy: 300 });
+    const PS = ['0', '0.5', '0.7', '0.9', '1.1'], u = p(t, 13.2, .8); $('pan').src = 'pan/pantalla-' + PS[Math.min(4, Math.floor(u * 5))] + '.png';
+    E.entra($('chipOk'), t, 9.99, { y: 30, s: .8, tipo: 'muelle', f: 2.6, z: .55 });
+    if (t > 13.8) $('chipOk').style.opacity = 1 - p(t, 13.8, .2);
+  } else if (!(t >= 7.9 && t < 8.74)) { $('chipOk').style.opacity = 0; }
+  if (t < 9.47 || t >= 14) $('chipOk').style.opacity = 0;
+  // ¿por qué? la web y lo que NO hace falta
+  tarj($('t6'), t, 14.02, TOTAL + 1, { dy: 300, s0: .85 });
+  $('t6').querySelector('img').style.transform = `translateY(${-ease.inOut(p(t, 15.2, 3.5)) * 700}px)`;
+  [['c1', 16.04], ['c2', 18.15]].forEach(([id, a]) => E.entra($(id), t, a, { y: 30, s: .8, tipo: 'muelle', f: 2.6, z: .55 }));
+  [['x1', 17.0], ['x2', 19.1]].forEach(([id, a]) => { $(id).style.transform = `scaleX(${ease.outExpo(p(t, a, .25))})`; $(id).style.opacity = t >= a ? 1 : 0; });
+  // boom
+  const kb = muelle(t, 8.99, 2.2, .5), on = t >= 8.9 && t < 9.47;
+  $('e2').style.zIndex = on ? 5 : 0;
+  if (on) { $('e2').style.left = '160px'; $('e2').style.top = '520px'; $('e2').style.transform = `rotate(${t * 60}deg) scale(${.3 + .7 * kb})`; }
+  else { $('e2').style.left = '700px'; $('e2').style.top = '-420px'; }
+};
+window.render(0); window.LISTO = true;
+</script></body></html>
