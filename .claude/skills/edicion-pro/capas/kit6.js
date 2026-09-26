@@ -18,9 +18,14 @@ K6.sub = (palabras, t0, t1, y, o = {}) => { // palabras [[texto, t]] ; aparecen 
   el.innerHTML = palabras.map(([w, t]) => `<span class="w" data-t="${t}">${w}</span>`).join(' '); $(o.capa || 'delante').appendChild(el);
   K6.nodos.push({ el, t0, t1, tipo: 'sub' }); return el; };
 K6.grande = (clase, txt, t0, t1, y, o = {}) => { const el = document.createElement('div'); el.className = clase; el.style.top = y + 'px';
-  if (o.size) el.style.fontSize = o.size + 'px'; if (o.color) el.style.color = o.color; if (o.x) el.style.transform = `translateX(${o.x}px)`; el.innerHTML = txt;
-  $(o.capa || 'delante').appendChild(el); K6.nodos.push({ el, t0, t1, tipo: clase.split(' ')[0], rot: o.rot || 0, x: o.x || 0 }); return el; };
-K6.pintaTextos = t => K6.nodos.forEach(n => { const { el, t0, t1 } = n; const vis = t >= t0 - .01 && t < t1; el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  if (o.size) el.style.fontSize = o.size + 'px'; if (o.color) el.style.color = o.color; if (o.x) el.style.transform = `translateX(${o.x}px)`;
+  if (clase.startsWith('cond') && !txt.includes('<')) el.innerHTML = [...txt].map(c => c === ' ' ? '<span class="m" style="width:.22em"></span>' : `<span class="m"><span>${c}</span></span>`).join('');
+  else el.innerHTML = txt;
+  if (o.color && clase.startsWith('cond')) el.classList.add('rojo');
+  $(o.capa || 'delante').appendChild(el); const n = { el, t0, t1, tipo: clase.split(' ')[0], rot: o.rot || 0, x: o.x || 0 };
+  if (clase.startsWith('cond') && o.reglas !== false) { n.reglas = [0, 1].map(() => { const r = document.createElement('div'); r.className = 'regla'; $(o.capa || 'delante').appendChild(r); return r; }); n.size = o.size || 200; n.y = y; }
+  K6.nodos.push(n); return el; };
+K6.pintaTextos = t => K6.nodos.forEach(n => { const { el, t0, t1 } = n; const vis = t >= t0 - .01 && t < t1; el.style.display = vis ? 'block' : 'none'; if (n.reglas && !vis) n.reglas.forEach(r => r.style.display = 'none'); if (!vis) return;
   const sal = ease.inCubic(p(t, t1 - .14, .14));
   if (n.tipo === 'sub') { el.querySelectorAll('.w').forEach(w => { const tw = +w.dataset.t, k = t < tw ? 0 : muelle(t, tw, 3.2, .55), e = ease.outCubic(p(t, tw, .12));
       w.style.opacity = e; w.style.transform = `translateY(${(1 - Math.min(k, 1.1)) * 14}px) scale(${.7 + .3 * k})`; });
@@ -28,7 +33,16 @@ K6.pintaTextos = t => K6.nodos.forEach(n => { const { el, t0, t1 } = n; const vi
   if (n.tipo === 'script') { // se «escribe»: barrido de izquierda a derecha + ligero giro
     const k = ease.outCubic(p(t, t0, .45)); el.style.clipPath = `inset(-30% ${(1 - k) * 100}% -30% -10%)`;
     el.style.transform = `translateX(${n.x}px) rotate(${n.rot}deg) scale(${1.08 - .08 * ease.outCubic(p(t, t0, .6))})`; el.style.opacity = 1 - sal; el.style.filter = sal ? `blur(${sal * 16}px)` : ''; return; }
-  // cond / num: entra desde desenfocado y grande
+  if (n.tipo === 'cond') { // letras que suben desde una máscara, una a una; brillo que cruza; reglas doradas que se abren
+    const L = el.querySelectorAll('.m>span'); L.forEach((l, i) => { const a = t0 + i * .035, k = ease.outExpo(p(t, a, .5)); l.style.transform = `translateY(${(1 - k) * 105}%)`; });
+    el.style.backgroundPosition = `${100 - 100 * ease.inOut(p(t, t0 + .25, .9))}% 0`;
+    const tr = .005 + .025 * p(t, t0, Math.max(.5, t1 - t0)); el.style.letterSpacing = tr + 'em';
+    el.style.opacity = 1 - sal; el.style.filter = `drop-shadow(0 8px 24px rgba(0,0,0,.45))` + (sal ? ` blur(${sal * 16}px)` : '');
+    el.style.transform = `translateX(${n.x}px) translateY(${-sal * 30}px) scale(${1.04 - .04 * ease.outCubic(p(t, t0, 1.2))})`;
+    if (n.reglas) { const w = ease.outExpo(p(t, t0 + .15, .6)) * 300 * (1 - sal); n.reglas.forEach((r, i) => { r.style.display = 'block'; r.style.width = w + 'px'; r.style.left = (540 - w / 2) + 'px';
+      r.style.top = (i ? n.y + n.size * .9 : n.y - 22) + 'px'; r.style.opacity = 1 - sal; }); }
+    return; }
+  // num: entra desde desenfocado y grande
   const k = muelle(t, t0, 2.2, .7), e = ease.outExpo(p(t, t0, .35));
   el.style.opacity = e * (1 - sal); el.style.filter = `blur(${(1 - e) * 18 + sal * 16}px)`;
   el.style.transform = `translateX(${n.x}px) scale(${1.25 - .25 * Math.min(k, 1.05)}) rotate(${n.rot}deg)`; });

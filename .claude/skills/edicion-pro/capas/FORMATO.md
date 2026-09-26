@@ -1,3 +1,20 @@
+# FORMATO PLEA5E v7 — «motion design» (POR DEFECTO, 26-9 noche)
+Referencias: vídeo tipo Spotify «Purity of Motion» (movimiento UI) + JoeEditor (cara con texto detrás).
+- **Fondo** noche #06080E con 3 resplandores (verde placa #1C5A40, oro oscuro, verde profundo) que respiran.
+- **Una sola tipografía: Figtree** (parecida a la de Spotify). Titular 600/96 px blanco con palabra clave en oro #E9BC46;
+  frase pequeña 500/44 px gris claro. Letras que entran con desenfoque, subida y escala (22 ms entre letras).
+- **La forma M**: un único elemento que se transforma (punto oro → píldora → marco redondeado con metraje real → se
+  cierra en punto / se abre a pantalla completa). Nunca hay cortes secos: todo es la misma forma moviéndose (easeInOutExpo).
+- **Metraje real de Mixkit** (licencia gratuita, uso comercial) dentro de la forma: aeropuerto 22613, baño 22089, camarero
+  13258, móvil croma 28300 (`movil_key.py` mete la pantalla de reseña en el croma siguiendo el móvil).
+- **UI**: chips tipo Spotify (el indicador oro pasa de «Obligar» a «Ponérselo fácil»), lista de reseñas con filas que suben con muelle.
+- **Cara** (solo 4 tramos): se abre desde un recorte redondeado y se cierra en píldora; palabra gigante Figtree 800 detrás de la cabeza.
+- **Cámara global** siempre viva (deriva + empujón en cada golpe).
+- Sonido: whooshes y clics de Mixkit (`marketing/instagram/sonidos/mixkit`) + música «Hazy After Hours» a −19 dB con
+  sidechain bajo la voz (`musica.py`).
+Ejemplo completo: `mosca7.html`.
+
+---
 # FORMATO PLEA5E v6 — estilo JoeEditor (POR DEFECTO, referencia que mandó Juan el 26-9)
 Juan: «este es el estilo que quiero» (vídeo de @JoeEditor). Rechazó v5 (gris/Inter, «fatal») y el bocadillo de comentario («se ve IA»);
 v4 le parecía «más currado» pero con emojis de móvil. Lo que hay que hacer:

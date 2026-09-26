@@ -54,3 +54,17 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#050505;font-fam
 .burbuja{position:absolute;background:#fff;color:#111;font:600 44px PO;letter-spacing:-.02em;padding:26px 34px;border-radius:34px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
 .tache{position:absolute;height:10px;border-radius:5px;background:var(--rojo);transform-origin:0 50%}
 .anillo{position:absolute;border-radius:50%;border:6px solid #fff}
+/* v7: tipografía propia PLEA5E Display (derivada de Noto Serif Display, OFL) */
+@font-face{font-family:PD;src:url(fuentes/plea5e-display-black.woff2);font-weight:900}
+@font-face{font-family:PD;src:url(fuentes/plea5e-display-semibold.woff2);font-weight:600}
+.cond{font-family:PD!important;font-weight:900;font-stretch:normal!important;letter-spacing:.005em;
+  background:linear-gradient(100deg,#E9B21E 0%,#F6D35A 38%,#FFF3C4 48%,#F6D35A 58%,#D9A21A 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;
+  text-shadow:none;filter:drop-shadow(0 8px 24px rgba(0,0,0,.45))}
+.cond.rojo{background:linear-gradient(100deg,#C8231B,#F0463B 45%,#FF8A7E 50%,#F0463B 55%,#B81E17);background-size:300% 100%;-webkit-background-clip:text;background-clip:text}
+.cond .m{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .06em}
+.cond .m>span{display:inline-block}
+.regla{position:absolute;height:4px;background:#F2C230;transform-origin:50% 50%}
+.marco{position:absolute;border:3px solid rgba(242,194,48,.9)}
+.num{font-family:PD!important;font-style:normal!important;font-weight:900}
+.sub{font-weight:600;letter-spacing:-.01em}
+.sub .w.k{color:#F2C230}
