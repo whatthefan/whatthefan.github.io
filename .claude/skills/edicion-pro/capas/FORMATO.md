@@ -124,4 +124,4 @@ estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vin
 - En los primeros 3 segundos, cada cambio de escena lleva su whoosh o swish.
 - Estrellas del móvil: `movil_key2.py` las rellena una a una con rebote (sin saltos entre capturas) y la página hace zoom hacia la pantalla del móvil mientras se llenan.
 - B-roll de bar real (Mixkit 720): 41222 (barra), 4295 (cócteles), 4915 (móvil en el bar), 817 (barista).
-- `punch-stop-riser` solo sube y se corta, así que la voz lo tapa. En las palabras gigantes va a -2 dB y, si no se oye, se refuerza con `packs/glitch` justo en el golpe (así en NADA).
+- Vetados por Juan: `packs/glitch`, `punch-stop-riser` y los booms graves. Para las palabras gigantes (NADA, IGUAL, ¿POR QUÉ?) usar `whoosh-dramatico` a -3 dB.
