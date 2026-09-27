@@ -3,10 +3,11 @@
 Objetivo: que una marca lo vea hasta el final y piense "quiero a este para mi producto". La historia se apoya en cosas reales: PLEA5E y los vídeos que ya tiene.
 Todo lo que va entre [corchetes] lo confirma Juan antes de grabar. No se inventa ningún dato.
 
-## Identidad del canal (distinta de PLEA5E)
-- **Colores:** negro #0B0B0C, crema #F3EEE6 y un acento rojo "Ego" #FF3B2F. En la plantilla: `--fondo:#0B0B0C; --oro:#FF3B2F; --glow1:#3a1512; --glow2:#2a2622; --glow3:#1a0f0e`.
-- **Letra:** Figtree 800 para las palabras gigantes y 600 para los textos. Palabra clave en rojo.
-- **Firma:** al final, "EGO" gigante detrás de la cabeza, siempre con el mismo woah-drop. Se convierte en la marca sonora del canal.
+## Identidad del canal (azul, negro y blanco; distinta de PLEA5E)
+- **Colores:** negro #07080B, blanco #F5F7FA y azul eléctrico #2F6BFF (palabra clave, chips encendidos, forma M). En la plantilla: `--fondo:#07080B; --oro:#2F6BFF; --glow1:#0f2a6b; --glow2:#1b1f2a; --glow3:#0a1640`.
+- **Letra:** Figtree 800 para las palabras gigantes y 600 para los textos. Palabra clave en azul; el resto en blanco.
+- **Cara en espejo** (darle la vuelta), como en los vídeos de PLEA5E.
+- **Firma:** al final, "EGO" gigante detrás de la cabeza, siempre con el mismo woah-drop.
 
 ## Guion
 | t (s) | Voz | Imagen | FX + sonido |
