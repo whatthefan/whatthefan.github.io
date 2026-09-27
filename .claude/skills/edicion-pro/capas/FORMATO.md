@@ -16,6 +16,10 @@ Ejemplos completos: `mosca7.html`, `uber7.html`.
 - **Producto en 3D, no fotos retocadas**: Juan no quiere la foto de la placa en mármol (hecha con IA). La placa se enseña en
   3D real con three.js (`placa3d.html` + `graba3d.js`): entra dando una vuelta completa, se ve la trasera, se asienta flotando.
   Diseño = `w-placa.png` del generador de la web. Tone mapping **Neutral** (ACES apaga el verde).
+- **Nunca escenas vacías** (Juan, 27-9): cada escena lleva el marco con metraje real; los chips, barras y números van ENCIMA
+  del metraje (capa `ui2`), con fondo oscuro translúcido y desenfoque.
+- **SFX: solo los buenos sacados de los vídeos** (`referencias/` tics, pops, clic-doble; `edicion/` arrow-swoosh, woah-drop,
+  cinematic-impact, mouse-click, ding; `virales/` puntual). **Nada de efectos de Mixkit** (le parecen malos). Listas: `sfx8-*.json`.
 - **Letras grandes**: titular Figtree 700/128 px, frase 600/58 px, subtítulos 700/66 px. Las palabras no se parten (`.wd`).
 
 ---

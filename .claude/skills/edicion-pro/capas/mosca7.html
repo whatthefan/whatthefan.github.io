@@ -23,7 +23,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#06080E;font-fam
 #M{position:absolute;overflow:hidden;background:#fff;will-change:transform}
 #M img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .chip{position:absolute;height:104px;padding:0 46px;border-radius:52px;display:flex;align-items:center;gap:16px;font-weight:600;font-size:46px;letter-spacing:-.01em;
-  background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);color:#fff;white-space:nowrap}
+  background:rgba(12,14,20,.72);border:1.5px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;backdrop-filter:blur(14px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
 .chip.on{background:var(--oro);color:#111;border-color:transparent}
 .card{position:absolute;border-radius:40px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);backdrop-filter:blur(20px)}
 .fila{position:absolute;left:28px;right:28px;height:128px;border-radius:26px;display:flex;align-items:center;gap:24px;padding:0 26px;background:rgba(255,255,255,.05)}
@@ -136,10 +136,11 @@ $('ui').innerHTML = `
  <svg class="linea" id="svgD" width="1080" height="1920"><g transform="translate(540 1080)"><circle id="d1" r="330" style="opacity:.35"/><circle id="d2" r="220" style="opacity:.6"/><circle id="d3" r="110" style="stroke:#E9BC46;stroke-width:8"/><circle id="onda" r="110" style="stroke:#E9BC46;stroke-width:5"/></g></svg>
  <svg id="mosca" class="abs" viewBox="-50 -50 100 100" style="left:0;top:0;width:92px;height:92px"><g fill="#fff"><ellipse rx="11" ry="17" cy="6"/><circle cy="-14" r="8"/></g>
    <g fill="none" stroke="#fff" stroke-width="3.5"><ellipse cx="-17" cy="-4" rx="17" ry="8" transform="rotate(-25)"/><ellipse cx="17" cy="-4" rx="17" ry="8" transform="rotate(25)"/></g></svg>
- <div id="ch1" class="chip" style="left:90px;top:1060px">Obligar<div id="tch" class="tache" style="left:34px;right:34px;top:44px"></div></div>
- <div id="ch2" class="chip" style="left:450px;top:1060px">Ponérselo fácil</div>
+ <div id="ch1" class="chip" style="left:130px;top:1470px">Obligar<div id="tch" class="tache" style="left:34px;right:34px;top:44px"></div></div>
+ <div id="ch2" class="chip" style="left:460px;top:1470px">Ponérselo fácil</div>
  <div id="lista" class="card" style="left:90px;top:620px;width:900px;height:760px;overflow:hidden"><div id="listaIn" class="abs" style="left:0;right:0;top:0"></div>
    <div class="demo" style="right:24px;top:22px">Demostración</div></div>`;
+['ch1', 'ch2'].forEach(id => $('ui2').appendChild($(id)));
 const RES = [['L', 'Lucía M.', 'Hace un momento', '#F4C95D'], ['A', 'Antonio R.', 'Hace 2 días', '#8FD3B6'], ['M', 'Marta G.', 'Hace 1 semana', '#F2A07B'], ['J', 'Javi P.', 'Hace 2 semanas', '#9DB8F2'], ['C', 'Carmen S.', 'Hace 3 semanas', '#E6B8F2']];
 $('listaIn').innerHTML = RES.map(([a, n, d, c], i) => `<div class="fila" style="top:${110 + i * 150}px"><div class="av" style="background:${c}">${a}</div><div><b>${n}</b><small>${d}</small></div><div class="est">★★★★★</div></div>`).join('');
 // ===== keyframes de la forma M (x,y,w,h,r) =====
@@ -150,11 +151,12 @@ MK.push(
  [4.8, 540, 1060, 0, 0, 0], [4.95, 540, 1060, 120, 120, 60], [5.3, 540, 1210, 900, 1060, 56],                                         // baño real
  [8.6, 540, 1210, 900, 1060, 56], [8.85, 540, 960, 1080, 1920, 0],                                                                   // se abre a la cara
  [10.2, 540, 1130, 1080, 1920, 0], [10.2, 540, 1080, 0, 0, 0],
+ [14.55, 540, 1250, 0, 0, 0], [14.7, 540, 1250, 120, 120, 60], [15.05, 540, 1250, 900, 820, 48], [17.6, 540, 1250, 900, 820, 48], [17.85, 540, 1250, 0, 0, 0],
  [19.4, 540, 1080, 0, 0, 0], [19.5, 540, 1100, 120, 120, 60], [19.85, 540, 1130, 900, 1180, 56],                                     // camarero
  [21.3, 540, 1130, 900, 1180, 56], [21.55, 540, 1150, 120, 120, 60], [21.7, 540, 1150, 0, 0, 0], [23.8, 540, 1150, 0, 0, 0],                                // placa real
  [23.9, 540, 1150, 120, 120, 60], [24.2, 540, 1130, 900, 1180, 56], [25.2, 540, 1130, 900, 1180, 56], [25.4, 540, 1000, 900, 760, 40], [25.5, 540, 1000, 0, 0, 0],     // móvil → lista
  [27.0, 540, 1000, 0, 0, 0], [27.12, 540, 960, 70, 70, 35], [27.35, 540, 960, 70, 70, 35], [27.55, 540, 960, 0, 0, 0], [99, 540, 960, 0, 0, 0]);
-const IMG = [[1.35, 2.8, 'br/aero/', 90, 'jpg', 0], [4.95, 8.85, 'br/bano/', 135, 'jpg', 0], [19.5, 21.45, 'br/cama/', 76, 'jpg', 0], [23.93, 25.45, 'br/movil/', 75, 'webp', 0]];
+const IMG = [[1.35, 2.8, 'br/aero/', 90, 'jpg', 0], [4.95, 8.85, 'br/bano/', 135, 'jpg', 0], [14.7, 17.85, 'br/cafe/', 90, 'jpg', 0], [19.5, 21.45, 'br/cama/', 76, 'jpg', 0], [23.93, 25.45, 'br/movil/', 75, 'webp', 0]];
 
 window.render = async t => {
   // fondo: resplandores que respiran
