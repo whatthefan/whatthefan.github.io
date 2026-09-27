@@ -12,7 +12,11 @@ Referencias: vídeo tipo Spotify «Purity of Motion» (movimiento UI) + JoeEdito
 - **Cámara global** siempre viva (deriva + empujón en cada golpe).
 - Sonido: whooshes y clics de Mixkit (`marketing/instagram/sonidos/mixkit`) + música «Hazy After Hours» a −19 dB con
   sidechain bajo la voz (`musica.py`).
-Ejemplo completo: `mosca7.html`.
+Ejemplos completos: `mosca7.html`, `uber7.html`.
+- **Producto en 3D, no fotos retocadas**: Juan no quiere la foto de la placa en mármol (hecha con IA). La placa se enseña en
+  3D real con three.js (`placa3d.html` + `graba3d.js`): entra dando una vuelta completa, se ve la trasera, se asienta flotando.
+  Diseño = `w-placa.png` del generador de la web. Tone mapping **Neutral** (ACES apaga el verde).
+- **Letras grandes**: titular Figtree 700/128 px, frase 600/58 px, subtítulos 700/66 px. Las palabras no se parten (`.wd`).
 
 ---
 # FORMATO PLEA5E v6 — estilo JoeEditor (POR DEFECTO, referencia que mandó Juan el 26-9)
