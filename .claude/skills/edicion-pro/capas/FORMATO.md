@@ -18,7 +18,8 @@ Ejemplos completos: `mosca7.html`, `uber7.html`.
   Diseño = `w-placa.png` del generador de la web. Tone mapping **Neutral** (ACES apaga el verde).
 - **Nunca escenas vacías** (Juan, 27-9): cada escena lleva el marco con metraje real; los chips, barras y números van ENCIMA
   del metraje (capa `ui2`), con fondo oscuro translúcido y desenfoque.
-- **SFX: solo los buenos sacados de los vídeos** (`referencias/` tics, pops, clic-doble; `edicion/` arrow-swoosh, woah-drop,
+- **SFX (27-9, definitivo): SIEMPRE `sonidos/packs/`** (ver su LEEME; woah-drop en producto/palabra clave/CTA, iphone-charging en el toque NFC). **Sin música.** Listas `sfx9-*.json`; remezclar sin re-render: `mezcla3.py` (copia el vídeo).
+- (antes) **SFX: solo los buenos sacados de los vídeos** (`referencias/` tics, pops, clic-doble; `edicion/` arrow-swoosh, woah-drop,
   cinematic-impact, mouse-click, ding; `virales/` puntual). **Nada de efectos de Mixkit** (le parecen malos). Listas: `sfx8-*.json`.
 - **Letras grandes**: titular Figtree 700/128 px, frase 600/58 px, subtítulos 700/66 px. Las palabras no se parten (`.wd`).
 
