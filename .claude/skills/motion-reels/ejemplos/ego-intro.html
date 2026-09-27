@@ -118,6 +118,9 @@ const css = document.createElement('style'); css.textContent = `
 #caraFondo{-webkit-mask-image:linear-gradient(transparent 0,#000 380px)!important;mask-image:linear-gradient(transparent 0,#000 380px)!important}
 .vert #caraFondo,.vert #caraPersona{top:0!important;height:1920px!important;-webkit-mask-image:none!important;mask-image:none!important}.vert #caraBlur{display:none}`;
 document.head.appendChild(css);
+CARA.length = 0; CARA.push([0, 7.35]);
+// tramos de cara dentro de la tarjeta
+const TARJ = [[11.8, 17.8], [22.8, 24.72], [26.3, 36.45], [36.55, 44.3]];
 // ---------- S1 gancho (cara) ----------
 fx(0, 'flash', P + 'camera-shutter.mp3', -6);
 sub('Hice un vídeo sobre una *mosca*', .35, 2.6, 2.3); sub('en un *urinario*', 2.6, 4.2, 3.6);
@@ -126,13 +129,13 @@ gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatic
 fx(2.3, null, Q + 'pop-imagen.mp3', -8);
 // ---------- S2 cuando empecé (cara) ----------
 fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);   // la mano tapa la cámara
-texto('Juan · Córdoba', 'p', 150, 7.5, 9.1, { capa: 'sobre', maq: true, st: .045 }); fx(7.5, null, Q + 'teclas.mp3', -11, { dur: 14 * .045 + .15 });
-texto('fundador de *PLEA5E*', 'h', 230, 7.9, 9.1, { capa: 'sobre', size: 84 });
-sub('cuando empecé', 7.55, 8.7, 8.4);
-sub('no tenía *agencia*', 8.8, 10.2, 9.7); sub('ni *presupuesto* para anuncios', 10.2, 11.8, 11.5);
-sub('así que aprendí a hacerlo *yo*', 11.9, 13.9, 13.5);
+texto('Juan · Córdoba', 'p', 300, 7.5, 8.85, { maq: true, st: .045 }); fx(7.5, null, Q + 'teclas.mp3', -11, { dur: 14 * .045 + .15 });
+texto('fundador de *PLEA5E*', 'h', 380, 7.85, 8.85, { size: 96 });
+texto('cuando *empecé*…', 'p', 1500, 7.6, 8.85, { center: true });
+texto('no tenía', 'p', 520, 8.85, 11.75, { center: true }); texto('para *anuncios*', 'p', 1330, 10.6, 11.75, { center: true });
+sub('así que aprendí a hacerlo *yo*', 11.95, 13.9, 13.5, 1560);
 fx(9.72, null, P + 'wrong.mp3', -8); fx(10.62, null, P + 'wrong.mp3', -8);
-fx(14.14, null, Q + 'pop-imagen.mp3', -9); fx(16.9, null, P + 'ding.mp3', -7);
+fx(7.9, null, Q + 'pop-imagen.mp3', -8); fx(11.8, null, Q + 'swish-c.mp3', -7); fx(14.14, null, Q + 'pop-imagen.mp3', -9); fx(16.9, null, P + 'ding.mp3', -7);
 // ---------- S3 la gente no se para por un anuncio (solo voz, motion) ----------
 fx(17.8, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
 texto('y descubrí *algo*', 'h', 330, 17.95, 19.05);
@@ -146,7 +149,7 @@ fx(22.9, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('esto es lo que *hago*', 23.2, 24.7, 24.4);
 fx(24.72, 'whip', Q + 'whoosh-b.mp3', -5); fx(25.5, null, Q + 'swish-c.mp3', -9); fx(26.3, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
 texto('lo que *hago*', 'h', 330, 24.8, 26.25, { capa: 'ui2' });
-sub('ahora lo hago para *marcas*', 26.4, 27.95, 27.5); gigante('MARCAS', 27.45, 28.9, 480, 210); fx(27.45, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
+sub('ahora lo hago para *marcas*', 26.4, 27.95, 27.5); texto('*MARCAS*', 'gig', 330, 27.45, 29.2, { capa: 'ui', size: 250 }); fx(27.45, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
 sub('pongo la *cara*', 28.0, 29.0, 28.7);
 sub('cuento tu *producto*', 29.85, 31.2, 30.8); sub('como una *historia*', 31.5, 32.9, 32.6);
 sub('es lo que ve la gente', 33.45, 34.85, 34.6); sub('y lo edito *así*', 35.0, 36.4, 35.9);
@@ -154,15 +157,14 @@ fx(28.35, null, Q + 'pop-imagen.mp3', -10); fx(30.4, null, Q + 'pop-imagen.mp3',
 fx(35.85, 'zoomdig', Q + 'zoom-digital.mp3', -8);
 // ---------- S5 cierre (vertical) ----------
 fx(36.55, 'flash', Q + 'obturador-flash.mp3', -5);  // puñetazo a cámara
-sub('si tu producto merece', 36.7, 38.0, 37.8, 1480); sub('que lo vean hasta el *final*', 38.0, 39.5, 39.2, 1480);
-sub('*escríbeme*', 39.7, 40.9, 40.2, 1480); sub('en mi perfil', 40.95, 42.0, 41.7, 1480);
-const ego = texto('*EGO*', 'gig', 1060, 42.1, 44.3, { capa: 'sobre', st: .05 }); ego.style.fontSize = '380px'; ego.style.textShadow = '0 20px 60px rgba(0,0,0,.6)'; fx(42.05, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(42.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 30 });
+sub('si tu producto merece', 36.7, 38.0, 37.8, 1560); sub('que lo vean hasta el *final*', 38.0, 39.5, 39.2, 1560);
+texto('*escríbeme*', 'h', 120, 39.7, 44.3, { center: true, size: 120 }); fx(39.72, null, Q + 'pop-imagen.mp3', -9); texto('enlace en mi perfil ↓', 'p', 1760, 40.95, 44.3, { center: true });
+const ego = texto('*EGO*', 'gig', 1320, 42.1, 44.3, { st: .05 }); ego.style.fontSize = '400px'; ego.style.textShadow = '0 20px 60px rgba(0,0,0,.6)'; fx(42.05, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(42.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 30 });
 // ---------- elementos ----------
 $('sobre').insertAdjacentHTML('beforeend', `
  <div id="tel" class="tel" style="left:640px;top:120px;width:360px;height:640px"><img id="telImg"></div>
- <div id="cAg" class="chip" style="left:120px;top:380px">Agencia<div id="tAg" class="tache" style="left:34px;right:34px;top:48px"></div></div>
- <div id="cPr" class="chip" style="left:520px;top:380px">Presupuesto<div id="tPr" class="tache" style="left:34px;right:34px;top:48px"></div></div>
- <div id="skills" class="abs" style="left:90px;top:260px;width:900px;height:260px"></div>
+ 
+ <div id="skills" class="abs" style="left:90px;top:250px;width:900px;height:260px"></div>
  <div id="nivel" class="abs" style="left:0;top:0;width:1080px;height:700px"></div>`);
 ['guion', 'cámara', 'edición', 'sonido'].forEach((w, i) => { const d = document.createElement('div'); d.className = 'chip'; d.textContent = w;
   Object.assign(d.style, { left: (i % 2) * 460 + 'px', top: Math.floor(i / 2) * 134 + 'px', width: '430px', justifyContent: 'center', fontSize: '50px' }); $('skills').appendChild(d); });
@@ -171,6 +173,9 @@ $('sobre').insertAdjacentHTML('beforeend', `
 $('ui2').insertAdjacentHTML('beforeend', `
  <div id="ad" class="ad"><div class="scr">ANUNCIO</div><div class="tag">Anuncio · 0:05</div><div class="bar"><i id="adBar"></i></div><div class="tt">Patrocinado</div><div class="skip" id="adSkip">Saltar anuncio ›</div></div>
  <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16 21l-3 1.3-3.3-6.6L4 20z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+ <div id="cAg" class="chip" style="left:250px;top:720px;height:150px;padding:0 70px;font-size:84px;font-weight:700">Agencia<div id="tAg" class="tache" style="left:50px;right:50px;top:72px;height:9px"></div></div>
+ <div id="cPr" class="chip" style="left:170px;top:930px;height:150px;padding:0 70px;font-size:84px;font-weight:700">Presupuesto<div id="tPr" class="tache" style="left:50px;right:50px;top:72px;height:9px"></div></div>
+ <img id="pl3" class="abs" style="left:190px;top:560px;width:700px;height:855px;display:none;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))">
  <div id="carr" class="abs" style="left:0;top:0;width:1080px;height:1920px"></div>`);
 [['c1', 'placa'], ['c2', 'app'], ['c3', 'UGC']].forEach(([d, e], i) => $('carr').insertAdjacentHTML('beforeend', `<div class="tile" id="tl${i}"><img id="ti${i}"><div class="et">${e}</div></div>`));
 async function frame(img, dir, t, t0, n) { const i = Math.max(1, Math.min(n, 1 + Math.floor((t - t0) * 30))), src = `br/${dir}/${pad(i)}.jpg`; if (img._s !== src) { img.src = src; await img.decode().catch(() => {}); img._s = src; } }
@@ -179,13 +184,25 @@ window.render = async t => {
   [['g1', 200, 1300, .3], ['g2', 820, 520, .23], ['g3', 540, 1700, .17]].forEach(([id, x, y, v], j) => { const g = $(id); g.style.left = (x - 450 + Math.sin(t * v + j) * 200) + 'px'; g.style.top = (y - 450 + Math.cos(t * v * 1.3 + j * 2) * 160) + 'px'; });
   $('mundo').style.transform = `scale(${1 + .025 * Math.sin(t * .35)}) rotate(${Math.sin(t * .23) * .6}deg)`;
   pintaTextos(t); pintaSubs(t); fxRender(t);
-  $('M').style.display = 'none';
+  // tarjeta (forma M) con la cara: punto → píldora → tarjeta, y se cierra al acabar
+  const tj = TARJ.find(([a, b]) => t >= a - .12 && t < b + .12), el = $('M'), mi = $('Mimg');
+  if (tj) { const [a, b] = tj, V = a >= 36.5, W = V ? 780 : 840, H = V ? 1380 : 1120, Y = V ? 980 : 1080;
+    const ki = ioX(p(t, a - .1, .45)), ko = ioX(p(t, b - .28, .3)), k = Math.max(0, ki - ko);
+    const kp = Math.min(1, ki * 3), w = lerp(0, 120, kp) + (W - 120) * Math.max(0, (ki - .33) / .67) * (1 - ko), h = lerp(0, 120, kp) + (H - 120) * Math.max(0, (ki - .33) / .67) * (1 - ko);
+    const x = 540 + (1 - ki) * 500 - ko * 600, r = Math.min(w, h) < 200 ? Math.min(w, h) / 2 : 60;
+    el.style.display = w > 2 ? 'block' : 'none'; Object.assign(el.style, { left: x - w / 2 + 'px', top: Y - h / 2 + 'px', width: w + 'px', height: h + 'px', borderRadius: r + 'px', background: 'var(--oro)', boxShadow: '0 40px 90px rgba(0,0,0,.55)' });
+    const fi = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), src = `${CARA_FONDO}/${pad(fi)}.jpg`;
+    if (w > 300) { mi.style.display = 'block'; mi.style.objectPosition = V ? '50% 30%' : '50% 20%'; mi.style.transform = `scale(${1.02 + .04 * p(t, a, b - a)})`; if (mi._s !== src) { mi.src = src; await mi.decode().catch(() => {}); mi._s = src; } } else mi.style.display = 'none';
+  } else el.style.display = 'none';
+  // placa 3D en la presentación
+  if (vis('pl3', t >= 7.4 && t < 8.85)) { const i = Math.min(80, 1 + Math.floor((t - 7.4) * 40)), src = `br/placa3d/${pad(i)}.png`, pl = $('pl3'); if (pl._s !== src) { pl.src = src; await pl.decode().catch(() => {}); pl._s = src; }
+    const k = muelle(t, 7.45, 2, .65); pl.style.transform = `translate(${(1 - Math.min(k, 1.03)) * 600 - ioX(p(t, 8.6, .25)) * 900}px,120px) scale(1.05)`; }
   // móvil con el vídeo de la mosca (gancho)
   if (vis('tel', t >= 2.25 && t < 4.75)) { const k = muelle(t, 2.3, 2.2, .62), s = ioX(p(t, 4.45, .3));
     $('tel').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 600 - s * 900}px) rotate(${6 - 2 * Math.min(k, 1)}deg)`; await frame($('telImg'), 'mosca', t, 2.3, 108); }
   // agencia / presupuesto tachados
-  const ch = t >= 8.9 && t < 11.85; vis('cAg', ch, 'flex'); vis('cPr', ch && t >= 9.95, 'flex');
-  if (ch) { [['cAg', 8.95], ['cPr', 9.95]].forEach(([id, a]) => { const k = muelle(t, a, 2.4, .6); $(id).style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 500}px)`; $(id).style.opacity = (1 - p(t, 11.6, .25)); });
+  const ch = t >= 8.9 && t < 11.8; vis('cAg', ch, 'flex'); vis('cPr', ch && t >= 9.95, 'flex');
+  if (ch) { [['cAg', 8.95], ['cPr', 9.95]].forEach(([id, a]) => { const k = muelle(t, a, 2.4, .6); $(id).style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 500}px)`; $(id).style.opacity = (1 - p(t, 11.5, .25)); });
     $('tAg').style.transform = `scaleX(${exp(p(t, 9.72, .3))})`; $('tPr').style.transform = `scaleX(${exp(p(t, 10.62, .3))})`; }
   // guion, cámara, edición, sonido
   if (vis('skills', t >= 13.95 && t < 17.8)) [...$('skills').children].forEach((c, i) => { const a = [14.14, 15.23, 15.95, 16.9][i], k = muelle(t, a - .1, 2.6, .6);
