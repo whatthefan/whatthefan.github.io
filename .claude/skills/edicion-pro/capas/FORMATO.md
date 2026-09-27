@@ -94,3 +94,19 @@ Voz: `voz.py` + cadena de `cadena-voz.txt` (RNNoise `arnndn` modelo std de githu
 Efectos (`mezcla2.py`, alineados al golpe, base −14 dB): pegar = `ui/pega*.mp3`, cinta = `ui/cinta.mp3`, tachar =
 `ui/rotulador.mp3`, cortes = `ui/aire-corto.mp3`, ¡pum! = `edicion/woah-drop.mp3`, toque = `edicion/mouse-click.mp3`,
 estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vine-boom` / `nope` / `grillos` (0,6 s).
+
+## v8 — sonido con sentido y movimiento lateral (feedback de Juan)
+- **SFX: uno por evento con significado, nunca de relleno.** Cada sonido se usa para lo que es:
+  - swoosh (arrow/arrow2, alternados) → solo transiciones de escena
+  - `wrong` → algo tachado o negado
+  - `right` → la opción buena o el resultado conseguido
+  - `cinematic-impact` → palabra gigante detrás de la cabeza
+  - `woah-drop` → la revelación del producto (una vez por vídeo, o dos como mucho)
+  - `punch-stop-riser` → una idea clave (el pico cae en el golpe)
+  - `mouse-click`/`iphone-charging` → toques de UI o del móvil
+  - `ding` → llega la reseña
+  - `camera-shutter` → la placa en la mano o el CTA
+- **Nada de sonido en las estrellas** ni en cada letra o chip. Si un momento no tiene evento, va en silencio (solo la voz).
+- **Movimiento de lado a lado (referencia Marz).** El texto entra desde la derecha y sale hacia la izquierda. La forma M entra por la derecha y sale por la izquierda (se hace automáticamente tras los keyframes MK). Las tarjetas se deslizan en horizontal.
+- **Las escenas explicativas se animan, no se tapan con b-roll.** Ejemplo del urinario: la mosca aparece, entra un hombre andando, el chorro apunta a la mosca, el hombre se va y el urinario queda limpio con brillos y el sonido `right`.
+- Listas de sonidos de referencia: `sfx10-mosca.json`, `sfx10-uber.json`. Páginas: `mosca8.html`, `uber8.html`.
