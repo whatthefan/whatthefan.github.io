@@ -120,3 +120,7 @@ estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vin
 - (feedback) **Nada de booms graves** (`braam`, `synth-hit`, `cinematic-impact`, `riser-impacto`): a Juan le suenan raros. Para las palabras gigantes usar `punch-stop-riser` con un `riser` corto (0,8 s) + `impacto`. Para PLACA al final, `woah-drop` (máximo 3 por vídeo).
 - El vídeo **empieza con sonido**: `flash` + `camera-shutter` en t=0.
 - `right` y `wrong` estaban intercambiados; ya están corregidos (`right` es la campanita, `wrong` el zumbido).
+- Cada texto pequeño que "se escribe" lleva `maq: true` (letras a máquina con cursor) y su `teclas` en FX con `dur = letras × st + 0,15`.
+- En los primeros 3 segundos, cada cambio de escena lleva su whoosh o swish.
+- Estrellas del móvil: `movil_key2.py` las rellena una a una con rebote (sin saltos entre capturas) y la página hace zoom hacia la pantalla del móvil mientras se llenan.
+- B-roll de bar real (Mixkit 720): 41222 (barra), 4295 (cócteles), 4915 (móvil en el bar), 817 (barista).

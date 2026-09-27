@@ -58,7 +58,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#06080E;font-fam
 <script src="fx.js"></script><script>
 const $ = id => document.getElementById(id);
 const { p, ease, muelle } = E;
-const FX = /*FX*/[{"t": 0.0, "v": "flash", "s": "packs/camera-shutter.mp3", "db": -6}, {"t": 1.05, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -5}, {"t": 2.62, "v": null, "s": "packs2/pop-imagen.mp3", "db": -7}, {"t": 4.9, "v": null, "s": "packs2/whoosh-mov.mp3", "db": -12}, {"t": 7.25, "v": null, "s": "packs/ding.mp3", "db": -7}, {"t": 8.8, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 9.62, "v": "riser", "d": 0.8}, {"t": 9.62, "v": "impacto", "s": "packs/punch-stop-riser.mp3", "db": -5, "a": 20}, {"t": 10.3, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7, "dir": -1}, {"t": 12.1, "v": "impacto", "s": "packs2/pop-imagen.mp3", "db": -7, "a": 10}, {"t": 13.7, "v": "riser", "s": "packs2/riser-metal.mp3", "db": -7, "d": 1.5}, {"t": 13.72, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 30}, {"t": 14.66, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -7}, {"t": 15.55, "v": null, "s": "packs/wrong.mp3", "db": -7}, {"t": 16.85, "v": null, "s": "packs/right.mp3", "db": -6}, {"t": 17.9, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 18.8, "v": "riser", "d": 0.8}, {"t": 18.8, "v": "impacto", "s": "packs/punch-stop-riser.mp3", "db": -5, "a": 20}, {"t": 19.5, "v": "glitch", "s": "packs2/glitch.mp3", "db": -7}, {"t": 21.6, "v": "riser", "s": "packs2/riser-metal.mp3", "db": -7, "d": 1.4}, {"t": 21.62, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 34}, {"t": 23.9, "v": "whip", "s": "packs2/whoosh-dramatico.mp3", "db": -6, "dir": -1}, {"t": 24.6, "v": null, "s": "packs/iphone-charging.mp3", "db": -8}, {"t": 25.31, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 0.95}, {"t": 26.2, "v": null, "s": "packs/ding.mp3", "db": -7}, {"t": 27.35, "v": "zoomdig", "s": "packs2/zoom-digital.mp3", "db": -8}, {"t": 28.3, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7}, {"t": 28.85, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 26}]/*FX*/;
+const FX = /*FX*/[{"t": 0.0, "v": "flash", "s": "packs/camera-shutter.mp3", "db": -6}, {"t": 1.05, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -4}, {"t": 2.62, "v": null, "s": "packs2/pop-imagen.mp3", "db": -7}, {"t": 2.75, "v": "whip", "s": "packs2/swish-c.mp3", "db": -6, "dir": -1}, {"t": 4.95, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 1.17}, {"t": 7.25, "v": null, "s": "packs/ding.mp3", "db": -7}, {"t": 8.8, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 9.62, "v": "riser", "d": 0.8}, {"t": 9.62, "v": "impacto", "s": "packs/punch-stop-riser.mp3", "db": -5, "a": 20}, {"t": 10.3, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7, "dir": -1}, {"t": 10.36, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 1.03}, {"t": 12.1, "v": "impacto", "s": "packs2/pop-imagen.mp3", "db": -7, "a": 10}, {"t": 13.7, "v": "riser", "s": "packs2/riser-metal.mp3", "db": -7, "d": 1.5}, {"t": 13.72, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 30}, {"t": 14.66, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -4}, {"t": 15.55, "v": null, "s": "packs/wrong.mp3", "db": -7}, {"t": 16.85, "v": null, "s": "packs/right.mp3", "db": -6}, {"t": 17.9, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 18.8, "v": "riser", "d": 0.8}, {"t": 18.8, "v": "impacto", "s": "packs/punch-stop-riser.mp3", "db": -5, "a": 20}, {"t": 19.5, "v": "glitch", "s": "packs2/glitch.mp3", "db": -7}, {"t": 19.58, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 0.8}, {"t": 21.6, "v": "riser", "s": "packs2/riser-metal.mp3", "db": -7, "d": 1.4}, {"t": 21.62, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 34}, {"t": 23.9, "v": "whip", "s": "packs2/whoosh-dramatico.mp3", "db": -6, "dir": -1}, {"t": 24.6, "v": null, "s": "packs/iphone-charging.mp3", "db": -8}, {"t": 25.31, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 0.95}, {"t": 26.2, "v": null, "s": "packs/ding.mp3", "db": -7}, {"t": 27.35, "v": "zoomdig", "s": "packs2/zoom-digital.mp3", "db": -8}, {"t": 28.3, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7}, {"t": 28.85, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 26}]/*FX*/;
 const TOTAL = 30.57; window.TOTAL = TOTAL;
 const pad = i => String(i).padStart(4, '0');
 const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
@@ -104,12 +104,12 @@ sub('dibujaron una *mosca*', 1.67, 2.55, 2.4, 1730);
 // S2 urinario (dibujo + mosca)
 texto('dentro de los *urinarios*', 'h', 300, 3.26, 4.85);
 // S3 baño real + limpio
-texto('y los baños empezaron a estar', 'p', 230, 4.95, 8.75);
+texto('y los baños empezaron a estar', 'p', 230, 4.95, 8.75, { maq: true, st: 0.035 });
 texto('mucho más *limpios*', 'h', 310, 7.2, 8.75);
 // cara 2
 sub('nadie les pidió', 8.89, 10.3, 9.5); gigante('NADA', 9.62, 10.3);
 // S4 diana
-texto('solo les pusieron algo', 'p', 300, 10.36, 13.05);
+texto('solo les pusieron algo', 'p', 300, 10.36, 13.05, { maq: true, st: 0.04 });
 texto('a lo que *apuntar*', 'h', 390, 11.98, 13.05);
 // S5 nudge
 texto('esto se llama', 'p', 620, 13.19, 14.6, { center: true });
@@ -119,7 +119,7 @@ texto('se lo pones más *fácil*', 'h', 390, 15.9, 17.85);
 // cara 3
 sub('con tus clientes', 18.07, 19.5, 18.7); gigante('IGUAL', 18.8, 19.5);
 // S6 camarero
-texto('no hace falta', 'p', 300, 19.58, 21.45);
+texto('no hace falta', 'p', 300, 19.58, 21.45, { maq: true, st: 0.05 });
 texto('*insistirles*', 'h', 390, 20.25, 21.45);
 // S7 placa real
 texto('hace falta ponerles', 'p', 300, 21.6, 23.85);
@@ -163,7 +163,7 @@ MK.push(
  [21.3, 540, 1130, 900, 1180, 56], [21.55, 540, 1150, 120, 120, 60], [21.7, 540, 1150, 0, 0, 0], [23.8, 540, 1150, 0, 0, 0],                                // placa real
  [23.9, 540, 1150, 120, 120, 60], [24.2, 540, 1130, 900, 1180, 56], [25.2, 540, 1130, 900, 1180, 56], [25.4, 540, 1000, 900, 760, 40], [25.5, 540, 1000, 0, 0, 0],     // móvil → lista
  [27.0, 540, 1000, 0, 0, 0], [27.12, 540, 960, 70, 70, 35], [27.35, 540, 960, 70, 70, 35], [27.55, 540, 960, 0, 0, 0], [99, 540, 960, 0, 0, 0]);
-const IMG = [[1.35, 2.8, 'br/aero/', 90, 'jpg', 0], [14.7, 17.85, 'br/cafe/', 90, 'jpg', 0], [19.5, 21.45, 'br/cama/', 76, 'jpg', 0], [23.93, 25.45, 'br/movil/', 75, 'webp', 0]];
+const IMG = [[1.35, 2.8, 'br/aero/', 90, 'jpg', 0], [14.7, 17.85, 'br/bar/', 100, 'jpg', 0], [19.5, 21.45, 'br/coctel/', 80, 'jpg', 0], [23.93, 25.45, 'br/movil/', 75, 'webp', 0]];
 
 // deslizamiento lateral de la forma: entra por la derecha, sale por la izquierda
 for (let i = 0; i < MK.length; i++) { const c = MK[i]; if (c[3] > 0) continue; const pv = MK[i - 1], nx = MK[i + 1];
@@ -183,7 +183,7 @@ window.render = async t => {
   el.style.background = im ? '#000' : '#E9BC46';
   if (im && w > 200) { mi.style.display = 'block'; let src;
     if (im[2] === 'foto') { src = 'foto-placa-marmol.jpg'; mi.style.transform = `scale(${1.08 + .1 * p(t, im[0], 2.5)})`; }
-    else { const i = Math.min(im[3], 1 + Math.floor((t - im[0]) * 30)); src = im[2] + pad(i) + '.' + im[4]; mi.style.transform = `scale(${1.04 + .05 * p(t, im[0], im[1] - im[0])})`; }
+    else { const i = Math.min(im[3], 1 + Math.floor((t - im[0]) * 30)); src = im[2] + pad(i) + '.' + im[4]; const mv = im[2] === 'br/movil/'; mi.style.transformOrigin = mv ? '47% 30%' : '50% 50%'; mi.style.transform = `scale(${mv ? 1.05 + .85 * ioX(p(t, im[0] + .45, .7)) : 1.04 + .05 * p(t, im[0], im[1] - im[0])})`; }
     if (mi._s !== src) { mi.src = src; await mi.decode().catch(() => {}); mi._s = src; }
     mi.style.objectFit = im[2] === 'br/movil/' ? 'cover' : 'cover'; el.style.background = im[2] === 'br/movil/' ? '#0b0f16' : '#000';
   } else mi.style.display = 'none';

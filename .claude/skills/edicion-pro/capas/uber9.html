@@ -59,7 +59,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#06080E;font-fam
 <script src="fx.js"></script><script>
 const $ = id => document.getElementById(id);
 const { p, ease, muelle } = E;
-const FX = /*FX*/[{"t": 0.0, "v": "flash", "s": "packs/camera-shutter.mp3", "db": -6}, {"t": 1.2, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -5}, {"t": 4.5, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7, "dir": -1}, {"t": 4.62, "v": null, "s": "packs2/pop-imagen.mp3", "db": -9}, {"t": 7.19, "v": null, "s": "packs2/pop-imagen.mp3", "db": -9}, {"t": 9.6, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -7}, {"t": 9.75, "v": null, "s": "packs2/contador.mp3", "db": -9, "dur": 0.75}, {"t": 10.55, "v": null, "s": "packs/wrong.mp3", "db": -7}, {"t": 11.9, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 11.96, "v": "riser", "d": 0.8}, {"t": 11.96, "v": "impacto", "s": "packs/punch-stop-riser.mp3", "db": -5, "a": 20}, {"t": 14.6, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7, "dir": -1}, {"t": 16.25, "v": "impacto", "s": "packs2/pop-imagen.mp3", "db": -6, "a": 14}, {"t": 17.2, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 19.28, "v": "glitch", "s": "packs2/glitch.mp3", "db": -6}, {"t": 19.9, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -7}, {"t": 21.1, "v": null, "s": "packs2/pop-imagen.mp3", "db": -8}, {"t": 21.93, "v": "riser", "s": "packs2/riser-metal.mp3", "db": -7, "d": 1.4}, {"t": 21.97, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 34}, {"t": 24.35, "v": "whip", "s": "packs2/whoosh-dramatico.mp3", "db": -6, "dir": -1}, {"t": 25.3, "v": null, "s": "packs/wrong.mp3", "db": -7}, {"t": 25.9, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7}, {"t": 26.4, "v": null, "s": "packs/iphone-charging.mp3", "db": -8}, {"t": 27.5, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 27.9, "v": "zoomdig", "s": "packs2/zoom-digital.mp3", "db": -8}, {"t": 29.62, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 26}]/*FX*/;
+const FX = /*FX*/[{"t": 0.0, "v": "flash", "s": "packs/camera-shutter.mp3", "db": -6}, {"t": 1.2, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -4}, {"t": 2.97, "v": null, "s": "packs2/pop-imagen.mp3", "db": -10}, {"t": 4.5, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7, "dir": -1}, {"t": 4.62, "v": null, "s": "packs2/pop-imagen.mp3", "db": -9}, {"t": 5.46, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 0.92}, {"t": 7.19, "v": null, "s": "packs2/pop-imagen.mp3", "db": -9}, {"t": 8.31, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 0.83}, {"t": 9.6, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -4}, {"t": 9.75, "v": null, "s": "packs2/contador.mp3", "db": -9, "dur": 0.75}, {"t": 10.55, "v": null, "s": "packs/wrong.mp3", "db": -7}, {"t": 11.9, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 11.96, "v": "riser", "d": 0.8}, {"t": 11.96, "v": "impacto", "s": "packs/punch-stop-riser.mp3", "db": -5, "a": 20}, {"t": 14.6, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7, "dir": -1}, {"t": 16.25, "v": "impacto", "s": "packs2/pop-imagen.mp3", "db": -6, "a": 14}, {"t": 17.2, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 19.28, "v": "glitch", "s": "packs2/glitch.mp3", "db": -6}, {"t": 19.9, "v": "whip", "s": "packs2/whoosh-b.mp3", "db": -4}, {"t": 20.17, "v": null, "s": "packs2/teclas.mp3", "db": -10, "dur": 0.91}, {"t": 21.1, "v": null, "s": "packs2/pop-imagen.mp3", "db": -8}, {"t": 21.93, "v": "riser", "s": "packs2/riser-metal.mp3", "db": -7, "d": 1.4}, {"t": 21.97, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 34}, {"t": 24.35, "v": "whip", "s": "packs2/whoosh-dramatico.mp3", "db": -6, "dir": -1}, {"t": 25.3, "v": null, "s": "packs/wrong.mp3", "db": -7}, {"t": 25.9, "v": "whip", "s": "packs2/swoosh-a.mp3", "db": -7}, {"t": 26.4, "v": null, "s": "packs/iphone-charging.mp3", "db": -8}, {"t": 27.5, "v": "flash", "s": "packs2/obturador-flash.mp3", "db": -5}, {"t": 27.9, "v": "zoomdig", "s": "packs2/zoom-digital.mp3", "db": -8}, {"t": 29.62, "v": "impacto", "s": "packs/woah-drop.mp3", "db": -2, "a": 26}]/*FX*/;
 const TOTAL = 30.58; window.TOTAL = TOTAL;
 const pad = i => String(i).padStart(4, '0');
 const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
@@ -102,8 +102,8 @@ texto('en que Uber te pide', 'p', 230, 1.25, 2.9);
 texto('la *valoración*', 'h', 310, 2.05, 2.9);
 texto('justo al', 'p', 230, 2.97, 4.45);
 texto('*bajarte* del coche', 'h', 310, 3.35, 4.45);
-texto('y *Glovo*', 'h', 230, 4.62, 7.1); texto('cuando llega la comida', 'p', 370, 5.46, 7.1);
-texto('y *Airbnb*', 'h', 230, 7.19, 9.55); texto('el día que te vas', 'p', 370, 8.31, 9.55);
+texto('y *Glovo*', 'h', 230, 4.62, 7.1); texto('cuando llega la comida', 'p', 370, 5.46, 7.1, { maq: true, st: 0.035 });
+texto('y *Airbnb*', 'h', 230, 7.19, 9.55); texto('el día que te vas', 'p', 370, 8.31, 9.55, { maq: true, st: 0.04 });
 texto('nunca a la', 'p', 300, 9.73, 11.85);
 texto('semana *siguiente*', 'h', 390, 10.4, 11.85);
 gigante('¿POR QUÉ?', 11.96, 12.72, 600, 190);
@@ -111,7 +111,7 @@ sub('porque en ese momento *todavía*', 12.77, 14.6, 13.9);
 texto('lo tienes *fresco*', 'h', 300, 14.61, 15.9);
 texto('y te cuesta', 'p', 300, 15.95, 17.15);
 sub('¿Y tu bar?', 17.3, 17.98, 17.6); sub('¿cuándo pide la reseña?', 18.01, 19.27, 18.9); gigante('NUNCA', 19.28, 19.9, 560, 260);
-texto('o cuando el cliente', 'p', 230, 20.17, 21.85);
+texto('o cuando el cliente', 'p', 230, 20.17, 21.85, { maq: true, st: 0.04 });
 texto('está en la *calle*', 'h', 310, 20.85, 21.85);
 texto('con esto la pides en el', 'p', 230, 22.01, 24.15);
 texto('momento *exacto*', 'h', 310, 23.05, 24.15);
@@ -140,7 +140,7 @@ MK.push(
  [14.6, 540, 1150, 0, 0, 0], [14.75, 540, 1150, 120, 120, 60], [15.1, 540, 1150, 900, 1000, 56], [16.95, 540, 1150, 900, 1000, 56], [17.15, 540, 1150, 0, 0, 0],
  [19.85, 540, 1150, 0, 0, 0], [19.95, 540, 1150, 120, 120, 60], [20.3, 540, 1130, 900, 1100, 56], [21.6, 540, 1130, 900, 1100, 56], [21.85, 540, 1150, 120, 120, 60], [21.95, 540, 1150, 0, 0, 0],
  [24.2, 540, 1150, 0, 0, 0], [24.35, 540, 1150, 120, 120, 60], [24.7, 540, 1150, 900, 1000, 56], [25.75, 540, 1150, 900, 1000, 56], [26.1, 540, 1150, 900, 1180, 56], [27.3, 540, 1150, 900, 1180, 56], [27.5, 540, 960, 1080, 1920, 0], [99, 540, 960, 1080, 1920, 0]);
-const IMG = [[1.3, 4.5, 'br/tel/', 102, 'jpg'], [9.72, 11.85, 'br/aero/', 90, 'jpg'], [14.75, 17.15, 'br/cafe/', 90, 'jpg'], [24.35, 25.9, 'br/cama/', 76, 'jpg'], [19.95, 21.95, 'br/calle/', 63, 'jpg'], [25.9, 27.5, 'br/movil/', 75, 'webp']];
+const IMG = [[1.3, 4.5, 'br/tel/', 102, 'jpg'], [9.72, 11.85, 'br/aero/', 90, 'jpg'], [14.75, 17.15, 'br/movbar/', 80, 'jpg'], [24.35, 25.9, 'br/barista/', 60, 'jpg'], [19.95, 21.95, 'br/calle/', 63, 'jpg'], [25.9, 27.5, 'br/movil/', 75, 'webp']];
 // deslizamiento lateral de la forma: entra por la derecha, sale por la izquierda
 for (let i = 0; i < MK.length; i++) { const c = MK[i]; if (c[3] > 0) continue; const pv = MK[i - 1], nx = MK[i + 1];
   if (pv && pv[3] > 0) c[1] = -320; else if (nx && nx[3] > 0) c[1] = 1400; }
@@ -153,7 +153,7 @@ window.render = async t => {
   const m = M(t), [x, y, w, h, r] = m.v, el = $('M'); el.style.display = w > 1 ? 'block' : 'none';
   Object.assign(el.style, { left: x - w / 2 + 'px', top: y - h / 2 + 'px', width: w + 'px', height: h + 'px', borderRadius: r + 'px' });
   const im = IMG.find(q => t >= q[0] && t < q[1]), mi = $('Mimg'); el.style.background = '#E9BC46';
-  if (im && w > 200) { mi.style.display = 'block'; const i = Math.min(im[3], 1 + Math.floor((t - im[0]) * 30)), src = im[2] + pad(i) + '.' + im[4]; mi.style.transform = `scale(${1.04 + .05 * p(t, im[0], im[1] - im[0])})`;
+  if (im && w > 200) { mi.style.display = 'block'; const i = Math.min(im[3], 1 + Math.floor((t - im[0]) * 30)), src = im[2] + pad(i) + '.' + im[4]; const mv = im[2] === 'br/movil/'; mi.style.transformOrigin = mv ? '47% 30%' : '50% 50%'; mi.style.transform = `scale(${mv ? 1.05 + .85 * ioX(p(t, im[0] + .45, .7)) : 1.04 + .05 * p(t, im[0], im[1] - im[0])})`;
     if (mi._s !== src) { mi.src = src; await mi.decode().catch(() => {}); mi._s = src; } el.style.background = im[2] === 'br/movil/' ? '#0b0f16' : '#000'; } else mi.style.display = 'none';
   const vis = (id, on, d = 'block') => { $(id).style.display = on ? d : 'none'; return on; };
   const pop = (id, a, dy = 60) => { const k = muelle(t, a, 2.4, .62), e = exp(p(t, a, .3)); $(id).style.opacity = e; $(id).style.transform = `translateY(${(1 - Math.min(k, 1.05)) * dy}px) scale(${.85 + .15 * Math.min(k, 1.05)})`; };
