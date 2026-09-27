@@ -60,7 +60,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--fondo);fon
 const $ = id => document.getElementById(id);
 const { p, ease, muelle } = E;
 const FX = /*FX*/[]/*FX*/; // se rellena abajo con fx(...)
-const TOTAL = 44.3; window.TOTAL = TOTAL; // duración de la voz en segundos
+const TOTAL = 48.65; window.TOTAL = TOTAL; // duración de la voz en segundos
 const pad = i => String(i).padStart(4, '0');
 const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -95,13 +95,19 @@ function M(t) { let a = MK[0], b = MK[0]; for (let i = 0; i < MK.length - 1; i++
 async function cara(t) { const i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), F = $('caraFondo');
   if (F._i !== i) { F.src = $('caraBlur').src = `${CARA_FONDO}/${pad(i)}.jpg`; $('caraPersona').src = `${CARA_PERSONA}/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
 // cara: fondo real (jpg) + persona recortada (webp con alfa) del MISMO fotograma, preescalados a 1080×1215 (lanczos + nitidez)
-const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 1139;
-const CARA = [[0, 7.35], [7.35, 17.8], [22.9, 24.72], [26.3, 36.55], [36.55, 44.3]]; const VERT = t => t >= 36.55; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
+const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 1307;
+const CARA = [[0, 7.35], [7.35, 12.95], [12.95, 23.4], [28.5, 30.3], [31.9, 42.15], [42.15, 48.65]]; const VERT = t => (t >= 7.35 && t < 12.95) || t >= 42.15; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
 const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
-/* ===== EGO · vídeo 00 · construcción ===== */
+/* ===== EGO · vídeo 00 · v3: persona recortada sobre una pared de pantallas con sus trabajos ===== */
 const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
 const P = 'packs/', Q = 'packs2/';
 const css = document.createElement('style'); css.textContent = `
+#caraBlur,#caraFondo{display:none!important}
+#caraPersona{top:705px;height:1215px;-webkit-mask-image:linear-gradient(transparent 0,#000 260px);mask-image:linear-gradient(transparent 0,#000 260px);filter:drop-shadow(0 0 40px rgba(47,107,255,.35))}
+.vert #caraPersona{top:0!important;height:1920px!important;transform:translateY(170px) scale(.94);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(transparent 0,#000 120px)!important;mask-image:linear-gradient(transparent 0,#000 120px)!important}
+#muro{position:absolute;inset:-80px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;filter:blur(10px) brightness(.42) saturate(.85)}
+#muro img{width:100%;height:100%;object-fit:cover;border-radius:22px}
+#tinte{position:absolute;inset:0;background:radial-gradient(ellipse 90% 55% at 50% 38%,rgba(47,107,255,.28),rgba(7,8,11,.2) 60%,rgba(7,8,11,.85));mix-blend-mode:normal}
 .tel{position:absolute;border-radius:54px;background:#0b0c10;padding:12px;box-shadow:0 0 0 2px #2a2f3a,0 40px 80px rgba(0,0,0,.6)}
 .tel img{width:100%;height:100%;object-fit:cover;border-radius:44px;display:block}
 .tile{position:absolute;top:600px;width:430px;height:764px;border-radius:40px;overflow:hidden;background:#111;box-shadow:0 30px 70px rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.12)}
@@ -114,117 +120,157 @@ const css = document.createElement('style'); css.textContent = `
 .ad .skip{position:absolute;right:28px;bottom:36px;padding:22px 34px;border-radius:16px;background:rgba(0,0,0,.6);border:1.5px solid rgba(255,255,255,.35);font:600 38px FT;color:#fff}
 .ad .tt{position:absolute;left:32px;bottom:44px;font:600 34px FT;color:rgba(255,255,255,.75)}
 #cursor{position:absolute;left:0;top:0;width:90px;height:90px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
-#caraBlur{display:none!important}
-#caraFondo{-webkit-mask-image:linear-gradient(transparent 0,#000 380px)!important;mask-image:linear-gradient(transparent 0,#000 380px)!important}
-.vert #caraFondo,.vert #caraPersona{top:0!important;height:1920px!important;-webkit-mask-image:none!important;mask-image:none!important}.vert #caraBlur{display:none}`;
+.pl{position:absolute;left:140px;top:560px;width:800px;height:120px}
+.pl .tr{position:absolute;left:0;right:140px;top:52px;height:14px;border-radius:7px;background:rgba(255,255,255,.18)}.pl .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:var(--oro)}
+.pl .pc{position:absolute;right:0;top:26px;font:800 60px FT;color:#fff;font-variant-numeric:tabular-nums}
+.pl .pb{position:absolute;left:0;top:-6px;font:600 30px FT;color:rgba(255,255,255,.7)}
+.visor{position:absolute;left:110px;top:760px;width:860px;height:980px}
+.visor i{position:absolute;width:110px;height:110px;border:0 solid #fff}
+.visor .rec{position:absolute;left:30px;top:-72px;font:700 36px FT;color:#fff;display:flex;align-items:center;gap:14px}.visor .rec b{width:26px;height:26px;border-radius:50%;background:#FF3B30}
+.beat{position:absolute;top:0;height:110px;padding:0 44px;border-radius:55px;display:flex;align-items:center;font:700 50px FT;color:#fff;background:rgba(12,14,20,.8);border:1.5px solid rgba(255,255,255,.2)}
+.beat.on{background:var(--oro);border-color:transparent}
+.tl{position:absolute;left:60px;top:250px;width:960px;height:380px;border-radius:30px;background:rgba(12,14,20,.85);border:1.5px solid rgba(255,255,255,.14);overflow:hidden}
+.tl .pista{position:absolute;left:30px;right:30px;height:70px}
+.tl .clip{position:absolute;top:0;height:70px;border-radius:12px}
+.tl .cab{position:absolute;top:20px;bottom:20px;width:5px;background:#fff;box-shadow:0 0 16px rgba(255,255,255,.8)}
+.tl .nm{position:absolute;left:34px;top:22px;font:600 28px FT;color:rgba(255,255,255,.6)}
+.dm{position:absolute;left:240px;top:170px;height:130px;padding:0 60px;border-radius:65px;display:flex;align-items:center;gap:22px;font:800 72px FT;color:#fff;background:var(--oro);box-shadow:0 30px 60px rgba(47,107,255,.35)}
+.flecha{position:absolute;left:470px;top:1700px;width:140px;height:140px}`;
 document.head.appendChild(css);
-CARA.length = 0; CARA.push([0, 7.35]);
-// tramos de cara dentro de la tarjeta
-const TARJ = [[11.8, 17.8], [22.8, 24.72], [26.3, 36.45], [36.55, 44.3]];
-// ---------- S1 gancho (cara) ----------
+// pared de pantallas (fondo de todas las tomas con cara)
+$('caraZ').insertAdjacentHTML('afterbegin', '<div id="muro"></div><div id="tinte"></div>');
+const MURO = ['c1', 'c2', 'c3', 'mosca', 'c1', 'c2', 'c3', 'mosca', 'c2'], NMURO = { c1: 66, c2: 66, c3: 66, mosca: 108 };
+MURO.forEach(() => $('muro').insertAdjacentHTML('beforeend', '<img>'));
+// ---------- S1 gancho ----------
 fx(0, 'flash', P + 'camera-shutter.mp3', -6);
 sub('Hice un vídeo sobre una *mosca*', .35, 2.6, 2.3); sub('en un *urinario*', 2.6, 4.2, 3.6);
 sub('¿y aun así?', 4.65, 5.8, 5.3); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
-gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
 fx(2.3, null, Q + 'pop-imagen.mp3', -8);
-// ---------- S2 cuando empecé (cara) ----------
-fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);   // la mano tapa la cámara
-texto('Juan · Córdoba', 'p', 300, 7.5, 8.85, { maq: true, st: .045 }); fx(7.5, null, Q + 'teclas.mp3', -11, { dur: 14 * .045 + .15 });
-texto('fundador de *PLEA5E*', 'h', 380, 7.85, 8.85, { size: 96 });
-texto('cuando *empecé*…', 'p', 1500, 7.6, 8.85, { center: true });
-texto('no tenía', 'p', 520, 8.85, 11.75, { center: true }); texto('para *anuncios*', 'p', 1330, 10.6, 11.75, { center: true });
-sub('así que aprendí a hacerlo *yo*', 11.95, 13.9, 13.5, 1560);
-fx(9.72, null, P + 'wrong.mp3', -8); fx(10.62, null, P + 'wrong.mp3', -8);
-fx(7.9, null, Q + 'pop-imagen.mp3', -8); fx(11.8, null, Q + 'swish-c.mp3', -7); fx(14.14, null, Q + 'pop-imagen.mp3', -9); fx(16.9, null, P + 'ding.mp3', -7);
-// ---------- S3 la gente no se para por un anuncio (solo voz, motion) ----------
-fx(17.8, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
-texto('y descubrí *algo*', 'h', 330, 17.95, 19.05);
-texto('la gente no se para', 'p', 360, 19.1, 21.2, { maq: true, st: .04 }); fx(19.1, null, Q + 'teclas.mp3', -11, { dur: 19 * .04 + .15 });
-texto('por un *anuncio*', 'h', 440, 19.9, 21.2);
-fx(20.9, null, P + 'mouse-click.mp3', -6); fx(21.05, 'glitch', Q + 'glitch.mp3', -7);
-texto('se para por una', 'p', 520, 21.3, 22.85, { center: true });
-texto('*HISTORIA*', 'gig', 650, 22.2, 22.85, { size: 196 }); fx(22.2, 'riser', null, 0, { d: .8 }); fx(22.2, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 26 });
-// ---------- S4 esto es lo que hago (cara + carrusel) ----------
-fx(22.9, 'flash', Q + 'obturador-flash.mp3', -5);
-sub('esto es lo que *hago*', 23.2, 24.7, 24.4);
-fx(24.72, 'whip', Q + 'whoosh-b.mp3', -5); fx(25.5, null, Q + 'swish-c.mp3', -9); fx(26.3, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
-texto('lo que *hago*', 'h', 330, 24.8, 26.25, { capa: 'ui2' });
-sub('ahora lo hago para *marcas*', 26.4, 27.95, 27.5); texto('*MARCAS*', 'gig', 330, 27.45, 29.2, { capa: 'ui', size: 250 }); fx(27.45, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
-sub('pongo la *cara*', 28.0, 29.0, 28.7);
-sub('cuento tu *producto*', 29.85, 31.2, 30.8); sub('como una *historia*', 31.5, 32.9, 32.6);
-sub('es lo que ve la gente', 33.45, 34.85, 34.6); sub('y lo edito *así*', 35.0, 36.4, 35.9);
-fx(28.35, null, Q + 'pop-imagen.mp3', -10); fx(30.4, null, Q + 'pop-imagen.mp3', -10); fx(33.7, null, Q + 'pop-imagen.mp3', -10);
-fx(35.85, 'zoomdig', Q + 'zoom-digital.mp3', -8);
-// ---------- S5 cierre (vertical) ----------
-fx(36.55, 'flash', Q + 'obturador-flash.mp3', -5);  // puñetazo a cámara
-sub('si tu producto merece', 36.7, 38.0, 37.8, 1560); sub('que lo vean hasta el *final*', 38.0, 39.5, 39.2, 1560);
-texto('*escríbeme*', 'h', 120, 39.7, 44.3, { center: true, size: 120 }); fx(39.72, null, Q + 'pop-imagen.mp3', -9); texto('enlace en mi perfil ↓', 'p', 1760, 40.95, 44.3, { center: true });
-const ego = texto('*EGO*', 'gig', 1320, 42.1, 44.3, { st: .05 }); ego.style.fontSize = '400px'; ego.style.textShadow = '0 20px 60px rgba(0,0,0,.6)'; fx(42.05, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(42.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 30 });
+gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
+// ---------- S2 me llamo Juan (vertical) ----------
+fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);
+texto('Juan', 'h', 170, 7.45, 12.9, { capa: 'sobre', maq: true, st: .08, size: 150 }); fx(7.45, null, Q + 'teclas.mp3', -11, { dur: .5 });
+fx(9.0, null, Q + 'pop-imagen.mp3', -9);
+sub('me llamo *Juan*, soy de Córdoba', 7.45, 10.0, 9.8, 1600); sub('y tengo mi propio negocio', 10.4, 12.0, 11.8, 1600);
+gigante('PLEA5E', 12.1, 12.95, 300, 230); fx(12.08, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(12.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 28 });
+// ---------- S3 cuando empecé ----------
+fx(12.95, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
+sub('cuando empecé', 13.15, 14.3, 14.0);
+sub('no tenía *agencia*', 14.4, 15.8, 15.3); sub('ni *presupuesto* para anuncios', 15.8, 17.4, 17.1);
+fx(15.32, null, P + 'wrong.mp3', -8); fx(16.22, null, P + 'wrong.mp3', -8);
+sub('así que aprendí a hacerlo', 17.5, 18.9, 18.7); gigante('YO', 18.95, 19.7, 430, 330); fx(18.95, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 16 });
+fx(19.74, null, Q + 'pop-imagen.mp3', -9); fx(22.5, null, P + 'ding.mp3', -7);
+// ---------- S4 la gente no se para por un anuncio (solo voz) ----------
+fx(23.4, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
+texto('y descubrí *algo*', 'h', 330, 23.55, 24.65);
+texto('la gente no se para', 'p', 360, 24.7, 26.8, { maq: true, st: .04 }); fx(24.7, null, Q + 'teclas.mp3', -11, { dur: 19 * .04 + .15 });
+texto('por un *anuncio*', 'h', 440, 25.5, 26.8);
+fx(26.5, null, P + 'mouse-click.mp3', -6); fx(26.65, 'glitch', Q + 'glitch.mp3', -7);
+texto('se para por una', 'p', 520, 26.9, 28.45, { center: true });
+texto('*HISTORIA*', 'gig', 650, 27.8, 28.45, { size: 196 }); fx(27.8, 'riser', null, 0, { d: .8 }); fx(27.8, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 26 });
+// ---------- S5 esto es lo que hago ----------
+fx(28.5, 'flash', Q + 'obturador-flash.mp3', -5);
+sub('esto es lo que *hago*', 28.8, 30.3, 30.0);
+fx(30.32, 'whip', Q + 'whoosh-b.mp3', -5); fx(31.1, null, Q + 'swish-c.mp3', -9); fx(31.9, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
+texto('lo que *hago*', 'h', 330, 30.4, 31.85);
+sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
+sub('pongo la *cara*', 33.6, 34.6, 34.3); fx(33.72, null, P + 'camera-click.mp3', -6);
+sub('cuento tu *producto*', 35.45, 36.8, 36.4); sub('como una *historia*', 37.1, 38.5, 38.2); fx(35.5, null, Q + 'swish-c.mp3', -9);
+sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.1, null, Q + 'pop-imagen.mp3', -10);
+sub('y lo edito *así*', 40.6, 42.0, 41.5); fx(41.45, 'zoomdig', Q + 'zoom-digital.mp3', -8);
+// ---------- S6 cierre (vertical) ----------
+fx(42.15, 'flash', Q + 'obturador-flash.mp3', -5);
+sub('si tu producto merece', 42.3, 43.6, 43.4, 1600); sub('que lo vean hasta el *final*', 43.6, 45.1, 44.8, 1600);
+fx(45.32, null, Q + 'pop-imagen.mp3', -8); sub('en mi perfil', 46.55, 47.4, 47.3, 1600);
+gigante('*EGO*', 47.45, 48.65, 110, 380); fx(47.43, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.1 }); fx(47.45, 'impacto', P + 'woah-drop.mp3', -2, { a: 28 });
 // ---------- elementos ----------
 $('sobre').insertAdjacentHTML('beforeend', `
- <div id="tel" class="tel" style="left:640px;top:120px;width:360px;height:640px"><img id="telImg"></div>
- 
+ <div id="tel" class="tel" style="left:640px;top:110px;width:360px;height:640px"><img id="telImg"></div>
+ <div class="pl" id="pl"><div class="pb">reproducido</div><div class="tr"><i id="plF"></i></div><div class="pc" id="plN">0%</div></div>
+ <div id="pin" class="chip" style="left:90px;top:360px;height:110px;font-size:52px;font-weight:700"><svg width="40" height="52" viewBox="0 0 24 32"><path d="M12 0C5.4 0 0 5.2 0 11.7 0 20.5 12 32 12 32s12-11.5 12-20.3C24 5.2 18.6 0 12 0zm0 16a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" fill="#2F6BFF"/></svg>Córdoba</div>
+ <img id="pl3" class="abs" style="left:560px;top:260px;width:440px;height:537px;display:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6))">
+ <div id="cAg" class="chip" style="left:90px;top:300px;height:120px;padding:0 56px;font-size:64px;font-weight:700">Agencia<div id="tAg" class="tache" style="left:40px;right:40px;top:58px;height:8px"></div></div>
+ <div id="cPr" class="chip" style="left:420px;top:450px;height:120px;padding:0 56px;font-size:64px;font-weight:700">Presupuesto<div id="tPr" class="tache" style="left:40px;right:40px;top:58px;height:8px"></div></div>
  <div id="skills" class="abs" style="left:90px;top:250px;width:900px;height:260px"></div>
- <div id="nivel" class="abs" style="left:0;top:0;width:1080px;height:700px"></div>`);
+ <div id="visor" class="visor"><div class="rec"><b></b>REC <span id="recT">00:00</span></div><i style="left:0;top:0;border-top-width:8px;border-left-width:8px"></i><i style="right:0;top:0;border-top-width:8px;border-right-width:8px"></i><i style="left:0;bottom:0;border-bottom-width:8px;border-left-width:8px"></i><i style="right:0;bottom:0;border-bottom-width:8px;border-right-width:8px"></i></div>
+ <div id="beats" class="abs" style="left:0;top:300px;width:1080px;height:300px"><svg id="bLine" width="1080" height="300" style="position:absolute;left:0;top:0;overflow:visible"><path id="bl" d="M200 55 L540 180 L880 55" fill="none" stroke="#2F6BFF" stroke-width="6" stroke-linecap="round" stroke-dasharray="6 16"/></svg></div>
+ <div id="nivel" class="abs" style="left:0;top:0;width:1080px;height:700px"></div>
+ <div id="tl" class="tl"><div class="nm">Timeline · EGO</div></div>
+ <div id="dm" class="dm"><svg width="70" height="70" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z" fill="#fff"/></svg>Escríbeme</div>
+ <svg id="flecha" class="flecha" viewBox="0 0 24 24"><path d="M12 3v15m0 0l-6-6m6 6l6-6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+[['gancho', 60], ['historia', 370], ['producto', 700]].forEach(([w, x], i) => $('beats').insertAdjacentHTML('beforeend', `<div class="beat" id="bt${i}" style="left:${x}px;top:${i === 1 ? 125 : 0}px">${w}</div>`));
 ['guion', 'cámara', 'edición', 'sonido'].forEach((w, i) => { const d = document.createElement('div'); d.className = 'chip'; d.textContent = w;
   Object.assign(d.style, { left: (i % 2) * 460 + 'px', top: Math.floor(i / 2) * 134 + 'px', width: '430px', justifyContent: 'center', fontSize: '50px' }); $('skills').appendChild(d); });
-[['UGC', 90, 150, 28.35], ['MARKETING', 250, 300, 30.4], ['STYLE', 520, 450, 33.7]].forEach(([w, x, y, a]) => { const d = document.createElement('div'); d.className = 't gig';
+[['UGC', 90, 160, 39.1], ['MARKETING', 230, 310, 39.45], ['STYLE', 480, 460, 39.8]].forEach(([w, x, y, a]) => { const d = document.createElement('div'); d.className = 't gig';
   Object.assign(d.style, { left: x + 'px', right: 'auto', top: y + 'px', fontSize: '130px', textAlign: 'left' }); d.textContent = w; d.dataset.a = a; $('nivel').appendChild(d); });
+[['#2F6BFF', [[0, 230], [250, 180], [450, 300]]], ['#8FB0FF', [[40, 160], [240, 260], [520, 200]]], ['#F5F7FA', [[0, 120], [150, 90], [300, 380]]]].forEach(([c, cl], j) => {
+  const pi = document.createElement('div'); pi.className = 'pista'; pi.style.top = (90 + j * 90) + 'px';
+  cl.forEach(([x, w]) => pi.insertAdjacentHTML('beforeend', `<div class="clip" style="left:${x}px;width:${w}px;background:${c};opacity:${.55 + j * .1}"></div>`)); $('tl').appendChild(pi); });
+$('tl').insertAdjacentHTML('beforeend', '<div class="cab" id="cab"></div>');
 $('ui2').insertAdjacentHTML('beforeend', `
  <div id="ad" class="ad"><div class="scr">ANUNCIO</div><div class="tag">Anuncio · 0:05</div><div class="bar"><i id="adBar"></i></div><div class="tt">Patrocinado</div><div class="skip" id="adSkip">Saltar anuncio ›</div></div>
  <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16 21l-3 1.3-3.3-6.6L4 20z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
- <div id="cAg" class="chip" style="left:250px;top:720px;height:150px;padding:0 70px;font-size:84px;font-weight:700">Agencia<div id="tAg" class="tache" style="left:50px;right:50px;top:72px;height:9px"></div></div>
- <div id="cPr" class="chip" style="left:170px;top:930px;height:150px;padding:0 70px;font-size:84px;font-weight:700">Presupuesto<div id="tPr" class="tache" style="left:50px;right:50px;top:72px;height:9px"></div></div>
- <img id="pl3" class="abs" style="left:190px;top:560px;width:700px;height:855px;display:none;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))">
  <div id="carr" class="abs" style="left:0;top:0;width:1080px;height:1920px"></div>`);
 [['c1', 'placa'], ['c2', 'app'], ['c3', 'UGC']].forEach(([d, e], i) => $('carr').insertAdjacentHTML('beforeend', `<div class="tile" id="tl${i}"><img id="ti${i}"><div class="et">${e}</div></div>`));
-async function frame(img, dir, t, t0, n) { const i = Math.max(1, Math.min(n, 1 + Math.floor((t - t0) * 30))), src = `br/${dir}/${pad(i)}.jpg`; if (img._s !== src) { img.src = src; await img.decode().catch(() => {}); img._s = src; } }
+async function frame(img, dir, t, t0, n, loop) { let i = 1 + Math.floor((t - t0) * 30); i = loop ? ((i - 1) % n + n) % n + 1 : Math.max(1, Math.min(n, i));
+  const src = `br/${dir}/${pad(i)}.jpg`; if (img._s !== src) { img.src = src; await img.decode().catch(() => {}); img._s = src; } }
 const vis = (id, on, d = 'block') => { $(id).style.display = on ? d : 'none'; return on; };
-window.render = async t => {
+const entra = (id, a, dx = 500) => { const k = muelle(t_, a, 2.4, .62); $(id).style.transform = `translateX(${(1 - Math.min(k, 1.04)) * dx}px)`; $(id).style.opacity = exp(p(t_, a, .25)); };
+let t_ = 0;
+window.render = async t => { t_ = t;
   [['g1', 200, 1300, .3], ['g2', 820, 520, .23], ['g3', 540, 1700, .17]].forEach(([id, x, y, v], j) => { const g = $(id); g.style.left = (x - 450 + Math.sin(t * v + j) * 200) + 'px'; g.style.top = (y - 450 + Math.cos(t * v * 1.3 + j * 2) * 160) + 'px'; });
   $('mundo').style.transform = `scale(${1 + .025 * Math.sin(t * .35)}) rotate(${Math.sin(t * .23) * .6}deg)`;
-  pintaTextos(t); pintaSubs(t); fxRender(t);
-  // tarjeta (forma M) con la cara: punto → píldora → tarjeta, y se cierra al acabar
-  const tj = TARJ.find(([a, b]) => t >= a - .12 && t < b + .12), el = $('M'), mi = $('Mimg');
-  if (tj) { const [a, b] = tj, V = a >= 36.5, W = V ? 780 : 840, H = V ? 1380 : 1120, Y = V ? 980 : 1080;
-    const ki = ioX(p(t, a - .1, .45)), ko = ioX(p(t, b - .28, .3)), k = Math.max(0, ki - ko);
-    const kp = Math.min(1, ki * 3), w = lerp(0, 120, kp) + (W - 120) * Math.max(0, (ki - .33) / .67) * (1 - ko), h = lerp(0, 120, kp) + (H - 120) * Math.max(0, (ki - .33) / .67) * (1 - ko);
-    const x = 540 + (1 - ki) * 500 - ko * 600, r = Math.min(w, h) < 200 ? Math.min(w, h) / 2 : 60;
-    el.style.display = w > 2 ? 'block' : 'none'; Object.assign(el.style, { left: x - w / 2 + 'px', top: Y - h / 2 + 'px', width: w + 'px', height: h + 'px', borderRadius: r + 'px', background: 'var(--oro)', boxShadow: '0 40px 90px rgba(0,0,0,.55)' });
-    const fi = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), src = `${CARA_FONDO}/${pad(fi)}.jpg`;
-    if (w > 300) { mi.style.display = 'block'; mi.style.objectPosition = V ? '50% 30%' : '50% 20%'; mi.style.transform = `scale(${1.02 + .04 * p(t, a, b - a)})`; if (mi._s !== src) { mi.src = src; await mi.decode().catch(() => {}); mi._s = src; } } else mi.style.display = 'none';
-  } else el.style.display = 'none';
-  // placa 3D en la presentación
-  if (vis('pl3', t >= 7.4 && t < 8.85)) { const i = Math.min(80, 1 + Math.floor((t - 7.4) * 40)), src = `br/placa3d/${pad(i)}.png`, pl = $('pl3'); if (pl._s !== src) { pl.src = src; await pl.decode().catch(() => {}); pl._s = src; }
-    const k = muelle(t, 7.45, 2, .65); pl.style.transform = `translate(${(1 - Math.min(k, 1.03)) * 600 - ioX(p(t, 8.6, .25)) * 900}px,120px) scale(1.05)`; }
-  // móvil con el vídeo de la mosca (gancho)
+  pintaTextos(t); pintaSubs(t); fxRender(t); $('M').style.display = 'none';
+  // pared de pantallas: deriva lenta, clips en bucle a 15 fps
+  const enCara = CARA.some(([a, b]) => t >= a && t < b);
+  if (enCara) { $('muro').style.transform = `translate(${Math.sin(t * .2) * 40}px,${-t * 6 % 120}px) scale(1.12)`; const tq = Math.floor(t * 15) / 15;
+    await Promise.all([...$('muro').children].map((im, i) => frame(im, MURO[i], tq + i * .37, 0, NMURO[MURO[i]], true))); }
+  // gancho: móvil con la mosca + barra reproducida al 100 %
   if (vis('tel', t >= 2.25 && t < 4.75)) { const k = muelle(t, 2.3, 2.2, .62), s = ioX(p(t, 4.45, .3));
     $('tel').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 600 - s * 900}px) rotate(${6 - 2 * Math.min(k, 1)}deg)`; await frame($('telImg'), 'mosca', t, 2.3, 108); }
+  if (vis('pl', t >= 5.7 && t < 6.5)) { const k = ioX(p(t, 5.75, .7)); $('plF').style.width = (k * 100) + '%'; $('plN').textContent = Math.round(k * 100) + '%'; $('pl').style.opacity = exp(p(t, 5.7, .15)) * (1 - p(t, 6.35, .15)); $('pl').style.transform = `translateX(${(1 - exp(p(t, 5.7, .3))) * 200}px)`; }
+  // me llamo Juan: Córdoba + placa 3D
+  if (vis('pin', t >= 9.0 && t < 12.9, 'flex')) { entra('pin', 9.0); $('pin').style.opacity *= 1 - p(t, 12.7, .2); }
+  if (vis('pl3', t >= 10.4 && t < 12.95)) { const i = 1 + Math.floor((t - 10.4) * 30) % 80, src = `br/placa3d/${pad(i)}.png`, pl = $('pl3'); if (pl._s !== src) { pl.src = src; await pl.decode().catch(() => {}); pl._s = src; }
+    const k = muelle(t, 10.45, 2, .65); pl.style.transform = `translate(${(1 - Math.min(k, 1.03)) * 600}px,${Math.sin(t * 2) * 10}px) scale(${1 + .15 * p(t, 12.1, .3)})`; pl.style.opacity = 1 - p(t, 12.75, .2); }
   // agencia / presupuesto tachados
-  const ch = t >= 8.9 && t < 11.8; vis('cAg', ch, 'flex'); vis('cPr', ch && t >= 9.95, 'flex');
-  if (ch) { [['cAg', 8.95], ['cPr', 9.95]].forEach(([id, a]) => { const k = muelle(t, a, 2.4, .6); $(id).style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 500}px)`; $(id).style.opacity = (1 - p(t, 11.5, .25)); });
-    $('tAg').style.transform = `scaleX(${exp(p(t, 9.72, .3))})`; $('tPr').style.transform = `scaleX(${exp(p(t, 10.62, .3))})`; }
+  const ch = t >= 14.4 && t < 17.45; vis('cAg', ch, 'flex'); vis('cPr', ch && t >= 15.35, 'flex');
+  if (ch) { [['cAg', 14.45], ['cPr', 15.4]].forEach(([id, a]) => { entra(id, a); $(id).style.opacity *= 1 - p(t, 17.2, .25); });
+    $('tAg').style.transform = `scaleX(${exp(p(t, 15.32, .3))})`; $('tPr').style.transform = `scaleX(${exp(p(t, 16.22, .3))})`; }
   // guion, cámara, edición, sonido
-  if (vis('skills', t >= 13.95 && t < 17.8)) [...$('skills').children].forEach((c, i) => { const a = [14.14, 15.23, 15.95, 16.9][i], k = muelle(t, a - .1, 2.6, .6);
-    c.style.opacity = exp(p(t, a - .1, .2)) * (1 - p(t, 17.5, .25)); c.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 300}px) scale(${t >= a ? 1 + .1 * (1 - muelle(t, a, 3, .5)) : 1})`; c.classList.toggle('on', t >= a); });
+  if (vis('skills', t >= 19.55 && t < 23.4)) [...$('skills').children].forEach((c, i) => { const a = [19.74, 20.83, 21.55, 22.5][i], k = muelle(t, a - .1, 2.6, .6);
+    c.style.opacity = exp(p(t, a - .1, .2)) * (1 - p(t, 23.1, .25)); c.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 300}px) scale(${t >= a ? 1 + .1 * (1 - muelle(t, a, 3, .5)) : 1})`; c.classList.toggle('on', t >= a); });
   // anuncio que se salta
-  if (vis('ad', t >= 19.15 && t < 21.3)) { const k = muelle(t, 19.2, 2.2, .7); $('ad').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 800}px) scale(${t > 20.9 ? 1 - .04 * (1 - muelle(t, 20.9, 4, .5)) : 1})`;
-    $('adBar').style.width = (p(t, 19.2, 1.9) * 100) + '%'; $('adSkip').style.background = t >= 20.9 ? '#fff' : 'rgba(0,0,0,.6)'; $('adSkip').style.color = t >= 20.9 ? '#111' : '#fff'; $('ad').style.opacity = 1 - p(t, 21.12, .15); }
-  if (vis('cursor', t >= 19.6 && t < 21.2)) { const k = ioX(p(t, 19.65, 1.1)); $('cursor').style.transform = `translate(${lerp(260, 830, k)}px,${lerp(1600, 1180, k)}px) scale(${t >= 20.9 && t < 21 ? .85 : 1})`; }
-  // carrusel de trabajos (de lado a lado)
-  if (vis('carr', t >= 24.62 && t < 26.4)) { const dr = ioX(p(t, 24.62, 1.75)); for (let i = 0; i < 3; i++) { const x = 540 - 215 + (i - 1) * 470 + lerp(620, -620, dr) * .55 + (i - 1) * 0;
-      $('tl' + i).style.transform = `translateX(${x}px) rotate(${(i - 1) * 3}deg) scale(${1 - Math.abs(x + 215 - 540) / 3000})`; await frame($('ti' + i), 'c' + (i + 1), t, 24.62, 66); } }
-  // UGC · MARKETING · STYLE por niveles
-  if (vis('nivel', t >= 28.3 && t < 36.4)) [...$('nivel').children].forEach(d => { const a = +d.dataset.a, k = muelle(t, a, 2.3, .62), e = exp(p(t, a, .3));
-    d.style.opacity = t >= a ? e * (1 - p(t, 36.1, .25)) : 0; d.style.color = d.textContent === 'STYLE' ? 'var(--oro)' : '#fff'; d.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 400}px)`; });
-  // cara (horizontal arriba con fondo desenfocado, o vertical a pantalla completa)
+  if (vis('ad', t >= 24.75 && t < 26.9)) { const k = muelle(t, 24.8, 2.2, .7); $('ad').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 800}px) scale(${t > 26.5 ? 1 - .04 * (1 - muelle(t, 26.5, 4, .5)) : 1})`;
+    $('adBar').style.width = (p(t, 24.8, 1.9) * 100) + '%'; $('adSkip').style.background = t >= 26.5 ? '#fff' : 'rgba(0,0,0,.6)'; $('adSkip').style.color = t >= 26.5 ? '#111' : '#fff'; $('ad').style.opacity = 1 - p(t, 26.72, .15); }
+  if (vis('cursor', t >= 25.2 && t < 26.8)) { const k = ioX(p(t, 25.25, 1.1)); $('cursor').style.transform = `translate(${lerp(260, 830, k)}px,${lerp(1600, 1180, k)}px) scale(${t >= 26.5 && t < 26.6 ? .85 : 1})`; }
+  // carrusel de trabajos
+  if (vis('carr', t >= 30.22 && t < 32.0)) { const dr = ioX(p(t, 30.22, 1.75)); for (let i = 0; i < 3; i++) { const x = 540 - 215 + (i - 1) * 470 + lerp(620, -620, dr) * .55;
+      $('tl' + i).style.transform = `translateX(${x}px) rotate(${(i - 1) * 3}deg) scale(${1 - Math.abs(x + 215 - 540) / 3000})`; await frame($('ti' + i), 'c' + (i + 1), t, 30.22, 66); } }
+  // pongo la cara: visor de cámara con REC
+  if (vis('visor', t >= 33.6 && t < 35.1)) { const k = muelle(t, 33.65, 2.6, .55); $('visor').style.transform = `scale(${1.25 - .25 * Math.min(k, 1.04)})`; $('visor').style.opacity = exp(p(t, 33.6, .15)) * (1 - p(t, 34.9, .2));
+    $('recT').textContent = '00:0' + Math.floor((t - 33.6) * 2); $('visor').querySelector('.rec b').style.opacity = Math.floor(t * 3) % 2 ? 1 : .2; }
+  // cuento tu producto como una historia: gancho → historia → producto
+  if (vis('beats', t >= 35.4 && t < 38.7)) { [0, 1, 2].forEach(i => { const a = [35.5, 36.4, 37.3][i]; entra('bt' + i, a, 300); $('bt' + i).classList.toggle('on', t >= a + .25); $('bt' + i).style.opacity *= 1 - p(t, 38.45, .25); });
+    const L = 800, dl = p(t, 35.6, 2.0) * L; $('bl').style.strokeDasharray = `${dl} ${L}`; $('bLine').style.opacity = 1 - p(t, 38.45, .25); }
+  // es lo que ve la gente: UGC · MARKETING · STYLE
+  if (vis('nivel', t >= 39.0 && t < 40.55)) [...$('nivel').children].forEach(d => { const a = +d.dataset.a, k = muelle(t, a, 2.3, .62), e = exp(p(t, a, .3));
+    d.style.opacity = t >= a ? e * (1 - p(t, 40.3, .25)) : 0; d.style.color = d.textContent === 'STYLE' ? 'var(--oro)' : '#fff'; d.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 400}px)`; });
+  // y lo edito así: timeline de edición con cabezal
+  if (vis('tl', t >= 40.55 && t < 42.15)) { entra('tl', 40.6, 700); $('tl').style.opacity *= 1 - p(t, 41.95, .2); $('cab').style.left = (30 + ioX(p(t, 40.8, 1.1)) * 880) + 'px'; }
+  // cierre: escríbeme + flecha al perfil
+  if (vis('dm', t >= 45.3 && t < 48.65, 'flex')) { const k = muelle(t, 45.32, 2.4, .55); $('dm').style.transform = `scale(${Math.min(k, 1.08)}) rotate(${(1 - Math.min(k, 1)) * -8}deg)`; $('dm').style.opacity = 1 - p(t, 47.3, .25); }
+  if (vis('flecha', t >= 46.5 && t < 48.65)) $('flecha').style.transform = `translateY(${Math.abs(Math.sin((t - 46.5) * 5)) * 40}px)`;
+  // persona recortada sobre la pared (horizontal abajo o vertical)
   document.body.classList.toggle('vert', VERT(t));
   const c = CARA.find(([a, b]) => t >= a && t < b), cf = $('cara');
-  if (c) { cf.style.display = 'block'; const [a, b] = c, cut = [7.35, 36.55].includes(a) || [7.35, 17.8, 36.55].includes(b);
-    const ei = a > 0 && ![7.35, 36.55].includes(a) ? ioX(p(t, a, .3)) : 1, eo = b < TOTAL && ![7.35, 36.55].includes(b) ? ioX(p(t, b - .25, .25)) : 0, ins = Math.max(1 - ei, eo);
+  if (c) { cf.style.display = 'block'; const [a, b] = c, duro = [7.35, 12.95, 42.15];
+    const ei = a > 0 && !duro.includes(a) ? ioX(p(t, a, .3)) : 1, eo = b < TOTAL && !duro.includes(b) && b !== 23.4 ? ioX(p(t, b - .25, .25)) : 0, ins = Math.max(1 - ei, eo);
     cf.style.clipPath = ins > 0 ? `inset(${ins * 42}% ${ins * 30}% ${ins * 42}% ${ins * 30}% round ${60 + ins * 200}px)` : 'none';
-    let zs = 1 + .04 * p(t, a, b - a); [[6.55, 1.08], [27.45, 1.07], [42.1, 1.06]].forEach(([g, e]) => { if (t >= g && g >= a && g < b) zs *= e; });
-    $('caraZ').style.transform = `scale(${zs})`; await cara(t); } else cf.style.display = 'none';
+    let zs = 1 + .04 * p(t, a, b - a); [[6.55, 1.08], [12.1, 1.06], [18.95, 1.07], [33.05, 1.07], [47.45, 1.05]].forEach(([g, e]) => { if (t >= g && g >= a && g < b) zs *= e; });
+    $('caraZ').style.transform = `scale(${zs})`; const F = $('caraPersona'), i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1));
+    if (F._i !== i) { F.src = `${CARA_PERSONA}/${pad(i)}.webp`; await F.decode().catch(() => {}); F._i = i; }
+  } else cf.style.display = 'none';
 };
 window.render(0); window.LISTO = true;
 </script></body></html>
