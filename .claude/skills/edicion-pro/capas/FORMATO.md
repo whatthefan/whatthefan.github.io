@@ -117,3 +117,6 @@ estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vin
 - Transiciones: hacia o desde la cara se usa `flash`; entre escenas de metraje, `whip` (alternando la dirección); para un corte raro, `glitch`.
 - Revelaciones: `riser` + `impacto` con `woah-drop` o `riser-impacto`.
 - Los sonidos no se cortan. Solo `teclas` y `contador` llevan `dur`, y se cortan con fundido.
+- (feedback) **Nada de booms graves** (`braam`, `synth-hit`, `cinematic-impact`, `riser-impacto`): a Juan le suenan raros. Para las palabras gigantes usar `punch-stop-riser` con un `riser` corto (0,8 s) + `impacto`. Para PLACA al final, `woah-drop` (máximo 3 por vídeo).
+- El vídeo **empieza con sonido**: `flash` + `camera-shutter` en t=0.
+- `right` y `wrong` estaban intercambiados; ya están corregidos (`right` es la campanita, `wrong` el zumbido).

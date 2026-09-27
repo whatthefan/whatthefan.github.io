@@ -5,6 +5,6 @@ normalizados a −16 LUFS. Para vídeos del perfil; no son CC0 (no usar en anunc
 - Golpe/revelación: `woah-drop` (el favorito de Juan: producto, palabra clave, CTA; máx. 3 por vídeo), `cinematic-impact`
 - Antes del golpe: `punch-stop-riser`, `metallic-riser`
 - Aparece algo / toque: `mouse-click`, `camera-click`; foto o producto: `camera-shutter`, `camera-screenshot`
-- Acierto / selección: `right`, `ding` · Tachar / error: `wrong` · Corte raro: `glitch`
+- Acierto / selección: `right` (campanita aguda), `ding` · Tachar / error: `wrong` (zumbido grave) · Corte raro: `glitch`
 - El móvil toca la placa (NFC): `iphone-charging` · Escribir: `mac-typing`
 - Otros: `gear`, `gun-shot`, `gunshot2`, `unknown-sound`, `off-discord`
