@@ -110,3 +110,10 @@ estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vin
 - **Movimiento de lado a lado (referencia Marz).** El texto entra desde la derecha y sale hacia la izquierda. La forma M entra por la derecha y sale por la izquierda (se hace automáticamente tras los keyframes MK). Las tarjetas se deslizan en horizontal.
 - **Las escenas explicativas se animan, no se tapan con b-roll.** Ejemplo del urinario: la mosca aparece, entra un hombre andando, el chorro apunta a la mosca, el hombre se va y el urinario queda limpio con brillos y el sonido `right`.
 - Listas de sonidos de referencia: `sfx10-mosca.json`, `sfx10-uber.json`. Páginas: `mosca8.html`, `uber8.html`.
+
+## v9: cada sonido con su transición (fx.js)
+- La lista `FX` de la página es la única fuente de verdad: cada entrada tiene `t`, `v` (efecto visual), `s` y `db` (sonido). `mezcla4.py` saca el audio de ahí, así que el sonido y el efecto siempre coinciden.
+- Efectos disponibles: `whip`, `flash`, `glitch`, `riser`, `impacto`, `zoomdig`, o `null` si solo va sonido. Qué sonido usar con cada uno está en `sonidos/packs2/LEEME.md`.
+- Transiciones: hacia o desde la cara se usa `flash`; entre escenas de metraje, `whip` (alternando la dirección); para un corte raro, `glitch`.
+- Revelaciones: `riser` + `impacto` con `woah-drop` o `riser-impacto`.
+- Los sonidos no se cortan. Solo `teclas` y `contador` llevan `dur`, y se cortan con fundido.
