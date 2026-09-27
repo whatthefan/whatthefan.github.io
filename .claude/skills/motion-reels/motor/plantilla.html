@@ -59,7 +59,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--fondo);fon
 const $ = id => document.getElementById(id);
 const { p, ease, muelle } = E;
 const FX = /*FX*/[]/*FX*/; // se rellena abajo con fx(...)
-const TOTAL = 12; // duración de la voz en segundos window.TOTAL = TOTAL;
+const TOTAL = 12; window.TOTAL = TOTAL; // duración de la voz en segundos
 const pad = i => String(i).padStart(4, '0');
 const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
 const lerp = (a, b, k) => a + (b - a) * k;

@@ -42,7 +42,7 @@ Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. 
 - `gigante(txt, t0, t1, y, size)`: palabra enorme **detrás** de la persona (capa `detras`).
 - `MK.push([t, x, y, w, h, radio], ...)`: la forma M (punto → píldora → marco) con easeInOutExpo. `IMG = [[t0, t1, 'br/dir/', nFotogramas, 'jpg']]` muestra metraje dentro. El bucle final hace que entre por la derecha y salga por la izquierda.
 - `CARA = [[t0, t1], ...]`: la cara se abre desde una píldora y se cierra en píldora.
-- `fx(t, efecto, sonido, db, {d, a, dir, dur})`: **la única lista de verdad**. `mezcla4.py` lee de ella el audio, así que el sonido y la imagen nunca se desincronizan. `mezcla2` alinea el **pico** de cada sonido con `t`.
+- `fx(t, efecto, sonido, db, {d, a, dir, dur})`: **la única lista de verdad** (si se rellena al cargar, `mezcla4` la saca con `scripts/fx-de-pagina.js`). `mezcla4.py` lee de ella el audio, así que el sonido y la imagen nunca se desincronizan. `mezcla2` alinea el **pico** de cada sonido con `t`.
 - Capas, de fondo a frente: `fondo` (3 resplandores que respiran) → `ui` → `M` → `p3d` → `ui2` (chips y tarjetas encima del metraje) → `cara` (`detras` + persona) → `subs` → `grano` (.025).
 
 ## Efectos FX (motor/fx.js) y su sonido
