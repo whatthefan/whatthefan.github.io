@@ -17,4 +17,4 @@ for i,x in enumerate(sfx):
     fl.append(f'[{n}:a]{tr}aresample=48000,aformat=channel_layouts=stereo,volume={g:.3f},adelay={int(st*1000)}|{int(st*1000)}[s{i}]'); lab.append(f'[s{i}]')
 fl.append('[1:a]aresample=48000,aformat=channel_layouts=stereo[vz]')
 fl.append('[vz]'+''.join(lab)+f'amix=inputs={len(lab)+1}:normalize=0:duration=first,alimiter=limit=0.93[a]')
-subprocess.run([F,'-loglevel','error','-y',*ins,'-filter_complex',';'.join(fl),'-map','0:v','-map','[a]','-c:v','libx264','-crf','19','-preset','medium','-pix_fmt','yuv420p','-profile:v','high','-c:a','aac','-b:a','192k','-movflags','+faststart','-shortest',out],check=True)
+subprocess.run([F,'-loglevel','error','-y',*ins,'-filter_complex',';'.join(fl),'-map','0:v','-map','[a]','-c:v','libx264',*(['-crf','15','-preset','slow','-tune','film','-maxrate','20M','-bufsize','30M','-g','60'] if __import__('os').environ.get('HQ') else ['-crf','19','-preset','medium']),'-pix_fmt','yuv420p','-profile:v','high','-c:a','aac','-b:a','256k' if __import__('os').environ.get('HQ') else '192k','-movflags','+faststart','-shortest',out],check=True)

@@ -125,3 +125,9 @@ estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vin
 - Estrellas del móvil: `movil_key2.py` las rellena una a una con rebote (sin saltos entre capturas) y la página hace zoom hacia la pantalla del móvil mientras se llenan.
 - B-roll de bar real (Mixkit 720): 41222 (barra), 4295 (cócteles), 4915 (móvil en el bar), 817 (barista).
 - Vetados por Juan: `packs/glitch`, `punch-stop-riser` y los booms graves. Para las palabras gigantes (NADA, IGUAL, ¿POR QUÉ?) usar `whoosh-dramatico` a -3 dB.
+
+## Exportar para Instagram (calidad)
+- Con `HQ=1 python3 mezcla4.py ...` se exporta con x264 crf 15, preset slow, tune film, maxrate 20M, GOP 60 y AAC 256k (unos 12–15 Mbps). La exportación normal con crf 19 salía a unos 4 Mbps y, al recomprimir, Instagram lo deja borroso.
+- El grano va a opacidad .025 (no .07), porque el ruido es lo primero que destroza la compresión.
+- Los fotogramas de la cara se preescalan a 1080×1215 con lanczos y un poco de nitidez (`cmf2/`, `pm2/`), para que no los amplíe el navegador con bilineal. La fuente es de 1080 de alto, así que no hay más resolución real.
+- Consejo para Juan: subir por Wi‑Fi desde el archivo original (no pasarlo por WhatsApp) y activar "Subir con la calidad más alta" en Instagram.
