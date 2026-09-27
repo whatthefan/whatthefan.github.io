@@ -95,8 +95,8 @@ function M(t) { let a = MK[0], b = MK[0]; for (let i = 0; i < MK.length - 1; i++
 async function cara(t) { const i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), F = $('caraFondo');
   if (F._i !== i) { F.src = $('caraBlur').src = `${CARA_FONDO}/${pad(i)}.jpg`; $('caraPersona').src = `${CARA_PERSONA}/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
 // cara: fondo real (jpg) + persona recortada (webp con alfa) del MISMO fotograma, preescalados a 1080×1215 (lanczos + nitidez)
-const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 1307;
-const CARA = [[0, 7.35], [7.35, 9.3], [12.95, 14.35], [17.45, 19.7], [28.5, 30.3], [31.9, 35.15], [42.15, 48.65]]; const VERT = t => (t >= 7.35 && t < 9.3) || t >= 42.15; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
+const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 1459;
+const CARA = [[0, 2.25], [5.55, 7.35], [7.35, 9.3], [12.95, 14.35], [17.45, 19.7], [28.5, 30.3], [31.9, 35.15], [42.15, 48.65]]; const VERT = t => (t >= 7.35 && t < 9.3) || t >= 42.15; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
 const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
 /* ===== EGO · vídeo 00 · v3: persona recortada sobre una pared de pantallas con sus trabajos ===== */
 const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
@@ -135,6 +135,14 @@ const css = document.createElement('style'); css.textContent = `
 .tl .cab{position:absolute;top:20px;bottom:20px;width:5px;background:#fff;box-shadow:0 0 16px rgba(255,255,255,.8)}
 .tl .nm{position:absolute;left:34px;top:22px;font:600 28px FT;color:rgba(255,255,255,.6)}
 .dm{position:absolute;left:240px;top:170px;height:130px;padding:0 60px;border-radius:65px;display:flex;align-items:center;gap:22px;font:800 72px FT;color:#fff;background:var(--oro);box-shadow:0 30px 60px rgba(47,107,255,.35)}
+.reel{position:absolute;left:170px;top:190px;width:740px;height:1316px;border-radius:64px;background:#000;padding:14px;box-shadow:0 0 0 3px #2a2f3a,0 60px 120px rgba(0,0,0,.7),0 0 120px rgba(47,107,255,.35)}
+.reel>img{width:100%;height:100%;object-fit:cover;border-radius:52px;display:block}
+.reel .ig{position:absolute;right:34px;bottom:190px;display:flex;flex-direction:column;gap:46px}
+.reel .ig svg{width:74px;height:74px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.reel .usr{position:absolute;left:40px;bottom:70px;display:flex;align-items:center;gap:18px;font:700 36px FT;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.reel .usr i{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#2F6BFF,#8FB0FF);display:block}
+.reel .top{position:absolute;left:0;right:0;top:40px;text-align:center;font:700 38px FT;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+#cora{position:absolute;left:390px;top:640px;width:300px;height:300px}
 .flecha{position:absolute;left:470px;top:1700px;width:140px;height:140px}`;
 document.head.appendChild(css);
 // pared de pantallas (fondo de todas las tomas con cara)
@@ -143,16 +151,16 @@ const MURO = ['c1', 'c2', 'c3', 'mosca', 'c1', 'c2', 'c3', 'mosca', 'c2'], NMURO
 
 // ---------- S1 gancho ----------
 fx(0, 'flash', P + 'camera-shutter.mp3', -6);
-sub('Hice un vídeo sobre una *mosca*', .35, 2.6, 2.3); sub('en un *urinario*', 2.6, 4.2, 3.6);
-sub('¿y aun así?', 4.65, 5.8, 5.3); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
-fx(2.3, null, Q + 'pop-imagen.mp3', -8);
+sub('Hice un vídeo sobre una *mosca*', .35, 2.4, 2.2); sub('en un *urinario*', 2.6, 4.2, 3.6, 1600);
+sub('¿y aun así?', 4.65, 5.6, 5.3, 1600); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
+fx(2.25, 'whip', Q + 'whoosh-b.mp3', -5); fx(4.05, null, P + 'mouse-click.mp3', -6); fx(4.1, null, Q + 'pop-imagen.mp3', -8); fx(5.55, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
 gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
 // ---------- S2 me llamo Juan (vertical) ----------
 fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);
 texto('Juan', 'h', 170, 7.45, 9.3, { capa: 'sobre', maq: true, st: .08, size: 150 }); fx(7.45, null, Q + 'teclas.mp3', -11, { dur: .5 });
 fx(9.35, null, Q + 'pop-imagen.mp3', -9);
 sub('me llamo *Juan*', 7.45, 9.3, 8.3, 1600); sub('soy de Córdoba', 9.3, 10.4, 10.1, 1640); fx(9.3, 'whip', Q + 'swish-c.mp3', -8);
-texto('tengo mi propio *negocio*', 'h', 360, 10.45, 12.9, { size: 96 });
+texto('tengo mi propio *negocio*', 'h', 360, 10.45, 12.9, { size: 96 }); fx(10.45, 'whip', Q + 'swoosh-a.mp3', -9, { dir: -1 });
 texto('*PLEA5E*', 'gig', 1480, 12.1, 12.95, { size: 210 }); fx(12.08, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(12.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 28 });
 // ---------- S3 cuando empecé ----------
 fx(12.95, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
@@ -177,7 +185,7 @@ texto('lo que *hago*', 'h', 330, 30.4, 31.85);
 sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
 sub('pongo la *cara*', 33.6, 34.6, 34.3); fx(33.72, null, P + 'camera-click.mp3', -6);
 fx(35.2, 'whip', Q + 'whoosh-b.mp3', -8); sub('cuento tu *producto*', 35.45, 36.8, 36.4); sub('como una *historia*', 37.1, 38.5, 38.2); fx(35.5, null, Q + 'swish-c.mp3', -9);
-sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.1, null, Q + 'pop-imagen.mp3', -10);
+sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.0, 'whip', Q + 'whoosh-b.mp3', -8); fx(39.1, null, Q + 'pop-imagen.mp3', -10);
 fx(40.5, 'whip', Q + 'swoosh-a.mp3', -8, { dir: -1 }); sub('y lo edito *así*', 40.6, 42.0, 41.5); fx(41.45, 'zoomdig', Q + 'zoom-digital.mp3', -8);
 // ---------- S6 cierre (vertical) ----------
 fx(42.15, 'flash', Q + 'obturador-flash.mp3', -5);
@@ -212,10 +220,16 @@ fx(19.7, 'whip', Q + 'whoosh-b.mp3', -8);
   cl.forEach(([x, w], k) => pi.insertAdjacentHTML('beforeend', j === 0 ? `<div class="clip" style="left:${x * 1.6}px;width:${w * 1.6}px;background-image:url(br/c${k + 1}/0030.jpg)"></div>` : `<div class="clip" style="left:${x * 1.6}px;width:${w * 1.6}px;background:${c};opacity:${.45 + j * .15}"></div>`)); $('tl').appendChild(pi); });
 $('tl').insertAdjacentHTML('beforeend', '<div class="cab" id="cab"></div>');
 $('ui2').insertAdjacentHTML('beforeend', `
+ <div id="reel" class="reel"><img id="reelImg"><div class="top">Reels</div>
+  <div class="ig"><svg id="hrt" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9C.8 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.6C12 6.1 13.6 5 15.6 5 19 5 21.2 8.4 19.6 12c-2.1 4.4-9.6 9-9.6 9z" fill="none" stroke="#fff" stroke-width="1.8"/></svg>
+   <svg viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z" fill="none" stroke="#fff" stroke-width="1.8"/></svg>
+   <svg viewBox="0 0 24 24"><path d="M22 3L10 14M22 3l-7 19-4-8-8-4z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+  <div class="usr"><i></i>ego · Audio original</div></div>
+ <svg id="cora" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9C.8 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.6C12 6.1 13.6 5 15.6 5 19 5 21.2 8.4 19.6 12c-2.1 4.4-9.6 9-9.6 9z" fill="#fff"/></svg>
  <div id="ad" class="ad"><div class="scr">ANUNCIO</div><div class="tag">Anuncio · 0:05</div><div class="bar"><i id="adBar"></i></div><div class="tt">Patrocinado</div><div class="skip" id="adSkip">Saltar anuncio ›</div></div>
  <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16 21l-3 1.3-3.3-6.6L4 20z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
  <div id="carr" class="abs" style="left:0;top:0;width:1080px;height:1920px"></div>`);
-[['c1', 'placa'], ['c2', 'app'], ['c3', 'UGC']].forEach(([d, e], i) => $('carr').insertAdjacentHTML('beforeend', `<div class="tile" id="tl${i}"><img id="ti${i}"><div class="et">${e}</div></div>`));
+[['c1', 'placa'], ['c2', 'app'], ['c3', 'yo']].forEach(([d, e], i) => $('carr').insertAdjacentHTML('beforeend', `<div class="tile" id="tl${i}"><img id="ti${i}"><div class="et">${e}</div></div>`));
 async function frame(img, dir, t, t0, n, loop) { let i = 1 + Math.floor((t - t0) * 30); i = loop ? ((i - 1) % n + n) % n + 1 : Math.max(1, Math.min(n, i));
   const src = `br/${dir}/${pad(i)}.jpg`; if (img._s !== src) { img.src = src; await img.decode().catch(() => {}); img._s = src; } }
 const vis = (id, on, d = 'block') => { $(id).style.display = on ? d : 'none'; return on; };
@@ -229,8 +243,10 @@ window.render = async t => { t_ = t;
   const enCara = CARA.some(([a, b]) => t >= a && t < b);
   if (enCara) $('suelo').style.backgroundPosition = `${Math.sin(t * .3) * 60}px ${t * 60 % 120}px`;
   // gancho: móvil con la mosca + barra reproducida al 100 %
-  if (vis('tel', t >= 2.25 && t < 4.75)) { const k = muelle(t, 2.3, 2.2, .62), s = ioX(p(t, 4.45, .3));
-    $('tel').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 600 - s * 900}px) rotate(${6 - 2 * Math.min(k, 1)}deg)`; await frame($('telImg'), 'mosca', t, 2.3, 108); }
+  vis('tel', false);
+  if (vis('reel', t >= 2.25 && t < 5.6)) { const k = muelle(t, 2.27, 2.1, .66); $('reel').style.transform = `translateY(${(1 - Math.min(k, 1.03)) * 900}px) rotate(${(1 - Math.min(k, 1)) * 8}deg) scale(${1 + .03 * p(t, 2.3, 3.2)})`;
+    await frame($('reelImg'), 'mosca', t, 2.3, 108); $('hrt').querySelector('path').setAttribute('fill', t >= 4.05 ? '#FF3B5C' : 'none'); $('hrt').style.transform = `scale(${t >= 4.05 ? 1 + .4 * (1 - muelle(t, 4.05, 3, .45)) : 1})`; }
+  if (vis('cora', t >= 4.05 && t < 4.9)) { const k = muelle(t, 4.05, 2.8, .5); $('cora').style.transform = `scale(${Math.min(k, 1.15) * 1.1})`; $('cora').style.opacity = 1 - p(t, 4.6, .3); }
   if (vis('pl', t >= 5.7 && t < 6.5)) { const k = ioX(p(t, 5.75, .7)); $('plF').style.width = (k * 100) + '%'; $('plN').textContent = Math.round(k * 100) + '%'; $('pl').style.opacity = exp(p(t, 5.7, .15)) * (1 - p(t, 6.35, .15)); $('pl').style.transform = `translateX(${(1 - exp(p(t, 5.7, .3))) * 200}px)`; }
   // me llamo Juan: Córdoba + placa 3D
   if (vis('pin', t >= 9.3 && t < 10.5, 'flex')) { entra('pin', 9.32, 700); $('pin').style.opacity *= 1 - p(t, 10.3, .2); }
