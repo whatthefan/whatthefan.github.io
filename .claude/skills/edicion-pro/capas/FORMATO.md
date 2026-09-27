@@ -131,3 +131,4 @@ estrellas = `tic-b` + `ding`, acierto = `cinematic-impact`, viral puntual = `vin
 - El grano va a opacidad .025 (no .07), porque el ruido es lo primero que destroza la compresión.
 - Los fotogramas de la cara se preescalan a 1080×1215 con lanczos y un poco de nitidez (`cmf2/`, `pm2/`), para que no los amplíe el navegador con bilineal. La fuente es de 1080 de alto, así que no hay más resolución real.
 - Consejo para Juan: subir por Wi‑Fi desde el archivo original (no pasarlo por WhatsApp) y activar "Subir con la calidad más alta" en Instagram.
+- Para enviarlo por el chat (límite de 30 MB): del máster HQ se saca una copia a dos pasadas con `-b:v 7000k -maxrate 12M` (unos 28 MB para 30 s).
