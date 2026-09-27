@@ -82,3 +82,11 @@ Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. 
 
 ## Canal de emprendimiento (no PLEA5E)
 Usa el mismo motor y las mismas reglas de sonido, pero **cambia la marca** en `:root` de la plantilla (`--oro`, `--fondo`, `--glow1..3`). Así el canal tiene identidad propia y no se confunde con PLEA5E. Las reglas 14 y los colores de PLEA5E no aplican ahí.
+
+## Tomas grabadas cerca de la cámara (aprendido en el vídeo EGO)
+- `scripts/base-tomas.py`: une los tramos buenos de varias tomas en una sola línea de tiempo (voz limpia + fotogramas en espejo). Las tomas en HDR del iPhone (HLG, 10 bits) se pasan a SDR con `zscale + tonemap=hable`.
+- `scripts/seguir-cara.py`: calcula el recorte (RVM) y **sigue la cabeza**. Recorta 960 px alrededor del centro de la persona, suavizado con una media de 21 fotogramas. Si Juan está cerca de la webcam, el recorte central lo deja fuera. Las tomas verticales van a pantalla completa (clase `vert`).
+- Si la cabeza sale cortada por arriba, la zona superior va con el **fondo de marca** (sin el desenfoque de la cara; `#caraBlur` oculto y máscara de 380 px), y el texto va encima. En vertical a pantalla completa, la palabra gigante va **delante**, a la altura del pecho.
+- Para textos encima de la cara usa la capa `sobre`. **Nunca hagas `innerHTML =` en una capa donde `texto()` ya ha metido elementos**: los borra. Usa `insertAdjacentHTML`.
+- Los gestos a cámara (mano que tapa → `whip`, puñetazo → `flash`) son las transiciones: corta justo en el fotograma tapado.
+- Escenas nuevas en `ejemplos/ego-intro.html`: anuncio falso con barra y cursor que pulsa "Saltar anuncio" (mouse-click + glitch), carrusel lateral de trabajos en tarjetas verticales, y palabras por niveles (UGC / MARKETING / STYLE).

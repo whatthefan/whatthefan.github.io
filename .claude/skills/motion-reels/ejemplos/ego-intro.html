@@ -1,0 +1,213 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-800-normal.woff2);font-weight:800}
+:root{--oro:#2F6BFF;--fondo:#07080B;--glow1:#0f2a6b;--glow2:#1b1f2a;--glow3:#0a1640} /* MARCA: cambia estos 5 colores (PLEA5E = oro/noche/verde) */
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--fondo);font-family:FT;color:#fff}
+.abs{position:absolute}
+#mundo{position:absolute;inset:0;transform-origin:50% 50%}
+#fondo{position:absolute;inset:0;background:var(--fondo);overflow:hidden}
+.glow{position:absolute;border-radius:50%;filter:blur(120px);opacity:.55}
+/* texto */
+.t{position:absolute;left:80px;right:80px;white-space:nowrap}
+.t .l{display:inline-block;will-change:transform}.t .wd{display:inline-block;white-space:nowrap}
+.h{font-weight:700;font-size:128px;letter-spacing:-.04em;line-height:.98;white-space:normal;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+.p{font-weight:600;font-size:58px;letter-spacing:-.02em;color:rgba(255,255,255,.78);line-height:1.3;white-space:normal}
+.k{color:var(--oro)}
+.gig{font-weight:800;font-size:300px;letter-spacing:-.06em;line-height:.85;text-align:center;left:0;right:0}
+.sub{position:absolute;left:40px;right:40px;text-align:center;font-weight:700;font-size:66px;letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+/* forma que se transforma */
+#M{position:absolute;overflow:hidden;background:#fff;will-change:transform}
+#M img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.chip{position:absolute;height:104px;padding:0 46px;border-radius:52px;display:flex;align-items:center;gap:16px;font-weight:600;font-size:46px;letter-spacing:-.01em;
+  background:rgba(12,14,20,.72);border:1.5px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;backdrop-filter:blur(14px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.chip.on{background:var(--oro);color:#fff;border-color:transparent}
+.card{position:absolute;border-radius:40px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);backdrop-filter:blur(20px)}
+.fila{position:absolute;left:28px;right:28px;height:128px;border-radius:26px;display:flex;align-items:center;gap:24px;padding:0 26px;background:rgba(255,255,255,.05)}
+.fila .av{width:74px;height:74px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:34px;color:#111}
+.fila b{display:block;font-weight:600;font-size:34px}.fila small{display:block;font-weight:500;font-size:26px;color:rgba(255,255,255,.55)}
+.fila .est{margin-left:auto;font-size:30px;letter-spacing:2px;color:var(--oro)}
+.linea{position:absolute;left:0;top:0;overflow:visible}
+.linea *{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+/* cara */
+#cara{position:absolute;inset:0;overflow:hidden}
+#caraZ{position:absolute;inset:0;transform-origin:50% 62%}
+#caraBlur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(38px) brightness(.5) saturate(1.05);transform:scale(1.15)}
+#caraFondo,#caraPersona{position:absolute;left:0;top:705px;width:1080px;height:1215px;object-fit:cover}
+#caraFondo{-webkit-mask-image:linear-gradient(transparent 0,#000 200px);mask-image:linear-gradient(transparent 0,#000 200px)}
+#detras{position:absolute;inset:0}
+#grano{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.demo{position:absolute;padding:8px 18px;border-radius:12px;background:rgba(17,17,17,.8);color:#fff;font:600 26px FT}
+.tache{position:absolute;height:6px;border-radius:3px;background:#E0463B;transform-origin:0 50%}
+</style></head><body>
+<div id="todo" style="position:absolute;inset:0;transform-origin:50% 50%">
+<div id="mundo">
+  <div id="fondo"><i class="glow" id="g1" style="width:900px;height:900px;background:var(--glow1)"></i><i class="glow" id="g2" style="width:700px;height:700px;background:var(--glow2)"></i><i class="glow" id="g3" style="width:600px;height:600px;background:var(--glow3)"></i></div>
+  <div id="ui"></div>
+  <div id="M"><img id="Mimg"></div>
+  <img id="p3d" class="abs" style="left:90px;top:580px;width:900px;height:1100px;display:none;filter:drop-shadow(0 50px 60px rgba(0,0,0,.55))">
+  <div id="ui2"></div>
+</div>
+<div id="cara"><div id="caraZ"><img id="caraBlur"><img id="caraFondo"><div id="detras"></div><img id="caraPersona"></div></div>
+<div id="sobre" style="position:absolute;inset:0"></div>
+<div id="subs"></div>
+</div>
+<div id="grano"></div>
+<script src="fx.js"></script><script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle } = E;
+const FX = /*FX*/[]/*FX*/; // se rellena abajo con fx(...)
+const TOTAL = 44.3; // duración de la voz en segundos window.TOTAL = TOTAL;
+const pad = i => String(i).padStart(4, '0');
+const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
+const lerp = (a, b, k) => a + (b - a) * k;
+/* ===== textos con letras que entran (blur + subida + escala), como el ref ===== */
+const T = [];
+function texto(html, cls, y, t0, t1, o = {}) { const el = document.createElement('div'); el.className = 't ' + cls; el.style.top = y + 'px'; if (o.center) { el.style.textAlign = 'center'; }
+  if (o.size) el.style.fontSize = o.size + 'px';
+  // html con *palabra* en oro
+  const parts = html.split(/(\*[^*]+\*)/); let s = '', n = 0;
+  parts.forEach(q => { const k = q.startsWith('*'); const txt = k ? q.slice(1, -1) : q; s += (k ? '<span class="k">' : '') + txt.split(' ').map(w => w ? '<span class="wd">' + [...w].map(c => `<span class="l" data-i="${n++}">${c}</span>`).join('') + '</span>' : '').join(' ') + (k ? '</span>' : ''); });
+  el.innerHTML = s; $(o.capa || 'ui2').appendChild(el); const ob = { el, t0, t1, st: o.st || .022, cls, maq: o.maq }; if (o.maq) { ob.cur = document.createElement('span'); ob.cur.textContent = '|'; ob.cur.style.cssText = 'display:inline-block;color:#E9BC46;margin-left:4px;font-weight:500'; } T.push(ob); return el; }
+function pintaTextos(t) { T.forEach(o => { const vis = t >= o.t0 - .01 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  const sal = p(t, o.t1 - .22, .22), se = ease.inCubic(sal);
+  if (o.maq) { const ls = o.el.querySelectorAll('.l'); let last = null; ls.forEach(l => { const on = t >= o.t0 + (+l.dataset.i) * o.st; l.style.display = on ? 'inline-block' : 'none'; l.style.opacity = 1 - ease.inCubic(sal); l.style.transform = `translateX(${-ease.inCubic(sal) * 90}px)`; if (on) last = l; });
+    o.cur.style.opacity = (Math.floor(t * 4) % 2 || t < o.t0 + ls.length * o.st + .1) ? 1 - sal : 0; if (last) last.after(o.cur); return; }
+  o.el.querySelectorAll('.l').forEach(l => { const i = +l.dataset.i, a = o.t0 + i * o.st, k = exp(p(t, a, .55)), m = muelle(t, a, 2.2, .72);
+    const ks = p(t, o.t1 - .22 + i * .006, .18), s2 = ease.inCubic(ks);
+    l.style.opacity = Math.min(k * 1.3, 1) * (1 - s2); l.style.filter = `blur(${(1 - k) * 10 + s2 * 10}px)`;
+    l.style.transform = `translate(${(1 - Math.min(m, 1.04)) * 90 - s2 * 90}px,${(1 - Math.min(m, 1.04)) * 10}px) scale(${.9 + .1 * Math.min(k, 1)})`; }); }); }
+/* ===== subtítulos (cara) palabra a palabra ===== */
+const S = [];
+function sub(txt, t0, t1, tt, y = 1590) { const el = document.createElement('div'); el.className = 'sub'; el.style.top = y + 'px'; const ws = txt.split(' '), L = ws.reduce((a, w) => a + w.length + 1, 0); let c = 0;
+  el.innerHTML = ws.map(w => { const t = t0 + (tt - t0) * c / L; c += w.length + 1; return `<span class="l" data-t="${t.toFixed(3)}" style="display:inline-block">${w.replace(/\*(.+)\*/, '<span class="k">$1</span>')}</span>`; }).join(' ');
+  $('subs').appendChild(el); S.push({ el, t0, t1 }); }
+function pintaSubs(t) { S.forEach(o => { const vis = t >= o.t0 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return; const s = ease.inCubic(p(t, o.t1 - .12, .12));
+  o.el.querySelectorAll('.l').forEach(l => { const a = +l.dataset.t, k = exp(p(t, a, .3)), m = muelle(t, a, 3, .6); l.style.opacity = k * (1 - s); l.style.transform = `translateY(${(1 - Math.min(m, 1.05)) * 20}px) scale(${.9 + .1 * Math.min(m, 1.05)})`; l.style.filter = `blur(${(1 - k) * 6 + s * 8}px)`; }); }); }
+/* ===== la forma M: keyframes [t, x, y, w, h, radio, color, imagen] con easeInOutExpo ===== */
+const MK = [];
+function M(t) { let a = MK[0], b = MK[0]; for (let i = 0; i < MK.length - 1; i++) if (t >= MK[i][0]) { a = MK[i]; b = MK[i + 1]; }
+  const d = b[0] - a[0], k = d > 0 ? ioX(Math.min(1, Math.max(0, (t - a[0]) / (d)))) : 1; const r = []; for (let j = 1; j <= 5; j++) r.push(lerp(a[j], b[j], k)); return { v: r, a, b, k }; }
+/* ===== cara ===== */
+async function cara(t) { const i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), F = $('caraFondo');
+  if (F._i !== i) { F.src = $('caraBlur').src = `${CARA_FONDO}/${pad(i)}.jpg`; $('caraPersona').src = `${CARA_PERSONA}/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
+// cara: fondo real (jpg) + persona recortada (webp con alfa) del MISMO fotograma, preescalados a 1080×1215 (lanczos + nitidez)
+const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 1139;
+const CARA = [[0, 7.35], [7.35, 17.8], [22.9, 24.72], [26.3, 36.55], [36.55, 44.3]]; const VERT = t => t >= 36.55; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
+const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
+/* ===== EGO · vídeo 00 · construcción ===== */
+const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
+const P = 'packs/', Q = 'packs2/';
+const css = document.createElement('style'); css.textContent = `
+.tel{position:absolute;border-radius:54px;background:#0b0c10;padding:12px;box-shadow:0 0 0 2px #2a2f3a,0 40px 80px rgba(0,0,0,.6)}
+.tel img{width:100%;height:100%;object-fit:cover;border-radius:44px;display:block}
+.tile{position:absolute;top:600px;width:430px;height:764px;border-radius:40px;overflow:hidden;background:#111;box-shadow:0 30px 70px rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.12)}
+.tile img{width:100%;height:100%;object-fit:cover}
+.tile .et{position:absolute;left:22px;bottom:22px;padding:10px 22px;border-radius:26px;background:rgba(7,8,11,.75);font:600 30px FT;color:#fff}
+.ad{position:absolute;left:90px;top:640px;width:900px;height:640px;border-radius:40px;overflow:hidden;background:#1a1d24;border:1.5px solid rgba(255,255,255,.12)}
+.ad .scr{position:absolute;inset:0 0 150px 0;background:linear-gradient(135deg,#252a35,#161920);display:flex;align-items:center;justify-content:center;font:800 120px FT;letter-spacing:-.04em;color:rgba(255,255,255,.14)}
+.ad .tag{position:absolute;left:28px;top:26px;padding:8px 20px;border-radius:20px;background:#E8C12E;color:#111;font:700 28px FT}
+.ad .bar{position:absolute;left:0;right:0;bottom:150px;height:10px;background:rgba(255,255,255,.12)}.ad .bar i{position:absolute;left:0;top:0;bottom:0;background:#E8C12E}
+.ad .skip{position:absolute;right:28px;bottom:36px;padding:22px 34px;border-radius:16px;background:rgba(0,0,0,.6);border:1.5px solid rgba(255,255,255,.35);font:600 38px FT;color:#fff}
+.ad .tt{position:absolute;left:32px;bottom:44px;font:600 34px FT;color:rgba(255,255,255,.75)}
+#cursor{position:absolute;left:0;top:0;width:90px;height:90px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+#caraBlur{display:none!important}
+#caraFondo{-webkit-mask-image:linear-gradient(transparent 0,#000 380px)!important;mask-image:linear-gradient(transparent 0,#000 380px)!important}
+.vert #caraFondo,.vert #caraPersona{top:0!important;height:1920px!important;-webkit-mask-image:none!important;mask-image:none!important}.vert #caraBlur{display:none}`;
+document.head.appendChild(css);
+// ---------- S1 gancho (cara) ----------
+fx(0, 'flash', P + 'camera-shutter.mp3', -6);
+sub('Hice un vídeo sobre una *mosca*', .35, 2.6, 2.3); sub('en un *urinario*', 2.6, 4.2, 3.6);
+sub('¿y aun así?', 4.65, 5.8, 5.3); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
+gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
+fx(2.3, null, Q + 'pop-imagen.mp3', -8);
+// ---------- S2 cuando empecé (cara) ----------
+fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);   // la mano tapa la cámara
+texto('Juan · Córdoba', 'p', 150, 7.5, 9.1, { capa: 'sobre', maq: true, st: .045 }); fx(7.5, null, Q + 'teclas.mp3', -11, { dur: 14 * .045 + .15 });
+texto('fundador de *PLEA5E*', 'h', 230, 7.9, 9.1, { capa: 'sobre', size: 84 });
+sub('cuando empecé', 7.55, 8.7, 8.4);
+sub('no tenía *agencia*', 8.8, 10.2, 9.7); sub('ni *presupuesto* para anuncios', 10.2, 11.8, 11.5);
+sub('así que aprendí a hacerlo *yo*', 11.9, 13.9, 13.5);
+fx(9.72, null, P + 'wrong.mp3', -8); fx(10.62, null, P + 'wrong.mp3', -8);
+fx(14.14, null, Q + 'pop-imagen.mp3', -9); fx(16.9, null, P + 'ding.mp3', -7);
+// ---------- S3 la gente no se para por un anuncio (solo voz, motion) ----------
+fx(17.8, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
+texto('y descubrí *algo*', 'h', 330, 17.95, 19.05);
+texto('la gente no se para', 'p', 360, 19.1, 21.2, { maq: true, st: .04 }); fx(19.1, null, Q + 'teclas.mp3', -11, { dur: 19 * .04 + .15 });
+texto('por un *anuncio*', 'h', 440, 19.9, 21.2);
+fx(20.9, null, P + 'mouse-click.mp3', -6); fx(21.05, 'glitch', Q + 'glitch.mp3', -7);
+texto('se para por una', 'p', 520, 21.3, 22.85, { center: true });
+texto('*HISTORIA*', 'gig', 650, 22.2, 22.85, { size: 196 }); fx(22.2, 'riser', null, 0, { d: .8 }); fx(22.2, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 26 });
+// ---------- S4 esto es lo que hago (cara + carrusel) ----------
+fx(22.9, 'flash', Q + 'obturador-flash.mp3', -5);
+sub('esto es lo que *hago*', 23.2, 24.7, 24.4);
+fx(24.72, 'whip', Q + 'whoosh-b.mp3', -5); fx(25.5, null, Q + 'swish-c.mp3', -9); fx(26.3, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
+texto('lo que *hago*', 'h', 330, 24.8, 26.25, { capa: 'ui2' });
+sub('ahora lo hago para *marcas*', 26.4, 27.95, 27.5); gigante('MARCAS', 27.45, 28.9, 480, 210); fx(27.45, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
+sub('pongo la *cara*', 28.0, 29.0, 28.7);
+sub('cuento tu *producto*', 29.85, 31.2, 30.8); sub('como una *historia*', 31.5, 32.9, 32.6);
+sub('es lo que ve la gente', 33.45, 34.85, 34.6); sub('y lo edito *así*', 35.0, 36.4, 35.9);
+fx(28.35, null, Q + 'pop-imagen.mp3', -10); fx(30.4, null, Q + 'pop-imagen.mp3', -10); fx(33.7, null, Q + 'pop-imagen.mp3', -10);
+fx(35.85, 'zoomdig', Q + 'zoom-digital.mp3', -8);
+// ---------- S5 cierre (vertical) ----------
+fx(36.55, 'flash', Q + 'obturador-flash.mp3', -5);  // puñetazo a cámara
+sub('si tu producto merece', 36.7, 38.0, 37.8, 1480); sub('que lo vean hasta el *final*', 38.0, 39.5, 39.2, 1480);
+sub('*escríbeme*', 39.7, 40.9, 40.2, 1480); sub('en mi perfil', 40.95, 42.0, 41.7, 1480);
+const ego = texto('*EGO*', 'gig', 1060, 42.1, 44.3, { capa: 'sobre', st: .05 }); ego.style.fontSize = '380px'; ego.style.textShadow = '0 20px 60px rgba(0,0,0,.6)'; fx(42.05, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(42.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 30 });
+// ---------- elementos ----------
+$('sobre').insertAdjacentHTML('beforeend', `
+ <div id="tel" class="tel" style="left:640px;top:120px;width:360px;height:640px"><img id="telImg"></div>
+ <div id="cAg" class="chip" style="left:120px;top:380px">Agencia<div id="tAg" class="tache" style="left:34px;right:34px;top:48px"></div></div>
+ <div id="cPr" class="chip" style="left:520px;top:380px">Presupuesto<div id="tPr" class="tache" style="left:34px;right:34px;top:48px"></div></div>
+ <div id="skills" class="abs" style="left:90px;top:260px;width:900px;height:260px"></div>
+ <div id="nivel" class="abs" style="left:0;top:0;width:1080px;height:700px"></div>`);
+['guion', 'cámara', 'edición', 'sonido'].forEach((w, i) => { const d = document.createElement('div'); d.className = 'chip'; d.textContent = w;
+  Object.assign(d.style, { left: (i % 2) * 460 + 'px', top: Math.floor(i / 2) * 134 + 'px', width: '430px', justifyContent: 'center', fontSize: '50px' }); $('skills').appendChild(d); });
+[['UGC', 90, 150, 28.35], ['MARKETING', 250, 300, 30.4], ['STYLE', 520, 450, 33.7]].forEach(([w, x, y, a]) => { const d = document.createElement('div'); d.className = 't gig';
+  Object.assign(d.style, { left: x + 'px', right: 'auto', top: y + 'px', fontSize: '130px', textAlign: 'left' }); d.textContent = w; d.dataset.a = a; $('nivel').appendChild(d); });
+$('ui2').insertAdjacentHTML('beforeend', `
+ <div id="ad" class="ad"><div class="scr">ANUNCIO</div><div class="tag">Anuncio · 0:05</div><div class="bar"><i id="adBar"></i></div><div class="tt">Patrocinado</div><div class="skip" id="adSkip">Saltar anuncio ›</div></div>
+ <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16 21l-3 1.3-3.3-6.6L4 20z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+ <div id="carr" class="abs" style="left:0;top:0;width:1080px;height:1920px"></div>`);
+[['c1', 'placa'], ['c2', 'app'], ['c3', 'UGC']].forEach(([d, e], i) => $('carr').insertAdjacentHTML('beforeend', `<div class="tile" id="tl${i}"><img id="ti${i}"><div class="et">${e}</div></div>`));
+async function frame(img, dir, t, t0, n) { const i = Math.max(1, Math.min(n, 1 + Math.floor((t - t0) * 30))), src = `br/${dir}/${pad(i)}.jpg`; if (img._s !== src) { img.src = src; await img.decode().catch(() => {}); img._s = src; } }
+const vis = (id, on, d = 'block') => { $(id).style.display = on ? d : 'none'; return on; };
+window.render = async t => {
+  [['g1', 200, 1300, .3], ['g2', 820, 520, .23], ['g3', 540, 1700, .17]].forEach(([id, x, y, v], j) => { const g = $(id); g.style.left = (x - 450 + Math.sin(t * v + j) * 200) + 'px'; g.style.top = (y - 450 + Math.cos(t * v * 1.3 + j * 2) * 160) + 'px'; });
+  $('mundo').style.transform = `scale(${1 + .025 * Math.sin(t * .35)}) rotate(${Math.sin(t * .23) * .6}deg)`;
+  pintaTextos(t); pintaSubs(t); fxRender(t);
+  $('M').style.display = 'none';
+  // móvil con el vídeo de la mosca (gancho)
+  if (vis('tel', t >= 2.25 && t < 4.75)) { const k = muelle(t, 2.3, 2.2, .62), s = ioX(p(t, 4.45, .3));
+    $('tel').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 600 - s * 900}px) rotate(${6 - 2 * Math.min(k, 1)}deg)`; await frame($('telImg'), 'mosca', t, 2.3, 108); }
+  // agencia / presupuesto tachados
+  const ch = t >= 8.9 && t < 11.85; vis('cAg', ch, 'flex'); vis('cPr', ch && t >= 9.95, 'flex');
+  if (ch) { [['cAg', 8.95], ['cPr', 9.95]].forEach(([id, a]) => { const k = muelle(t, a, 2.4, .6); $(id).style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 500}px)`; $(id).style.opacity = (1 - p(t, 11.6, .25)); });
+    $('tAg').style.transform = `scaleX(${exp(p(t, 9.72, .3))})`; $('tPr').style.transform = `scaleX(${exp(p(t, 10.62, .3))})`; }
+  // guion, cámara, edición, sonido
+  if (vis('skills', t >= 13.95 && t < 17.8)) [...$('skills').children].forEach((c, i) => { const a = [14.14, 15.23, 15.95, 16.9][i], k = muelle(t, a - .1, 2.6, .6);
+    c.style.opacity = exp(p(t, a - .1, .2)) * (1 - p(t, 17.5, .25)); c.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 300}px) scale(${t >= a ? 1 + .1 * (1 - muelle(t, a, 3, .5)) : 1})`; c.classList.toggle('on', t >= a); });
+  // anuncio que se salta
+  if (vis('ad', t >= 19.15 && t < 21.3)) { const k = muelle(t, 19.2, 2.2, .7); $('ad').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 800}px) scale(${t > 20.9 ? 1 - .04 * (1 - muelle(t, 20.9, 4, .5)) : 1})`;
+    $('adBar').style.width = (p(t, 19.2, 1.9) * 100) + '%'; $('adSkip').style.background = t >= 20.9 ? '#fff' : 'rgba(0,0,0,.6)'; $('adSkip').style.color = t >= 20.9 ? '#111' : '#fff'; $('ad').style.opacity = 1 - p(t, 21.12, .15); }
+  if (vis('cursor', t >= 19.6 && t < 21.2)) { const k = ioX(p(t, 19.65, 1.1)); $('cursor').style.transform = `translate(${lerp(260, 830, k)}px,${lerp(1600, 1180, k)}px) scale(${t >= 20.9 && t < 21 ? .85 : 1})`; }
+  // carrusel de trabajos (de lado a lado)
+  if (vis('carr', t >= 24.62 && t < 26.4)) { const dr = ioX(p(t, 24.62, 1.75)); for (let i = 0; i < 3; i++) { const x = 540 - 215 + (i - 1) * 470 + lerp(620, -620, dr) * .55 + (i - 1) * 0;
+      $('tl' + i).style.transform = `translateX(${x}px) rotate(${(i - 1) * 3}deg) scale(${1 - Math.abs(x + 215 - 540) / 3000})`; await frame($('ti' + i), 'c' + (i + 1), t, 24.62, 66); } }
+  // UGC · MARKETING · STYLE por niveles
+  if (vis('nivel', t >= 28.3 && t < 36.4)) [...$('nivel').children].forEach(d => { const a = +d.dataset.a, k = muelle(t, a, 2.3, .62), e = exp(p(t, a, .3));
+    d.style.opacity = t >= a ? e * (1 - p(t, 36.1, .25)) : 0; d.style.color = d.textContent === 'STYLE' ? 'var(--oro)' : '#fff'; d.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 400}px)`; });
+  // cara (horizontal arriba con fondo desenfocado, o vertical a pantalla completa)
+  document.body.classList.toggle('vert', VERT(t));
+  const c = CARA.find(([a, b]) => t >= a && t < b), cf = $('cara');
+  if (c) { cf.style.display = 'block'; const [a, b] = c, cut = [7.35, 36.55].includes(a) || [7.35, 17.8, 36.55].includes(b);
+    const ei = a > 0 && ![7.35, 36.55].includes(a) ? ioX(p(t, a, .3)) : 1, eo = b < TOTAL && ![7.35, 36.55].includes(b) ? ioX(p(t, b - .25, .25)) : 0, ins = Math.max(1 - ei, eo);
+    cf.style.clipPath = ins > 0 ? `inset(${ins * 42}% ${ins * 30}% ${ins * 42}% ${ins * 30}% round ${60 + ins * 200}px)` : 'none';
+    let zs = 1 + .04 * p(t, a, b - a); [[6.55, 1.08], [27.45, 1.07], [42.1, 1.06]].forEach(([g, e]) => { if (t >= g && g >= a && g < b) zs *= e; });
+    $('caraZ').style.transform = `scale(${zs})`; await cara(t); } else cf.style.display = 'none';
+};
+window.render(0); window.LISTO = true;
+</script></body></html>
