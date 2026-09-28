@@ -20,7 +20,7 @@
     '<div id="fxFlash" style="position:absolute;inset:0;z-index:19;pointer-events:none;opacity:0;background:#fff"></div>');
 })();
 function fxRender(t) {
-  const { p, ease } = E; let tx = 0, ty = 0, sc = 1, bx = 0, gl = 0, fl = 0, dk = 0, ba = null, ir = null, ob = null, an = null;
+  const { p, ease } = E; let tx = 0, ty = 0, sc = 1, bx = 0, gl = 0, fl = 0, dk = 0, ba = null, ir = null, ob = null, an = null, rz = 0, ry = 0, rx = 0;
   for (const f of FX) { const u = t - f.t, dir = f.dir || 1;
     if (f.v === 'whip' && u > -.14 && u < .2) { // sale lo viejo hacia un lado, entra lo nuevo desde el otro
       if (u < 0) { const k = ease.inCubic((u + .14) / .14); tx -= dir * k * 240; bx += k * 70; sc *= 1 + .28 * k; }
@@ -33,6 +33,10 @@ function fxRender(t) {
     if (f.v === 'iris' && u > -.3 && u < .3) ir = Math.abs(u) / .3;                     // diafragma que se cierra en el corte y se abre
     if (f.v === 'obturador' && u > -.22 && u < .26) ob = u < 0 ? (u + .22) / .22 : 1 - u / .26;   // láminas de obturador que se cierran y abren
     if (f.v === 'anillos' && u > -.4 && u < .25) an = u < 0 ? (u + .4) / .4 : 1 + u / .25;          // anillos azules que crecen hasta blanco
+    // cambios de ángulo de cámara: el plano gira, cae o se ladea y el siguiente llega desde el lado opuesto
+    if (f.v === 'giro' && u > -.2 && u < .26) { if (u < 0) { const k = ease.inCubic((u + .2) / .2); rz -= dir * 75 * k; sc *= 1 + .45 * k; bx += k * 30; } else { const k = 1 - ease.outCubic(u / .26); rz += dir * 75 * k; sc *= 1 + .45 * k; bx += k * 30; } }
+    if (f.v === 'caida' && u > -.22 && u < .28) { if (u < 0) { const k = ease.inCubic((u + .22) / .22); ty += 1500 * k; rx -= 35 * k; } else { const k = 1 - ease.outCubic(u / .28); ty -= 1500 * k; rx += 35 * k; } }
+    if (f.v === 'ladeo' && u > -.16 && u < .3) { if (u < 0) { const k = ease.inCubic((u + .16) / .16); rz += dir * 14 * k; tx += dir * 380 * k; sc *= 1 + .2 * k; bx += 40 * k; } else { const k = 1 - ease.outCubic(u / .3); rz -= dir * 14 * k; tx -= dir * 380 * k; sc *= 1 + .2 * k; bx += 40 * k; } }
     if (f.v === 'zoomdig' && u >= 0 && u < .5) { const st = Math.min(2, Math.floor(u / .11)); sc *= 1 + .05 * (st + 1) * (1 - ease.inOut(p(t, f.t + .36, .14))); }
   }
   const B = document.getElementById('fxBarras'); B.style.display = ba === null ? 'none' : 'block';
@@ -48,7 +52,7 @@ function fxRender(t) {
   const A = document.getElementById('fxAni'); A.style.display = an === null ? 'none' : 'block';
   if (an !== null) { const c = A.children; [0, 1].forEach(i => { const k = Math.max(0, Math.min(1, an - i * .15)); c[i].setAttribute('r', ease.inCubic(k) * 1500); c[i].setAttribute('stroke-width', 90 - i * 30 + k * 300); });
     c[2].setAttribute('r', an > .7 ? ease.inCubic(Math.min(1, (an - .7) / .3)) * 1500 : 0); A.style.opacity = an > 1 ? 1 - (an - 1) : 1; }
-  const el = document.getElementById('todo'); el.style.transform = `translate(${tx}px,${ty}px) scale(${sc})`;
+  const el = document.getElementById('todo'); el.style.transform = `perspective(1400px) translate(${tx}px,${ty}px) rotateX(${rx}deg) rotate(${rz}deg) scale(${sc})`;
   const fs = [];
   if (bx > .5) { document.getElementById('mbB').setAttribute('stdDeviation', `${bx} 0`); fs.push('url(#mb)'); }
   if (gl > .02) { const s = Math.floor(t * 30); document.getElementById('glT').setAttribute('seed', s % 97 + 1);

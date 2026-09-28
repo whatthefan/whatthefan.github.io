@@ -100,7 +100,7 @@ const CARA = [[0, 2.25], [5.55, 7.35], [7.35, 9.3], [12.95, 14.35], [17.45, 19.7
 const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
 /* ===== EGO · vídeo 00 · v3: persona recortada sobre una pared de pantallas con sus trabajos ===== */
 const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
-const P = 'packs/', Q = 'packs2/';
+const P = 'packs/', Q = 'packs2/'; const J = 'packs3/';
 const css = document.createElement('style'); css.textContent = `
 #caraBlur,#caraFondo{display:none!important}
 #caraPersona{top:705px;height:1215px;-webkit-mask-image:linear-gradient(transparent 0,#000 260px);mask-image:linear-gradient(transparent 0,#000 260px);filter:drop-shadow(0 0 40px rgba(47,107,255,.35))}
@@ -156,14 +156,14 @@ const css = document.createElement('style'); css.textContent = `
 #fn5{width:300px;height:533px;top:663px;border-color:#2F6BFF;background:radial-gradient(ellipse 70% 38% at 50% 44%,rgba(47,107,255,.55),rgba(47,107,255,.08) 55%,transparent 75%),linear-gradient(#07080B,#0a0f22 60%,#07080B)}
 #fn5 .yoIn{position:absolute;left:0;top:0;width:1080px;height:1920px;transform:scale(.2778);transform-origin:0 0}
 #fn5 .yoIn img{position:absolute;left:0;top:705px;width:1080px;height:1215px;object-fit:cover;-webkit-mask-image:linear-gradient(transparent 0,#000 260px);mask-image:linear-gradient(transparent 0,#000 260px)}
-.rama{position:absolute;left:720px;width:250px;height:230px;border-radius:26px;overflow:hidden;border:3px solid rgba(255,255,255,.85);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.rama{position:absolute;width:280px;height:330px;border-radius:26px;overflow:hidden;border:3px solid rgba(255,255,255,.85);box-shadow:0 16px 40px rgba(0,0,0,.5)}
 .rama img{width:100%;height:100%;object-fit:cover}.rama span{position:absolute;left:12px;bottom:10px;padding:6px 14px;border-radius:14px;background:rgba(7,8,11,.8);font:700 26px FT;color:#fff}
 .sub{font-size:78px!important;font-weight:800!important;letter-spacing:-.03em;line-height:1.08;text-shadow:0 4px 0 rgba(0,0,0,.35),0 10px 34px rgba(0,0,0,.65)!important}
 .sub .k{color:#fff!important;background:#2F6BFF;padding:0 .14em;border-radius:.18em;box-shadow:0 8px 24px rgba(47,107,255,.45)}
 #moscaV{position:absolute;left:0;top:0;width:160px;height:160px;z-index:15;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 .perfil{position:absolute;left:90px;top:520px;width:900px;height:1040px;border-radius:56px;background:rgba(16,20,32,.92);border:1.5px solid rgba(255,255,255,.14);box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 120px rgba(47,107,255,.25)}
 .perfil .av{position:absolute;left:260px;top:-10px;width:380px;height:380px;border-radius:50%;overflow:hidden;border:8px solid #2F6BFF;background:radial-gradient(circle at 50% 40%,#1b3a8f,#07080B)}
-.perfil .av img{position:absolute;left:-28px;top:-40px;width:420px;height:747px;object-fit:cover}
+.perfil .av img{position:absolute;left:-150px;top:-200px;width:640px;height:720px;object-fit:cover}
 .perfil .nm{position:absolute;left:0;right:0;top:400px;text-align:center;font:800 68px FT;color:#fff}
 .perfil .bio{position:absolute;left:60px;right:60px;top:500px;text-align:center;font:600 40px FT;color:rgba(255,255,255,.72);line-height:1.35}
 .perfil .bt{position:absolute;top:760px;height:130px;border-radius:30px;display:flex;align-items:center;justify-content:center;font:800 50px FT}
@@ -174,48 +174,48 @@ $('caraZ').insertAdjacentHTML('afterbegin', '<div id="muro"><div id="suelo"></di
 const MURO = ['c1', 'c2', 'c3', 'mosca', 'c1', 'c2', 'c3', 'mosca', 'c2'], NMURO = { c1: 66, c2: 66, c3: 66, mosca: 108 };
 
 // ---------- S1 gancho ----------
-fx(0, 'flash', P + 'camera-shutter.mp3', -6);
+fx(0, 'flash', J + 'obturador-real.mp3', -5);
 sub('Hice un vídeo sobre una *mosca*', .35, 2.4, 2.2); sub('en un *urinario*', 2.6, 4.2, 3.6, 1600);
 sub('¿y aun así?', 4.65, 5.6, 5.3, 1600); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
-fx(2.25, 'whip', Q + 'whoosh-b.mp3', -5); fx(4.05, null, Q + 'pop-imagen.mp3', -7); fx(5.55, 'barras', Q + 'whoosh-b.mp3', -5);
+fx(2.25, 'whip', J + 'swoosh-suave.mp3', -5); fx(4.05, null, J + 'tap.mp3', -4); fx(5.55, 'barras', Q + 'whoosh-b.mp3', -5);
 gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
 // ---------- S2 me llamo Juan (vertical) ----------
-fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);
+fx(7.35, 'giro', P + 'arrow-swoosh.mp3', -5);
 texto('Juan', 'h', 170, 7.45, 9.3, { capa: 'sobre', maq: true, st: .08, size: 150 }); fx(7.45, null, Q + 'teclas.mp3', -11, { dur: .5 });
-fx(9.35, null, Q + 'pop-imagen.mp3', -9);
+
 sub('me llamo *Juan*', 7.45, 9.3, 8.3, 1600); sub('soy de Córdoba', 9.3, 10.4, 10.1, 1640); fx(9.3, 'obturador', P + 'camera-shutter.mp3', -6);
-texto('tengo mi propio *negocio*', 'h', 360, 10.45, 12.9, { size: 96 }); fx(10.45, 'whip', Q + 'swoosh-a.mp3', -9, { dir: -1 });
+texto('tengo mi propio *negocio*', 'h', 360, 10.45, 12.9, { size: 96 }); fx(10.45, 'whip', J + 'swoosh-corto.mp3', -8, { dir: -1 });
 texto('*PLEA5E*', 'gig', 1480, 12.1, 12.95, { size: 210 }); fx(12.08, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(12.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 28 });
 // ---------- S3 cuando empecé ----------
-fx(12.95, 'barras', Q + 'whoosh-dramatico.mp3', -7);
+fx(12.95, 'caida', Q + 'whoosh-mov.mp3', -6);
 sub('cuando empecé', 13.15, 14.3, 14.0);
-fx(14.35, 'whip', Q + 'whoosh-b.mp3', -8, { dir: -1 }); texto('no tenía', 'p', 560, 14.4, 17.4, { center: true, size: 70 }); texto('para *anuncios*', 'p', 1300, 16.3, 17.4, { center: true, size: 70 }); fx(17.45, null, Q + 'swish-c.mp3', -10);
+fx(14.35, 'ladeo', J + 'swoosh-aire.mp3', -7, { dir: -1 }); texto('no tenía', 'p', 560, 14.4, 17.4, { center: true, size: 70 }); texto('para *anuncios*', 'p', 1300, 16.3, 17.4, { center: true, size: 70 }); fx(17.45, null, Q + 'swish-c.mp3', -10);
 fx(15.32, null, P + 'wrong.mp3', -8); fx(16.22, null, P + 'wrong.mp3', -8);
 sub('así que aprendí a hacerlo', 17.5, 18.9, 18.7); gigante('YO', 18.95, 19.7, 430, 330); fx(18.95, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 16 });
-fx(19.74, null, Q + 'pop-imagen.mp3', -9); fx(22.5, null, P + 'ding.mp3', -7);
+ fx(22.5, null, P + 'ding.mp3', -7);
 // ---------- S4 la gente no se para por un anuncio (solo voz) ----------
-fx(23.4, 'barras', Q + 'whoosh-b.mp3', -6);
+fx(23.4, 'giro', P + 'arrow2-swoosh.mp3', -6, { dir: -1 });
 texto('y descubrí *algo*', 'h', 330, 23.55, 24.65);
 texto('la gente no se para', 'p', 360, 24.7, 26.8, { maq: true, st: .04 }); fx(24.7, null, Q + 'teclas.mp3', -11, { dur: 19 * .04 + .15 });
 texto('por un *anuncio*', 'h', 440, 25.5, 26.8);
-fx(26.5, null, P + 'mouse-click.mp3', -6); fx(26.65, 'glitch');
+fx(26.5, null, J + 'click.mp3', -4); fx(26.65, 'glitch');
 texto('se para por una', 'p', 520, 26.9, 28.45, { center: true });
-texto('*HISTORIA*', 'gig', 650, 27.8, 28.45, { size: 196 }); fx(27.8, 'riser', null, 0, { d: .8 }); fx(27.8, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 26 });
+texto('*HISTORIA*', 'gig', 650, 27.8, 28.45, { size: 196 }); fx(27.8, 'riser', Q + 'riser-metal.mp3', -7, { d: .8 }); fx(27.8, 'impacto', null, 0, { a: 26 });
 // ---------- S5 esto es lo que hago ----------
 fx(28.5, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('esto es lo que *hago*', 28.8, 30.3, 30.0);
-fx(30.32, 'whip'); fx(30.75, null, Q + 'swish-c.mp3', -6); fx(31.9, null, Q + 'riser-metal.mp3', -9);
+fx(30.32, 'whip'); fx(30.75, null, Q + 'swoosh-a.mp3', -6); fx(31.9, null, P + 'metallic-riser.mp3', -9);
 
-sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
+sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', P + 'woah-drop.mp3', -3, { a: 18 });
 sub('pongo la *cara*', 33.6, 34.6, 34.3); fx(33.72, null, P + 'camera-click.mp3', -6);
-fx(35.2, 'barras', Q + 'swoosh-a.mp3', -7); sub('cuento tu *producto*', 35.45, 36.8, 36.4); sub('como una *historia*', 37.1, 38.5, 38.2); fx(35.5, null, Q + 'swish-c.mp3', -9);
-sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.0, 'whip', Q + 'whoosh-b.mp3', -8);
-fx(40.5, 'obturador', P + 'camera-shutter.mp3', -7); sub('y lo edito *así*', 40.6, 42.0, 41.5); fx(41.45, 'zoomdig', Q + 'zoom-digital.mp3', -8);
+fx(35.2, 'caida', J + 'swoosh-suave.mp3', -7); sub('cuento tu *producto*', 35.45, 36.8, 36.4); sub('como una *historia*', 37.1, 38.5, 38.2); 
+sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.0, 'whip', P + 'arrow-swoosh.mp3', -7);
+fx(40.5, 'obturador', J + 'obturador-seco.mp3', -6); sub('y lo edito *así*', 40.6, 42.0, 41.5); fx(41.45, 'zoomdig', Q + 'zoom-digital.mp3', -8);
 // ---------- S6 cierre (vertical) ----------
 fx(42.15, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('si tu producto merece', 42.3, 43.6, 43.4, 1600); sub('que lo vean hasta el *final*', 43.6, 45.1, 44.8, 1600);
-fx(45.32, null, Q + 'pop-imagen.mp3', -8); sub('en mi perfil', 46.55, 47.4, 47.3, 1600);
-texto('*EGO*', 'gig', 150, 47.95, 50.2, { capa: 'ui', size: 360 }); fx(47.4, null, Q + 'whoosh-b.mp3', -7); fx(47.93, 'riser', null, 0, { d: .5 }); fx(47.95, 'impacto', P + 'woah-drop.mp3', -2, { a: 22 }); fx(48.95, null, Q + 'pop-imagen.mp3', -8);
+fx(45.32, null, J + 'pop-limpio.mp3', -7); sub('en mi perfil', 46.55, 47.4, 47.3, 1600);
+texto('*EGO*', 'gig', 150, 47.95, 50.2, { capa: 'ui', size: 360 }); fx(47.4, null, J + 'swoosh-corto.mp3', -7); fx(47.93, 'riser', null, 0, { d: .5 }); fx(47.95, 'impacto', P + 'woah-drop.mp3', -2, { a: 22 }); fx(48.95, null, J + 'click.mp3', -4);
 // ---------- elementos ----------
 $('sobre').insertAdjacentHTML('beforeend', `
  <div id="tel" class="tel" style="left:640px;top:110px;width:360px;height:640px"><img id="telImg"></div>
@@ -236,7 +236,7 @@ const ICO = { guion: '<path d="M6 2h9l5 5v15H6z M15 2v5h5 M9 12h8 M9 16h8" />', 
 ['guion', 'cámara', 'edición', 'sonido'].forEach((w, i) => { const d = document.createElement('div'); d.className = 'chip';
   d.innerHTML = `<img class="bv" data-d="${['guion', 'camara', 'edicion', 'sonido'][i]}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:46px;filter:brightness(.55) saturate(.9)"><div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:18px"><svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICO[w]}</svg><span>${w}</span></div>`; d.style.overflow = 'hidden';
   Object.assign(d.style, { left: (i % 2) * 460 + 'px', top: Math.floor(i / 2) * 420 + 'px', width: '440px', height: '390px', borderRadius: '48px', flexDirection: 'column', justifyContent: 'center', gap: '26px', fontSize: '64px', fontWeight: 700 }); $('skills').appendChild(d); });
-fx(19.7, 'obturador', P + 'camera-shutter.mp3', -6);
+fx(19.7, 'obturador', J + 'rafaga-fotos.mp3', -6);
 [['UGC', 90, 560, 39.1], ['MARKETING', 90, 770, 39.45], ['STYLE', 90, 980, 39.8]].forEach(([w, x, y, a]) => { const d = document.createElement('div'); d.className = 't gig';
   Object.assign(d.style, { left: x + 'px', right: 'auto', top: y + 'px', fontSize: '160px', textAlign: 'left' }); d.textContent = w; d.dataset.a = a; $('nivel').appendChild(d); });
 [['#2F6BFF', [[0, 230], [250, 180], [450, 300]]], ['#8FB0FF', [[40, 160], [240, 260], [520, 200]]], ['#F5F7FA', [[0, 120], [150, 90], [300, 380]]]].forEach(([c, cl], j) => {
@@ -248,11 +248,12 @@ document.body.insertAdjacentHTML('beforeend', `<div class="hud" id="hud"><div cl
  <i class="co" style="left:34px;top:34px;border-top-width:5px;border-left-width:5px;display:none"></i>
  <i class="co" style="right:34px;bottom:34px;border-bottom-width:5px;border-right-width:5px"></i><i class="co" style="left:34px;bottom:34px;border-bottom-width:5px;border-left-width:5px"></i><i class="co" style="right:34px;top:34px;border-top-width:5px;border-right-width:5px;display:none"></i>
  <div class="pie">UGC · MARKETING · STYLE</div></div>`);
+const RP = [[190, 900], [540, 900], [890, 900], [365, 1290], [715, 1290]];
 const RAMAS = [['unbox', 'unboxing'], ['resena', 'reseña'], ['rutina', 'rutina'], ['detras', 'detrás de cámaras'], ['pov', 'POV']];
 const FAN = ['c1', 'unbox', 'c2', 'resena', 'mosca', 'yo', 'rutina', 'c3', 'detras', 'pov', 'creador'], NF = { c1: 66, c2: 66, c3: 66, mosca: 108, unbox: 100, resena: 100, rutina: 100, detras: 100, pov: 100, creador: 110 };
-$('ui2').insertAdjacentHTML('beforeend', `<div id="arbol" class="abs" style="left:0;top:0;width:1080px;height:1920px"><svg width="1080" height="1920" style="position:absolute;left:0;top:0"><path id="onda" fill="none" stroke="#2F6BFF" stroke-width="7" stroke-linecap="round"/>${RAMAS.map((r, i) => `<path id="rm${i}" d="M330 960 C 520 960, 540 ${400 + i * 250}, 720 ${400 + i * 250}" fill="none" stroke="rgba(245,247,250,.8)" stroke-width="4"/><circle id="nd${i}" cx="720" cy="${400 + i * 250}" r="12" fill="#2F6BFF"/>`).join('')}<circle cx="330" cy="960" r="18" fill="#2F6BFF"/></svg>${RAMAS.map(([d, l], i) => `<div class="rama" id="ra${i}" style="top:${285 + i * 250}px"><img><span>${l}</span></div>`).join('')}</div>
+$('ui2').insertAdjacentHTML('beforeend', `<div id="arbol" class="abs" style="left:0;top:0;width:1080px;height:1920px"><svg width="1080" height="1920" style="position:absolute;left:0;top:0"><path id="onda" fill="none" stroke="#2F6BFF" stroke-width="8" stroke-linecap="round"/>${RAMAS.map((r, i) => { const [cx, cy] = RP[i]; return `<path id="rm${i}" d="M540 560 C 540 720, ${cx} 640, ${cx} ${cy - 165}" fill="none" stroke="rgba(245,247,250,.8)" stroke-width="5"/><circle id="nd${i}" cx="${cx}" cy="${cy - 165}" r="13" fill="#2F6BFF"/>`; }).join('')}<circle cx="540" cy="560" r="20" fill="#2F6BFF"/></svg>${RAMAS.map(([d, l], i) => `<div class="rama" id="ra${i}" style="left:${RP[i][0] - 140}px;top:${RP[i][1] - 165}px"><img><span>${l}</span></div>`).join('')}</div>
  <div id="fanes" class="abs" style="left:0;top:0;width:1080px;height:1920px">${FAN.map((d, i) => d === 'yo' ? `<div class="fan" id="fn${i}"><div class="yoIn"><img></div></div>` : `<div class="fan" id="fn${i}"><img></div>`).join('')}</div><div class="prompt" id="prompt"><span>¿Qué creamos para tu marca?</span><b><svg width="56" height="56" viewBox="0 0 24 24"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg></b></div>`);
-$('ui2').insertAdjacentHTML('beforeend', `<div class="perfil" id="perfil"><div class="av"><img id="avImg" src="cara/persona2/1382.webp"></div><div class="nm">Ego</div><div class="bio">UGC · marketing · style<br>Juan · Córdoba<br><b style="color:#fff">Escríbeme para colaborar</b></div>
+$('ui2').insertAdjacentHTML('beforeend', `<div class="perfil" id="perfil"><div class="av"><img id="avImg" src="cara/persona2/1230.webp"></div><div class="nm">Ego</div><div class="bio">UGC · marketing · style<br>Juan · Córdoba<br><b style="color:#fff">Escríbeme para colaborar</b></div>
  <div class="bt" id="bSeg" style="left:60px;width:400px;background:#2F6BFF;color:#fff">Seguir</div><div class="bt" style="left:480px;width:360px;border:3px solid rgba(255,255,255,.5);color:#fff">Mensaje</div></div>`);
 $('ui2').insertAdjacentHTML('beforeend', `
  <div id="bandas" class="abs" style="left:0;top:0;width:1080px;height:1920px;overflow:hidden"><div class="banda" id="bd1" style="top:700px;background:#2F6BFF;color:#fff;transform:rotate(-8deg)"></div><div class="banda" id="bd2" style="top:1000px;background:#F5F7FA;color:#07080B;transform:rotate(6deg)"></div></div>
@@ -325,10 +326,10 @@ window.render = async t => { t_ = t;
   // cuento tu producto como una historia: gancho → historia → producto
   if (vis('beats', false)) { [0, 1, 2].forEach(i => { const a = [35.5, 36.4, 37.3][i]; entra('bt' + i, a, 300); $('bt' + i).classList.toggle('on', t >= a + .25); $('bt' + i).style.opacity *= 1 - p(t, 38.45, .25); });
     const L = 800, dl = p(t, 35.6, 2.0) * L; $('bl').style.strokeDasharray = `${dl} ${L}`; $('bLine').style.opacity = 1 - p(t, 38.45, .25); }
-  if (vis('arbol', t >= 35.2 && t < 39.02)) { let d = 'M40 960'; for (let x = 40; x <= 330; x += 6) d += ` L${x} ${960 + Math.sin(x * .06 - t * 9) * 40 * Math.min(1, (330 - x) / 120) * (1 - p(t, 38.6, .3))}`; $('onda').setAttribute('d', d);
+  if (vis('arbol', t >= 35.2 && t < 39.02)) { let d = 'M540 170'; for (let y = 170; y <= 560; y += 6) d += ` L${540 + Math.sin(y * .05 - t * 9) * 46 * Math.min(1, (560 - y) / 140) * (1 - p(t, 38.6, .3))} ${y}`; $('onda').setAttribute('d', d);
     $('onda').style.strokeDasharray = `${p(t, 35.25, .4) * 400} 400`; const fin = 1 - p(t, 38.65, .3);
-    await Promise.all(RAMAS.map(async ([dd], i) => { const a = 35.6 + i * .18, L = 520, pr = $('rm' + i); pr.style.strokeDasharray = `${ease.outCubic(p(t, a, .45)) * L} ${L}`; pr.style.opacity = 1 - p(t, 38.4, .2);
-      $('nd' + i).style.opacity = t >= a + .35 ? fin : 0; const k = muelle(t, a + .35, 2.4, .6), el = $('ra' + i); el.style.opacity = t >= a + .35 ? fin : 0; const g = ioX(p(t, 38.45, .45)); el.style.opacity = t >= a + .35 ? 1 : 0; el.style.transform = `translate(${(1 - Math.min(k, 1.04)) * 260 - g * 305}px,${g * (845 - 285 - i * 250)}px) rotate(${g * (i - 2) * 7}deg) scale(${(.7 + .3 * Math.min(k, 1.04)) * (1 + g * .5)})`;
+    await Promise.all(RAMAS.map(async ([dd], i) => { const a = 35.6 + i * .18, L = 760, pr = $('rm' + i); pr.style.strokeDasharray = `${ease.outCubic(p(t, a, .45)) * L} ${L}`; pr.style.opacity = 1 - p(t, 38.4, .2);
+      $('nd' + i).style.opacity = t >= a + .35 ? fin : 0; const k = muelle(t, a + .35, 2.4, .6), el = $('ra' + i); el.style.opacity = t >= a + .35 ? fin : 0; const g = ioX(p(t, 38.45, .45)); el.style.opacity = t >= a + .35 ? 1 : 0; el.style.transform = `translate(${g * (540 - RP[i][0])}px,${(1 - Math.min(k, 1.04)) * 200 + g * (1080 - RP[i][1])}px) rotate(${g * (i - 2) * 7}deg) scale(${(.6 + .4 * Math.min(k, 1.04)) * (1 + g * .35)})`;
       if (t >= a + .3) await frame(el.firstChild, dd, t, a, 100, true); })); } else vis('arbol', false);
   // es lo que ve la gente: UGC · MARKETING · STYLE
   if (vis('bandas', t >= 39.0 && t < 40.55)) { const k = ioX(p(t, 39.0, .35)); $('bd1').style.transform = `translateX(${(1 - k) * 1400 - (t - 39) * 260}px) rotate(-8deg)`; $('bd2').style.transform = `translateX(${-(1 - k) * 1400 + (t - 39) * 260 - 400}px) rotate(6deg)`; }
