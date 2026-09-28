@@ -163,14 +163,15 @@ const css = document.createElement('style'); css.textContent = `
 #moscaV{position:absolute;left:0;top:0;width:160px;height:160px;z-index:15;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 .perfil{position:absolute;left:90px;top:520px;width:900px;height:1040px;border-radius:56px;background:rgba(16,20,32,.92);border:1.5px solid rgba(255,255,255,.14);box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 120px rgba(47,107,255,.25)}
 .perfil .av{position:absolute;left:260px;top:-10px;width:380px;height:380px;border-radius:50%;overflow:hidden;border:8px solid #2F6BFF;background:radial-gradient(circle at 50% 40%,#1b3a8f,#07080B)}
-.perfil .av img{position:absolute;left:-150px;top:-200px;width:640px;height:720px;object-fit:cover}
+.perfil .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .perfil .nm{position:absolute;left:0;right:0;top:400px;text-align:center;font:800 68px FT;color:#fff}
 .perfil .bio{position:absolute;left:60px;right:60px;top:500px;text-align:center;font:600 40px FT;color:rgba(255,255,255,.72);line-height:1.35}
 .perfil .bt{position:absolute;top:760px;height:130px;border-radius:30px;display:flex;align-items:center;justify-content:center;font:800 50px FT}
+#rayos{position:absolute;left:-460px;top:-500px;width:2000px;height:2000px;background:repeating-conic-gradient(from 0deg,rgba(47,107,255,.55) 0 6deg,transparent 6deg 18deg);-webkit-mask-image:radial-gradient(circle,#000 10%,transparent 55%);mask-image:radial-gradient(circle,#000 10%,transparent 55%)}
 .flecha{position:absolute;left:470px;top:1700px;width:140px;height:140px}`;
 document.head.appendChild(css);
 // pared de pantallas (fondo de todas las tomas con cara)
-$('caraZ').insertAdjacentHTML('afterbegin', '<div id="muro"><div id="suelo"></div></div><div id="tinte"></div>');
+$('caraZ').insertAdjacentHTML('afterbegin', '<div id="muro"><div id="suelo"></div></div><div id="tinte"></div><div id="rayos"></div>');
 const MURO = ['c1', 'c2', 'c3', 'mosca', 'c1', 'c2', 'c3', 'mosca', 'c2'], NMURO = { c1: 66, c2: 66, c3: 66, mosca: 108 };
 
 // ---------- S1 gancho ----------
@@ -204,9 +205,9 @@ texto('*HISTORIA*', 'gig', 650, 27.8, 28.45, { size: 196 }); fx(27.8, 'riser', Q
 // ---------- S5 esto es lo que hago ----------
 fx(28.5, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('esto es lo que *hago*', 28.8, 30.3, 30.0);
-fx(30.32, 'whip'); fx(30.75, null, Q + 'swoosh-a.mp3', -6); fx(31.9, null, P + 'metallic-riser.mp3', -9);
+fx(30.32, 'whip'); fx(30.75, null, Q + 'swoosh-a.mp3', -6); fx(31.9, null, J + 'carga-parpadeo.mp3', -8);
 
-sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', P + 'woah-drop.mp3', -3, { a: 18 });
+sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', J + 'obturador-swoosh.mp3', -4, { a: 18 });
 sub('pongo la *cara*', 33.6, 34.6, 34.3); fx(33.72, null, P + 'camera-click.mp3', -6);
 fx(35.2, 'caida', J + 'swoosh-suave.mp3', -7); sub('cuento tu *producto*', 35.45, 36.8, 36.4); sub('como una *historia*', 37.1, 38.5, 38.2); 
 sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.0, 'whip', P + 'arrow-swoosh.mp3', -7);
@@ -253,7 +254,7 @@ const RAMAS = [['unbox', 'unboxing'], ['resena', 'reseña'], ['rutina', 'rutina'
 const FAN = ['c1', 'unbox', 'c2', 'resena', 'mosca', 'yo', 'rutina', 'c3', 'detras', 'pov', 'creador'], NF = { c1: 66, c2: 66, c3: 66, mosca: 108, unbox: 100, resena: 100, rutina: 100, detras: 100, pov: 100, creador: 110 };
 $('ui2').insertAdjacentHTML('beforeend', `<div id="arbol" class="abs" style="left:0;top:0;width:1080px;height:1920px"><svg width="1080" height="1920" style="position:absolute;left:0;top:0"><path id="onda" fill="none" stroke="#2F6BFF" stroke-width="8" stroke-linecap="round"/>${RAMAS.map((r, i) => { const [cx, cy] = RP[i]; return `<path id="rm${i}" d="M540 560 C 540 720, ${cx} 640, ${cx} ${cy - 165}" fill="none" stroke="rgba(245,247,250,.8)" stroke-width="5"/><circle id="nd${i}" cx="${cx}" cy="${cy - 165}" r="13" fill="#2F6BFF"/>`; }).join('')}<circle cx="540" cy="560" r="20" fill="#2F6BFF"/></svg>${RAMAS.map(([d, l], i) => `<div class="rama" id="ra${i}" style="left:${RP[i][0] - 140}px;top:${RP[i][1] - 165}px"><img><span>${l}</span></div>`).join('')}</div>
  <div id="fanes" class="abs" style="left:0;top:0;width:1080px;height:1920px">${FAN.map((d, i) => d === 'yo' ? `<div class="fan" id="fn${i}"><div class="yoIn"><img></div></div>` : `<div class="fan" id="fn${i}"><img></div>`).join('')}</div><div class="prompt" id="prompt"><span>¿Qué creamos para tu marca?</span><b><svg width="56" height="56" viewBox="0 0 24 24"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg></b></div>`);
-$('ui2').insertAdjacentHTML('beforeend', `<div class="perfil" id="perfil"><div class="av"><img id="avImg" src="cara/persona2/1230.webp"></div><div class="nm">Ego</div><div class="bio">UGC · marketing · style<br>Juan · Córdoba<br><b style="color:#fff">Escríbeme para colaborar</b></div>
+$('ui2').insertAdjacentHTML('beforeend', `<div class="perfil" id="perfil"><div class="av"><img id="avImg" src="avatar.jpg"></div><div class="nm">Ego</div><div class="bio">UGC · marketing · style<br>Juan · Córdoba<br><b style="color:#fff">Escríbeme para colaborar</b></div>
  <div class="bt" id="bSeg" style="left:60px;width:400px;background:#2F6BFF;color:#fff">Seguir</div><div class="bt" style="left:480px;width:360px;border:3px solid rgba(255,255,255,.5);color:#fff">Mensaje</div></div>`);
 $('ui2').insertAdjacentHTML('beforeend', `
  <div id="bandas" class="abs" style="left:0;top:0;width:1080px;height:1920px;overflow:hidden"><div class="banda" id="bd1" style="top:700px;background:#2F6BFF;color:#fff;transform:rotate(-8deg)"></div><div class="banda" id="bd2" style="top:1000px;background:#F5F7FA;color:#07080B;transform:rotate(6deg)"></div></div>
@@ -274,6 +275,7 @@ const entra = (id, a, dx = 500) => { const k = muelle(t_, a, 2.4, .62); $(id).st
 let t_ = 0;
 ['bd1', 'bd2'].forEach(id => $(id).textContent = 'UGC · MARKETING · STYLE · EGO · '.repeat(4));
 window.render = async t => { t_ = t;
+  if (vis('rayos', t >= 32.95 && t < 33.9)) { const k = ease.outCubic(p(t, 33.0, .35)); $('rayos').style.transform = `rotate(${(t - 33) * 40}deg) scale(${.3 + .7 * k})`; $('rayos').style.opacity = k * (1 - p(t, 33.6, .3)); }
   // la mosca revolotea alrededor de la cabeza en el gancho (engancha los 2 primeros segundos)
   if (vis('moscaV', t < 2.3)) { const a = t * 4.2, x = 540 + Math.sin(a) * 330 + Math.sin(a * 2.7) * 60, y = 900 + Math.cos(a * 1.3) * 220 + Math.sin(a * 3.1) * 40, ent = ease.outCubic(p(t, 0, .35));
     $('moscaV').style.transform = `translate(${lerp(1200, x, ent) - 55}px,${y - 55}px) rotate(${Math.cos(a) * 60 + 90}deg) scale(${1 - .6 * p(t, 2.0, .3)})`; $('alas').style.transform = `scaleY(${Math.floor(t * 60) % 2 ? .4 : 1})`; $('moscaV').style.opacity = 1 - p(t, 2.1, .2); }
