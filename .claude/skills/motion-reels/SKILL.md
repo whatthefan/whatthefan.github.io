@@ -55,6 +55,8 @@ Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. 
 | `impacto` (`a`) | sacudida amortiguada + punch + mini flash | `packs/woah-drop` (revelación), `packs2/whoosh-dramatico` (palabra gigante), `packs2/pop-imagen` (aterriza algo) | justo en el golpe |
 | `barras` | 3 barras diagonales (azul, blanco, negro) barren la pantalla y tapan el corte | `packs2/whoosh-b`, `whoosh-dramatico`, `swoosh-a` | cambio de bloque, con personalidad de marca |
 | `iris` | diafragma: círculo que se cierra en el corte y se abre | `packs2/obturador-flash` | pasar a algo de "cámara" o a una escena de motion |
+| `obturador` | 6 láminas de obturador que se cierran en hexágono y se abren | `packs/camera-shutter` | la transición "de cámara" favorita de Juan |
+| `anillos` | anillos azules que crecen desde el centro hasta blanco | `packs2/swoosh-a` | salir de una escena llena (abanico) a la cara |
 | `zoomdig` | zoom a 3 saltos | `packs2/zoom-digital` | marca o logo |
 | `null` | solo sonido | ver catálogo | UI, tachar, acierto, teclas |
 
@@ -103,3 +105,7 @@ Usa el mismo motor y las mismas reglas de sonido, pero **cambia la marca** en `:
 - Gancho mejorado (EGO v5): cuando se nombra tu vídeo anterior, `whip` a un **reel de Instagram a pantalla completa** que lo reproduce, con corazón que se rellena y explota (mouse-click + pop), y `whip` de vuelta a la cara.
 
 - (feedback de Juan, v6) **Personalidad para que las marcas escriban**: marco de creador fijo en todo el vídeo (logo EGO arriba a la izquierda, "● REC 00:ss" con el tiempo real arriba a la derecha, esquinas de visor y "UGC · MARKETING · STYLE" abajo), bandas diagonales de texto en movimiento, y **clips reales de creación de contenido** (Mixkit: 20810 libreta, 44056 cámara, 44054 edición, 44049 micro, 2374 diafragma) dentro de las tarjetas. Hay que **variar las transiciones**: whip, barras, iris, flash y glitch, sin repetir la misma dos veces seguidas.
+
+- (feedback de Juan, v7) **Como máximo UN sonido por transición o evento.** No se pone clic + glitch, ni clic + pop, ni whoosh + pop juntos. Si una transición visual va pegada a otro sonido, esa va en silencio (`fx(t, 'whip')` sin sonido).
+- Ideas sacadas del vídeo de referencia de OpenAI (motion "de producto"): **caja de prompt** con botón de enviar que al pulsarse hace **explotar un abanico de tarjetas** con vídeo; **onda que se ramifica** en nodos que acaban en tarjetas (formatos UGC: unboxing, reseña, rutina, detrás de cámaras, POV); y **anillos** que crecen hasta blanco.
+- Clips UGC típicos (Mixkit): 31218 unboxing, 34478 reseña a cámara, 50406 rutina en móvil con aro de luz, 42315 aro de luz, 41181 selfie POV.

@@ -149,6 +149,12 @@ const css = document.createElement('style'); css.textContent = `
 .hud .co{position:absolute;width:64px;height:64px;border:0 solid rgba(255,255,255,.8)}
 .hud .pie{position:absolute;left:54px;bottom:58px;font:600 24px FT;letter-spacing:.18em;color:rgba(255,255,255,.55)}
 .banda{position:absolute;left:-300px;width:1700px;height:150px;display:flex;align-items:center;white-space:nowrap;font:800 96px FT;letter-spacing:-.02em}
+.prompt{position:absolute;left:90px;top:860px;width:900px;height:170px;border-radius:85px;background:rgba(245,247,250,.96);display:flex;align-items:center;padding:0 40px 0 60px;box-shadow:0 30px 80px rgba(47,107,255,.35)}
+.prompt span{font:600 50px FT;color:#07080B;flex:1}.prompt b{width:110px;height:110px;border-radius:50%;background:#2F6BFF;display:flex;align-items:center;justify-content:center}
+.fan{position:absolute;left:390px;top:720px;width:300px;height:420px;border-radius:30px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.55);border:3px solid rgba(255,255,255,.85)}
+.fan img{width:100%;height:100%;object-fit:cover}
+.rama{position:absolute;left:720px;width:250px;height:230px;border-radius:26px;overflow:hidden;border:3px solid rgba(255,255,255,.85);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.rama img{width:100%;height:100%;object-fit:cover}.rama span{position:absolute;left:12px;bottom:10px;padding:6px 14px;border-radius:14px;background:rgba(7,8,11,.8);font:700 26px FT;color:#fff}
 .flecha{position:absolute;left:470px;top:1700px;width:140px;height:140px}`;
 document.head.appendChild(css);
 // pared de pantallas (fondo de todas las tomas con cara)
@@ -159,13 +165,13 @@ const MURO = ['c1', 'c2', 'c3', 'mosca', 'c1', 'c2', 'c3', 'mosca', 'c2'], NMURO
 fx(0, 'flash', P + 'camera-shutter.mp3', -6);
 sub('Hice un vídeo sobre una *mosca*', .35, 2.4, 2.2); sub('en un *urinario*', 2.6, 4.2, 3.6, 1600);
 sub('¿y aun así?', 4.65, 5.6, 5.3, 1600); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
-fx(2.25, 'whip', Q + 'whoosh-b.mp3', -5); fx(4.05, null, P + 'mouse-click.mp3', -6); fx(4.1, null, Q + 'pop-imagen.mp3', -8); fx(5.55, 'barras', Q + 'whoosh-b.mp3', -5);
+fx(2.25, 'whip', Q + 'whoosh-b.mp3', -5); fx(4.05, null, P + 'mouse-click.mp3', -6); fx(5.55, 'barras', Q + 'whoosh-b.mp3', -5);
 gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
 // ---------- S2 me llamo Juan (vertical) ----------
 fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);
 texto('Juan', 'h', 170, 7.45, 9.3, { capa: 'sobre', maq: true, st: .08, size: 150 }); fx(7.45, null, Q + 'teclas.mp3', -11, { dur: .5 });
 fx(9.35, null, Q + 'pop-imagen.mp3', -9);
-sub('me llamo *Juan*', 7.45, 9.3, 8.3, 1600); sub('soy de Córdoba', 9.3, 10.4, 10.1, 1640); fx(9.3, 'iris', Q + 'obturador-flash.mp3', -7);
+sub('me llamo *Juan*', 7.45, 9.3, 8.3, 1600); sub('soy de Córdoba', 9.3, 10.4, 10.1, 1640); fx(9.3, 'obturador', P + 'camera-shutter.mp3', -6);
 texto('tengo mi propio *negocio*', 'h', 360, 10.45, 12.9, { size: 96 }); fx(10.45, 'whip', Q + 'swoosh-a.mp3', -9, { dir: -1 });
 texto('*PLEA5E*', 'gig', 1480, 12.1, 12.95, { size: 210 }); fx(12.08, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.2 }); fx(12.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 28 });
 // ---------- S3 cuando empecé ----------
@@ -180,19 +186,19 @@ fx(23.4, 'barras', Q + 'whoosh-b.mp3', -6);
 texto('y descubrí *algo*', 'h', 330, 23.55, 24.65);
 texto('la gente no se para', 'p', 360, 24.7, 26.8, { maq: true, st: .04 }); fx(24.7, null, Q + 'teclas.mp3', -11, { dur: 19 * .04 + .15 });
 texto('por un *anuncio*', 'h', 440, 25.5, 26.8);
-fx(26.5, null, P + 'mouse-click.mp3', -6); fx(26.65, 'glitch', Q + 'glitch.mp3', -7);
+fx(26.5, null, P + 'mouse-click.mp3', -6); fx(26.65, 'glitch');
 texto('se para por una', 'p', 520, 26.9, 28.45, { center: true });
 texto('*HISTORIA*', 'gig', 650, 27.8, 28.45, { size: 196 }); fx(27.8, 'riser', null, 0, { d: .8 }); fx(27.8, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 26 });
 // ---------- S5 esto es lo que hago ----------
 fx(28.5, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('esto es lo que *hago*', 28.8, 30.3, 30.0);
-fx(30.32, 'whip', Q + 'whoosh-b.mp3', -5); fx(31.1, null, Q + 'swish-c.mp3', -9); fx(31.9, 'whip', Q + 'swoosh-a.mp3', -6, { dir: -1 });
-texto('lo que *hago*', 'h', 330, 30.4, 31.85);
+fx(30.32, 'whip'); fx(30.75, 'impacto', Q + 'whoosh-dramatico.mp3', -6, { a: 12 }); fx(31.9, 'anillos', Q + 'swoosh-a.mp3', -6);
+
 sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
 sub('pongo la *cara*', 33.6, 34.6, 34.3); fx(33.72, null, P + 'camera-click.mp3', -6);
 fx(35.2, 'barras', Q + 'swoosh-a.mp3', -7); sub('cuento tu *producto*', 35.45, 36.8, 36.4); sub('como una *historia*', 37.1, 38.5, 38.2); fx(35.5, null, Q + 'swish-c.mp3', -9);
-sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.0, 'whip', Q + 'whoosh-b.mp3', -8); fx(39.1, null, Q + 'pop-imagen.mp3', -10);
-fx(40.5, 'iris', Q + 'obturador-flash.mp3', -8); sub('y lo edito *así*', 40.6, 42.0, 41.5); fx(41.45, 'zoomdig', Q + 'zoom-digital.mp3', -8);
+sub('es lo que ve la gente', 39.05, 40.45, 40.2); fx(39.0, 'whip', Q + 'whoosh-b.mp3', -8);
+fx(40.5, 'obturador', P + 'camera-shutter.mp3', -7); sub('y lo edito *así*', 40.6, 42.0, 41.5); fx(41.45, 'zoomdig', Q + 'zoom-digital.mp3', -8);
 // ---------- S6 cierre (vertical) ----------
 fx(42.15, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('si tu producto merece', 42.3, 43.6, 43.4, 1600); sub('que lo vean hasta el *final*', 43.6, 45.1, 44.8, 1600);
@@ -218,7 +224,7 @@ const ICO = { guion: '<path d="M6 2h9l5 5v15H6z M15 2v5h5 M9 12h8 M9 16h8" />', 
 ['guion', 'cámara', 'edición', 'sonido'].forEach((w, i) => { const d = document.createElement('div'); d.className = 'chip';
   d.innerHTML = `<img class="bv" data-d="${['guion', 'camara', 'edicion', 'sonido'][i]}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:46px;filter:brightness(.55) saturate(.9)"><div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:18px"><svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICO[w]}</svg><span>${w}</span></div>`; d.style.overflow = 'hidden';
   Object.assign(d.style, { left: (i % 2) * 460 + 'px', top: Math.floor(i / 2) * 420 + 'px', width: '440px', height: '390px', borderRadius: '48px', flexDirection: 'column', justifyContent: 'center', gap: '26px', fontSize: '64px', fontWeight: 700 }); $('skills').appendChild(d); });
-fx(19.7, 'iris', Q + 'obturador-flash.mp3', -7);
+fx(19.7, 'obturador', P + 'camera-shutter.mp3', -6);
 [['UGC', 90, 560, 39.1], ['MARKETING', 90, 770, 39.45], ['STYLE', 90, 980, 39.8]].forEach(([w, x, y, a]) => { const d = document.createElement('div'); d.className = 't gig';
   Object.assign(d.style, { left: x + 'px', right: 'auto', top: y + 'px', fontSize: '160px', textAlign: 'left' }); d.textContent = w; d.dataset.a = a; $('nivel').appendChild(d); });
 [['#2F6BFF', [[0, 230], [250, 180], [450, 300]]], ['#8FB0FF', [[40, 160], [240, 260], [520, 200]]], ['#F5F7FA', [[0, 120], [150, 90], [300, 380]]]].forEach(([c, cl], j) => {
@@ -229,6 +235,10 @@ document.body.insertAdjacentHTML('beforeend', `<div class="hud" id="hud"><div cl
  <i class="co" style="left:34px;top:34px;border-top-width:5px;border-left-width:5px;display:none"></i>
  <i class="co" style="right:34px;bottom:34px;border-bottom-width:5px;border-right-width:5px"></i><i class="co" style="left:34px;bottom:34px;border-bottom-width:5px;border-left-width:5px"></i><i class="co" style="right:34px;top:34px;border-top-width:5px;border-right-width:5px;display:none"></i>
  <div class="pie">UGC · MARKETING · STYLE</div></div>`);
+const RAMAS = [['unbox', 'unboxing'], ['resena', 'reseña'], ['rutina', 'rutina'], ['detras', 'detrás de cámaras'], ['pov', 'POV']];
+const FAN = ['c1', 'unbox', 'c2', 'resena', 'mosca', 'rutina', 'c3', 'detras', 'pov', 'creador'], NF = { c1: 66, c2: 66, c3: 66, mosca: 108, unbox: 100, resena: 100, rutina: 100, detras: 100, pov: 100, creador: 110 };
+$('ui2').insertAdjacentHTML('beforeend', `<div id="arbol" class="abs" style="left:0;top:0;width:1080px;height:1920px"><svg width="1080" height="1920" style="position:absolute;left:0;top:0"><path id="onda" fill="none" stroke="#2F6BFF" stroke-width="7" stroke-linecap="round"/>${RAMAS.map((r, i) => `<path id="rm${i}" d="M330 960 C 520 960, 540 ${400 + i * 250}, 720 ${400 + i * 250}" fill="none" stroke="rgba(245,247,250,.8)" stroke-width="4"/><circle id="nd${i}" cx="720" cy="${400 + i * 250}" r="12" fill="#2F6BFF"/>`).join('')}<circle cx="330" cy="960" r="18" fill="#2F6BFF"/></svg>${RAMAS.map(([d, l], i) => `<div class="rama" id="ra${i}" style="top:${285 + i * 250}px"><img><span>${l}</span></div>`).join('')}</div>
+ <div id="fanes" class="abs" style="left:0;top:0;width:1080px;height:1920px">${FAN.map((d, i) => `<div class="fan" id="fn${i}"><img></div>`).join('')}</div><div class="prompt" id="prompt"><span>¿Qué creamos para tu marca?</span><b><svg width="56" height="56" viewBox="0 0 24 24"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg></b></div>`);
 $('ui2').insertAdjacentHTML('beforeend', `
  <div id="bandas" class="abs" style="left:0;top:0;width:1080px;height:1920px;overflow:hidden"><div class="banda" id="bd1" style="top:700px;background:#2F6BFF;color:#fff;transform:rotate(-8deg)"></div><div class="banda" id="bd2" style="top:1000px;background:#F5F7FA;color:#07080B;transform:rotate(6deg)"></div></div>
  <div id="reel" class="reel"><img id="reelImg"><div class="top">Reels</div>
@@ -277,16 +287,24 @@ window.render = async t => { t_ = t;
   // anuncio que se salta
   if (vis('ad', t >= 24.75 && t < 26.9)) { const k = muelle(t, 24.8, 2.2, .7); $('ad').style.transform = `translateX(${(1 - Math.min(k, 1.03)) * 800}px) scale(${t > 26.5 ? 1 - .04 * (1 - muelle(t, 26.5, 4, .5)) : 1})`;
     $('adBar').style.width = (p(t, 24.8, 1.9) * 100) + '%'; $('adSkip').style.background = t >= 26.5 ? '#fff' : 'rgba(0,0,0,.6)'; $('adSkip').style.color = t >= 26.5 ? '#111' : '#fff'; $('ad').style.opacity = 1 - p(t, 26.72, .15); }
-  if (vis('cursor', t >= 25.2 && t < 26.8)) { const k = ioX(p(t, 25.25, 1.1)); $('cursor').style.transform = `translate(${lerp(260, 830, k)}px,${lerp(1600, 1180, k)}px) scale(${t >= 26.5 && t < 26.6 ? .85 : 1})`; }
+  if (vis('cursor', (t >= 25.2 && t < 26.8) || (t >= 30.3 && t < 30.8))) { const b = t >= 30.3, k = b ? ioX(p(t, 30.3, .35)) : ioX(p(t, 25.25, 1.1)); $('cursor').style.transform = b ? `translate(${lerp(500, 880, k)}px,${lerp(1300, 950, k)}px) scale(${t >= 30.68 ? .85 : 1})` : `translate(${lerp(260, 830, k)}px,${lerp(1600, 1180, k)}px) scale(${t >= 26.5 && t < 26.6 ? .85 : 1})`; }
   // carrusel de trabajos
-  if (vis('carr', t >= 30.22 && t < 32.0)) { const dr = ioX(p(t, 30.22, 1.75)); for (let i = 0; i < 3; i++) { const x = 540 - 215 + (i - 1) * 470 + lerp(620, -620, dr) * .55;
+  if (vis('prompt', t >= 30.22 && t < 30.95, 'flex')) { const k = muelle(t, 30.25, 2.4, .65); $('prompt').style.transform = `scale(${t >= 30.68 ? 1 - .06 * (1 - muelle(t, 30.68, 4, .5)) : Math.min(k, 1.04)})`; $('prompt').style.opacity = 1 - p(t, 30.8, .12); }
+  if (vis('fanes', t >= 30.72 && t < 32.1)) await Promise.all(FAN.map(async (d, i) => { const el = $('fn' + i), k = ease.outCubic(p(t, 30.75, .55)), a = i / FAN.length * Math.PI * 2 + (t - 30.75) * .6, rr = k * 560;
+      el.style.transform = `translate(${Math.cos(a) * rr}px,${Math.sin(a) * rr * 1.25}px) rotate(${a * 57.3 + 90}deg) scale(${.4 + .6 * k})`; await frame(el.firstChild, d, t, 30.75, NF[d], true); }));
+  if (vis('carr', false)) { const dr = ioX(p(t, 30.22, 1.75)); for (let i = 0; i < 3; i++) { const x = 540 - 215 + (i - 1) * 470 + lerp(620, -620, dr) * .55;
       $('tl' + i).style.transform = `translateX(${x}px) rotate(${(i - 1) * 3}deg) scale(${1 - Math.abs(x + 215 - 540) / 3000})`; await frame($('ti' + i), 'c' + (i + 1), t, 30.22, 66); } }
   // pongo la cara: visor de cámara con REC
   if (vis('visor', t >= 33.6 && t < 35.1)) { const k = muelle(t, 33.65, 2.6, .55); $('visor').style.transform = `scale(${1.25 - .25 * Math.min(k, 1.04)})`; $('visor').style.opacity = exp(p(t, 33.6, .15)) * (1 - p(t, 34.9, .2));
     $('recT').textContent = '00:0' + Math.floor((t - 33.6) * 2); $('visor').querySelector('.rec b').style.opacity = Math.floor(t * 3) % 2 ? 1 : .2; }
   // cuento tu producto como una historia: gancho → historia → producto
-  if (vis('beats', t >= 35.4 && t < 38.7)) { [0, 1, 2].forEach(i => { const a = [35.5, 36.4, 37.3][i]; entra('bt' + i, a, 300); $('bt' + i).classList.toggle('on', t >= a + .25); $('bt' + i).style.opacity *= 1 - p(t, 38.45, .25); });
+  if (vis('beats', false)) { [0, 1, 2].forEach(i => { const a = [35.5, 36.4, 37.3][i]; entra('bt' + i, a, 300); $('bt' + i).classList.toggle('on', t >= a + .25); $('bt' + i).style.opacity *= 1 - p(t, 38.45, .25); });
     const L = 800, dl = p(t, 35.6, 2.0) * L; $('bl').style.strokeDasharray = `${dl} ${L}`; $('bLine').style.opacity = 1 - p(t, 38.45, .25); }
+  if (vis('arbol', t >= 35.2 && t < 38.95)) { let d = 'M40 960'; for (let x = 40; x <= 330; x += 6) d += ` L${x} ${960 + Math.sin(x * .06 - t * 9) * 40 * Math.min(1, (330 - x) / 120) * (1 - p(t, 38.6, .3))}`; $('onda').setAttribute('d', d);
+    $('onda').style.strokeDasharray = `${p(t, 35.25, .4) * 400} 400`; const fin = 1 - p(t, 38.65, .3);
+    await Promise.all(RAMAS.map(async ([dd], i) => { const a = 35.6 + i * .18, L = 520, pr = $('rm' + i); pr.style.strokeDasharray = `${ease.outCubic(p(t, a, .45)) * L} ${L}`; pr.style.opacity = fin;
+      $('nd' + i).style.opacity = t >= a + .35 ? fin : 0; const k = muelle(t, a + .35, 2.4, .6), el = $('ra' + i); el.style.opacity = t >= a + .35 ? fin : 0; el.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 260}px) scale(${.7 + .3 * Math.min(k, 1.04)})`;
+      if (t >= a + .3) await frame(el.firstChild, dd, t, a, 100, true); })); } else vis('arbol', false);
   // es lo que ve la gente: UGC · MARKETING · STYLE
   if (vis('bandas', t >= 39.0 && t < 40.55)) { const k = ioX(p(t, 39.0, .35)); $('bd1').style.transform = `translateX(${(1 - k) * 1400 - (t - 39) * 260}px) rotate(-8deg)`; $('bd2').style.transform = `translateX(${-(1 - k) * 1400 + (t - 39) * 260 - 400}px) rotate(6deg)`; }
   if (vis('nivel', false)) [...$('nivel').children].forEach(d => { const a = +d.dataset.a, k = muelle(t, a, 2.3, .62), e = exp(p(t, a, .3));

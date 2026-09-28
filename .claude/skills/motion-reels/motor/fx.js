@@ -14,11 +14,13 @@
   document.body.insertAdjacentHTML('beforeend', svg +
     '<div id="fxOsc" style="position:absolute;inset:0;z-index:18;pointer-events:none;opacity:0;background:radial-gradient(ellipse 75% 60% at 50% 50%,transparent 30%,#000 100%)"></div>' +
     '<div id="fxBarras" style="position:absolute;inset:0;z-index:17;pointer-events:none;overflow:hidden"><i></i><i></i><i></i></div>' +
+    '<svg id="fxObt" viewBox="-540 -960 1080 1920" style="position:absolute;inset:0;width:1080px;height:1920px;z-index:17;pointer-events:none;display:none"></svg>' +
+    '<svg id="fxAni" viewBox="-540 -890 1080 1920" style="position:absolute;inset:0;width:1080px;height:1920px;z-index:17;pointer-events:none;display:none"><circle r="0" fill="none" stroke="#2F6BFF" stroke-width="90"/><circle r="0" fill="none" stroke="#8FB0FF" stroke-width="60"/><circle r="0" fill="#F5F7FA"/></svg>' +
     '<div id="fxIris" style="position:absolute;inset:0;z-index:17;pointer-events:none;opacity:0"></div>' +
     '<div id="fxFlash" style="position:absolute;inset:0;z-index:19;pointer-events:none;opacity:0;background:#fff"></div>');
 })();
 function fxRender(t) {
-  const { p, ease } = E; let tx = 0, ty = 0, sc = 1, bx = 0, gl = 0, fl = 0, dk = 0, ba = null, ir = null;
+  const { p, ease } = E; let tx = 0, ty = 0, sc = 1, bx = 0, gl = 0, fl = 0, dk = 0, ba = null, ir = null, ob = null, an = null;
   for (const f of FX) { const u = t - f.t, dir = f.dir || 1;
     if (f.v === 'whip' && u > -.14 && u < .2) { // sale lo viejo hacia un lado, entra lo nuevo desde el otro
       if (u < 0) { const k = ease.inCubic((u + .14) / .14); tx -= dir * k * 240; bx += k * 70; sc *= 1 + .28 * k; }
@@ -29,6 +31,8 @@ function fxRender(t) {
     if (f.v === 'impacto' && u >= 0 && u < .55) { const e = Math.exp(-u * 8) * (f.a || 30); tx += Math.sin(u * 80) * e; ty += Math.cos(u * 64) * e * .8; sc *= 1 + .06 * Math.exp(-u * 7); gl = Math.max(gl, .6 * Math.exp(-u * 16)); fl = Math.max(fl, .35 * Math.exp(-u * 20)); }
     if (f.v === 'barras' && u > -.32 && u < .32) ba = (u + .32) / .64;                 // barras de marca que barren y tapan el corte
     if (f.v === 'iris' && u > -.3 && u < .3) ir = Math.abs(u) / .3;                     // diafragma que se cierra en el corte y se abre
+    if (f.v === 'obturador' && u > -.22 && u < .26) ob = u < 0 ? (u + .22) / .22 : 1 - u / .26;   // láminas de obturador que se cierran y abren
+    if (f.v === 'anillos' && u > -.4 && u < .25) an = u < 0 ? (u + .4) / .4 : 1 + u / .25;          // anillos azules que crecen hasta blanco
     if (f.v === 'zoomdig' && u >= 0 && u < .5) { const st = Math.min(2, Math.floor(u / .11)); sc *= 1 + .05 * (st + 1) * (1 - ease.inOut(p(t, f.t + .36, .14))); }
   }
   const B = document.getElementById('fxBarras'); B.style.display = ba === null ? 'none' : 'block';
@@ -37,6 +41,13 @@ function fxRender(t) {
       background: ['#2F6BFF', '#F5F7FA', '#07080B'][i], boxShadow: '0 0 60px rgba(0,0,0,.5)' }); });
   const I = document.getElementById('fxIris'); I.style.opacity = ir === null ? 0 : 1;
   if (ir !== null) { const r = ease.inOut(ir) * 1300; I.style.background = `radial-gradient(circle ${Math.max(r, 1)}px at 50% 46%, transparent ${Math.max(r - 2, 0)}px, #07080B ${r}px)`; }
+  const O = document.getElementById('fxObt'); O.style.display = ob === null ? 'none' : 'block';
+  if (ob !== null) { const k = ease.inOut(Math.max(0, Math.min(1, ob))), d = 1250 * (1 - k); let h = '';
+    for (let i = 0; i < 6; i++) { const a = i * 60 + 25 * k; h += `<g transform="rotate(${a})"><path d="M${-1400} ${d} L1400 ${d - 380} L1400 2400 L-1400 2400Z" fill="#101218" stroke="#3a4050" stroke-width="4"/></g>`; }
+    O.innerHTML = h; }
+  const A = document.getElementById('fxAni'); A.style.display = an === null ? 'none' : 'block';
+  if (an !== null) { const c = A.children; [0, 1].forEach(i => { const k = Math.max(0, Math.min(1, an - i * .15)); c[i].setAttribute('r', ease.inCubic(k) * 1500); c[i].setAttribute('stroke-width', 90 - i * 30 + k * 300); });
+    c[2].setAttribute('r', an > .7 ? ease.inCubic(Math.min(1, (an - .7) / .3)) * 1500 : 0); A.style.opacity = an > 1 ? 1 - (an - 1) : 1; }
   const el = document.getElementById('todo'); el.style.transform = `translate(${tx}px,${ty}px) scale(${sc})`;
   const fs = [];
   if (bx > .5) { document.getElementById('mbB').setAttribute('stdDeviation', `${bx} 0`); fs.push('url(#mb)'); }
