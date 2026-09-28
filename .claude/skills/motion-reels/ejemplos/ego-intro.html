@@ -95,7 +95,7 @@ function M(t) { let a = MK[0], b = MK[0]; for (let i = 0; i < MK.length - 1; i++
 async function cara(t) { const i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), F = $('caraFondo');
   if (F._i !== i) { F.src = $('caraBlur').src = `${CARA_FONDO}/${pad(i)}.jpg`; $('caraPersona').src = `${CARA_PERSONA}/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
 // cara: fondo real (jpg) + persona recortada (webp con alfa) del MISMO fotograma, preescalados a 1080×1215 (lanczos + nitidez)
-const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 1459;
+const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona2', CARA_N = 1459;
 const CARA = [[0, 2.25], [5.55, 7.35], [7.35, 9.3], [12.95, 14.35], [17.45, 19.7], [28.5, 30.3], [31.9, 35.15], [42.15, 48.65]]; const VERT = t => (t >= 7.35 && t < 9.3) || t >= 42.15; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
 const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
 /* ===== EGO · vídeo 00 · v3: persona recortada sobre una pared de pantallas con sus trabajos ===== */
@@ -155,6 +155,9 @@ const css = document.createElement('style'); css.textContent = `
 .fan img{width:100%;height:100%;object-fit:cover}
 .rama{position:absolute;left:720px;width:250px;height:230px;border-radius:26px;overflow:hidden;border:3px solid rgba(255,255,255,.85);box-shadow:0 16px 40px rgba(0,0,0,.5)}
 .rama img{width:100%;height:100%;object-fit:cover}.rama span{position:absolute;left:12px;bottom:10px;padding:6px 14px;border-radius:14px;background:rgba(7,8,11,.8);font:700 26px FT;color:#fff}
+.sub{font-size:78px!important;font-weight:800!important;letter-spacing:-.03em;line-height:1.08;text-shadow:0 4px 0 rgba(0,0,0,.35),0 10px 34px rgba(0,0,0,.65)!important}
+.sub .k{color:#fff!important;background:#2F6BFF;padding:0 .14em;border-radius:.18em;box-shadow:0 8px 24px rgba(47,107,255,.45)}
+#moscaV{position:absolute;left:0;top:0;width:160px;height:160px;z-index:15;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 .flecha{position:absolute;left:470px;top:1700px;width:140px;height:140px}`;
 document.head.appendChild(css);
 // pared de pantallas (fondo de todas las tomas con cara)
@@ -165,7 +168,7 @@ const MURO = ['c1', 'c2', 'c3', 'mosca', 'c1', 'c2', 'c3', 'mosca', 'c2'], NMURO
 fx(0, 'flash', P + 'camera-shutter.mp3', -6);
 sub('Hice un vídeo sobre una *mosca*', .35, 2.4, 2.2); sub('en un *urinario*', 2.6, 4.2, 3.6, 1600);
 sub('¿y aun así?', 4.65, 5.6, 5.3, 1600); sub('lo viste hasta el *final*', 5.8, 7.3, 6.9);
-fx(2.25, 'whip', Q + 'whoosh-b.mp3', -5); fx(4.05, null, P + 'mouse-click.mp3', -6); fx(5.55, 'barras', Q + 'whoosh-b.mp3', -5);
+fx(2.25, 'whip', Q + 'whoosh-b.mp3', -5); fx(4.05, null, Q + 'pop-imagen.mp3', -7); fx(5.55, 'barras', Q + 'whoosh-b.mp3', -5);
 gigante('FINAL', 6.55, 7.35, 470, 250); fx(6.55, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
 // ---------- S2 me llamo Juan (vertical) ----------
 fx(7.35, 'whip', Q + 'whoosh-b.mp3', -4);
@@ -231,6 +234,7 @@ fx(19.7, 'obturador', P + 'camera-shutter.mp3', -6);
   const pi = document.createElement('div'); pi.className = 'pista'; pi.style.top = (100 + j * 170) + 'px';
   cl.forEach(([x, w], k) => pi.insertAdjacentHTML('beforeend', j === 0 ? `<div class="clip" style="left:${x * 1.6}px;width:${w * 1.6}px;background-image:url(br/c${k + 1}/0030.jpg)"></div>` : `<div class="clip" style="left:${x * 1.6}px;width:${w * 1.6}px;background:${c};opacity:${.45 + j * .15}"></div>`)); $('tl').appendChild(pi); });
 $('tl').insertAdjacentHTML('beforeend', '<div class="cab" id="cab"></div>');
+document.body.insertAdjacentHTML('beforeend', `<svg id="moscaV" viewBox="-50 -50 100 100"><g fill="#fff"><ellipse rx="11" ry="17" cy="6"/><circle cy="-14" r="8"/></g><g id="alas" fill="rgba(255,255,255,.55)" stroke="#fff" stroke-width="3"><ellipse cx="-17" cy="-4" rx="17" ry="8" transform="rotate(-25)"/><ellipse cx="17" cy="-4" rx="17" ry="8" transform="rotate(25)"/></g></svg>`);
 document.body.insertAdjacentHTML('beforeend', `<div class="hud" id="hud"><div class="lg">EGO<b>.</b></div><div class="rc"><i id="recD"></i><span id="recTC">REC 00:00</span></div>
  <i class="co" style="left:34px;top:34px;border-top-width:5px;border-left-width:5px;display:none"></i>
  <i class="co" style="right:34px;bottom:34px;border-bottom-width:5px;border-right-width:5px"></i><i class="co" style="left:34px;bottom:34px;border-bottom-width:5px;border-left-width:5px"></i><i class="co" style="right:34px;top:34px;border-top-width:5px;border-right-width:5px;display:none"></i>
@@ -258,6 +262,9 @@ const entra = (id, a, dx = 500) => { const k = muelle(t_, a, 2.4, .62); $(id).st
 let t_ = 0;
 ['bd1', 'bd2'].forEach(id => $(id).textContent = 'UGC · MARKETING · STYLE · EGO · '.repeat(4));
 window.render = async t => { t_ = t;
+  // la mosca revolotea alrededor de la cabeza en el gancho (engancha los 2 primeros segundos)
+  if (vis('moscaV', t < 2.3)) { const a = t * 4.2, x = 540 + Math.sin(a) * 330 + Math.sin(a * 2.7) * 60, y = 900 + Math.cos(a * 1.3) * 220 + Math.sin(a * 3.1) * 40, ent = ease.outCubic(p(t, 0, .35));
+    $('moscaV').style.transform = `translate(${lerp(1200, x, ent) - 55}px,${y - 55}px) rotate(${Math.cos(a) * 60 + 90}deg) scale(${1 - .6 * p(t, 2.0, .3)})`; $('alas').style.transform = `scaleY(${Math.floor(t * 60) % 2 ? .4 : 1})`; $('moscaV').style.opacity = 1 - p(t, 2.1, .2); }
   $('recTC').textContent = 'REC 00:' + String(Math.floor(t)).padStart(2, '0'); $('recD').style.opacity = Math.floor(t * 2) % 2 ? 1 : .25;
   $('hud').style.opacity = t < .4 ? p(t, 0, .4) : 1;
   [['g1', 200, 1300, .3], ['g2', 820, 520, .23], ['g3', 540, 1700, .17]].forEach(([id, x, y, v], j) => { const g = $(id); g.style.left = (x - 450 + Math.sin(t * v + j) * 200) + 'px'; g.style.top = (y - 450 + Math.cos(t * v * 1.3 + j * 2) * 160) + 'px'; });
@@ -325,5 +332,13 @@ window.render = async t => { t_ = t;
     if (F._i !== i) { F.src = `${CARA_PERSONA}/${pad(i)}.webp`; await F.decode().catch(() => {}); F._i = i; }
   } else cf.style.display = 'none';
 };
+// ===== jump cuts: se quitan pausas y se acelera un poco; render(tn) dibuja el instante original =====
+const KEEP = [[0, 3.97], [4.59, 8.41], [8.94, 31.45], [31.58, 34.64], [34.88, 38.54], [38.68, 44.92], [45.22, 48.65]], VEL = 1.06;
+const tNuevo = to => { let acc = 0; for (const [a, b] of KEEP) { if (to <= b) return (acc + Math.max(0, to - a)) / VEL; acc += b - a; } return acc / VEL; };
+const tViejo = tn => { let tt = tn * VEL, acc = 0; for (const [a, b] of KEEP) { if (tt <= acc + (b - a)) return a + (tt - acc); acc += b - a; } return KEEP[KEEP.length - 1][1]; };
+window.FX_MEZCLA = FX.filter(f => f.s).map(f => Object.assign({}, f, { t: +tNuevo(f.t).toFixed(3) }));
+const renderViejo = window.render; window.TOTAL = tNuevo(48.65);
+window.render = async tn => { const to = tViejo(tn); await renderViejo(to);
+  const tramo = KEEP.findIndex(([a, b]) => to >= a && to <= b); if (tramo > 0 && tramo % 2 === 1) $('caraZ').style.transform += ' scale(1.07)'; };
 window.render(0); window.LISTO = true;
 </script></body></html>

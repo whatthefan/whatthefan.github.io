@@ -7,5 +7,5 @@ const srv = http.createServer((q, r) => fs.readFile(path.join(path.dirname(pag),
 srv.listen(0, '127.0.0.1', async () => {
   const b = await chromium.launch(), p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
   await p.goto(`http://127.0.0.1:${srv.address().port}/${path.basename(pag)}`); await p.waitForFunction(() => window.render);
-  console.log(JSON.stringify(await p.evaluate(() => FX))); await b.close(); srv.close();
+  console.log(JSON.stringify(await p.evaluate(() => window.FX_MEZCLA || FX))); await b.close(); srv.close();
 });
