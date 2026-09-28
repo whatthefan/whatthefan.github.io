@@ -13,10 +13,12 @@
     <feBlend in="r2" in2="gb2" mode="screen"/></filter></defs></svg>`;
   document.body.insertAdjacentHTML('beforeend', svg +
     '<div id="fxOsc" style="position:absolute;inset:0;z-index:18;pointer-events:none;opacity:0;background:radial-gradient(ellipse 75% 60% at 50% 50%,transparent 30%,#000 100%)"></div>' +
+    '<div id="fxBarras" style="position:absolute;inset:0;z-index:17;pointer-events:none;overflow:hidden"><i></i><i></i><i></i></div>' +
+    '<div id="fxIris" style="position:absolute;inset:0;z-index:17;pointer-events:none;opacity:0"></div>' +
     '<div id="fxFlash" style="position:absolute;inset:0;z-index:19;pointer-events:none;opacity:0;background:#fff"></div>');
 })();
 function fxRender(t) {
-  const { p, ease } = E; let tx = 0, ty = 0, sc = 1, bx = 0, gl = 0, fl = 0, dk = 0;
+  const { p, ease } = E; let tx = 0, ty = 0, sc = 1, bx = 0, gl = 0, fl = 0, dk = 0, ba = null, ir = null;
   for (const f of FX) { const u = t - f.t, dir = f.dir || 1;
     if (f.v === 'whip' && u > -.14 && u < .2) { // sale lo viejo hacia un lado, entra lo nuevo desde el otro
       if (u < 0) { const k = ease.inCubic((u + .14) / .14); tx -= dir * k * 240; bx += k * 70; sc *= 1 + .28 * k; }
@@ -25,8 +27,16 @@ function fxRender(t) {
     if (f.v === 'glitch' && u > -.08 && u < .26) gl = Math.max(gl, 1 - Math.abs(u - .04) / .22);
     if (f.v === 'riser') { const d = f.d || 1.4; if (u > -d && u < 0) { const k = (u + d) / d, a = 7 * k * k * k; sc *= 1 + .06 * ease.inCubic(k); dk = Math.max(dk, .45 * k); tx += Math.sin(t * 93) * a; ty += Math.cos(t * 71) * a; } }
     if (f.v === 'impacto' && u >= 0 && u < .55) { const e = Math.exp(-u * 8) * (f.a || 30); tx += Math.sin(u * 80) * e; ty += Math.cos(u * 64) * e * .8; sc *= 1 + .06 * Math.exp(-u * 7); gl = Math.max(gl, .6 * Math.exp(-u * 16)); fl = Math.max(fl, .35 * Math.exp(-u * 20)); }
+    if (f.v === 'barras' && u > -.32 && u < .32) ba = (u + .32) / .64;                 // barras de marca que barren y tapan el corte
+    if (f.v === 'iris' && u > -.3 && u < .3) ir = Math.abs(u) / .3;                     // diafragma que se cierra en el corte y se abre
     if (f.v === 'zoomdig' && u >= 0 && u < .5) { const st = Math.min(2, Math.floor(u / .11)); sc *= 1 + .05 * (st + 1) * (1 - ease.inOut(p(t, f.t + .36, .14))); }
   }
+  const B = document.getElementById('fxBarras'); B.style.display = ba === null ? 'none' : 'block';
+  if (ba !== null) [...B.children].forEach((b, i) => { const k = ease.inOut(Math.min(1, Math.max(0, ba * 1.25 - i * .12)));
+    Object.assign(b.style, { position: 'absolute', top: '-20%', height: '140%', width: '900px', left: (1500 - k * 3400 + i * 140) + 'px', transform: 'skewX(-18deg)',
+      background: ['#2F6BFF', '#F5F7FA', '#07080B'][i], boxShadow: '0 0 60px rgba(0,0,0,.5)' }); });
+  const I = document.getElementById('fxIris'); I.style.opacity = ir === null ? 0 : 1;
+  if (ir !== null) { const r = ease.inOut(ir) * 1300; I.style.background = `radial-gradient(circle ${Math.max(r, 1)}px at 50% 46%, transparent ${Math.max(r - 2, 0)}px, #07080B ${r}px)`; }
   const el = document.getElementById('todo'); el.style.transform = `translate(${tx}px,${ty}px) scale(${sc})`;
   const fs = [];
   if (bx > .5) { document.getElementById('mbB').setAttribute('stdDeviation', `${bx} 0`); fs.push('url(#mb)'); }

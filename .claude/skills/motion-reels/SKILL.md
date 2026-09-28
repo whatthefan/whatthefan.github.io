@@ -53,6 +53,8 @@ Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. 
 | `glitch` | RGB separado + franjas desplazadas | `packs2/glitch` | corte raro, algo que "falla" (NUNCA) |
 | `riser` (`d`) | zoom lento, temblor creciente, viñeta oscura | `packs2/riser-metal` (su pico cae al final) | antes de una revelación |
 | `impacto` (`a`) | sacudida amortiguada + punch + mini flash | `packs/woah-drop` (revelación), `packs2/whoosh-dramatico` (palabra gigante), `packs2/pop-imagen` (aterriza algo) | justo en el golpe |
+| `barras` | 3 barras diagonales (azul, blanco, negro) barren la pantalla y tapan el corte | `packs2/whoosh-b`, `whoosh-dramatico`, `swoosh-a` | cambio de bloque, con personalidad de marca |
+| `iris` | diafragma: círculo que se cierra en el corte y se abre | `packs2/obturador-flash` | pasar a algo de "cámara" o a una escena de motion |
 | `zoomdig` | zoom a 3 saltos | `packs2/zoom-digital` | marca o logo |
 | `null` | solo sonido | ver catálogo | UI, tachar, acierto, teclas |
 
@@ -99,3 +101,5 @@ Usa el mismo motor y las mismas reglas de sonido, pero **cambia la marca** en `:
 - Comprueba el espejo **por clip**: cada toma puede venir ya invertida por la cámara (el clip "me llamo Juan" no había que voltearlo).
 - **`CARA_N` es el índice del ÚLTIMO fotograma, no el número de archivos.** Los tramos de solo voz no tienen fotogramas pero sí ocupan índices. Si se pone mal, el final se queda congelado ("se queda glitch").
 - Gancho mejorado (EGO v5): cuando se nombra tu vídeo anterior, `whip` a un **reel de Instagram a pantalla completa** que lo reproduce, con corazón que se rellena y explota (mouse-click + pop), y `whip` de vuelta a la cara.
+
+- (feedback de Juan, v6) **Personalidad para que las marcas escriban**: marco de creador fijo en todo el vídeo (logo EGO arriba a la izquierda, "● REC 00:ss" con el tiempo real arriba a la derecha, esquinas de visor y "UGC · MARKETING · STYLE" abajo), bandas diagonales de texto en movimiento, y **clips reales de creación de contenido** (Mixkit: 20810 libreta, 44056 cámara, 44054 edición, 44049 micro, 2374 diafragma) dentro de las tarjetas. Hay que **variar las transiciones**: whip, barras, iris, flash y glitch, sin repetir la misma dos veces seguidas.
