@@ -60,7 +60,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--fondo);fon
 const $ = id => document.getElementById(id);
 const { p, ease, muelle } = E;
 const FX = /*FX*/[]/*FX*/; // se rellena abajo con fx(...)
-const TOTAL = 48.65; window.TOTAL = TOTAL; // duración de la voz en segundos
+const TOTAL = 50.2; window.TOTAL = TOTAL; // duración de la voz en segundos
 const pad = i => String(i).padStart(4, '0');
 const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -96,7 +96,7 @@ async function cara(t) { const i = Math.max(1, Math.min(CARA_N, Math.round(t * 3
   if (F._i !== i) { F.src = $('caraBlur').src = `${CARA_FONDO}/${pad(i)}.jpg`; $('caraPersona').src = `${CARA_PERSONA}/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
 // cara: fondo real (jpg) + persona recortada (webp con alfa) del MISMO fotograma, preescalados a 1080×1215 (lanczos + nitidez)
 const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona2', CARA_N = 1459;
-const CARA = [[0, 2.25], [5.55, 7.35], [7.35, 9.3], [12.95, 14.35], [17.45, 19.7], [28.5, 30.3], [31.9, 35.15], [42.15, 48.65]]; const VERT = t => (t >= 7.35 && t < 9.3) || t >= 42.15; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
+const CARA = [[0, 2.25], [5.55, 7.35], [7.35, 9.3], [12.95, 14.35], [17.45, 19.7], [28.5, 30.3], [31.9, 35.15], [42.15, 47.8]]; const VERT = t => (t >= 7.35 && t < 9.3) || t >= 42.15; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
 const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
 /* ===== EGO · vídeo 00 · v3: persona recortada sobre una pared de pantallas con sus trabajos ===== */
 const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
@@ -153,11 +153,20 @@ const css = document.createElement('style'); css.textContent = `
 .prompt span{font:600 50px FT;color:#07080B;flex:1}.prompt b{width:110px;height:110px;border-radius:50%;background:#2F6BFF;display:flex;align-items:center;justify-content:center}
 .fan{position:absolute;left:390px;top:720px;width:300px;height:420px;border-radius:30px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.55);border:3px solid rgba(255,255,255,.85)}
 .fan img{width:100%;height:100%;object-fit:cover}
+#fn5{width:300px;height:533px;top:663px;border-color:#2F6BFF;background:radial-gradient(ellipse 70% 38% at 50% 44%,rgba(47,107,255,.55),rgba(47,107,255,.08) 55%,transparent 75%),linear-gradient(#07080B,#0a0f22 60%,#07080B)}
+#fn5 .yoIn{position:absolute;left:0;top:0;width:1080px;height:1920px;transform:scale(.2778);transform-origin:0 0}
+#fn5 .yoIn img{position:absolute;left:0;top:705px;width:1080px;height:1215px;object-fit:cover;-webkit-mask-image:linear-gradient(transparent 0,#000 260px);mask-image:linear-gradient(transparent 0,#000 260px)}
 .rama{position:absolute;left:720px;width:250px;height:230px;border-radius:26px;overflow:hidden;border:3px solid rgba(255,255,255,.85);box-shadow:0 16px 40px rgba(0,0,0,.5)}
 .rama img{width:100%;height:100%;object-fit:cover}.rama span{position:absolute;left:12px;bottom:10px;padding:6px 14px;border-radius:14px;background:rgba(7,8,11,.8);font:700 26px FT;color:#fff}
 .sub{font-size:78px!important;font-weight:800!important;letter-spacing:-.03em;line-height:1.08;text-shadow:0 4px 0 rgba(0,0,0,.35),0 10px 34px rgba(0,0,0,.65)!important}
 .sub .k{color:#fff!important;background:#2F6BFF;padding:0 .14em;border-radius:.18em;box-shadow:0 8px 24px rgba(47,107,255,.45)}
 #moscaV{position:absolute;left:0;top:0;width:160px;height:160px;z-index:15;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.perfil{position:absolute;left:90px;top:520px;width:900px;height:1040px;border-radius:56px;background:rgba(16,20,32,.92);border:1.5px solid rgba(255,255,255,.14);box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 120px rgba(47,107,255,.25)}
+.perfil .av{position:absolute;left:260px;top:-10px;width:380px;height:380px;border-radius:50%;overflow:hidden;border:8px solid #2F6BFF;background:radial-gradient(circle at 50% 40%,#1b3a8f,#07080B)}
+.perfil .av img{position:absolute;left:-28px;top:-40px;width:420px;height:747px;object-fit:cover}
+.perfil .nm{position:absolute;left:0;right:0;top:400px;text-align:center;font:800 68px FT;color:#fff}
+.perfil .bio{position:absolute;left:60px;right:60px;top:500px;text-align:center;font:600 40px FT;color:rgba(255,255,255,.72);line-height:1.35}
+.perfil .bt{position:absolute;top:760px;height:130px;border-radius:30px;display:flex;align-items:center;justify-content:center;font:800 50px FT}
 .flecha{position:absolute;left:470px;top:1700px;width:140px;height:140px}`;
 document.head.appendChild(css);
 // pared de pantallas (fondo de todas las tomas con cara)
@@ -195,7 +204,7 @@ texto('*HISTORIA*', 'gig', 650, 27.8, 28.45, { size: 196 }); fx(27.8, 'riser', n
 // ---------- S5 esto es lo que hago ----------
 fx(28.5, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('esto es lo que *hago*', 28.8, 30.3, 30.0);
-fx(30.32, 'whip'); fx(30.75, 'impacto', Q + 'whoosh-dramatico.mp3', -6, { a: 12 }); fx(31.9, 'anillos', Q + 'swoosh-a.mp3', -6);
+fx(30.32, 'whip'); fx(30.75, null, Q + 'swish-c.mp3', -6); fx(31.9, null, Q + 'riser-metal.mp3', -9);
 
 sub('ahora lo hago para *marcas*', 32.0, 33.55, 33.1); gigante('MARCAS', 33.05, 33.6, 440, 230); fx(33.05, 'impacto', Q + 'whoosh-dramatico.mp3', -4, { a: 18 });
 sub('pongo la *cara*', 33.6, 34.6, 34.3); fx(33.72, null, P + 'camera-click.mp3', -6);
@@ -206,7 +215,7 @@ fx(40.5, 'obturador', P + 'camera-shutter.mp3', -7); sub('y lo edito *así*', 40
 fx(42.15, 'flash', Q + 'obturador-flash.mp3', -5);
 sub('si tu producto merece', 42.3, 43.6, 43.4, 1600); sub('que lo vean hasta el *final*', 43.6, 45.1, 44.8, 1600);
 fx(45.32, null, Q + 'pop-imagen.mp3', -8); sub('en mi perfil', 46.55, 47.4, 47.3, 1600);
-gigante('*EGO*', 47.45, 48.65, 190, 380); fx(47.43, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.1 }); fx(47.45, 'impacto', P + 'woah-drop.mp3', -2, { a: 28 });
+texto('*EGO*', 'gig', 150, 47.95, 50.2, { capa: 'ui', size: 360 }); fx(47.4, null, Q + 'whoosh-b.mp3', -7); fx(47.93, 'riser', null, 0, { d: .5 }); fx(47.95, 'impacto', P + 'woah-drop.mp3', -2, { a: 22 }); fx(48.95, null, Q + 'pop-imagen.mp3', -8);
 // ---------- elementos ----------
 $('sobre').insertAdjacentHTML('beforeend', `
  <div id="tel" class="tel" style="left:640px;top:110px;width:360px;height:640px"><img id="telImg"></div>
@@ -240,9 +249,11 @@ document.body.insertAdjacentHTML('beforeend', `<div class="hud" id="hud"><div cl
  <i class="co" style="right:34px;bottom:34px;border-bottom-width:5px;border-right-width:5px"></i><i class="co" style="left:34px;bottom:34px;border-bottom-width:5px;border-left-width:5px"></i><i class="co" style="right:34px;top:34px;border-top-width:5px;border-right-width:5px;display:none"></i>
  <div class="pie">UGC · MARKETING · STYLE</div></div>`);
 const RAMAS = [['unbox', 'unboxing'], ['resena', 'reseña'], ['rutina', 'rutina'], ['detras', 'detrás de cámaras'], ['pov', 'POV']];
-const FAN = ['c1', 'unbox', 'c2', 'resena', 'mosca', 'rutina', 'c3', 'detras', 'pov', 'creador'], NF = { c1: 66, c2: 66, c3: 66, mosca: 108, unbox: 100, resena: 100, rutina: 100, detras: 100, pov: 100, creador: 110 };
+const FAN = ['c1', 'unbox', 'c2', 'resena', 'mosca', 'yo', 'rutina', 'c3', 'detras', 'pov', 'creador'], NF = { c1: 66, c2: 66, c3: 66, mosca: 108, unbox: 100, resena: 100, rutina: 100, detras: 100, pov: 100, creador: 110 };
 $('ui2').insertAdjacentHTML('beforeend', `<div id="arbol" class="abs" style="left:0;top:0;width:1080px;height:1920px"><svg width="1080" height="1920" style="position:absolute;left:0;top:0"><path id="onda" fill="none" stroke="#2F6BFF" stroke-width="7" stroke-linecap="round"/>${RAMAS.map((r, i) => `<path id="rm${i}" d="M330 960 C 520 960, 540 ${400 + i * 250}, 720 ${400 + i * 250}" fill="none" stroke="rgba(245,247,250,.8)" stroke-width="4"/><circle id="nd${i}" cx="720" cy="${400 + i * 250}" r="12" fill="#2F6BFF"/>`).join('')}<circle cx="330" cy="960" r="18" fill="#2F6BFF"/></svg>${RAMAS.map(([d, l], i) => `<div class="rama" id="ra${i}" style="top:${285 + i * 250}px"><img><span>${l}</span></div>`).join('')}</div>
- <div id="fanes" class="abs" style="left:0;top:0;width:1080px;height:1920px">${FAN.map((d, i) => `<div class="fan" id="fn${i}"><img></div>`).join('')}</div><div class="prompt" id="prompt"><span>¿Qué creamos para tu marca?</span><b><svg width="56" height="56" viewBox="0 0 24 24"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg></b></div>`);
+ <div id="fanes" class="abs" style="left:0;top:0;width:1080px;height:1920px">${FAN.map((d, i) => d === 'yo' ? `<div class="fan" id="fn${i}"><div class="yoIn"><img></div></div>` : `<div class="fan" id="fn${i}"><img></div>`).join('')}</div><div class="prompt" id="prompt"><span>¿Qué creamos para tu marca?</span><b><svg width="56" height="56" viewBox="0 0 24 24"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg></b></div>`);
+$('ui2').insertAdjacentHTML('beforeend', `<div class="perfil" id="perfil"><div class="av"><img id="avImg" src="cara/persona2/1382.webp"></div><div class="nm">Ego</div><div class="bio">UGC · marketing · style<br>Juan · Córdoba<br><b style="color:#fff">Escríbeme para colaborar</b></div>
+ <div class="bt" id="bSeg" style="left:60px;width:400px;background:#2F6BFF;color:#fff">Seguir</div><div class="bt" style="left:480px;width:360px;border:3px solid rgba(255,255,255,.5);color:#fff">Mensaje</div></div>`);
 $('ui2').insertAdjacentHTML('beforeend', `
  <div id="bandas" class="abs" style="left:0;top:0;width:1080px;height:1920px;overflow:hidden"><div class="banda" id="bd1" style="top:700px;background:#2F6BFF;color:#fff;transform:rotate(-8deg)"></div><div class="banda" id="bd2" style="top:1000px;background:#F5F7FA;color:#07080B;transform:rotate(6deg)"></div></div>
  <div id="reel" class="reel"><img id="reelImg"><div class="top">Reels</div>
@@ -297,8 +308,15 @@ window.render = async t => { t_ = t;
   if (vis('cursor', (t >= 25.2 && t < 26.8) || (t >= 30.3 && t < 30.8))) { const b = t >= 30.3, k = b ? ioX(p(t, 30.3, .35)) : ioX(p(t, 25.25, 1.1)); $('cursor').style.transform = b ? `translate(${lerp(500, 880, k)}px,${lerp(1300, 950, k)}px) scale(${t >= 30.68 ? .85 : 1})` : `translate(${lerp(260, 830, k)}px,${lerp(1600, 1180, k)}px) scale(${t >= 26.5 && t < 26.6 ? .85 : 1})`; }
   // carrusel de trabajos
   if (vis('prompt', t >= 30.22 && t < 30.95, 'flex')) { const k = muelle(t, 30.25, 2.4, .65); $('prompt').style.transform = `scale(${t >= 30.68 ? 1 - .06 * (1 - muelle(t, 30.68, 4, .5)) : Math.min(k, 1.04)})`; $('prompt').style.opacity = 1 - p(t, 30.8, .12); }
-  if (vis('fanes', t >= 30.72 && t < 32.1)) await Promise.all(FAN.map(async (d, i) => { const el = $('fn' + i), k = ease.outCubic(p(t, 30.75, .55)), a = i / FAN.length * Math.PI * 2 + (t - 30.75) * .6, rr = k * 560;
-      el.style.transform = `translate(${Math.cos(a) * rr}px,${Math.sin(a) * rr * 1.25}px) rotate(${a * 57.3 + 90}deg) scale(${.4 + .6 * k})`; await frame(el.firstChild, d, t, 30.75, NF[d], true); }));
+  if (vis('fanes', t >= 30.72 && t < 31.92)) { const tz = Math.min(t, 31.2), z = ioX(p(t, 31.2, .7)); let yx = 0, yy = 0, yr = 0;
+    await Promise.all(FAN.map(async (d, i) => { const el = $('fn' + i), k = ease.outCubic(p(tz, 30.75, .55)), a = i / FAN.length * Math.PI * 2 + (tz - 30.75) * .6, rr = k * 560, x = Math.cos(a) * rr, y = Math.sin(a) * rr * 1.25, r = a * 57.3 + 90;
+      el.style.transform = `translate(${x}px,${y}px) rotate(${r}deg) scale(${.4 + .6 * k})`;
+      if (d === 'yo') { yx = x; yy = y; yr = r; const im = el.querySelector('img'), fi = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), src = `${CARA_PERSONA}/${pad(fi)}.webp`; if (im._s !== src) { im.src = src; await im.decode().catch(() => {}); im._s = src; } }
+      else await frame(el.firstChild, d, t, 30.75, NF[d], true); }));
+    // la cámara gira y se acerca a la tarjeta en la que hablo hasta llenar la pantalla
+    const rr = ((yr % 360) + 540) % 360 - 180, S = lerp(1, 3.6, z);
+    $('fanes').style.transformOrigin = '540px 930px'; $('fanes').style.transform = `rotate(${-rr * z}deg) scale(${S}) translate(${-yx * z}px,${-yy * z + 30 * z}px)`;
+    $('fanes').style.filter = z > 0 && z < 1 ? `blur(${Math.sin(z * Math.PI) * 3}px)` : ''; } else $('fanes').style.transform = '';
   if (vis('carr', false)) { const dr = ioX(p(t, 30.22, 1.75)); for (let i = 0; i < 3; i++) { const x = 540 - 215 + (i - 1) * 470 + lerp(620, -620, dr) * .55;
       $('tl' + i).style.transform = `translateX(${x}px) rotate(${(i - 1) * 3}deg) scale(${1 - Math.abs(x + 215 - 540) / 3000})`; await frame($('ti' + i), 'c' + (i + 1), t, 30.22, 66); } }
   // pongo la cara: visor de cámara con REC
@@ -307,10 +325,10 @@ window.render = async t => { t_ = t;
   // cuento tu producto como una historia: gancho → historia → producto
   if (vis('beats', false)) { [0, 1, 2].forEach(i => { const a = [35.5, 36.4, 37.3][i]; entra('bt' + i, a, 300); $('bt' + i).classList.toggle('on', t >= a + .25); $('bt' + i).style.opacity *= 1 - p(t, 38.45, .25); });
     const L = 800, dl = p(t, 35.6, 2.0) * L; $('bl').style.strokeDasharray = `${dl} ${L}`; $('bLine').style.opacity = 1 - p(t, 38.45, .25); }
-  if (vis('arbol', t >= 35.2 && t < 38.95)) { let d = 'M40 960'; for (let x = 40; x <= 330; x += 6) d += ` L${x} ${960 + Math.sin(x * .06 - t * 9) * 40 * Math.min(1, (330 - x) / 120) * (1 - p(t, 38.6, .3))}`; $('onda').setAttribute('d', d);
+  if (vis('arbol', t >= 35.2 && t < 39.02)) { let d = 'M40 960'; for (let x = 40; x <= 330; x += 6) d += ` L${x} ${960 + Math.sin(x * .06 - t * 9) * 40 * Math.min(1, (330 - x) / 120) * (1 - p(t, 38.6, .3))}`; $('onda').setAttribute('d', d);
     $('onda').style.strokeDasharray = `${p(t, 35.25, .4) * 400} 400`; const fin = 1 - p(t, 38.65, .3);
-    await Promise.all(RAMAS.map(async ([dd], i) => { const a = 35.6 + i * .18, L = 520, pr = $('rm' + i); pr.style.strokeDasharray = `${ease.outCubic(p(t, a, .45)) * L} ${L}`; pr.style.opacity = fin;
-      $('nd' + i).style.opacity = t >= a + .35 ? fin : 0; const k = muelle(t, a + .35, 2.4, .6), el = $('ra' + i); el.style.opacity = t >= a + .35 ? fin : 0; el.style.transform = `translateX(${(1 - Math.min(k, 1.04)) * 260}px) scale(${.7 + .3 * Math.min(k, 1.04)})`;
+    await Promise.all(RAMAS.map(async ([dd], i) => { const a = 35.6 + i * .18, L = 520, pr = $('rm' + i); pr.style.strokeDasharray = `${ease.outCubic(p(t, a, .45)) * L} ${L}`; pr.style.opacity = 1 - p(t, 38.4, .2);
+      $('nd' + i).style.opacity = t >= a + .35 ? fin : 0; const k = muelle(t, a + .35, 2.4, .6), el = $('ra' + i); el.style.opacity = t >= a + .35 ? fin : 0; const g = ioX(p(t, 38.45, .45)); el.style.opacity = t >= a + .35 ? 1 : 0; el.style.transform = `translate(${(1 - Math.min(k, 1.04)) * 260 - g * 305}px,${g * (845 - 285 - i * 250)}px) rotate(${g * (i - 2) * 7}deg) scale(${(.7 + .3 * Math.min(k, 1.04)) * (1 + g * .5)})`;
       if (t >= a + .3) await frame(el.firstChild, dd, t, a, 100, true); })); } else vis('arbol', false);
   // es lo que ve la gente: UGC · MARKETING · STYLE
   if (vis('bandas', t >= 39.0 && t < 40.55)) { const k = ioX(p(t, 39.0, .35)); $('bd1').style.transform = `translateX(${(1 - k) * 1400 - (t - 39) * 260}px) rotate(-8deg)`; $('bd2').style.transform = `translateX(${-(1 - k) * 1400 + (t - 39) * 260 - 400}px) rotate(6deg)`; }
@@ -319,25 +337,28 @@ window.render = async t => { t_ = t;
   // y lo edito así: timeline de edición con cabezal
   if (vis('tl', t >= 40.55 && t < 42.15)) { entra('tl', 40.6, 700); $('tl').style.opacity *= 1 - p(t, 41.95, .2); $('cab').style.left = (30 + ioX(p(t, 40.8, 1.1)) * 920) + 'px'; }
   // cierre: escríbeme + flecha al perfil
-  if (vis('dm', t >= 45.3 && t < 48.65, 'flex')) { const k = muelle(t, 45.32, 2.4, .55); $('dm').style.transform = `scale(${Math.min(k, 1.08)}) rotate(${(1 - Math.min(k, 1)) * -8}deg)`; $('dm').style.opacity = 1 - p(t, 47.3, .25); }
-  if (vis('flecha', t >= 46.5 && t < 48.65)) $('flecha').style.transform = `translateY(${Math.abs(Math.sin((t - 46.5) * 5)) * 40}px)`;
+  if (vis('perfil', t >= 47.7)) { const k = muelle(t, 47.72, 2.2, .7); $('perfil').style.transform = `scale(${.6 + .4 * Math.min(k, 1.03)})`; $('perfil').style.opacity = exp(p(t, 47.7, .2));
+    $('bSeg').textContent = t >= 48.95 ? 'Siguiendo' : 'Seguir'; $('bSeg').style.background = t >= 48.95 ? 'rgba(255,255,255,.12)' : '#2F6BFF'; $('bSeg').style.transform = `scale(${t >= 48.9 && t < 49.1 ? .93 : 1})`; }
+  if (t >= 48.3 && t < 49.3) { vis('cursor', true); const k = ioX(p(t, 48.3, .6)); $('cursor').style.transform = `translate(${lerp(700, 330, k)}px,${lerp(1750, 1330, k)}px) scale(${t >= 48.9 && t < 49.05 ? .85 : 1})`; }
+  if (vis('dm', t >= 45.3 && t < 47.4, 'flex')) { const k = muelle(t, 45.32, 2.4, .55); $('dm').style.transform = `scale(${Math.min(k, 1.08)}) rotate(${(1 - Math.min(k, 1)) * -8}deg)`; $('dm').style.opacity = 1 - p(t, 47.3, .25); }
+  if (vis('flecha', t >= 46.5 && t < 47.4)) $('flecha').style.transform = `translateY(${Math.abs(Math.sin((t - 46.5) * 5)) * 40}px)`;
   // persona recortada sobre la pared (horizontal abajo o vertical)
   document.body.classList.toggle('vert', VERT(t));
   const c = CARA.find(([a, b]) => t >= a && t < b), cf = $('cara');
-  if (c) { cf.style.display = 'block'; const [a, b] = c, duro = [7.35, 12.95, 42.15];
+  if (c) { cf.style.display = 'block'; const [a, b] = c, duro = [7.35, 12.95, 42.15, 31.9, 47.8];
     const ei = a > 0 && !duro.includes(a) ? ioX(p(t, a, .3)) : 1, eo = b < TOTAL && !duro.includes(b) && b !== 23.4 ? ioX(p(t, b - .25, .25)) : 0, ins = Math.max(1 - ei, eo);
-    cf.style.clipPath = ins > 0 ? `inset(${ins * 42}% ${ins * 30}% ${ins * 42}% ${ins * 30}% round ${60 + ins * 200}px)` : 'none';
+    cf.style.clipPath = t >= 47.35 ? `circle(${lerp(1400, 190, ioX(p(t, 47.35, .45)))}px at 540px ${lerp(960, 700, ioX(p(t, 47.35, .45)))}px)` : ins > 0 ? `inset(${ins * 42}% ${ins * 30}% ${ins * 42}% ${ins * 30}% round ${60 + ins * 200}px)` : 'none';
     let zs = 1 + .04 * p(t, a, b - a); [[6.55, 1.08], [12.1, 1.06], [18.95, 1.07], [33.05, 1.07], [47.45, 1.05]].forEach(([g, e]) => { if (t >= g && g >= a && g < b) zs *= e; });
     $('caraZ').style.transform = `scale(${zs})`; const F = $('caraPersona'), i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1));
     if (F._i !== i) { F.src = `${CARA_PERSONA}/${pad(i)}.webp`; await F.decode().catch(() => {}); F._i = i; }
   } else cf.style.display = 'none';
 };
 // ===== jump cuts: se quitan pausas y se acelera un poco; render(tn) dibuja el instante original =====
-const KEEP = [[0, 3.97], [4.59, 8.41], [8.94, 31.45], [31.58, 34.64], [34.88, 38.54], [38.68, 44.92], [45.22, 48.65]], VEL = 1.06;
+const KEEP = [[0, 3.97], [4.59, 8.41], [8.94, 34.64], [34.88, 44.92], [45.22, 50.2]], VEL = 1.06;
 const tNuevo = to => { let acc = 0; for (const [a, b] of KEEP) { if (to <= b) return (acc + Math.max(0, to - a)) / VEL; acc += b - a; } return acc / VEL; };
 const tViejo = tn => { let tt = tn * VEL, acc = 0; for (const [a, b] of KEEP) { if (tt <= acc + (b - a)) return a + (tt - acc); acc += b - a; } return KEEP[KEEP.length - 1][1]; };
 window.FX_MEZCLA = FX.filter(f => f.s).map(f => Object.assign({}, f, { t: +tNuevo(f.t).toFixed(3) }));
-const renderViejo = window.render; window.TOTAL = tNuevo(48.65);
+const renderViejo = window.render; window.TOTAL = tNuevo(50.2);
 window.render = async tn => { const to = tViejo(tn); await renderViejo(to);
   const tramo = KEEP.findIndex(([a, b]) => to >= a && to <= b); if (tramo > 0 && tramo % 2 === 1) $('caraZ').style.transform += ' scale(1.07)'; };
 window.render(0); window.LISTO = true;

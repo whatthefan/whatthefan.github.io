@@ -114,3 +114,8 @@ Usa el mismo motor y las mismas reglas de sonido, pero **cambia la marca** en `:
 - **Subtítulos de retención**: Figtree 800 a 78 px con sombra dura, y la palabra clave en **bloque azul** (no solo el color).
 - **Gancho**: algo se mueve en el primer fotograma. En EGO, una mosca que revolotea alrededor de la cabeza hasta que entra el reel.
 - En el "me gusta" del reel, `pop-imagen` (no `mouse-click`, que suena mal).
+- (feedback de Juan, v9) **Transiciones "de cámara" dentro de la escena** (le encantan):
+  - **Zoom a la tarjeta en la que habla**: en el abanico hay una tarjeta 9:16 (`#fn5`) que reproduce su propio plano con el mismo encuadre (un 1080×1920 escalado ×0,2778). La cámara gira y se acerca hasta que la tarjeta llena la pantalla (escala 3,6) y la cara sigue sin corte. Ese tramo de cara no lleva la entrada de píldora.
+  - **Agruparse en uno**: las tarjetas se apilan en el centro, ligeramente giradas, antes del siguiente `whip`.
+- **Final sin "cara rara"**: la cara se encoge en un círculo hasta la **foto de perfil** (se elige un fotograma sonriente) y se monta una **tarjeta de perfil/contacto** (nombre, bio, "Escríbeme para colaborar", botones Seguir y Mensaje). Un cursor pulsa Seguir, que pasa a Siguiendo con un pop, y la palabra de marca va detrás con el woah-drop. No se inventan seguidores ni cifras.
+- En escenas seguidas, **no repitas el mismo sonido**: alterna swish, riser, whoosh y pop.
