@@ -231,7 +231,7 @@ $('pasos').innerHTML = PASOS.map(([n], i) => `<div class="paso" id="paso${i}" st
 const COD = [[10, '<span class="kw">placa</span>    = <span class="s">"Placa de mesa"</span>'], [11, '<span class="kw">medida</span>   = <span class="s">"90 × 90 mm"</span>'], [12, '<span class="kw">material</span> = <span class="s">"metacrilato 4 mm"</span>'],
   [13, '<span class="kw">enlace</span>   = <span class="s">""</span>', 'viejo'], [13, '<span class="kw">enlace</span>   = <span class="s">"<span id="tecl"></span>"</span>', 'nuevo'], [14, ''],
   [15, '<span class="f">al_acercar</span>(movil) {'], [16, '  <span class="f">abrir</span>(enlace)  <span class="c">// tu ficha de Google</span>'], [17, '}']];
-const TERM = [['<span style="color:var(--oro)">$</span> <span id="cmd"></span>', 12.25], ['<span id="bar2" style="display:inline-block;width:0;height:12px;border-radius:6px;background:var(--oro);vertical-align:middle"></span>', 13.15],
+const TERM = [['<span style="color:var(--oro)">$&nbsp;</span><span id="cmd"></span>', 12.25], ['<span id="bar2" style="display:inline-block;width:0;height:12px;border-radius:6px;background:var(--oro);vertical-align:middle"></span>', 13.15],
   ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> chip NFC grabado', 14.0], ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> QR generado', 14.3],
   ['<span style="color:#A5E3B8">✓ al acercar el móvil se abre tu ficha</span>', 14.9]];
 $('codigoIn').innerHTML = COD.map(([n, h, k], i) => `<div class="linea" id="cl${i}"><span class="n">${n}</span><span class="mk" style="width:26px;flex:none"></span><span class="tx">${h}</span></div>`).join('')
