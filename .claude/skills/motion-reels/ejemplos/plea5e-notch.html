@@ -38,9 +38,9 @@ html,body{width:1080px;height:1350px;overflow:hidden;background:var(--fondo);fon
 .gr{color:var(--gris)}.mono{font-family:'DejaVu Sans Mono',monospace}
 .t{position:absolute;left:60px;right:60px;text-align:center}
 .t .l{display:inline-block}.t .wd{display:inline-block;white-space:nowrap}
-.h{font-weight:800;font-size:84px;letter-spacing:-.04em;line-height:1;text-shadow:0 6px 30px rgba(0,0,0,.4)}
-.p{font-weight:600;font-size:40px;letter-spacing:-.01em;color:rgba(255,255,255,.72)}
-.k{color:var(--oro)}
+.h{font-weight:500;font-size:74px;letter-spacing:-.03em;line-height:1.05;text-shadow:0 6px 30px rgba(0,0,0,.4)}
+.p{font-weight:500;font-size:36px;letter-spacing:-.01em;color:rgba(255,255,255,.72)}
+.k{color:var(--oro)}.h .k{font-weight:600}
 .linea{position:absolute;left:0;right:0;height:40px;font:24px 'DejaVu Sans Mono',monospace;white-space:pre;display:flex;align-items:center}
 .linea .n{width:64px;text-align:right;padding-right:22px;color:#4a5064;flex:none}
 .linea .s{color:#A5E3B8}.linea .kw{color:#C792EA}.linea .c{color:#5d6478}.linea .f{color:#82AAFF}
@@ -107,15 +107,16 @@ fx(4.0, null, R + 'swoosh-corto.mp3', -8);           // se recoge en el notch
 fx(5.86, null, N + 'notch-clic.mp3', -5);            // clic en el notch → panel
 fx(8.45, null, R + 'click.mp3', -6);                // clic en la tarjeta → editor (el panel se estira, como en el original)
 fx(10.3, null, Q + 'teclas.mp3', -10, { dur: 1.15 });  // escribe el enlace
-fx(12.4, null, Q + 'carga.mp3', -9, { dur: 1.1 });   // grabando el chip
-fx(13.6, null, N + 'tarea-hecha.mp3', -6);           // chip grabado
-fx(14.6, null, P + 'iphone-charging.mp3', -8);       // el móvil toca la placa: se abre la ficha
+fx(12.3, null, P + 'mac-typing.mp3', -9, { dur: .9 }); // escribe el comando
+fx(13.15, null, Q + 'carga.mp3', -9, { dur: .8 });  // grabando el chip
+fx(14.0, null, N + 'tarea-hecha.mp3', -6);           // chip grabado
+fx(14.9, null, P + 'iphone-charging.mp3', -8);       // el móvil toca la placa: se abre la ficha
 fx(15.75, null, N + 'notch-clic.mp3', -5);           // pestaña inicio → precios
 fx(16.45, null, Q + 'contador.mp3', -10, { dur: .75 });// 33,50 → 25
 fx(17.3, null, N + 'pago-llega.mp3', -6);            // aterriza el precio
 fx(19.75, null, R + 'tap.mp3', -6);                  // pestaña chat
 fx(20.9, null, R + 'pop-limpio.mp3', -8);            // pregunta
-fx(21.9, null, N + 'respuesta.mp3', -7);             // responde
+fx(21.95, null, P + 'mac-typing.mp3', -9, { dur: 2.0 }); // la Estrellita escribe la respuesta
 fx(24.75, null, R + 'clic-doble.mp3', -6);           // pestaña +
 fx(27.35, null, N + 'suelta-archivo.mp3', -6);       // suelta el logo
 fx(28.85, null, N + 'subida-ok.mp3', -6);            // subido
@@ -224,15 +225,15 @@ const ESC = [ // [id, t0, t1, html]
 ];
 $('escenas').innerHTML = ESC.map(([id, , , h]) => `<div class="esc" id="e_${id}">${h}</div>`).join('');
 // pasos del editor
-const PASOS = [['Diseño', 8.6], ['Enlace', 11.55], ['Chip NFC', 13.6], ['Listo', 14.6]];
+const PASOS = [['Diseño', 8.6], ['Enlace', 11.55], ['Chip NFC', 14.0], ['Listo', 14.9]];
 $('pasos').innerHTML = PASOS.map(([n], i) => `<div class="paso" id="paso${i}" style="top:${392 + i * 50}px"><span class="ico" id="pi${i}"></span><span>${n}</span></div>`).join('');
 // código
 const COD = [[10, '<span class="kw">placa</span>    = <span class="s">"Placa de mesa"</span>'], [11, '<span class="kw">medida</span>   = <span class="s">"90 × 90 mm"</span>'], [12, '<span class="kw">material</span> = <span class="s">"metacrilato 4 mm"</span>'],
   [13, '<span class="kw">enlace</span>   = <span class="s">""</span>', 'viejo'], [13, '<span class="kw">enlace</span>   = <span class="s">"<span id="tecl"></span>"</span>', 'nuevo'], [14, ''],
   [15, '<span class="f">al_acercar</span>(movil) {'], [16, '  <span class="f">abrir</span>(enlace)  <span class="c">// tu ficha de Google</span>'], [17, '}']];
-const TERM = [['<span style="color:var(--oro)">$</span> grabar --nfc --qr', 12.3], ['<span id="bar2" style="display:inline-block;width:0;height:12px;border-radius:6px;background:var(--oro);vertical-align:middle"></span>', 12.4],
-  ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> chip NFC grabado', 13.6], ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> QR generado', 14.05],
-  ['<span style="color:#A5E3B8">✓ al acercar el móvil se abre tu ficha</span>', 14.6]];
+const TERM = [['<span style="color:var(--oro)">$</span> <span id="cmd"></span>', 12.25], ['<span id="bar2" style="display:inline-block;width:0;height:12px;border-radius:6px;background:var(--oro);vertical-align:middle"></span>', 13.15],
+  ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> chip NFC grabado', 14.0], ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> QR generado', 14.3],
+  ['<span style="color:#A5E3B8">✓ al acercar el móvil se abre tu ficha</span>', 14.9]];
 $('codigoIn').innerHTML = COD.map(([n, h, k], i) => `<div class="linea" id="cl${i}"><span class="n">${n}</span><span class="mk" style="width:26px;flex:none"></span><span class="tx">${h}</span></div>`).join('')
   + TERM.map(([h], i) => `<div class="linea" id="tl${i}" style="padding-left:24px">${h}</div>`).join('');
 const ENLACE = 'g.page/r/tu-bar/review', MSG = 'Hola, quiero placas de mesa con mi logo.';
@@ -261,10 +262,18 @@ const CLICS = [5.86, 8.45, 15.75, 19.75, 24.75, 29.9, 32.1, 36.7, 38.45, 39.6, 4
 function cursor(t) { let i = 0; while (i < KC.length - 2 && t >= KC[i + 1][0]) i++; const a = KC[i], b = KC[i + 1], k = ease.inOut(cl((t - a[0]) / (b[0] - a[0])));
   return [lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; }
 const bump = (t, t0) => { const u = t - t0; return u < 0 || u > .5 ? 0 : Math.exp(-u * 9) * Math.cos(u * 22); };
-const pose = (el, n) => { const s = 'est/' + n + '.svg'; if (el._s !== s) { el.src = s; el._s = s; } };
+let TT = 0;
+const pose = (el, n) => { const s = 'est/' + n + '.svg'; if (el._s !== s) { if (el._s) el._tc = TT; el.src = s; el._s = s; } };
+/* personaje "de agua": flota, respira (squash & stretch) y cada cambio de pose rebota como gelatina */
+const ESTRELLAS = [['holaE', 0], ['mini', 0], ['t1I', 1], ['t2I', 1], ['t3I', 1], ['t4I', 1], ['t5I', 1], ['t6I', 1], ['t8I', 1], ['t7', 0], ['mE', 0], ['finE', 0]];
+function agua(t) { ESTRELLAS.forEach(([id, tileImg], j) => { const el = $(id); if (!el || !el.offsetParent) return;
+  const ph = j * 1.7, u = t - (el._tc ?? -9), q = u >= 0 && u < 1 ? Math.exp(-5.5 * u) * Math.sin(17 * u) * .14 : 0;
+  const s = Math.sin(t * 3.1 + ph) * .028, bob = Math.sin(t * 2.2 + ph) * 6, rot = Math.sin(t * 1.5 + ph) * 3.2 + Math.sin(t * 2.7 + ph) * 1.2;
+  const base = tileImg ? 'translateX(-50%)' : el.style.transform;
+  el.style.transformOrigin = '50% 100%'; el.style.transform = `${base} translateY(${bob}px) rotate(${rot}deg) scale(${1 + s + q},${1 - s - q})`; }); }
 const PRE = ['abajo', 'saluda', 'arriba', 'guino', 'curiosa', 'apunta', 'pulgar', 'tachan', 'asombro', 'apoyada', 'senala', 'salta'].map(n => { const i = new Image(); i.src = 'est/' + n + '.svg'; return i; });
 
-window.render = async t => {
+window.render = async t => { TT = t;
   // cámara
   const [cs, ox, oy] = camara(t); $('cam').style.transformOrigin = `${ox}px ${oy}px`;
   $('cam').style.transform = `scale(${cs * (1 + .006 * Math.sin(t * .5))}) translateY(${Math.sin(t * .31) * 3}px)`;
@@ -276,7 +285,7 @@ window.render = async t => {
   $('camara').style.left = (540 - 6 + (w > 600 ? 0 : 60)) + 'px'; $('camara').style.top = (430 + 20) + 'px'; $('camara').style.opacity = h < 90 ? 1 : 0;
   const mini = $('mini'), mv = (t > 4.25 && t < 5.9) || (t > 43.6 && t < 45.1); mini.style.display = mv ? 'block' : 'none';
   if (mv) { const t0 = t < 10 ? 4.25 : 43.6, k = muelle(t, t0, 2.5, .6); mini.style.left = (430 - 26) + 'px'; mini.style.top = (432 + (1 - Math.min(k, 1.1)) * 20) + 'px'; mini.style.transform = `scale(${Math.min(k, 1.1)})`;
-    pose(mini, t > 43.6 ? (Math.floor(t * 6) % 2 ? 'saluda' : 'arriba') : (t > 5.25 ? 'asombro' : 'curiosa')); }
+    pose(mini, t > 43.6 ? (Math.floor(t * 3.6) % 2 ? 'saluda' : 'arriba') : (t > 5.25 ? 'asombro' : 'curiosa')); }
   // pestañas
   const tb = $('tabs'); tb.style.opacity = t < 45 ? cl((w - 850) / 150) * cl((h - 200) / 80) : 0;
   const tabX = [26, 96, 166], cambio = [[0, 0], [19.9, 1], [24.9, 2], [38.6, 0]]; let ta = 0, tp = 0, tt = 0; cambio.forEach(([c, i]) => { if (t >= c) { tp = ta; ta = i; tt = c; } });
@@ -286,8 +295,8 @@ window.render = async t => {
     const ki = exp(p(t, t0 + .06, .38)), ko = ease.inCubic(p(t, t1 - .16, .16));
     el.style.opacity = Math.min(1, ki * 1.2) * (1 - ko); el.style.filter = `blur(${(1 - ki) * 12 + ko * 10}px)`; el.style.transform = `translateY(${(1 - ki) * 22 - ko * 14}px) scale(${.97 + .03 * ki})`; });
   // 1 · hola
-  if (t < 4.1) { const k = muelle(t, .45, 2.2, .62); $('holaE').style.transform = `translateY(${(1 - Math.min(k, 1.08)) * 200}px) rotate(${t > 1.3 && t < 2.6 ? Math.sin((t - 1.3) * 16) * 7 : 0}deg)`;
-    pose($('holaE'), t < 1.25 ? 'abajo' : t < 2.6 ? (Math.floor((t - 1.25) / .16) % 2 ? 'arriba' : 'saluda') : t < 2.85 ? 'guino' : 'saluda');
+  if (t < 4.1) { const k = muelle(t, .45, 2.2, .62); $('holaE').style.transform = `translateY(${(1 - Math.min(k, 1.08)) * 200}px) rotate(${t > 1.3 && t < 2.6 ? Math.sin((t - 1.3) * 11.6) * 6 : 0}deg)`;
+    pose($('holaE'), t < 1.25 ? 'abajo' : t < 2.6 ? (Math.floor((t - 1.25) / .27) % 2 ? 'arriba' : 'saluda') : t < 2.85 ? 'guino' : 'saluda');
     const kb = muelle(t, 1.32, 3, .55); $('holaB').style.transform = `scale(${Math.max(0, Math.min(kb, 1.1))})`; $('holaB').style.transformOrigin = '0 100%'; $('holaB').style.opacity = t < 1.32 ? 0 : 1;
     const kd = muelle(t, 3.1, 3, .55); $('holaD').style.transform = `scale(${t < 3.1 ? 0 : Math.min(kd, 1.15)})`; $('holaD').querySelectorAll('i').forEach((d, i) => d.style.opacity = .35 + .65 * (Math.floor(t * 5 - i) % 3 === 0));
     $('holaG').style.opacity = .6 + .4 * Math.sin(t * 3); }
@@ -299,7 +308,7 @@ window.render = async t => {
     PASOS.forEach(([n, tf], i) => { const ic = $('pi' + i), hecho = t >= tf + (i === 0 ? 0 : 0), activo = !hecho && (i === 0 || t >= PASOS[i - 1][1]);
       ic.innerHTML = hecho ? ok() : ''; ic.style.border = hecho ? 'none' : activo ? '3px solid #2a2f3d' : '3px solid #2a2f3d'; ic.style.borderTopColor = activo ? 'var(--oro)' : '#2a2f3d';
       ic.style.transform = activo ? `rotate(${t * 400}deg)` : `scale(${hecho ? 1 + .3 * bump(t, tf) : 1})`; $('paso' + i).style.color = hecho || activo ? '#fff' : '#4a5064'; });
-    pose($('t2I'), t > 14.6 ? 'pulgar' : 'apunta'); $('t2B').style.display = t > 14.6 ? 'none' : 'flex';
+    pose($('t2I'), t > 14.9 ? 'pulgar' : 'apunta'); $('t2B').style.display = t > 14.9 ? 'none' : 'flex';
     $('t2B').querySelectorAll('i').forEach((d, i) => d.style.opacity = .35 + .65 * (Math.floor(t * 5 - i) % 3 === 0));
     // líneas: la vieja se marca en rojo (9,7), la nueva entra (10,2) y se escribe (10,3)
     const ins = ioX(p(t, 10.15, .3)); let y = 0;
@@ -311,7 +320,8 @@ window.render = async t => {
     const nch = Math.max(0, Math.min(ENLACE.length, Math.floor((t - 10.3) / .05))); $('tecl').textContent = ENLACE.slice(0, nch) + (t > 10.25 && t < 11.7 && Math.floor(t * 4) % 2 ? '▍' : '');
     const sc = 170 * ioX(p(t, 12.1, .45)); $('codigoIn').style.transform = `translateY(${-sc}px)`; y += 14;
     TERM.forEach(([hh, tt], i) => { const el = $('tl' + i), k = exp(p(t, tt, .3)); el.style.top = y + 'px'; el.style.opacity = k; el.style.transform = `translateX(${(1 - k) * 20}px)`; y += 40; });
-    $('bar2').style.width = 420 * ease.inOut(p(t, 12.4, 1.1)) + 'px'; }
+    $('bar2').style.width = 420 * ease.inOut(p(t, 13.15, .8)) + 'px';
+    const CMD = 'grabar --nfc --qr', nc = Math.max(0, Math.min(CMD.length, Math.floor((t - 12.3) / .05))); $('cmd').textContent = CMD.slice(0, nc) + (t > 12.25 && t < 13.2 && Math.floor(t * 4) % 2 ? '▍' : ''); }
   // 4 · precios
   if (t >= 15.9 && t < 19.9) { const k = ease.outCubic(p(t, 16.45, .8)), v = 33.5 - 8.5 * k; $('precio').textContent = t > 17.3 ? '25' : v.toFixed(2).replace('.', ',');
     const kl = muelle(t, 17.3, 3, .55); $('precio').style.display = 'inline-block'; $('precio').style.transform = `scale(${t > 17.3 ? .85 + .15 * Math.min(kl, 1.12) : 1})`;
@@ -320,7 +330,7 @@ window.render = async t => {
   // 5 · chat
   if (t >= 19.9 && t < 24.9) { const kq = muelle(t, 20.9, 3, .6); $('preg').style.transform = `scale(${t < 20.9 ? 0 : Math.min(kq, 1.1)})`; $('preg').style.transformOrigin = '100% 50%';
     pose($('t3I'), t < 21.9 ? 'curiosa' : t < 23.8 ? 'senala' : 'guino');
-    let j = 0; $('resp').querySelectorAll('.w').forEach(wd => { const a = (j < 16 ? 21.95 + j * .075 : 23.55 + (j - 16) * .075); const k = exp(p(t, a, .25)); wd.style.opacity = k; wd.style.filter = `blur(${(1 - k) * 6}px)`; j++; }); }
+    let j = 0; $('resp').querySelectorAll('.w').forEach(wd => { const a = (j < 16 ? 21.95 + j * .075 : 23.2 + (j - 16) * .075); const k = exp(p(t, a, .25)); wd.style.opacity = k; wd.style.filter = `blur(${(1 - k) * 6}px)`; j++; }); }
   // 6 · subir el logo
   const [cx, cy] = cursor(t); const arr = t >= 26.2 && t < 27.35, fa = $('fantasma'); fa.style.display = arr ? 'block' : 'none';
   if (arr) { fa.style.left = cx - 75 + 'px'; fa.style.top = cy - 40 + 'px'; fa.style.transform = `scale(${1 - .25 * p(t, 26.9, .45)}) rotate(${-6 * Math.sin(p(t, 26.2, 1.1) * Math.PI)}deg)`; }
@@ -342,12 +352,12 @@ window.render = async t => {
     if (mz) { M.style.opacity = Math.min(p(t, 41.0, .12), 1 - p(t, 42.5, .2)); $('mE').style.transform = `rotate(${Math.sin(t * 13) * 12}deg)`; $('mE').style.transformOrigin = '50% 70%';
       [0, 1, 2].forEach(i => { const a = t * 6 + i * 2.09; const o = $('ob' + i); o.style.left = 150 + Math.cos(a) * 80 + 'px'; o.style.top = 110 + Math.sin(a) * 22 + 'px'; o.style.opacity = .5 + .5 * Math.sin(a); }); } }
   // 9 · final
-  if (t >= 45.1) { pose($('finE'), Math.floor((t - 45.1) / .2) % 2 && t < 47 ? 'arriba' : 'saluda'); const k = muelle(t, 45.2, 1.8, .6); $('finE').style.transform = `translateY(${(1 - Math.min(k, 1.06)) * 260}px)`; }
+  if (t >= 45.1) { pose($('finE'), Math.floor((t - 45.1) / .3) % 2 && t < 47 ? 'arriba' : 'saluda'); const k = muelle(t, 45.2, 1.8, .6); $('finE').style.transform = `translateY(${(1 - Math.min(k, 1.06)) * 260}px)`; }
   // cursor
   const cu = $('cursor'), cv = t > 4.45 && t < 43.4; cu.style.display = cv ? 'block' : 'none';
   const cb = CLICS.reduce((s, c) => s + Math.max(0, bump(t, c)), 0); cu.style.transform = `translate(${cx}px,${cy}px) scale(${1 - .18 * cb})`;
   $('demo').style.opacity = t < 45.1 ? 1 : 0;
-  pintaTextos(t); fxRender(t);
+  agua(t); pintaTextos(t); fxRender(t);
 };
 window.render(0); window.LISTO = true;
 </script></body></html>
