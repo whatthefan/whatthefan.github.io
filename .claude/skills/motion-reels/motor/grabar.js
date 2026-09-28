@@ -22,7 +22,8 @@ function servir(raiz) {
 (async () => {
   const srv = await servir(path.dirname(path.resolve(pagina)));
   const b = await chromium.launch();
-  const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
+  const [W, H] = (process.env.TAM || '1080x1920').split('x').map(Number); // TAM=1080x1350 para 4:5
+  const p = await b.newPage({ viewport: { width: W, height: H } });
   p.on('pageerror', e => console.log('ERR', e.message));
   const modo = capa === 'prueba' ? (resto.shift(), 'prueba') : 'video';
   const nombreCapa = modo === 'prueba' ? process.argv[4] : capa;

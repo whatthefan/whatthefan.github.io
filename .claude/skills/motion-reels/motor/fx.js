@@ -3,6 +3,7 @@
       'riser' (tensión: zoom lento + temblor creciente + oscurecer, d = duración), 'impacto' (sacudida + punch),
       'zoomdig' (zoom digital a saltos), null (solo sonido). s/db/dur → mezcla (se leen desde Python). */
 (function () {
+  const H = innerHeight || 1920; // alto del lienzo (1920 vertical, 1350 para 4:5: grabar.js con TAM=1080x1350)
   const svg = `<svg width="0" height="0" style="position:absolute"><defs>
    <filter id="mb" x="-10%" y="0" width="120%" height="100%"><feGaussianBlur id="mbB" stdDeviation="0 0"/></filter>
    <filter id="gl" x="-5%" y="0" width="110%" height="100%" color-interpolation-filters="sRGB">
@@ -14,8 +15,8 @@
   document.body.insertAdjacentHTML('beforeend', svg +
     '<div id="fxOsc" style="position:absolute;inset:0;z-index:18;pointer-events:none;opacity:0;background:radial-gradient(ellipse 75% 60% at 50% 50%,transparent 30%,#000 100%)"></div>' +
     '<div id="fxBarras" style="position:absolute;inset:0;z-index:17;pointer-events:none;overflow:hidden"><i></i><i></i><i></i></div>' +
-    '<svg id="fxObt" viewBox="-540 -960 1080 1920" style="position:absolute;inset:0;width:1080px;height:1920px;z-index:17;pointer-events:none;display:none"></svg>' +
-    '<svg id="fxAni" viewBox="-540 -890 1080 1920" style="position:absolute;inset:0;width:1080px;height:1920px;z-index:17;pointer-events:none;display:none"><circle r="0" fill="none" stroke="#2F6BFF" stroke-width="90"/><circle r="0" fill="none" stroke="#8FB0FF" stroke-width="60"/><circle r="0" fill="#F5F7FA"/></svg>' +
+    `<svg id="fxObt" viewBox="-540 ${-H / 2} 1080 ${H}" style="position:absolute;inset:0;width:1080px;height:${H}px;z-index:17;pointer-events:none;display:none"></svg>` +
+    `<svg id="fxAni" viewBox="-540 ${-H / 2 + 70} 1080 ${H}" style="position:absolute;inset:0;width:1080px;height:${H}px;z-index:17;pointer-events:none;display:none"><circle r="0" fill="none" style="stroke:var(--oro)" stroke-width="90"/><circle r="0" fill="none" style="stroke:var(--oro2,#8FB0FF)" stroke-width="60"/><circle r="0" fill="#F5F7FA"/></svg>` +
     '<div id="fxIris" style="position:absolute;inset:0;z-index:17;pointer-events:none;opacity:0"></div>' +
     '<div id="fxFlash" style="position:absolute;inset:0;z-index:19;pointer-events:none;opacity:0;background:#fff"></div>');
 })();
@@ -42,7 +43,7 @@ function fxRender(t) {
   const B = document.getElementById('fxBarras'); B.style.display = ba === null ? 'none' : 'block';
   if (ba !== null) [...B.children].forEach((b, i) => { const k = ease.inOut(Math.min(1, Math.max(0, ba * 1.25 - i * .12)));
     Object.assign(b.style, { position: 'absolute', top: '-20%', height: '140%', width: '900px', left: (1500 - k * 3400 + i * 140) + 'px', transform: 'skewX(-18deg)',
-      background: ['#2F6BFF', '#F5F7FA', '#07080B'][i], boxShadow: '0 0 60px rgba(0,0,0,.5)' }); });
+      background: [`var(--oro)`, '#F5F7FA', `var(--fondo)`][i], boxShadow: '0 0 60px rgba(0,0,0,.5)' }); });
   const I = document.getElementById('fxIris'); I.style.opacity = ir === null ? 0 : 1;
   if (ir !== null) { const r = ease.inOut(ir) * 1300; I.style.background = `radial-gradient(circle ${Math.max(r, 1)}px at 50% 46%, transparent ${Math.max(r - 2, 0)}px, #07080B ${r}px)`; }
   const O = document.getElementById('fxObt'); O.style.display = ob === null ? 'none' : 'block';

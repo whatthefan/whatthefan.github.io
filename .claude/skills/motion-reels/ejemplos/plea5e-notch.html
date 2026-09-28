@@ -1,0 +1,357 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-800-normal.woff2);font-weight:800}
+:root{--oro:#E9BC46;--oro2:#F5DC8A;--fondo:#06080E;--gris:#8b91a1;--verde:#3DDC84;--rojo:#E0463B;--card:#0c0f16;--borde:#1a1f2b}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:var(--fondo);font-family:FT;color:#fff}
+.a{position:absolute}
+#cam{position:absolute;inset:0;transform-origin:540px 470px}
+#tapa{position:absolute;left:-200px;right:-200px;top:-400px;height:835px;background:radial-gradient(ellipse 60% 70% at 50% 60%,#141722 0,#0a0c12 55%,#06080E 100%)}
+#borde{position:absolute;left:-200px;right:-200px;top:418px;height:12px;background:linear-gradient(#1c2030,#0b0d14)}
+#pantalla{position:absolute;left:-200px;right:-200px;top:430px;height:1300px;overflow:hidden;background:#07090f}
+#barra{position:absolute;left:0;right:0;top:430px;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font:600 22px FT;color:rgba(255,255,255,.82)}
+#barra .d{display:flex;gap:12px}#barra .d i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.55)}
+#barra .r{display:flex;gap:20px;align-items:center}
+#panel{position:absolute;top:430px;background:#000;overflow:visible;box-shadow:0 30px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.05)}
+#panel:before,#panel:after{content:"";position:absolute;top:0;width:22px;height:22px}
+#panel:before{left:-22px;background:radial-gradient(circle at 0 100%,transparent 21px,#000 22px)}
+#panel:after{right:-22px;background:radial-gradient(circle at 100% 100%,transparent 21px,#000 22px)}
+#pin{position:absolute;inset:0;overflow:hidden;border-radius:inherit}
+#glow{position:absolute;inset:0;opacity:0}
+.esc{position:absolute;left:50%;top:0;width:1030px;margin-left:-515px;height:900px;display:none}
+#tabs{position:absolute;left:50%;top:0;width:1030px;margin-left:-515px;height:80px}
+#tabs .ic{position:absolute;top:22px;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+#tabs svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+#pill{position:absolute;top:18px;width:70px;height:48px;border-radius:24px;background:#1b1f2a}
+.card{position:absolute;background:var(--card);border:1.5px solid var(--borde);border-radius:30px}
+.tile{position:absolute;border-radius:40px;background:linear-gradient(160deg,#1b2030,#0b0d14);border:1.5px solid #262c3c;overflow:visible;box-shadow:inset 0 0 40px rgba(233,188,70,.10)}
+.tile img{position:absolute;left:50%;bottom:6px;transform:translateX(-50%)}
+.badge{position:absolute;left:-10px;top:-10px;width:46px;height:46px;border-radius:50%;background:var(--oro);border:4px solid #000;display:flex;align-items:center;justify-content:center;gap:4px}
+.badge i{width:6px;height:6px;border-radius:50%;background:#111}
+.chipa{position:absolute;width:178px;height:84px;border-radius:22px;background:#141822;border:1.5px solid #1e2330;display:flex;align-items:center;gap:12px;padding-left:14px;font:600 21px FT;white-space:nowrap}
+.cara{width:40px;height:30px;border-radius:11px;position:relative;flex:none}
+.cara:before,.cara:after{content:"";position:absolute;top:9px;width:6px;height:11px;border-radius:3px;background:#0b0d12}
+.cara:before{left:11px}.cara:after{right:11px}
+.gr{color:var(--gris)}.mono{font-family:'DejaVu Sans Mono',monospace}
+.t{position:absolute;left:60px;right:60px;text-align:center}
+.t .l{display:inline-block}.t .wd{display:inline-block;white-space:nowrap}
+.h{font-weight:800;font-size:84px;letter-spacing:-.04em;line-height:1;text-shadow:0 6px 30px rgba(0,0,0,.4)}
+.p{font-weight:600;font-size:40px;letter-spacing:-.01em;color:rgba(255,255,255,.72)}
+.k{color:var(--oro)}
+.linea{position:absolute;left:0;right:0;height:40px;font:24px 'DejaVu Sans Mono',monospace;white-space:pre;display:flex;align-items:center}
+.linea .n{width:64px;text-align:right;padding-right:22px;color:#4a5064;flex:none}
+.linea .s{color:#A5E3B8}.linea .kw{color:#C792EA}.linea .c{color:#5d6478}.linea .f{color:#82AAFF}
+.paso{position:absolute;left:30px;display:flex;align-items:center;gap:14px;font:600 26px FT}
+.ico{width:26px;height:26px;border-radius:50%;flex:none;position:relative}
+.btn{position:absolute;height:60px;border-radius:30px;display:flex;align-items:center;justify-content:center;font:700 26px FT}
+.campo{position:absolute;background:#10131b;border:1.5px solid #1e2330;border-radius:16px;font:500 25px FT;display:flex;align-items:center;padding:0 20px}
+#cursor{position:absolute;left:0;top:0;width:34px;height:48px;z-index:9;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+#archivo,#fantasma{position:absolute;width:160px;white-space:nowrap;text-align:center;font:600 17px FT;color:#fff}
+.doc{width:78px;height:98px;margin:0 auto 8px;background:#f3f4f7;border-radius:8px;position:relative;clip-path:polygon(0 0,70% 0,100% 22%,100% 100%,0 100%)}
+.doc:after{content:"";position:absolute;right:0;top:0;width:30%;height:22%;background:#c9ccd6;border-bottom-left-radius:6px}
+.doc img{position:absolute;left:13px;top:26px;width:52px}
+#demo{position:absolute;left:28px;bottom:26px;padding:8px 16px;border-radius:12px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.12);font:600 22px FT;color:rgba(255,255,255,.85);z-index:8}
+#grano{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.05;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+</style></head><body>
+<div id="todo" style="position:absolute;inset:0;transform-origin:50% 50%">
+<div id="cam">
+  <div id="tapa"></div><div id="borde"></div>
+  <div id="pantalla"><svg id="olas" class="a" style="left:200px;top:0" width="1080" height="1100" viewBox="0 0 1080 1100">
+    <defs><linearGradient id="gA" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#090b14"/><stop offset=".6" stop-color="#161b2e"/><stop offset="1" stop-color="#2a2a3a"/></linearGradient>
+    <linearGradient id="gL" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#E9BC46" stop-opacity="0"/><stop offset=".55" stop-color="#E9BC46" stop-opacity=".75"/><stop offset="1" stop-color="#F5DC8A" stop-opacity=".2"/></linearGradient>
+    <filter id="bl"><feGaussianBlur stdDeviation="6"/></filter></defs><g id="olasG"></g></svg>
+    <div class="a" style="left:560px;top:180px;width:700px;height:700px;border-radius:50%;background:radial-gradient(#E9BC46,transparent 70%);opacity:.08"></div>
+  </div>
+  <div id="barra"><div class="d"><i></i><i></i><i></i></div><div class="r">
+    <svg width="26" height="20" viewBox="0 0 26 20" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".85"><path d="M2 7a16 16 0 0 1 22 0M6 11a10 10 0 0 1 14 0M10 15a4 4 0 0 1 6 0"/></svg>
+    <svg width="40" height="20" viewBox="0 0 40 20" opacity=".85"><rect x="1" y="2" width="33" height="16" rx="5" fill="none" stroke="#fff" stroke-width="2"/><rect x="4" y="5" width="22" height="10" rx="2.5" fill="#fff"/><rect x="36" y="7" width="3" height="6" rx="1.5" fill="#fff"/></svg>
+    <span>10:08</span></div></div>
+  <div id="archivo" style="left:883px;top:1098px"><div class="doc"><img src="sello-plea5e.svg"></div>logo-tu-bar.png</div>
+  <div id="panel"><div id="pin"><div id="glow"></div>
+    <div id="tabs"><div id="pill"></div>
+      <div class="ic" style="left:30px"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+      <div class="ic" style="left:100px"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></div>
+      <div class="ic" style="left:170px"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      <div class="ic" style="right:90px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div>
+      <div class="ic" style="right:30px"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></div>
+    </div>
+    <div id="escenas"></div>
+  </div></div>
+  <img id="mini" class="a" src="est/curiosa.svg" style="height:46px;display:none">
+  <div id="camara" class="a" style="width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#2a3550,#07080c 70%)"></div>
+  <div id="fantasma" style="display:none"><div class="doc"><img src="sello-plea5e.svg"></div></div>
+  <svg id="cursor" viewBox="0 0 34 48"><path d="M3 2 L3 38 L12 30 L18 44 L24 41 L18 28 L30 28 Z" fill="#fff" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/></svg>
+</div>
+<div id="textos"></div>
+<div id="demo">Demostración</div>
+</div>
+<div id="grano"></div>
+<script src="fx.js"></script><script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle } = E;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), lerp = (a, b, k) => a + (b - a) * k;
+const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x <= 0 ? 0 : x >= 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+const spr = x => x <= 0 ? 0 : 1 - Math.exp(-7 * x) * Math.cos(10 * x); // muelle del notch: rebasa ~10 % y se asienta
+const FX = []; const TOTAL = 48.3; window.TOTAL = TOTAL;
+const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
+const P = 'packs/', Q = 'packs2/', R = 'packs3/', N = 'packs4/';
+
+/* ============ SONIDO: uno por suceso, ninguno más de 2 veces ============ */
+fx(.12, null, N + 'notch-abre.mp3', -6);            // el notch se abre (el vídeo empieza con sonido)
+fx(1.3, null, N + 'bot-saluda.mp3', -6);            // la Estrellita saluda
+fx(3.1, null, R + 'pop-limpio.mp3', -9);             // globo de "pensando"
+fx(4.0, null, R + 'swoosh-corto.mp3', -8);           // se recoge en el notch
+fx(5.86, null, N + 'notch-clic.mp3', -5);            // clic en el notch → panel
+fx(8.6, 'ladeo', Q + 'whoosh-b.mp3', -5, { dir: 1 });   // → editor
+fx(10.3, null, Q + 'teclas.mp3', -10, { dur: 1.15 });  // escribe el enlace
+fx(12.4, null, Q + 'carga.mp3', -9, { dur: 1.1 });   // grabando el chip
+fx(13.6, null, N + 'tarea-hecha.mp3', -6);           // chip grabado
+fx(14.6, null, P + 'iphone-charging.mp3', -8);       // el móvil toca la placa: se abre la ficha
+fx(15.9, 'whip', Q + 'swish-c.mp3', -5, { dir: -1 });  // → precios
+fx(16.45, null, Q + 'contador.mp3', -10, { dur: .75 });// 33,50 → 25
+fx(17.3, null, N + 'pago-llega.mp3', -6);            // aterriza el precio
+fx(19.9, 'barras', Q + 'swoosh-a.mp3', -5);           // → chat
+fx(20.9, null, R + 'tap.mp3', -7);                    // pregunta
+fx(21.9, null, N + 'respuesta.mp3', -7);             // responde
+fx(24.9, 'giro', P + 'arrow-swoosh.mp3', -5, { dir: 1 }); // → subir logo
+fx(27.35, null, N + 'suelta-archivo.mp3', -6);       // suelta el logo
+fx(28.85, null, N + 'subida-ok.mp3', -6);            // subido
+fx(29.9, null, R + 'click.mp3', -6);                 // "Pedir por WhatsApp"
+fx(30.45, null, Q + 'teclas.mp3', -10, { dur: 1.5 });  // escribe el mensaje
+fx(32.1, null, P + 'arrow2-swoosh.mp3', -6);         // enviado
+fx(33.6, 'obturador', R + 'obturador-real.mp3', -5);  // → propuesta de diseño
+fx(36.7, null, P + 'right.mp3', -7);                 // aprobado
+fx(38.6, 'caida', R + 'swoosh-suave.mp3', -5);        // → inicio
+fx(39.6, null, N + 'toque-bot.mp3', -6);
+fx(40.1, null, N + 'toque-bot2.mp3', -6);
+fx(40.55, null, N + 'toque-bot.mp3', -6);
+fx(41.0, 'impacto', N + 'mareo.mp3', -5, { a: 16 });   // se marea
+fx(43.3, null, R + 'swoosh-corto.mp3', -8);          // se recoge
+fx(45.1, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.3 });
+fx(45.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 30 }); // revelación final
+
+/* ============ TEXTOS GRANDES (arriba, sobre la tapa del portátil) ============ */
+const T = [];
+function texto(html, cls, y, t0, t1) { const el = document.createElement('div'); el.className = 't ' + cls; el.style.top = y + 'px';
+  const parts = html.split(/(\*[^*]+\*)/); let s = '', n = 0;
+  parts.forEach(q => { const k = q.startsWith('*'); const tx = k ? q.slice(1, -1) : q; s += (k ? '<span class="k">' : '') + tx.split(' ').map(w => w ? '<span class="wd">' + [...w].map(c => `<span class="l" data-i="${n++}">${c}</span>`).join('') + '</span>' : '').join(' ') + (k ? '</span>' : ''); });
+  el.innerHTML = s; $('textos').appendChild(el); T.push({ el, t0, t1 }); }
+function pintaTextos(t) { T.forEach(o => { const vis = t >= o.t0 - .01 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  o.el.querySelectorAll('.l').forEach(l => { const i = +l.dataset.i, a = o.t0 + i * .018, k = exp(p(t, a, .5)), m = muelle(t, a, 2.2, .72), s2 = ease.inCubic(p(t, o.t1 - .2 + i * .004, .16));
+    l.style.opacity = Math.min(k * 1.3, 1) * (1 - s2); l.style.filter = `blur(${(1 - k) * 10 + s2 * 12}px)`;
+    l.style.transform = `translate(${(1 - Math.min(m, 1.04)) * 70}px,${(1 - Math.min(m, 1.04)) * 14 - s2 * 30}px) scale(${.9 + .1 * Math.min(k, 1)})`; }); }); }
+texto('Hola, soy *Estrellita*', 'h', 150, .3, 3.85); texto('la mascota de PLEA5E', 'p', 262, 1.2, 3.85);
+texto('Y te enseño cómo se hace *tu placa*', 'h', 110, 4.15, 5.8);
+texto('Eliges tu *placa*', 'h', 150, 6.0, 8.45); texto('La de mesa es la más pedida', 'p', 262, 6.5, 8.45);
+texto('Ponemos tu enlace de *Google*', 'h', 110, 8.7, 12.15);
+texto('…y lo grabamos en el *chip*', 'h', 110, 12.25, 15.75); texto('NFC y QR en la misma placa', 'p', 300, 12.9, 15.75);
+texto('Las placas: *pago único*', 'h', 150, 16.0, 19.75); texto('Pagas una vez y son tuyas', 'p', 262, 16.6, 19.75);
+texto('Lo pides por *WhatsApp*', 'h', 150, 20.0, 24.75); texto('con todo ya escrito', 'p', 262, 20.7, 24.75);
+texto('Nos mandas *tu logo*', 'h', 150, 25.0, 29.75);
+texto('Y te hacemos *el diseño*', 'h', 150, 29.9, 33.45); texto('Propuesta en 48 h', 'p', 262, 30.5, 33.45);
+texto('No se imprime hasta que *lo apruebas*', 'h', 110, 33.7, 38.45);
+texto('Tócala, pero *con cariño*', 'h', 150, 38.75, 42.95);
+texto('¿Te hago *la tuya*?', 'h', 150, 43.4, 45.0);
+texto('Tu placa, *con tu marca*', 'h', 150, 45.12, TOTAL + 1);
+
+/* ============ ESCENAS DENTRO DEL NOTCH ============ */
+const cara = c => `<span class="cara" style="background:${c}"></span>`;
+const chips = (L) => `<div class="card" style="left:626px;top:88px;width:384px;height:234px"></div>` + L.map(([n, c], i) => `<div class="chipa" style="left:${636 + (i % 2) * 186}px;top:${112 + Math.floor(i / 2) * 98}px">${cara(c)}${n}</div>`).join('');
+const tile = (id, x, y, s, pose, badge) => `<div class="tile" id="${id}" style="left:${x}px;top:${y}px;width:${s}px;height:${s}px"><img id="${id}I" src="est/${pose}.svg" style="height:${s * .86}px">${badge ? '<div class="badge" id="' + id + 'B"><i></i><i></i><i></i></div>' : ''}</div>`;
+const ok = (c = 'var(--verde)') => `<svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="${c}"/><path d="M7.5 13.5l3.6 3.4 7.4-7.8" fill="none" stroke="#06080E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ESC = [ // [id, t0, t1, html]
+ ['hola', .15, 4.05, `<div id="holaG" class="a" style="left:315px;top:20px;width:400px;height:300px;background:radial-gradient(ellipse at 50% 55%,rgba(233,188,70,.45),transparent 65%)"></div>
+   <img id="holaE" class="a" src="est/abajo.svg" style="left:392px;top:44px;height:230px">
+   <div id="holaB" class="a" style="left:640px;top:62px;padding:12px 24px;border-radius:26px 26px 26px 6px;background:#fff;color:#111;font:800 36px FT">¡Hola!</div>
+   <div id="holaD" class="badge" style="left:410px;top:46px"><i></i><i></i><i></i></div>`],
+ ['panel1', 5.9, 8.6, tile('t1', 42, 112, 172, 'guino', true) + `<div class="card" style="left:20px;top:88px;width:590px;height:234px;z-index:-1"></div>
+   <div class="a" style="left:240px;top:118px;font:800 32px FT"><span style="color:var(--oro)">●</span> Placa de mesa</div><div class="a gr" style="left:548px;top:124px;font:600 22px FT">1/4</div>
+   <div class="a" style="left:240px;top:170px;font:600 25px FT;display:flex;gap:12px;align-items:center"><span id="gira1" class="ico" style="border:3px solid #2a2f3d;border-top-color:var(--oro)"></span>Diseño en marcha</div>
+   <div class="a mono gr" style="left:240px;top:222px;font-size:20px">90 × 90 mm · metacrilato 4 mm</div><div class="a mono gr" style="left:240px;top:254px;font-size:20px">chip NFC + QR</div>` + chips([['Google', '#4C8BF5'], ['WhatsApp', '#25D366'], ['NFC', '#E9BC46'], ['QR', '#F3F4F7']])],
+ ['editor', 8.6, 15.9, tile('t2', 30, 96, 180, 'apunta', true) + `<div class="a" style="left:30px;top:300px;font:800 30px FT">Estrellita</div><div class="a gr" style="left:30px;top:338px;font:600 22px FT">Taller PLEA5E</div>
+   <div id="pasos"></div>
+   <div class="a" style="left:236px;top:90px;width:774px;height:512px;background:#0a0c12;border:1.5px solid var(--borde);border-radius:24px;overflow:hidden">
+     <div class="a" style="left:24px;top:16px;display:flex;gap:10px;align-items:center;font:600 22px 'DejaVu Sans Mono',monospace"><span style="background:var(--oro);color:#111;font:800 15px FT;padding:3px 7px;border-radius:6px">NFC</span>tu-placa.nfc <span style="color:var(--oro)">●</span></div>
+     <div class="a mono" style="right:24px;top:20px;font-size:18px;color:#4a5064">taller/placas/tu-placa.nfc</div>
+     <div class="a" style="left:0;right:0;top:62px;height:1px;background:var(--borde)"></div>
+     <div id="codigo" class="a" style="left:0;right:0;top:74px;height:430px;overflow:hidden"><div id="codigoIn" class="a" style="left:0;right:0;top:0"></div></div>
+   </div>`],
+ ['precios', 15.9, 19.9, `<div class="card" style="left:20px;top:88px;width:590px;height:254px"></div>
+   <div class="tile" style="left:42px;top:118px;width:160px;height:160px;background:radial-gradient(circle at 50% 40%,#2a2410,#0b0d14)"><img src="sello-plea5e.svg" style="height:128px;bottom:16px"></div>
+   <div class="a" style="left:228px;top:112px;font:700 22px FT"><span style="color:var(--oro)">●</span> PLEA5E <span class="gr">Precios</span></div>
+   <div class="a" style="left:226px;top:142px;display:flex;align-items:baseline;gap:12px"><span id="precio" style="font:800 62px FT;letter-spacing:-.03em">33,50</span><span style="font:700 26px FT" class="gr">€</span>
+     <span id="antes" class="gr" style="font:600 24px FT;text-decoration:line-through">33,50 €</span><span id="dto" style="background:var(--oro);color:#111;font:800 22px FT;padding:4px 10px;border-radius:10px">−25%</span></div>
+   <div id="filas" class="a" style="left:228px;top:222px;width:360px;height:112px;overflow:hidden"></div>` + chips([['Pago único', '#E9BC46'], ['Sin apps', '#F3F4F7'], ['NFC + QR', '#4C8BF5'], ['Tu marca', '#3DDC84']])],
+ ['chat', 19.9, 24.9, `<div class="a" style="left:40px;top:96px;padding:8px 18px;border-radius:20px;background:#141822;border:1.5px solid #1e2330;font:600 22px FT"><span style="color:var(--verde)">●</span> Estrellita</div>
+   <div id="preg" class="a" style="right:30px;top:100px;padding:14px 26px;border-radius:26px;background:#1d2130;font:600 28px FT">¿Cómo la pido?</div>` + tile('t3', 30, 210, 120, 'curiosa') + `
+   <div id="resp" class="a" style="left:178px;top:196px;width:800px;font:500 30px/1.38 FT"></div>
+   <div class="a" style="left:178px;top:382px;width:822px;height:62px;border-radius:31px;background:#10131b;border:1.5px solid #1e2330;font:500 24px FT;color:#4a5064;display:flex;align-items:center;padding-left:26px">Escribe…
+     <div class="a" style="right:8px;top:7px;width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 16V4M4.5 9.5L10 4l5.5 5.5" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>`],
+ ['suelta', 24.9, 27.45, `<div id="zona" class="a" style="left:20px;top:86px;width:990px;height:196px;border-radius:26px;border:2.5px dashed rgba(233,188,70,.45);background:linear-gradient(180deg,rgba(233,188,70,.05),rgba(233,188,70,.12))"></div>
+   <div class="a gr" style="left:0;right:0;top:140px;text-align:center;font:600 32px FT">Suelta aquí <span style="color:#fff">tu logo</span></div>
+   <div class="a" style="left:0;right:0;top:196px;display:flex;justify-content:center;gap:10px;font:600 20px FT">${['PNG', 'JPG', 'SVG', 'PDF'].map(x => `<span style="padding:5px 14px;border-radius:12px;background:#141822;color:var(--gris)">${x}</span>`).join('')}</div>`],
+ ['sube', 27.45, 29.35, `<div class="a" style="left:40px;top:120px;font:600 28px FT">Subiendo logo-tu-bar.png</div><div id="pct" class="a gr" style="right:40px;top:120px;font:600 28px FT">0 %</div>
+   <div class="a" style="left:40px;top:190px;width:950px;height:10px;border-radius:5px;background:#1a1e2a"><div id="barraS" style="height:100%;border-radius:5px;background:linear-gradient(90deg,#b8902c,var(--oro))"></div></div>
+   <div id="okS" class="a" style="right:34px;top:116px">${ok()}</div>`],
+ ['listo', 29.35, 29.95, tile('t4', 30, 100, 150, 'pulgar') + `<div class="a" style="left:206px;top:108px;font:800 32px FT">logo-tu-bar.png está listo.</div><div class="a gr" style="left:206px;top:152px;font:600 26px FT">¿Qué hacemos con él?</div>
+   <div id="bWa" class="btn" style="left:206px;top:204px;width:300px;background:#fff;color:#111">Pedir por WhatsApp</div><div class="btn" style="left:522px;top:204px;width:170px;background:#1a1e2a">Cancelar</div>`],
+ ['form', 29.95, 32.25, tile('t5', 30, 100, 150, 'apunta') + `<div class="a" style="left:206px;top:98px;font:800 28px FT">Nuevo mensaje <span class="gr" style="font-weight:600;font-size:22px">con logo-tu-bar.png</span></div>
+   <div class="campo" style="left:206px;top:146px;width:794px;height:58px"><span class="gr" style="width:110px">Para</span>PLEA5E · WhatsApp</div>
+   <div class="campo" style="left:206px;top:218px;width:794px;height:140px;align-items:flex-start;padding-top:18px"><span id="msg"></span></div>
+   <div id="bEnv" class="btn" style="left:206px;top:380px;width:150px;background:var(--oro);color:#111">Enviar</div><div class="btn" style="left:372px;top:380px;width:170px;background:#1a1e2a">Cancelar</div>`],
+ ['enviado', 32.25, 33.6, tile('t6', 30, 96, 130, 'tachan') + `<div class="a" style="left:190px;top:112px;font:800 32px FT;display:flex;gap:12px;align-items:center">${ok()} Enviado a PLEA5E.</div><div class="a gr" style="left:190px;top:162px;font:600 26px FT">Te contestamos con la propuesta de diseño.</div>`],
+ ['diseno', 33.6, 38.6, `<div class="a" style="left:40px;top:96px;font:800 32px FT">Propuesta de diseño</div><div class="a gr" style="left:40px;top:138px;font:600 22px FT">Placa de mesa · 90 × 90 mm</div>
+   <div id="aprob" class="a" style="right:40px;top:100px;padding:8px 18px;border-radius:16px;background:var(--verde);color:#06080E;font:800 24px FT">Aprobado ✓</div>
+   <div class="a" style="left:265px;top:560px;width:500px;height:80px;border-radius:50%;background:radial-gradient(rgba(233,188,70,.35),transparent 70%);filter:blur(10px)"></div>
+   <img id="placaD" class="a" src="placa-cuadrada.png" style="left:388px;top:176px;height:440px">
+   <img id="t7" class="a" src="est/pulgar.svg" style="left:720px;top:360px;height:200px">
+   <div class="a gr" style="left:0;right:0;top:652px;text-align:center;font:600 24px FT">No se imprime nada hasta que apruebas el diseño.</div>
+   <div id="bApr" class="btn" style="left:300px;top:714px;width:200px;background:var(--oro);color:#111">Aprobar</div><div class="btn" style="left:516px;top:714px;width:220px;background:#1a1e2a">Cambiar algo</div>`],
+ ['panel2', 38.6, 43.3, tile('t8', 42, 112, 172, 'guino') + `<div class="card" style="left:20px;top:88px;width:590px;height:234px;z-index:-1"></div>
+   <div class="a" style="left:240px;top:118px;font:800 32px FT"><span style="color:var(--verde)">●</span> Placa de mesa</div><div class="a gr" style="left:548px;top:124px;font:600 22px FT">4/4</div>
+   <div class="a" style="left:240px;top:170px;font:600 25px FT;display:flex;gap:12px;align-items:center;color:var(--verde)">${ok()} Lista · diseño aprobado</div>
+   <div class="a mono gr" style="left:240px;top:222px;font-size:20px">$ acerca el móvil</div><div class="a mono" style="left:240px;top:254px;font-size:20px;color:#A5E3B8">→ se abre tu ficha de Google</div>` + chips([['Google', '#4C8BF5'], ['WhatsApp', '#25D366'], ['NFC', '#E9BC46'], ['QR', '#F3F4F7']])
+   + `<div id="mareo" class="a" style="inset:0;display:none"><div class="a" style="inset:0;background:radial-gradient(ellipse 60% 120% at 30% 50%,rgba(224,70,59,.38),transparent 70%),radial-gradient(ellipse 50% 100% at 80% 60%,rgba(233,188,70,.22),transparent 70%),#000"></div>
+     <img id="mE" class="a" src="est/apoyada.svg" style="left:40px;top:96px;height:230px"><div id="orb"></div>
+     <div class="a" style="left:330px;top:170px;font:800 40px FT">¡Uy! Demasiados toques a la vez.</div></div>`],
+ ['fin', 45.1, 99, `<div class="a" style="left:0;right:0;top:0;height:920px;background:radial-gradient(ellipse 60% 45% at 50% 40%,rgba(233,188,70,.22),transparent 70%)"></div>
+   <img id="finE" class="a" src="est/saluda.svg" style="left:352px;top:110px;height:300px">
+   <img class="a" src="marca-plea5e.svg" style="left:95px;top:450px;width:840px">
+   <div class="a" style="left:0;right:0;top:660px;text-align:center;font:800 54px FT;color:var(--oro)">plea5e.es</div>
+   <div class="a gr" style="left:0;right:0;top:736px;text-align:center;font:600 28px FT">Placas NFC y QR · pago único</div>`],
+];
+$('escenas').innerHTML = ESC.map(([id, , , h]) => `<div class="esc" id="e_${id}">${h}</div>`).join('');
+// pasos del editor
+const PASOS = [['Diseño', 8.6], ['Enlace', 11.55], ['Chip NFC', 13.6], ['Listo', 14.6]];
+$('pasos').innerHTML = PASOS.map(([n], i) => `<div class="paso" id="paso${i}" style="top:${392 + i * 50}px"><span class="ico" id="pi${i}"></span><span>${n}</span></div>`).join('');
+// código
+const COD = [[10, '<span class="kw">placa</span>    = <span class="s">"Placa de mesa"</span>'], [11, '<span class="kw">medida</span>   = <span class="s">"90 × 90 mm"</span>'], [12, '<span class="kw">material</span> = <span class="s">"metacrilato 4 mm"</span>'],
+  [13, '<span class="kw">enlace</span>   = <span class="s">""</span>', 'viejo'], [13, '<span class="kw">enlace</span>   = <span class="s">"<span id="tecl"></span>"</span>', 'nuevo'], [14, ''],
+  [15, '<span class="f">al_acercar</span>(movil) {'], [16, '  <span class="f">abrir</span>(enlace)  <span class="c">// tu ficha de Google</span>'], [17, '}']];
+const TERM = [['<span style="color:var(--oro)">$</span> grabar --nfc --qr', 12.3], ['<span id="bar2" style="display:inline-block;width:0;height:12px;border-radius:6px;background:var(--oro);vertical-align:middle"></span>', 12.4],
+  ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> chip NFC grabado', 13.6], ['<span style="background:var(--verde);color:#06080E;padding:0 8px;border-radius:5px">OK</span> QR generado', 14.05],
+  ['<span style="color:#A5E3B8">✓ al acercar el móvil se abre tu ficha</span>', 14.6]];
+$('codigoIn').innerHTML = COD.map(([n, h, k], i) => `<div class="linea" id="cl${i}"><span class="n">${n}</span><span class="mk" style="width:26px;flex:none"></span><span class="tx">${h}</span></div>`).join('')
+  + TERM.map(([h], i) => `<div class="linea" id="tl${i}" style="padding-left:24px">${h}</div>`).join('');
+const ENLACE = 'g.page/r/tu-bar/review', MSG = 'Hola, quiero placas de mesa con mi logo.';
+const RESP = ['Marcas lo que quieres, ves el precio al momento y se abre WhatsApp con todo escrito.', 'Te contestamos con la propuesta de diseño en 48 h.'];
+$('resp').innerHTML = RESP.map((r, j) => `<p style="margin-bottom:14px;${j ? 'color:var(--gris)' : ''}">` + r.split(' ').map(w => `<span class="w" style="display:inline-block;opacity:0">${w}</span>`).join(' ') + '</p>').join('');
+const FILAS = [['Placa de mesa', '25 €'], ['Expositor de pie', '28 €'], ['Tarjeta de mano', '15 €']];
+$('filas').innerHTML = FILAS.map(([a, b], i) => `<div id="fi${i}" class="a" style="left:0;right:0;top:${i * 36}px;display:flex;justify-content:space-between;font:600 22px FT"><span><span style="color:var(--oro)">●</span> ${a}</span><span style="color:var(--oro)">${b} <span class="gr" style="font-size:17px">/ud.</span></span></div>`).join('');
+$('orb').innerHTML = [0, 1, 2].map(i => `<span id="ob${i}" class="a" style="font:800 30px FT;color:var(--oro)">✦</span>`).join('');
+// olas del fondo
+$('olasG').innerHTML = [0, 1, 2, 3, 4, 5].map(i => `<path id="ola${i}" fill="url(#gA)" stroke="url(#gL)" stroke-width="${2.5 - i * .2}" opacity="${.95 - i * .08}"/>`).join('');
+
+/* ============ geometría del notch (muelle) ============ */
+const PK = [[0, 280, 52, .5], [.12, 760, 300, .6], [4.0, 280, 52, .45], [5.3, 320, 60, .3], [5.88, 1030, 342, .55], [8.6, 1030, 624, .5], [15.9, 1030, 362, .5], [19.9, 1030, 470, .5],
+  [24.9, 1030, 302, .5], [29.95, 1030, 470, .5], [32.25, 1030, 250, .5], [33.6, 1030, 812, .55], [38.6, 1030, 342, .5], [43.3, 280, 52, .5], [45.1, 1080, 920, .6]];
+const ST = [[PK[0][1], PK[0][2]]];
+const val = (i, t) => { const [a, W, H, d] = PK[i]; if (!i) return [W, H]; const k = spr(Math.min(3, (t - a) / d)); return [lerp(ST[i][0], W, k), lerp(ST[i][1], H, k)]; };
+for (let i = 1; i < PK.length; i++) ST.push(val(i - 1, PK[i][0]));
+function notch(t) { let i = 0; while (i < PK.length - 1 && PK[i + 1][0] <= t) i++; return val(i, t); }
+// cámara [t, escala, x, y] (origen del zoom), interpolada con easeInOutExpo
+const CK = [[0, 1.55, 540, 470], [1.1, 1.14, 540, 470], [3.8, 1.14, 540, 470], [4.5, 1, 540, 470], [8.5, 1.03, 540, 700], [8.7, 1, 540, 700], [15.8, 1.03, 540, 700], [16, 1, 540, 700],
+  [33.5, 1.02, 540, 700], [33.7, 1, 540, 840], [38.5, 1.03, 540, 840], [38.7, 1, 540, 700], [43.2, 1.02, 540, 470], [43.8, 1.02, 540, 470], [45.05, 1.3, 540, 470], [45.25, 1, 540, 700], [TOTAL, 1.05, 540, 800]];
+function camara(t) { let i = 0; while (i < CK.length - 2 && t >= CK[i + 1][0]) i++; const a = CK[i], b = CK[i + 1], k = ioX(cl((t - a[0]) / (b[0] - a[0])));
+  return [lerp(a[1], b[1], k), lerp(a[2], b[2], k), lerp(a[3], b[3], k)]; }
+// cursor [t, x, y]; clics
+const KC = [[0, 1000, 1400], [4.4, 1000, 1400], [4.6, 900, 1180], [5.6, 590, 458], [6.5, 800, 980], [8.0, 820, 1010], [8.4, 700, 820], [9.0, 980, 1160], [15.8, 960, 1120], [16.4, 840, 1010],
+  [20.2, 760, 1040], [24.8, 780, 1060], [25.8, 948, 1150], [26.2, 948, 1150], [27.25, 560, 620], [27.8, 640, 760], [29.5, 360, 660], [29.9, 360, 660], [30.3, 520, 900], [31.6, 300, 830], [32.1, 290, 832],
+  [32.6, 520, 960], [34.8, 780, 1300], [36.2, 430, 1160], [36.7, 420, 1162], [37.3, 620, 1260], [38.8, 700, 1000], [39.4, 160, 640], [40.6, 160, 640], [41.3, 820, 1000], [43.0, 900, 1150], [43.4, 1000, 1400]];
+const CLICS = [5.86, 29.9, 32.1, 36.7, 39.6, 40.1, 40.55];
+function cursor(t) { let i = 0; while (i < KC.length - 2 && t >= KC[i + 1][0]) i++; const a = KC[i], b = KC[i + 1], k = ease.inOut(cl((t - a[0]) / (b[0] - a[0])));
+  return [lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; }
+const bump = (t, t0) => { const u = t - t0; return u < 0 || u > .5 ? 0 : Math.exp(-u * 9) * Math.cos(u * 22); };
+const pose = (el, n) => { const s = 'est/' + n + '.svg'; if (el._s !== s) { el.src = s; el._s = s; } };
+const PRE = ['abajo', 'saluda', 'arriba', 'guino', 'curiosa', 'apunta', 'pulgar', 'tachan', 'asombro', 'apoyada', 'senala', 'salta'].map(n => { const i = new Image(); i.src = 'est/' + n + '.svg'; return i; });
+
+window.render = async t => {
+  // cámara
+  const [cs, ox, oy] = camara(t); $('cam').style.transformOrigin = `${ox}px ${oy}px`;
+  $('cam').style.transform = `scale(${cs * (1 + .006 * Math.sin(t * .5))}) translateY(${Math.sin(t * .31) * 3}px)`;
+  // olas del fondo (se mueven despacio)
+  for (let i = 0; i < 6; i++) { const y0 = 420 + i * 130, s = Math.sin(t * .25 + i) * 30; $('ola' + i).setAttribute('d', `M-60 ${y0 + 260} C ${300 + s} ${y0 + 120}, ${560 - s} ${y0 - 60}, 1150 ${y0 - 560} L 1150 1100 L -60 1100 Z`); }
+  // notch
+  const [w, h] = notch(t), pn = $('panel'), r = Math.min(46, h / 2);
+  Object.assign(pn.style, { left: 540 - w / 2 + 'px', width: w + 'px', height: h + 'px', borderRadius: `0 0 ${r}px ${r}px` });
+  $('camara').style.left = (540 - 6 + (w > 600 ? 0 : 60)) + 'px'; $('camara').style.top = (430 + 20) + 'px'; $('camara').style.opacity = h < 90 ? 1 : 0;
+  const mini = $('mini'), mv = (t > 4.25 && t < 5.9) || (t > 43.6 && t < 45.1); mini.style.display = mv ? 'block' : 'none';
+  if (mv) { const t0 = t < 10 ? 4.25 : 43.6, k = muelle(t, t0, 2.5, .6); mini.style.left = (430 - 26) + 'px'; mini.style.top = (432 + (1 - Math.min(k, 1.1)) * 20) + 'px'; mini.style.transform = `scale(${Math.min(k, 1.1)})`;
+    pose(mini, t > 43.6 ? (Math.floor(t * 6) % 2 ? 'saluda' : 'arriba') : (t > 5.25 ? 'asombro' : 'curiosa')); }
+  // pestañas
+  const tb = $('tabs'); tb.style.opacity = t < 45 ? cl((w - 850) / 150) * cl((h - 200) / 80) : 0;
+  const tabX = [26, 96, 166], cambio = [[0, 0], [19.9, 1], [24.9, 2], [38.6, 0]]; let ta = 0, tp = 0, tt = 0; cambio.forEach(([c, i]) => { if (t >= c) { tp = ta; ta = i; tt = c; } });
+  $('pill').style.left = lerp(tabX[tp], tabX[ta], ioX(p(t, tt, .35))) - 4 + 'px';
+  // escenas
+  ESC.forEach(([id, t0, t1]) => { const el = $('e_' + id), vis = t >= t0 && t < t1; el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+    const ki = exp(p(t, t0 + .06, .38)), ko = ease.inCubic(p(t, t1 - .16, .16));
+    el.style.opacity = Math.min(1, ki * 1.2) * (1 - ko); el.style.filter = `blur(${(1 - ki) * 12 + ko * 10}px)`; el.style.transform = `translateY(${(1 - ki) * 22 - ko * 14}px) scale(${.97 + .03 * ki})`; });
+  // 1 · hola
+  if (t < 4.1) { const k = muelle(t, .45, 2.2, .62); $('holaE').style.transform = `translateY(${(1 - Math.min(k, 1.08)) * 200}px) rotate(${t > 1.3 && t < 2.6 ? Math.sin((t - 1.3) * 16) * 7 : 0}deg)`;
+    pose($('holaE'), t < 1.25 ? 'abajo' : t < 2.6 ? (Math.floor((t - 1.25) / .16) % 2 ? 'arriba' : 'saluda') : t < 2.85 ? 'guino' : 'saluda');
+    const kb = muelle(t, 1.32, 3, .55); $('holaB').style.transform = `scale(${Math.max(0, Math.min(kb, 1.1))})`; $('holaB').style.transformOrigin = '0 100%'; $('holaB').style.opacity = t < 1.32 ? 0 : 1;
+    const kd = muelle(t, 3.1, 3, .55); $('holaD').style.transform = `scale(${t < 3.1 ? 0 : Math.min(kd, 1.15)})`; $('holaD').querySelectorAll('i').forEach((d, i) => d.style.opacity = .35 + .65 * (Math.floor(t * 5 - i) % 3 === 0));
+    $('holaG').style.opacity = .6 + .4 * Math.sin(t * 3); }
+  // 2 · panel inicial
+  $('gira1').style.transform = `rotate(${t * 400}deg)`;
+  if (t >= 5.9 && t < 8.6) { $('t1B').querySelectorAll('i').forEach((d, i) => d.style.opacity = .35 + .65 * (Math.floor(t * 5 - i) % 3 === 0)); }
+  // 3 · editor
+  if (t >= 8.6 && t < 15.9) {
+    PASOS.forEach(([n, tf], i) => { const ic = $('pi' + i), hecho = t >= tf + (i === 0 ? 0 : 0), activo = !hecho && (i === 0 || t >= PASOS[i - 1][1]);
+      ic.innerHTML = hecho ? ok() : ''; ic.style.border = hecho ? 'none' : activo ? '3px solid #2a2f3d' : '3px solid #2a2f3d'; ic.style.borderTopColor = activo ? 'var(--oro)' : '#2a2f3d';
+      ic.style.transform = activo ? `rotate(${t * 400}deg)` : `scale(${hecho ? 1 + .3 * bump(t, tf) : 1})`; $('paso' + i).style.color = hecho || activo ? '#fff' : '#4a5064'; });
+    pose($('t2I'), t > 14.6 ? 'pulgar' : 'apunta'); $('t2B').style.display = t > 14.6 ? 'none' : 'flex';
+    $('t2B').querySelectorAll('i').forEach((d, i) => d.style.opacity = .35 + .65 * (Math.floor(t * 5 - i) % 3 === 0));
+    // líneas: la vieja se marca en rojo (9,7), la nueva entra (10,2) y se escribe (10,3)
+    const ins = ioX(p(t, 10.15, .3)); let y = 0;
+    COD.forEach(([n, hh, k], i) => { const el = $('cl' + i); let alto = 40, bg = 'transparent', mk = '';
+      if (k === 'viejo') { const kr = p(t, 9.7, .2); bg = `rgba(224,70,59,${.22 * kr})`; mk = kr > 0 ? '<span style="color:#E0463B">-</span>' : ''; el.querySelector('.tx').style.textDecoration = kr > .5 ? 'line-through' : 'none'; el.querySelector('.tx').style.opacity = 1 - .5 * kr;
+        if (t < 9.7) bg = `rgba(255,255,255,${.05 * p(t, 9.1, .2)})`; }
+      if (k === 'nuevo') { alto = 40 * ins; bg = 'rgba(61,220,132,.16)'; mk = '<span style="color:#3DDC84">+</span>'; el.style.opacity = ins; }
+      el.style.top = y + 'px'; el.style.height = alto + 'px'; el.style.overflow = 'hidden'; el.style.background = bg; el.style.boxShadow = bg !== 'transparent' && k ? `inset 4px 0 0 ${k === 'viejo' ? '#E0463B' : '#3DDC84'}` : 'none'; el.querySelector('.mk').innerHTML = mk; y += alto; });
+    const nch = Math.max(0, Math.min(ENLACE.length, Math.floor((t - 10.3) / .05))); $('tecl').textContent = ENLACE.slice(0, nch) + (t > 10.25 && t < 11.7 && Math.floor(t * 4) % 2 ? '▍' : '');
+    const sc = 170 * ioX(p(t, 12.1, .45)); $('codigoIn').style.transform = `translateY(${-sc}px)`; y += 14;
+    TERM.forEach(([hh, tt], i) => { const el = $('tl' + i), k = exp(p(t, tt, .3)); el.style.top = y + 'px'; el.style.opacity = k; el.style.transform = `translateX(${(1 - k) * 20}px)`; y += 40; });
+    $('bar2').style.width = 420 * ease.inOut(p(t, 12.4, 1.1)) + 'px'; }
+  // 4 · precios
+  if (t >= 15.9 && t < 19.9) { const k = ease.outCubic(p(t, 16.45, .8)), v = 33.5 - 8.5 * k; $('precio').textContent = t > 17.3 ? '25' : v.toFixed(2).replace('.', ',');
+    const kl = muelle(t, 17.3, 3, .55); $('precio').style.display = 'inline-block'; $('precio').style.transform = `scale(${t > 17.3 ? .85 + .15 * Math.min(kl, 1.12) : 1})`;
+    $('antes').style.opacity = t > 17.3 ? 1 : 0; $('dto').style.transform = `scale(${t > 17.3 ? Math.min(kl, 1.15) : 0})`; $('dto').style.display = 'inline-block';
+    FILAS.forEach((f, i) => { const kk = exp(p(t, 16.2 + i * .12, .4)); $('fi' + i).style.opacity = kk; $('fi' + i).style.transform = `translateY(${(1 - kk) * 26}px)`; }); }
+  // 5 · chat
+  if (t >= 19.9 && t < 24.9) { const kq = muelle(t, 20.9, 3, .6); $('preg').style.transform = `scale(${t < 20.9 ? 0 : Math.min(kq, 1.1)})`; $('preg').style.transformOrigin = '100% 50%';
+    pose($('t3I'), t < 21.9 ? 'curiosa' : t < 23.8 ? 'senala' : 'guino');
+    let j = 0; $('resp').querySelectorAll('.w').forEach(wd => { const a = (j < 16 ? 21.95 + j * .075 : 23.55 + (j - 16) * .075); const k = exp(p(t, a, .25)); wd.style.opacity = k; wd.style.filter = `blur(${(1 - k) * 6}px)`; j++; }); }
+  // 6 · subir el logo
+  const [cx, cy] = cursor(t); const arr = t >= 26.2 && t < 27.35, fa = $('fantasma'); fa.style.display = arr ? 'block' : 'none';
+  if (arr) { fa.style.left = cx - 75 + 'px'; fa.style.top = cy - 40 + 'px'; fa.style.transform = `scale(${1 - .25 * p(t, 26.9, .45)}) rotate(${-6 * Math.sin(p(t, 26.2, 1.1) * Math.PI)}deg)`; }
+  $('archivo').style.opacity = arr ? .45 : 1;
+  if (t >= 24.9 && t < 27.45) { const g = p(t, 26.7, .4); $('zona').style.borderColor = `rgba(233,188,70,${.45 + .5 * g})`; $('zona').style.boxShadow = `inset 0 0 ${60 * g}px rgba(233,188,70,.3)`; }
+  if (t >= 27.45 && t < 29.35) { const k = ease.inOut(p(t, 27.5, 1.3)); $('barraS').style.width = k * 100 + '%'; $('pct').textContent = Math.round(k * 100) + ' %'; $('pct').style.opacity = t > 28.85 ? 0 : 1;
+    const ko = muelle(t, 28.85, 3, .55); $('okS').style.transform = `scale(${t < 28.85 ? 0 : Math.min(ko, 1.2) * 1.3})`; }
+  if (t >= 29.35 && t < 29.95) $('bWa').style.transform = `scale(${1 - .08 * Math.max(0, bump(t, 29.9))})`;
+  if (t >= 29.95 && t < 32.25) { const n = Math.max(0, Math.min(MSG.length, Math.floor((t - 30.45) / .036))); $('msg').textContent = MSG.slice(0, n) + (Math.floor(t * 4) % 2 || (t > 30.4 && n < MSG.length) ? '▍' : '');
+    $('bEnv').style.transform = `scale(${1 - .1 * Math.max(0, bump(t, 32.1))})`; }
+  // 7 · propuesta de diseño
+  if (t >= 33.6 && t < 38.6) { const k = muelle(t, 33.75, 1.6, .6); $('placaD').style.transform = `perspective(900px) translateY(${(1 - Math.min(k, 1.05)) * 160}px) rotateY(${Math.sin(t * 1.3) * 9}deg) rotateX(${4 + Math.sin(t * .9) * 3}deg)`;
+    const ka = muelle(t, 36.72, 3, .55); $('aprob').style.transform = `scale(${t < 36.72 ? 0 : Math.min(ka, 1.15)})`; $('bApr').style.transform = `scale(${1 - .1 * Math.max(0, bump(t, 36.7))})`;
+    const ke = muelle(t, 36.8, 2.6, .55); $('t7').style.opacity = t < 36.8 ? 0 : 1; $('t7').style.transform = `translateY(${(1 - Math.min(Math.max(ke, 0), 1.1)) * 160}px) rotate(${-8 + 8 * Math.min(ke, 1)}deg)`; }
+  // 8 · toques y mareo
+  if (t >= 38.6 && t < 43.3) { const sq = [39.6, 40.1, 40.55].reduce((s, c) => s + Math.max(0, bump(t, c)), 0); $('t8').style.transform = `scale(${1 - .12 * sq}) rotate(${sq * 6}deg)`;
+    pose($('t8I'), t < 39.6 ? 'guino' : t < 40.1 ? 'asombro' : t < 40.55 ? 'curiosa' : 'asombro');
+    const mz = t >= 41.0 && t < 42.7, M = $('mareo'); M.style.display = mz ? 'block' : 'none';
+    if (mz) { M.style.opacity = Math.min(p(t, 41.0, .12), 1 - p(t, 42.5, .2)); $('mE').style.transform = `rotate(${Math.sin(t * 13) * 12}deg)`; $('mE').style.transformOrigin = '50% 70%';
+      [0, 1, 2].forEach(i => { const a = t * 6 + i * 2.09; const o = $('ob' + i); o.style.left = 150 + Math.cos(a) * 80 + 'px'; o.style.top = 110 + Math.sin(a) * 22 + 'px'; o.style.opacity = .5 + .5 * Math.sin(a); }); } }
+  // 9 · final
+  if (t >= 45.1) { pose($('finE'), Math.floor((t - 45.1) / .2) % 2 && t < 47 ? 'arriba' : 'saluda'); const k = muelle(t, 45.2, 1.8, .6); $('finE').style.transform = `translateY(${(1 - Math.min(k, 1.06)) * 260}px)`; }
+  // cursor
+  const cu = $('cursor'), cv = t > 4.45 && t < 43.4; cu.style.display = cv ? 'block' : 'none';
+  const cb = CLICS.reduce((s, c) => s + Math.max(0, bump(t, c)), 0); cu.style.transform = `translate(${cx}px,${cy}px) scale(${1 - .18 * cb})`;
+  $('demo').style.opacity = t < 45.1 ? 1 : 0;
+  pintaTextos(t); fxRender(t);
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

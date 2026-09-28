@@ -69,6 +69,8 @@ Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. 
 - **Texto y números**: `packs2/teclas` (con `dur`), `packs2/contador` (chips o días que avanzan, con `dur`), `packs2/carga`
 - **Movimiento**: `packs2/whoosh-mov` (alguien entra andando), `packs2/zoom-digital`
 - **Vetados**: `packs2/braam`, `packs2/synth-hit`, `packs/cinematic-impact`, `packs2/riser-impacto`, `packs/glitch`, `packs/punch-stop-riser`
+- **UI de apps y notch** (`packs4/`, ver su LEEME): `notch-abre`, `bot-saluda`, `notch-clic`, `tarea-hecha`, `pago-llega`, `respuesta`, `suelta-archivo`, `subida-ok`, `toque-bot`, `toque-bot2`, `mareo`
+- **Sonidos de un vídeo con música de fondo**: `python3 -m demucs -n htdemucs` (4 pistas); los SFX de interfaz caen en `other`. Solo valen los golpes que sacan 20 dB o más al fondo (mediana 0,6 s antes). Después, puerta de ruido (umbral 3,2 × fondo), fundido de 4 ms / 30 ms y normalizar a 0,89. Así se hizo `packs4/`.
 - **Sonidos nuevos de un vídeo de referencia**: `scripts/extraer-sfx.py video.mp4 destino nombre:inicio:dur --sin-voz`. Separa la voz con Demucs, alarga el final hasta que el sonido se apaga y añade cola de reverb si la fuente corta. Comprueba siempre la cola: `20·log10(rms_final/pico) < -30 dB`.
 
 ## Calidad (Instagram)
@@ -83,6 +85,11 @@ Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. 
 - Para trabajos en segundo plano usa marcadores (`echo MOSCA_OK`) en el log.
 - Solo para cambiar el audio no hace falta volver a grabar: `mezcla3.py video.mp4 voz.wav salida.mp4 sfx.json` copia el vídeo tal cual.
 - Si el vídeo lo pide, mira la plantilla de la escena explicativa: el urinario (`ejemplos/mosca.html`: la mosca, el hombre Open Peeps que entra, el chorro con dasharray, se va, brillos + `ding`).
+
+## Formato 4:5 y recreaciones de interfaz (aprendido en el vídeo del notch)
+- **4:5 (1080×1350)**: `TAM=1080x1350 bash scripts/exporta.sh …` (grabar.js lee `TAM`; fx.js ajusta el obturador y los anillos al alto de la ventana). En el CSS, `html,body{height:1350px}`. Sin voz, pasa un WAV de silencio que dure TOTAL + 0,3 s.
+- **Recrear un vídeo de UI** (ejemplo: `ejemplos/plea5e-notch.html`): primero la hoja de contactos a 1 fps (`crop` de la zona que importa) para sacar las escenas. Después, un panel negro con **muelle** (`spr(x) = 1 - e^(-7x)·cos(10x)`, rebasa un 10 %) que cambia de tamaño en cada escena. El contenido entra con desenfoque y subida y sale igual. El cursor va por fotogramas clave y se encoge en cada clic.
+- **Nuestra versión**: el bot es la **Estrellita** (`public/marca/estrellita/*.svg`, 20 poses, ya parpadea sola); cambia de pose con `src`. Todo lo que dice sale de la web (precios, "pago único", "propuesta en 48 h", "no se imprime nada hasta que apruebas el diseño") y lleva la etiqueta "Demostración". Encima, textos grandes de retención en la tapa del portátil, y entre escenas, transiciones de cámara (ladeo, whip, barras, giro, obturador, caída).
 
 ## Canal de emprendimiento (no PLEA5E)
 Usa el mismo motor y las mismas reglas de sonido, pero **cambia la marca** en `:root` de la plantilla (`--oro`, `--fondo`, `--glow1..3`). Así el canal tiene identidad propia y no se confunde con PLEA5E. Las reglas 14 y los colores de PLEA5E no aplican ahí.
