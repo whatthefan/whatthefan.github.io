@@ -105,33 +105,32 @@ fx(1.3, null, N + 'bot-saluda.mp3', -6);            // la Estrellita saluda
 fx(3.1, null, R + 'pop-limpio.mp3', -9);             // globo de "pensando"
 fx(4.0, null, R + 'swoosh-corto.mp3', -8);           // se recoge en el notch
 fx(5.86, null, N + 'notch-clic.mp3', -5);            // clic en el notch → panel
-fx(8.6, 'ladeo', Q + 'whoosh-b.mp3', -5, { dir: 1 });   // → editor
+fx(8.45, null, R + 'click.mp3', -6);                // clic en la tarjeta → editor (el panel se estira, como en el original)
 fx(10.3, null, Q + 'teclas.mp3', -10, { dur: 1.15 });  // escribe el enlace
 fx(12.4, null, Q + 'carga.mp3', -9, { dur: 1.1 });   // grabando el chip
 fx(13.6, null, N + 'tarea-hecha.mp3', -6);           // chip grabado
 fx(14.6, null, P + 'iphone-charging.mp3', -8);       // el móvil toca la placa: se abre la ficha
-fx(15.9, 'whip', Q + 'swish-c.mp3', -5, { dir: -1 });  // → precios
+fx(15.75, null, N + 'notch-clic.mp3', -5);           // pestaña inicio → precios
 fx(16.45, null, Q + 'contador.mp3', -10, { dur: .75 });// 33,50 → 25
 fx(17.3, null, N + 'pago-llega.mp3', -6);            // aterriza el precio
-fx(19.9, 'barras', Q + 'swoosh-a.mp3', -5);           // → chat
-fx(20.9, null, R + 'tap.mp3', -7);                    // pregunta
+fx(19.75, null, R + 'tap.mp3', -6);                  // pestaña chat
+fx(20.9, null, R + 'pop-limpio.mp3', -8);            // pregunta
 fx(21.9, null, N + 'respuesta.mp3', -7);             // responde
-fx(24.9, 'giro', P + 'arrow-swoosh.mp3', -5, { dir: 1 }); // → subir logo
+fx(24.75, null, R + 'clic-doble.mp3', -6);           // pestaña +
 fx(27.35, null, N + 'suelta-archivo.mp3', -6);       // suelta el logo
 fx(28.85, null, N + 'subida-ok.mp3', -6);            // subido
 fx(29.9, null, R + 'click.mp3', -6);                 // "Pedir por WhatsApp"
 fx(30.45, null, Q + 'teclas.mp3', -10, { dur: 1.5 });  // escribe el mensaje
 fx(32.1, null, P + 'arrow2-swoosh.mp3', -6);         // enviado
-fx(33.6, 'obturador', R + 'obturador-real.mp3', -5);  // → propuesta de diseño
+fx(33.6, null, P + 'ding.mp3', -7);                  // llega la propuesta de diseño
 fx(36.7, null, P + 'right.mp3', -7);                 // aprobado
-fx(38.6, 'caida', R + 'swoosh-suave.mp3', -5);        // → inicio
+fx(38.45, null, R + 'clic-doble.mp3', -6);           // pestaña inicio
 fx(39.6, null, N + 'toque-bot.mp3', -6);
 fx(40.1, null, N + 'toque-bot2.mp3', -6);
 fx(40.55, null, N + 'toque-bot.mp3', -6);
-fx(41.0, 'impacto', N + 'mareo.mp3', -5, { a: 16 });   // se marea
+fx(41.0, null, N + 'mareo.mp3', -5);                 // se marea
 fx(43.3, null, R + 'swoosh-corto.mp3', -8);          // se recoge
-fx(45.1, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.3 });
-fx(45.1, 'impacto', P + 'woah-drop.mp3', -2, { a: 30 }); // revelación final
+fx(45.1, null, P + 'woah-drop.mp3', -2);             // se abre con la marca
 
 /* ============ TEXTOS GRANDES (arriba, sobre la tapa del portátil) ============ */
 const T = [];
@@ -253,15 +252,12 @@ const val = (i, t) => { const [a, W, H, d] = PK[i]; if (!i) return [W, H]; const
 for (let i = 1; i < PK.length; i++) ST.push(val(i - 1, PK[i][0]));
 function notch(t) { let i = 0; while (i < PK.length - 1 && PK[i + 1][0] <= t) i++; return val(i, t); }
 // cámara [t, escala, x, y] (origen del zoom), interpolada con easeInOutExpo
-const CK = [[0, 1.55, 540, 470], [1.1, 1.14, 540, 470], [3.8, 1.14, 540, 470], [4.5, 1, 540, 470], [8.5, 1.03, 540, 700], [8.7, 1, 540, 700], [15.8, 1.03, 540, 700], [16, 1, 540, 700],
-  [33.5, 1.02, 540, 700], [33.7, 1, 540, 840], [38.5, 1.03, 540, 840], [38.7, 1, 540, 700], [43.2, 1.02, 540, 470], [43.8, 1.02, 540, 470], [45.05, 1.3, 540, 470], [45.25, 1, 540, 700], [TOTAL, 1.05, 540, 800]];
+const CK = [[0, 1, 540, 700], [TOTAL, 1, 540, 700]]; // cámara fija, como el original
 function camara(t) { let i = 0; while (i < CK.length - 2 && t >= CK[i + 1][0]) i++; const a = CK[i], b = CK[i + 1], k = ioX(cl((t - a[0]) / (b[0] - a[0])));
   return [lerp(a[1], b[1], k), lerp(a[2], b[2], k), lerp(a[3], b[3], k)]; }
 // cursor [t, x, y]; clics
-const KC = [[0, 1000, 1400], [4.4, 1000, 1400], [4.6, 900, 1180], [5.6, 590, 458], [6.5, 800, 980], [8.0, 820, 1010], [8.4, 700, 820], [9.0, 980, 1160], [15.8, 960, 1120], [16.4, 840, 1010],
-  [20.2, 760, 1040], [24.8, 780, 1060], [25.8, 948, 1150], [26.2, 948, 1150], [27.25, 560, 620], [27.8, 640, 760], [29.5, 360, 660], [29.9, 360, 660], [30.3, 520, 900], [31.6, 300, 830], [32.1, 290, 832],
-  [32.6, 520, 960], [34.8, 780, 1300], [36.2, 430, 1160], [36.7, 420, 1162], [37.3, 620, 1260], [38.8, 700, 1000], [39.4, 160, 640], [40.6, 160, 640], [41.3, 820, 1000], [43.0, 900, 1150], [43.4, 1000, 1400]];
-const CLICS = [5.86, 29.9, 32.1, 36.7, 39.6, 40.1, 40.55];
+const KC = [[0,1000,1400],[4.4,1000,1400],[4.6,900,1180],[5.6,590,458],[6.5,800,980],[7.6,800,980],[8.2,300,640],[8.45,300,640],[9.2,980,1160],[14.9,980,1160],[15.55,75,470],[15.75,75,470],[16.4,840,1010],[19.0,840,1010],[19.55,145,470],[19.75,145,470],[20.3,760,1040],[24.0,760,1040],[24.55,215,470],[24.75,215,470],[25.8,948,1150],[26.2,948,1150],[27.25,560,620],[27.8,640,760],[29.5,360,660],[29.9,360,660],[30.3,520,900],[31.6,300,830],[32.1,290,832],[32.6,520,960],[34.8,780,1300],[36.2,430,1160],[36.7,420,1162],[37.3,620,1260],[37.9,75,470],[38.45,75,470],[39.4,160,640],[40.6,160,640],[41.3,820,1000],[43.0,900,1150],[43.4,1000,1400]];
+const CLICS = [5.86, 8.45, 15.75, 19.75, 24.75, 29.9, 32.1, 36.7, 38.45, 39.6, 40.1, 40.55];
 function cursor(t) { let i = 0; while (i < KC.length - 2 && t >= KC[i + 1][0]) i++; const a = KC[i], b = KC[i + 1], k = ease.inOut(cl((t - a[0]) / (b[0] - a[0])));
   return [lerp(a[1], b[1], k), lerp(a[2], b[2], k)]; }
 const bump = (t, t0) => { const u = t - t0; return u < 0 || u > .5 ? 0 : Math.exp(-u * 9) * Math.cos(u * 22); };
