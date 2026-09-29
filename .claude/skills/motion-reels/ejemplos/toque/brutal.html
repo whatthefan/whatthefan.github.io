@@ -1,0 +1,402 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><script src="trazos.js"></script><style>
+@font-face{font-family:A;src:url(f/archivo-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:A;src:url(f/archivo-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:A;src:url(f/archivo-latin-800-normal.woff2);font-weight:800}
+@font-face{font-family:A;src:url(f/archivo-latin-900-normal.woff2);font-weight:900}
+@font-face{font-family:S;src:url(f/instrument-serif-latin-400-italic.woff2);font-style:italic}
+@font-face{font-family:S;src:url(f/instrument-serif-latin-400-normal.woff2);font-style:normal}
+@font-face{font-family:I;src:url(f/inter-tight-latin-300-normal.woff2);font-weight:300}
+@font-face{font-family:I;src:url(f/inter-tight-latin-500-normal.woff2);font-weight:500}
+:root{--oro:#E9BC46;--oro2:#FFD27A;--fondo:#07080B;--blanco:#EFECE6;--gris:#7c776d}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#07080B;color:var(--blanco)}
+.a{position:absolute}
+.esc{position:absolute;inset:0;display:none;will-change:transform,filter}
+.m{font-family:'DejaVu Sans Mono',monospace}
+.A{font-family:A}.S{font-family:S;font-style:italic}.I{font-family:I}
+.oro{color:var(--oro);text-shadow:0 0 18px rgba(233,188,70,.55),0 0 60px rgba(233,188,70,.25)}
+.gl{text-shadow:0 0 22px rgba(255,255,255,.18)}
+.w{display:inline-block;white-space:pre}
+svg{overflow:visible}
+.ln{fill:none;stroke-linecap:round;stroke-linejoin:round}
+#grano{position:absolute;inset:0;z-index:30;pointer-events:none;mix-blend-mode:overlay;opacity:.16}
+#vin{position:absolute;inset:0;z-index:29;pointer-events:none;background:radial-gradient(ellipse 80% 70% at 50% 50%,transparent 45%,rgba(0,0,0,.72) 100%)}
+#hud{position:absolute;inset:0;z-index:28;pointer-events:none;font:500 21px 'DejaVu Sans Mono',monospace;color:rgba(239,236,230,.55);letter-spacing:.04em}
+#hud .c{position:absolute;width:44px;height:44px;border-color:rgba(239,236,230,.4);border-style:solid;border-width:0}
+.caja{position:absolute;background:rgba(14,15,19,.82);border:1.5px solid #2a2721;border-radius:18px}
+</style></head><body>
+<div id="todo" style="position:absolute;inset:0;transform-origin:50% 50%">
+<div id="cam" style="position:absolute;inset:0">
+<!-- ============ 01 GLIFO ============ -->
+<div class="esc" id="s0"><svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <g id="g0">
+    <g id="guias0" stroke="#E9BC46" stroke-width="1.4" vector-effect="non-scaling-stroke" opacity=".55"></g>
+    <circle id="circ0" cx="512" cy="660" r="120" class="ln" stroke="#E9BC46" stroke-width="1.2" stroke-dasharray="6 8" vector-effect="non-scaling-stroke" opacity="0"/>
+    <path id="est0" class="ln" stroke="#E9BC46" stroke-width="2" filter="url(#bloom2)"/>
+    <path id="estF0" fill="#E9BC46" opacity="0"/>
+    <path id="cinco0" class="ln" stroke="#FFD27A" stroke-width="3.2" filter="url(#bloom2)"/>
+    <path id="cincoF0" fill="#E9BC46" opacity="0" filter="url(#bloom)"/>
+    <g id="nodos0"></g>
+    <g id="et0" font-family="DejaVu Sans Mono" font-size="11" fill="#E9BC46" opacity=".85"></g>
+  </g></svg>
+  <div class="a m" id="cab0" style="left:80px;top:170px;font-size:24px;line-height:1.6;color:rgba(239,236,230,.7);white-space:pre"></div>
+  <div class="a" id="txt0" style="left:70px;right:70px;top:1390px;text-align:center"></div>
+</div>
+<!-- ============ 02 CLIENTE ============ -->
+<div class="esc" id="s1"><svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <g id="taza" transform="translate(540 820) scale(1.75)" stroke="#EFECE6" stroke-width="2.2" vector-effect="non-scaling-stroke"></g>
+  <g id="lid1" font-family="DejaVu Sans Mono" font-size="22" fill="#EFECE6"></g></svg>
+  <div class="a" id="txt1" style="left:70px;right:70px;top:1270px;text-align:center"></div>
+</div>
+<!-- ============ 03 PROMESA ============ -->
+<div class="esc" id="s2">
+  <div class="a m" id="dice2" style="left:80px;top:700px;font-size:26px;color:var(--gris)"></div>
+  <div class="caja" id="prompt2" style="left:60px;top:760px;width:960px;height:190px"></div>
+  <div class="a m" style="left:100px;top:822px;font-size:50px;color:var(--oro)">›</div>
+  <div class="a m" id="tip2" style="left:160px;top:815px;font-size:50px;white-space:pre"></div>
+  <div class="a m" style="left:80px;top:966px;font-size:19px;color:#4b4740">PROMESA 01 · ENTRADA DE VOZ · 23:47</div>
+  <div class="caja" id="tab2" style="left:560px;top:1090px;width:460px;height:250px;font:19px 'DejaVu Sans Mono',monospace;padding:22px 26px;line-height:2.1;color:rgba(239,236,230,.62)"></div>
+  <div class="a" id="txt2" style="left:70px;right:70px;top:300px;text-align:center"></div>
+</div>
+<!-- ============ 04 OLVIDO ============ -->
+<div class="esc" id="s3">
+  <div id="terr" class="a" style="left:-420px;top:-200px;width:1920px;height:2320px;transform:perspective(1000px) rotateX(58deg);transform-origin:50% 50%"><canvas id="cv3" width="960" height="1160" style="width:1920px;height:2320px"></canvas></div>
+  <svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920"><defs>
+    <radialGradient id="mk3" cx="540" cy="1080" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000"/><stop offset=".22" stop-color="#000"/><stop offset=".55" stop-color="#fff"/></radialGradient>
+    <mask id="mask3"><rect width="1080" height="1920" fill="url(#mk3)"/></mask></defs>
+    <path id="espiral3" fill="none"/>
+    <text mask="url(#mask3)" font-family="A" font-weight="800" font-size="84" fill="#EFECE6" letter-spacing="2"><textPath id="tp3" href="#espiral3">Y se le olvidó.  Y se le olvidó.  Y se le olvidó.</textPath></text>
+  </svg>
+  <div class="a" id="txt3" style="left:70px;right:70px;top:250px;text-align:center"></div>
+</div>
+<!-- ============ 05 FRICCIÓN ============ -->
+<div class="esc" id="s4">
+  <div class="a" id="tun4" style="inset:0;perspective:1100px;perspective-origin:50% 55%"><div id="tunIn4" class="a" style="inset:0;transform-style:preserve-3d"></div></div>
+  <div class="a" id="txt4" style="left:60px;right:60px;top:230px;text-align:center"></div>
+</div>
+<!-- ============ 06 TOQUE ============ -->
+<div class="esc" id="s5"><canvas id="cv5" class="a" width="1080" height="1920"></canvas>
+  <svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920"><g id="aro5">
+    <path id="circ5" fill="none" d="M -420 0 A 420 420 0 1 1 420 0 A 420 420 0 1 1 -420 0"/>
+    <text font-family="A" font-weight="800" font-size="66" letter-spacing="8" fill="#E9BC46" filter="url(#bloom2)"><textPath id="tp5" href="#circ5">ASÍ QUE LO PUSIMOS · A UN TOQUE · ASÍ QUE LO PUSIMOS · A UN TOQUE · </textPath></text></g></svg>
+  <div class="a" id="txt5" style="left:60px;right:60px;top:1450px;text-align:center"></div>
+</div>
+<!-- ============ 07 NFC ============ -->
+<div class="esc" id="s6"><svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <g id="ondas6" fill="none" stroke="#E9BC46" filter="url(#bloom2)"></g>
+  <g id="placa6" transform="translate(0 140)" stroke="#EFECE6" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
+  <g id="movil6" stroke="#EFECE6" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
+  <g id="lid6" font-family="DejaVu Sans Mono" font-size="22" fill="#EFECE6"></g></svg>
+  <div class="a" id="txt6" style="left:60px;right:60px;top:230px;text-align:center"></div>
+</div>
+<!-- ============ 08 FICHA ============ -->
+<div class="esc" id="s7">
+  <div class="a" style="inset:0;perspective:1600px"><div id="papel7" class="a" style="left:90px;top:470px;width:900px;height:1080px;background:#ECE8DE;border-radius:10px;box-shadow:0 40px 120px rgba(0,0,0,.6);color:#141414;transform-origin:50% 50%"></div></div>
+  <div class="a" id="txt7" style="left:60px;right:60px;top:200px;text-align:center"></div>
+  <div class="a" id="txt7b" style="left:60px;right:60px;top:1640px;text-align:center"></div>
+</div>
+<!-- ============ 09 PRODUCTO ============ -->
+<div class="esc" id="s8"><svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920"><g id="med8" stroke="#E9BC46" stroke-width="1.6" fill="none" opacity=".9"></g><g id="lid8" font-family="DejaVu Sans Mono" font-size="22" fill="#EFECE6"></g></svg>
+  <div id="p8a" class="a A" style="left:0;right:0;top:560px;text-align:center;font-weight:900;font-size:205px;letter-spacing:-.04em;line-height:1.1;overflow:hidden;height:230px"></div>
+  <div id="p8b" class="a A" style="left:0;right:0;top:850px;text-align:center;font-weight:800;font-size:180px;letter-spacing:-.03em;line-height:1;color:transparent;-webkit-text-stroke:3px #E9BC46;white-space:nowrap">NFC + QR</div>
+  <div id="p8c" class="a S oro" style="left:0;right:0;top:1060px;text-align:center;font-size:210px;line-height:1"></div>
+</div>
+<!-- ============ 10 PLEA5E ============ -->
+<div class="esc" id="s9"><svg class="a" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <circle id="punto9" cx="540" cy="860" r="0" fill="#FFD27A" filter="url(#bloom)"/>
+  <g id="g9" transform="translate(540 860) scale(.62) translate(-512 -512)">
+    <path id="est9" class="ln" stroke="#E9BC46" stroke-width="4" filter="url(#bloom2)"/>
+    <path id="estF9" fill="#E9BC46" opacity="0" filter="url(#bloom)"/>
+    <path id="cinco9" fill="#07080B" opacity="0"/>
+  </g></svg>
+  <div id="marca9" class="a" style="left:90px;top:1230px;width:900px;height:180px;overflow:hidden"><img src="marca-plea5e.svg" style="width:900px;height:180px;object-fit:contain"></div>
+  <div id="web9" class="a m" style="left:0;right:0;top:1470px;text-align:center;font-size:52px;color:var(--oro)"></div>
+  <div id="sub9" class="a I" style="left:0;right:0;top:1560px;text-align:center;font-size:34px;font-weight:300;color:rgba(239,236,230,.7);letter-spacing:.02em">Placas NFC y QR con tu marca · pago único</div>
+</div>
+</div>
+<canvas id="polvo" class="a" width="1080" height="1920" style="z-index:27;pointer-events:none"></canvas><div id="vin"></div>
+<div id="hud"><i class="c" style="left:40px;top:40px;border-left-width:2px;border-top-width:2px"></i><i class="c" style="right:40px;top:40px;border-right-width:2px;border-top-width:2px"></i>
+  <i class="c" style="left:40px;bottom:40px;border-left-width:2px;border-bottom-width:2px"></i><i class="c" style="right:40px;bottom:40px;border-right-width:2px;border-bottom-width:2px"></i>
+  <div class="a" style="left:100px;top:62px">PLEA5E — TOMA ÚNICA</div><div class="a" id="tc" style="right:100px;top:62px"></div>
+  <div class="a" style="left:100px;bottom:62px"><span id="rec" style="color:#E0463B">●</span> REC</div><div class="a" id="lab" style="right:100px;bottom:62px"></div></div>
+<canvas id="grano" width="540" height="960" style="width:1080px;height:1920px"></canvas>
+</div>
+<svg width="0" height="0" class="a"><defs id="mbs"><radialGradient id="gPant" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#E9BC46" stop-opacity=".55"/><stop offset="1" stop-color="#E9BC46" stop-opacity=".08"/></radialGradient><filter id="bloom" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="bloom2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>
+<script src="fx.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle } = E;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), lerp = (a, b, k) => a + (b - a) * k;
+const eo = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ei = x => x <= 0 ? 0 : Math.pow(2, 10 * x - 10);
+const io = x => (x = cl(x)) < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const ioX = x => (x = cl(x)) <= 0 ? 0 : x >= 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+const TOTAL = 42; window.TOTAL = TOTAL;
+const NS = 'http://www.w3.org/2000/svg', mk = (tag, at, par) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; };
+let sd = 7; const rnd = () => (sd = (sd * 9301 + 49297) % 233280) / 233280;
+
+/* ============ SONIDO (uno por suceso; ninguno más de 2 veces; woah máx. 3) ============ */
+const FX = []; const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
+const P = 'packs/', Q = 'packs2/', R = 'packs3/', N = 'packs4/';
+fx(.05, null, R + 'carga-parpadeo.mp3', -8);        // arranca el visor
+fx(.35, null, P + 'mac-typing.mp3', -11, { dur: 1.0 }); // cabecera técnica que se escribe
+fx(2.25, null, R + 'pop-limpio.mp3', -8);           // el 5 se rellena
+fx(3.95, null, Q + 'whoosh-b.mp3', -5);             // entra en el 5
+fx(5.3, null, R + 'click.mp3', -9);                 // etiqueta
+fx(7.4, null, Q + 'swish-c.mp3', -6);               // barrido
+fx(8.0, null, Q + 'teclas.mp3', -10, { dur: 1.55 });  // «ahora os dejo la reseña»
+fx(10.2, null, R + 'tap.mp3', -8);                  // subrayado
+fx(11.2, null, R + 'swoosh-aire.mp3', -6);          // las letras caen
+fx(13.3, null, R + 'swoosh-suave.mp3', -8);         // no es culpa suya
+fx(15.4, null, P + 'arrow-swoosh.mp3', -5);         // giro
+fx(16.3, null, R + 'rafaga-fotos.mp3', -8);         // pasos que pasan
+fx(18.75, null, P + 'wrong.mp3', -8);               // demasiados
+fx(19.8, null, Q + 'whoosh-mov.mp3', -5);           // atraviesa
+fx(20.3, null, Q + 'zoom-digital.mp3', -9);         // rejilla
+fx(22.95, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.35 }); // tensión
+fx(24.35, 'flash', Q + 'obturador-flash.mp3', -4);  // destello
+fx(25.25, null, R + 'swoosh-corto.mp3', -7);        // entra el móvil
+fx(26.3, null, P + 'iphone-charging.mp3', -6);      // NFC
+fx(28.25, null, Q + 'whoosh-b.mp3', -5);            // dentro de la pantalla
+fx(28.75, null, R + 'obturador-swoosh.mp3', -8);    // aterriza la ficha
+fx(29.8, null, Q + 'contador.mp3', -10, { dur: .85 }); // estrellas
+fx(30.9, null, Q + 'teclas.mp3', -10, { dur: .75 });  // escribe
+fx(32.25, null, P + 'right.mp3', -7);               // publicar
+fx(32.9, null, Q + 'swish-c.mp3', -6);              // barrido
+fx(33.3, null, R + 'clic-doble.mp3', -8);           // PLACAS
+fx(34.3, null, R + 'swoosh-corto.mp3', -8);         // NFC + QR
+fx(35.2, null, R + 'pop-limpio.mp3', -8);           // pago único
+fx(35.9, null, R + 'click.mp3', -9);                // cotas
+fx(37.25, null, Q + 'swoosh-a.mp3', -6);            // se recoge en un punto
+fx(38.5, 'impacto', P + 'woah-drop.mp3', -2, { a: 22 }); // la marca
+fx(39.9, null, P + 'mac-typing.mp3', -11, { dur: .6 });  // plea5e.es
+
+/* ============ texto que entra palabra a palabra (desenfoque + desliz), como la referencia ============ */
+const TX = [];
+function frase(id, html, t0, st = .09, o = {}) { const el = $(id); const d = document.createElement('div'); d.style.cssText = o.css || '';
+  d.innerHTML = html.replace(/\{([^}]+)\}/g, (m, w) => w.split(' ').map(x => `<span class="w" data-k="1">${x}</span>`).join(' ')); // {palabras} → sueltas
+  const tw = document.createTreeWalker(d, NodeFilter.SHOW_TEXT), tn = []; while (tw.nextNode()) tn.push(tw.currentNode);
+  tn.forEach(n => { if (!n.parentNode.classList.contains('w')) { const f = document.createDocumentFragment(); n.textContent.split(/( )/).forEach(x => { if (x === ' ') f.appendChild(document.createTextNode(' ')); else if (x) { const s = document.createElement('span'); s.className = 'w'; s.textContent = x; f.appendChild(s); } }); n.parentNode.replaceChild(f, n); } });
+  el.appendChild(d); const ws = [...d.querySelectorAll('.w')]; TX.push({ ws, t0, st, t1: o.t1 ?? 999, dx: o.dx ?? 60 }); return d; }
+function pintaFrases(t) { TX.forEach(o => o.ws.forEach((w, i) => { const a = o.t0 + i * o.st, k = eo(p(t, a, .55)), s = ease.inCubic(p(t, o.t1 - .25 + i * .02, .22));
+  w.style.opacity = Math.min(1, k * 1.4) * (1 - s); w.style.filter = `blur(${(1 - k) * 14 + s * 16}px)`; w.style.transform = `translateX(${(1 - k) * o.dx}px) translateY(${-s * 40}px)`; })); }
+const tipo = (el, str, t0, cps, t, cur = true) => { const n = Math.max(0, Math.min(str.length, Math.floor((t - t0) * cps))); el.textContent = str.slice(0, n) + (cur && t > t0 - .3 && (n < str.length || Math.floor(t * 3) % 2) ? '█' : ''); return n; };
+const trazo = (el, k) => { if (!el._L) el._L = el.getTotalLength(); el.style.strokeDasharray = el._L; el.style.strokeDashoffset = el._L * (1 - cl(k)); };
+function lider(par, x1, y1, x2, y2, txt, anchor = 'start') { const g = mk('g', {}, par); const l = mk('path', { d: `M${x1} ${y1} L${x2} ${y1 === y2 ? y2 : y2} L${x2 + (anchor === 'start' ? 40 : -40)} ${y2}`, class: 'ln', stroke: '#E9BC46', 'stroke-width': 1.6 }, g);
+  const d = mk('circle', { cx: x1, cy: y1, r: 5, fill: '#E9BC46' }, g); const tx = mk('text', { x: x2 + (anchor === 'start' ? 52 : -52), y: y2 + 7, 'text-anchor': anchor }, g); tx.textContent = txt; return { g, l, d, tx, txt }; }
+const pintaLider = (o, t, t0) => { trazo(o.l, p(t, t0, .45)); o.d.style.opacity = t > t0 ? 1 : 0; const n = Math.floor(cl((t - t0 - .3) * 40, 0, o.txt.length)); o.tx.textContent = o.txt.slice(0, n); };
+
+/* ============ ESCENAS ============ */
+// 01 GLIFO
+(() => { const g = $('guias0'); [358, 761].forEach(y => mk('line', { x1: -500, x2: 1500, y1: y, y2: y }, g)); mk('line', { x1: 518, x2: 518, y1: 200, y2: 900 }, g);
+  $('est0').setAttribute('d', TRAZOS.estrella); $('estF0').setAttribute('d', TRAZOS.estrella);
+  ['cinco0', 'cincoF0'].forEach(id => { $(id).setAttribute('d', TRAZOS.cinco); $(id).setAttribute('transform', 'translate(370.4 754.5) scale(0.5668)'); });
+  const et = $('et0'); [['altura · 700', 358], ['base · 0', 761]].forEach(([s, y]) => { const t = mk('text', { x: 250, y: y - 8 }, et); t.textContent = s; });
+  const t2 = mk('text', { x: 530, y: 215 }, et); t2.textContent = 'eje · 0°';
+  frase('txt0', '<div class="A gl" style="font-weight:800;font-size:78px;letter-spacing:-.03em;line-height:1.05">Esto es lo que tu cliente</div><div class="S oro" style="font-size:132px;line-height:1.05">te iba a dejar.</div>', .5, .08, { t1: 3.7 }); })();
+const nodos0 = []; function nodos() { const c = $('cinco0'), L = c.getTotalLength(); for (let i = 0; i < 26; i++) { const q = c.getPointAtLength(L * i / 26); const r = mk('rect', { x: q.x - 7, y: q.y - 7, width: 14, height: 14, fill: '#07080B', stroke: '#FFD27A', 'stroke-width': 2.5, transform: 'translate(370.4 754.5) scale(0.5668)' }, $('nodos0')); nodos0.push([r, i / 26]); } }
+// 02 CLIENTE: taza dibujada a trazo
+(() => { const g = $('taza'), A = (d, extra = {}) => mk('path', Object.assign({ d, class: 'ln' }, extra), g);
+  A('M-210 150 Q-210 176 0 178 Q210 176 210 150 Q210 126 0 124 Q-210 126 -210 150 Z');
+  A('M-130 -60 L-112 112 Q-104 140 -70 140 L70 140 Q104 140 112 112 L130 -60');
+  A('M-130 -60 Q-130 -40 0 -38 Q130 -40 130 -60 Q130 -80 0 -82 Q-130 -80 -130 -60 Z');
+  A('M-112 -58 Q-112 -46 0 -45 Q112 -46 112 -58', { stroke: '#E9BC46', opacity: .7 });
+  A('M127 -18 C205 -22 206 88 116 86', {}); A('M124 6 C176 6 176 64 118 62', {});
+  [-50, 0, 50].forEach((x, i) => A('', { id: 'vapor' + i, stroke: '#E9BC46', 'stroke-width': 2, filter: 'url(#bloom2)' }));
+  const L = $('lid1'); window.L1 = [lider(L, 740, 860, 820, 700, 'mesa 4'), lider(L, 420, 1110, 250, 1180, 'cuenta · pagada ✓', 'end')];
+  frase('txt1', '<span class="A gl" style="font-weight:800;font-size:124px;letter-spacing:-.04em">Se fue </span><span class="S oro" style="font-size:150px">contento.</span>', 4.2, .12, { t1: 7.25 }); })();
+// 03 PROMESA
+(() => { $('tab2').innerHTML = ['promesa ········ reseña', 'cuándo ·········· luego', 'estado ···· <b style="color:#E9BC46;font-weight:400">pendiente</b>', 'recordatorio ·· ninguno'].map(r => `<div>${r}</div>`).join('');
+  frase('txt2', '<div class="A gl" style="font-weight:800;font-size:96px;letter-spacing:-.035em;line-height:1.05">Al pagar te dice:</div>', 7.3, .1, { t1: 11.1 }); })();
+// 04 OLVIDO: espiral en perspectiva hacia el pozo
+(() => { let d = ''; for (let i = 0; i <= 260; i++) { const k = i / 260, a = -Math.PI * .9 + k * Math.PI * 4.6, r = 560 * Math.pow(1 - k, 1.25) + 20; d += (i ? 'L' : 'M') + (540 + Math.cos(a) * r).toFixed(1) + ' ' + (1080 + Math.sin(a) * r * .42).toFixed(1); }
+  $('espiral3').setAttribute('d', d);
+  frase('txt3', '<div class="S" style="font-size:118px;line-height:1">No es culpa suya.</div>', 13.3, .1, { t1: 15.3 }); })();
+// 05 FRICCIÓN: túnel de pasos
+const PASOS = ['Abrir Google Maps', 'Buscar tu negocio', 'Bajar hasta «Reseñas»', 'Pulsar «Escribir una reseña»', 'Elegir estrellas y escribir'];
+(() => { $('tunIn4').innerHTML = PASOS.map((s, i) => `<div class="caja tar4" style="left:120px;top:880px;width:840px;height:300px;padding:44px 50px;background:rgba(14,15,19,.9)">
+  <div class="m" style="font-size:24px;color:#E9BC46;letter-spacing:.1em">PASO 0${i + 1}</div><div class="I" style="font-weight:500;font-size:52px;margin-top:22px;line-height:1.15">${s}</div>
+  <div class="m" style="position:absolute;right:30px;top:36px;font-size:18px;color:#4b4740">${i + 1}/5</div></div>`).join('') + '';
+  $('s4').insertAdjacentHTML('beforeend', '<div id="tacha4" class="a" style="left:120px;top:1010px;width:840px;height:12px;background:#E0463B;transform-origin:0 50%;box-shadow:0 0 30px rgba(224,70,59,.7)"></div>');
+  frase('txt4', '<div class="A gl" style="font-weight:800;font-size:92px;letter-spacing:-.035em;line-height:1.05">Buscarte en Google</div><div class="S oro" style="font-size:150px;line-height:1">cuesta.</div>', 15.9, .1, { t1: 19.7 }); })();
+// 06 TOQUE
+frase('txt5', '<div class="S gl" style="font-size:160px;line-height:1">a un <span class="oro">toque.</span></div>', 21.3, .14, { t1: 24.3 });
+// 07 NFC: placa y móvil a trazo
+(() => { const g = $('placa6'), A = (d, ex = {}) => mk('path', Object.assign({ d }, ex), g);
+  A('M330 1010 Q330 990 350 990 L730 990 Q750 990 750 1010 L750 1440 Q750 1460 730 1460 L350 1460 Q330 1460 330 1440 Z', { id: 'pl6' });
+  A('M372 1060 L708 1060', { stroke: '#E9BC46' }); A('M400 1100 L680 1100', { 'stroke-width': 1.2, opacity: .6 });
+  A('M400 1230 Q400 1190 440 1190 L470 1190 Q480 1190 480 1200 L480 1300 Q480 1310 470 1310 L410 1310 Q400 1310 400 1300 Z', { id: 'ic6' });
+  [0, 1, 2].forEach(i => A(`M${500 + i * 18} ${1215 - i * 8} Q${520 + i * 26} 1250 ${500 + i * 18} ${1285 + i * 8}`, { stroke: '#E9BC46', id: 'arc6' + i }));
+  sd = 11; let qr = ''; for (let y = 0; y < 9; y++) for (let x = 0; x < 9; x++) { const esq = (x < 3 && y < 3) || (x > 5 && y < 3) || (x < 3 && y > 5); if (esq ? (x % 3 !== 1 || y % 3 !== 1 || true) && !(x % 3 === 1 && y % 3 === 1) : rnd() > .5) qr += `M${580 + x * 16} ${1182 + y * 16} h12 v12 h-12 Z`; }
+  A(qr, { id: 'qr6', 'stroke-width': 1.6 }); A('M430 1390 L650 1390', { 'stroke-width': 1.4, opacity: .6, id: 'l6a' }); A('M470 1420 L610 1420', { 'stroke-width': 1.4, opacity: .6, id: 'l6b' });
+  const m = $('movil6'), B = (d, ex = {}) => mk('path', Object.assign({ d }, ex), m);
+  B('M-150 -320 Q-150 -350 -120 -350 L120 -350 Q150 -350 150 -320 L150 320 Q150 350 120 350 L-120 350 Q-150 350 -150 320 Z', { id: 'mv6' });
+  B('M-40 -326 L40 -326', { 'stroke-width': 8, id: 'isla6' }); mk('rect', { x: -132, y: -300, width: 264, height: 620, rx: 18, fill: 'url(#gPant)', stroke: 'none', id: 'pant6', opacity: 0 }, m); const est6 = mk('g', { id: 'est6' }, m); for (let i = 0; i < 5; i++) mk('path', { d: TRAZOS.estrella, transform: `translate(${-110 + i * 46} -40) scale(.04)`, fill: '#FFD27A', stroke: 'none' }, est6); mk('path', { d: 'M-100 40 L100 40 M-100 80 L60 80', stroke: '#EFECE6', 'stroke-width': 3, opacity: .5 }, m).id = 'lin6';
+  for (let i = 0; i < 4; i++) mk('ellipse', { rx: 10, ry: 10, 'stroke-width': 3, id: 'on6' + i }, $('ondas6'));
+  const L = $('lid6'); window.L6 = [lider(L, 330, 1200, 150, 1050, 'NFC · 13,56 MHz', 'start'), lider(L, 680, 1400, 860, 1700, 'o escanea el QR', 'end')];
+  frase('txt6', '<div class="A gl" style="font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:1">Acerca el móvil</div>', 24.7, .1, { t1: 28.1 });
+  frase('txt6', '<div class="S oro" style="font-size:140px;line-height:1.1">y se abre tu ficha.</div>', 26.6, .1, { t1: 28.1 }); })();
+// 08 FICHA
+(() => { $('papel7').innerHTML = `<div style="position:absolute;left:0;right:0;top:0;height:170px;border-bottom:3px solid #141414;display:flex">
+    <div style="background:#141414;color:#ECE8DE;font:900 64px A;letter-spacing:-.02em;padding:48px 44px 0;width:470px">TU FICHA</div>
+    <div class="m" style="font-size:19px;line-height:1.7;padding:36px 30px;letter-spacing:.06em">GOOGLE · RESEÑA<br>FORMULARIO 5-E<br><span style="color:#8b857a">EDICIÓN ÚNICA</span></div></div>
+  <div class="m" style="position:absolute;left:50px;top:210px;font-size:19px;color:#6d675c;letter-spacing:.08em">01 · NEGOCIO</div>
+  <div class="I" style="position:absolute;left:50px;top:246px;font:500 60px I">Bar Nombre</div>
+  <div class="m" style="position:absolute;left:50px;top:400px;font-size:19px;color:#6d675c;letter-spacing:.08em">02 · VALORACIÓN</div>
+  <div id="est7" style="position:absolute;left:44px;top:440px;display:flex;gap:28px"></div>
+  <div class="m" style="position:absolute;left:50px;top:620px;font-size:19px;color:#6d675c;letter-spacing:.08em">03 · TU RESEÑA</div>
+  <div style="position:absolute;left:50px;right:50px;top:660px;height:200px;border-bottom:2px solid #141414"><span id="esc7" class="S" style="font-size:78px;line-height:1.4"></span></div>
+  <div id="pub7" style="position:absolute;left:50px;top:910px;height:96px;padding:0 60px;border-radius:48px;background:#141414;color:#ECE8DE;font:800 38px A;letter-spacing:.06em;display:flex;align-items:center">PUBLICAR</div>
+  <div id="sello7" class="m" style="position:absolute;right:60px;top:900px;border:4px solid #1a8a4a;color:#1a8a4a;padding:12px 22px;font-size:30px;font-weight:bold;letter-spacing:.1em;transform:rotate(-8deg)">PUBLICADA</div>
+  <div class="m" style="position:absolute;right:50px;bottom:20px;font-size:17px;color:#8b857a;letter-spacing:.12em">DEMOSTRACIÓN</div>`;
+  $('est7').innerHTML = [0, 1, 2, 3, 4].map(i => `<svg id="st7${i}" width="118" height="118" viewBox="0 0 1024 1024"><path d="${TRAZOS.estrella}" fill="transparent" stroke="#141414" stroke-width="44" stroke-linejoin="round"/></svg>`).join('');
+  frase('txt7', '<div class="A gl" style="font-weight:800;font-size:100px;letter-spacing:-.04em;line-height:1">Sin buscar nada.</div>', 28.9, .1, { t1: 32.8 });
+  frase('txt7b', '<div class="S oro" style="font-size:104px;line-height:1">solo tiene que escribir.</div>', 30.6, .08, { t1: 32.8 }); })();
+// 09 PRODUCTO
+(() => { $('p8a').innerHTML = [...'PLACAS'].map(c => `<span style="display:inline-block">${c}</span>`).join('');
+  $('p8c').innerHTML = 'pago único.'.split('').map(c => `<span style="display:inline-block;white-space:pre">${c}</span>`).join('');
+  const g = $('med8'); mk('path', { id: 'm8a', d: 'M110 520 L110 500 L970 500 L970 520' }, g); mk('path', { id: 'm8b', d: 'M70 850 L50 850 L50 1030 L70 1030' }, g); mk('path', { id: 'm8c', d: 'M140 1300 L940 1300' }, g);
+  const L = $('lid8'); window.L8 = [lider(L, 540, 500, 700, 420, '90 × 90 mm'), lider(L, 50, 940, 120, 1480, 'metacrilato 4 mm'), lider(L, 940, 1300, 800, 1480, 'desde 25 €', 'end')]; })();
+// 10 MARCA
+$('est9').setAttribute('d', TRAZOS.estrella); $('estF9').setAttribute('d', TRAZOS.estrella); $('cinco9').setAttribute('d', TRAZOS.cinco); $('cinco9').setAttribute('transform', 'translate(370.4 754.5) scale(0.5668)');
+
+/* ============ CÁMARA CONTINUA ============
+   escena i vive entre TR[i-1] y TR[i]; cada transición mueve las dos escenas como si fuera la misma cámara */
+const TR = [[3.95, 'dive', 1.0, 540, 930], [7.4, 'pan', .75, 0, -1], [11.25, 'caer', .9], [15.4, 'giro', .85], [19.8, 'dive', .8, 540, 960], [24.35, 'corte', .2], [28.25, 'dive', .85, 540, 700], [32.9, 'pan', .75, -1, 0], [37.3, 'punto', .55]];
+const NSC = 10; for (let i = 0; i < NSC; i++) mk('filter', { id: 'mb' + i, x: '-20%', y: '-20%', width: '140%', height: '140%' }, $('mbs')).appendChild(document.createElementNS(NS, 'feGaussianBlur')).setAttribute('stdDeviation', '0 0');
+function camara(i, t) { const t0 = i ? TR[i - 1][0] : 0, t1 = i < TR.length ? TR[i][0] : TOTAL; let s = 1 + .06 * cl((t - t0) / (t1 - t0 + .001)), tx = 0, ty = 0, r = 0, bx = 0, by = 0, op = 1, ox = 540, oy = 960;
+  const o = TR[i], n = TR[i - 1];
+  if (o && t > o[0] - o[2] / 2) { const [T, ty_, d, a, b] = o, k = cl((t - (T - d / 2)) / d);
+    if (ty_ === 'dive') { const e = ei(k); s *= 1 + 18 * e; ox = a; oy = b; bx = by = 18 * e; op = 1 - cl((k - .45) / .2); }
+    if (ty_ === 'pan') { const e = io(k); tx += a * 1080 * e; ty += b * 1920 * e; const m = Math.sin(Math.PI * k) * 60; bx = Math.abs(a) * m; by = Math.abs(b) * m; }
+    if (ty_ === 'caer') { op = 1 - cl((k - .3) / .5); s *= 1 + .1 * k; }
+    if (ty_ === 'giro') { const e = ei(k); r += 70 * e; s *= 1 + 1.6 * e; bx = by = 14 * e; op = 1 - cl((k - .5) / .3); }
+    if (ty_ === 'corte') op = k < .5 ? 1 : 0;
+    if (ty_ === 'punto') { const e = ei(k); s *= 1 - .97 * e; bx = by = 10 * e; op = 1 - cl((k - .8) / .2); } }
+  if (n && t < n[0] + n[2] / 2) { const [T, ty_, d, a, b] = n, k = cl((t - (T - d / 2)) / d);
+    if (ty_ === 'dive') { const e = eo(cl((k - .35) / .65)); s *= .08 + .92 * e; bx = by = 16 * (1 - e); op = cl((k - .38) / .15); }
+    if (ty_ === 'pan') { const e = io(k); tx -= a * 1080 * (1 - e); ty -= b * 1920 * (1 - e); const m = Math.sin(Math.PI * k) * 60; bx = Math.abs(a) * m; by = Math.abs(b) * m; }
+    if (ty_ === 'caer') { op = cl((k - .15) / .5); s *= 1.25 - .25 * eo(k); }
+    if (ty_ === 'giro') { const e = eo(cl((k - .3) / .7)); r -= 50 * (1 - e); s *= .5 + .5 * e; bx = by = 12 * (1 - e); op = cl((k - .35) / .2); }
+    if (ty_ === 'corte') op = k < .5 ? 0 : 1;
+    if (ty_ === 'punto') op = cl((k - .7) / .3); }
+  return { s, tx, ty, r, bx, by, op, ox, oy }; }
+const vivo = i => { const t0 = i ? TR[i - 1][0] - TR[i - 1][2] / 2 : 0, t1 = i < TR.length ? TR[i][0] + TR[i][2] / 2 : TOTAL + 1; return [t0, t1]; };
+
+/* ============ FONDOS DE CANVAS ============ */
+// ruido suave (value noise)
+const H = (x, y) => { const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); };
+const sm = x => x * x * (3 - 2 * x);
+function ruido(x, y) { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = sm(xf), v = sm(yf);
+  return lerp(lerp(H(xi, yi), H(xi + 1, yi), u), lerp(H(xi, yi + 1), H(xi + 1, yi + 1), u), v); }
+// 04: mapa de curvas de nivel con un pozo en el centro (marching squares)
+const C3 = $('cv3').getContext('2d'), GW = 72, GH = 88;
+function curvas(t) { const W = 960, Hh = 1160, cx = W / 2, cy = Hh * .5, dx = W / GW, dy = Hh / GH, f = [];
+  for (let j = 0; j <= GH; j++) { f[j] = []; for (let i = 0; i <= GW; i++) { const x = i * dx, y = j * dy, r2 = ((x - cx) ** 2 + (y - cy) ** 2) / (230 * 230);
+    f[j][i] = ruido(x / 170 + t * .05, y / 170) * .7 + ruido(x / 60, y / 60 - t * .03) * .18 - 1.25 * Math.exp(-r2) - .45 * Math.exp(-r2 * .15); } }
+  C3.clearRect(0, 0, W, Hh); C3.lineWidth = 1.3;
+  for (let L = -1.6; L < .9; L += .085) { const cerca = L < -.6; C3.strokeStyle = cerca ? `rgba(233,188,70,${.35 + .5 * cl((-L - .6) / .9)})` : 'rgba(239,236,230,.22)'; C3.beginPath();
+    for (let j = 0; j < GH; j++) for (let i = 0; i < GW; i++) { const a = f[j][i], b = f[j][i + 1], c = f[j + 1][i + 1], d = f[j + 1][i], x = i * dx, y = j * dy;
+      const idx = (a > L) | ((b > L) << 1) | ((c > L) << 2) | ((d > L) << 3); if (idx === 0 || idx === 15) continue;
+      const e = [[x + dx * (L - a) / (b - a), y], [x + dx, y + dy * (L - b) / (c - b)], [x + dx * (L - d) / (c - d), y + dy], [x, y + dy * (L - a) / (d - a)]];
+      const S = { 1: [3, 0], 2: [0, 1], 3: [3, 1], 4: [1, 2], 5: [3, 2, 0, 1], 6: [0, 2], 7: [3, 2], 8: [2, 3], 9: [0, 2], 10: [0, 3, 1, 2], 11: [1, 2], 12: [1, 3], 13: [0, 1], 14: [0, 3] }[idx];
+      for (let q = 0; q < S.length; q += 2) { C3.moveTo(...e[S[q]]); C3.lineTo(...e[S[q + 1]]); } }
+    C3.stroke(); } }
+// 06: rejilla en perspectiva que cae en un pozo con un anillo de luz
+const C5 = $('cv5').getContext('2d');
+function pozo(t, fuerza) { const W = 1080, Hh = 1920, cz = 9, cam = { y: 2.6, z: -3.5 }, pit = .27, f = 1450, hy = 820;
+  const prof = (x, z) => { const r2 = x * x + (z - cz) ** 2; return -(2.2 + 2.5 * fuerza) / (1 + r2 / (1.1 + .3 * Math.sin(t))); };
+  const pr = (x, y, z) => { const Y = y - cam.y, Z = z - cam.z, y2 = Y * Math.cos(pit) + Z * Math.sin(pit), z2 = -Y * Math.sin(pit) + Z * Math.cos(pit); return z2 < .2 ? null : [W / 2 + f * x / z2, hy - f * y2 / z2, z2]; };
+  C5.clearRect(0, 0, W, Hh); C5.lineWidth = 1.2;
+  const lin = pts => { C5.beginPath(); let st = false; pts.forEach(q => { if (!q) { st = false; return; } st ? C5.lineTo(q[0], q[1]) : C5.moveTo(q[0], q[1]); st = true; }); C5.stroke(); };
+  const desl = (t * .9) % 1;
+  for (let i = -18; i <= 18; i++) { const x = i * .75; const pts = []; for (let z = 0; z <= 34; z += .25) pts.push(pr(x, prof(x, z), z)); C5.strokeStyle = `rgba(233,188,70,${.2 + .35 * Math.exp(-Math.abs(x) / 4)})`; lin(pts); }
+  for (let k = 0; k <= 46; k++) { const z = k * .75 - desl * .75; if (z < 0) continue; const pts = []; for (let x = -14; x <= 14; x += .2) pts.push(pr(x, prof(x, z), z)); C5.strokeStyle = `rgba(233,188,70,${.55 * Math.exp(-z / 20)})`; lin(pts); }
+  const c = pr(0, -2.2 - 2.5 * fuerza, cz) || [540, 900]; const R = 185 + 50 * fuerza;
+  const g = C5.createRadialGradient(c[0], c[1], R * .6, c[0], c[1], R * 3.2); g.addColorStop(0, 'rgba(255,210,122,.95)'); g.addColorStop(.12, 'rgba(233,150,50,.55)'); g.addColorStop(.4, 'rgba(233,120,40,.12)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  C5.fillStyle = g; C5.beginPath(); C5.arc(c[0], c[1], R * 3.2, 0, 7); C5.fill();
+  for (let a = 0; a < 26; a++) { const ang = a * .9 + t * (1.2 + fuerza * 3), rr = R * (1.02 + (a % 5) * .08); C5.strokeStyle = `rgba(255,220,150,${.25 + .4 * ((a * 7) % 3) / 3})`; C5.lineWidth = 1.4 + (a % 3); C5.beginPath(); C5.ellipse(c[0], c[1], rr, rr * .9, 0, ang, ang + .6 + (a % 4) * .3); C5.stroke(); }
+  C5.fillStyle = '#000'; C5.beginPath(); C5.arc(c[0], c[1], R * .86, 0, 7); C5.fill(); C5.lineWidth = 3; C5.strokeStyle = 'rgba(255,230,170,.9)'; C5.shadowColor = '#FFD27A'; C5.shadowBlur = 30; C5.beginPath(); C5.arc(c[0], c[1], R * .88, 0, 7); C5.stroke(); C5.shadowBlur = 0;
+  return c; }
+// grano de película
+const GR = $('grano').getContext('2d'), GI = [...Array(6)].map(() => { const d = GR.createImageData(540, 960); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } return d; });
+
+sd = 99; const POL = [...Array(70)].map(() => ({ x: rnd() * 1080, y: rnd() * 2100, z: Math.pow(rnd(), 2), f: rnd() * 6 }));
+const ETQ = ['01 · GLIFO', '02 · CLIENTE', '03 · PROMESA', '04 · OLVIDO', '05 · FRICCIÓN', '06 · TOQUE', '07 · NFC', '08 · FICHA', '09 · PRODUCTO', '10 · PLEA5E'];
+let listo0 = false;
+window.render = async t => {
+  if (!listo0) { nodos(); listo0 = true; }
+  // cámara por escena
+  for (let i = 0; i < NSC; i++) { const el = $('s' + i), [a, b] = vivo(i), v = t >= a && t < b; el.style.display = v ? 'block' : 'none'; if (!v) continue;
+    const c = camara(i, t), dr = Math.sin(t * .4 + i) * .4;
+    el.style.transformOrigin = `${c.ox}px ${c.oy}px`; el.style.transform = `translate(${c.tx}px,${c.ty}px) rotate(${c.r + dr}deg) scale(${c.s})`; el.style.opacity = c.op;
+    const blur = $('mb' + i).firstChild; blur.setAttribute('stdDeviation', `${c.bx.toFixed(1)} ${c.by.toFixed(1)}`); el.style.filter = (c.bx + c.by) > .3 ? `url(#mb${i})` : 'none'; }
+  const ia = TR.findIndex(x => t < x[0]); const esc = ia < 0 ? 9 : ia;
+  // ---- 01 glifo
+  if (t < 4.6) { const z = lerp(1.85, 1.0, io(p(t, 2.5, 1.3))); $('g0').setAttribute('transform', `translate(540 820) scale(${z}) translate(-518 -560)`);
+    $('guias0').querySelectorAll('line').forEach((l, j) => { const k = io(p(t, j * .08, .5)); l.setAttribute('stroke-dasharray', '2000'); l.setAttribute('stroke-dashoffset', 2000 * (1 - k)); });
+    $('et0').style.opacity = cl((t - .6) * 3) * (1 - cl((t - 2.6) * 2)); $('circ0').style.opacity = .7 * cl((t - .8) * 3) * (1 - cl((t - 2.4) * 3)); $('circ0').setAttribute('transform', `rotate(${t * 40} 512 660)`);
+    trazo($('cinco0'), io(p(t, -.25, 1.6))); nodos0.forEach(([r, k]) => { const a = -.25 + k * 1.6; r.style.opacity = t > a ? 1 - cl((t - 2.1) * 3) : 0; r.setAttribute('stroke-width', 2.5); });
+    $('cincoF0').style.opacity = eo(p(t, 2.2, .5)); $('cinco0').style.opacity = 1 - cl((t - 2.5) * 2);
+    trazo($('est0'), io(p(t, 2.55, 1.0))); $('estF0').style.opacity = .18 * cl((t - 3.2) * 2);
+    tipo($('cab0'), 'U+0035  DÍGITO CINCO\nPLEA5E · sello · trazado 02\nregla: el 5 nunca se refleja', .35, 70, t, t < 2.6); }
+  // ---- 02 cliente
+  if (t > 3.4 && t < 8.2) { const k = p(t, 4.0, 1.4); $('taza').querySelectorAll('path').forEach((e, j) => { if (!e.id.startsWith('vapor')) trazo(e, io(p(t, 3.85 + j * .1, .9))); });
+    [0, 1, 2].forEach(i => { const x = [-50, 0, 50][i]; let d = ''; for (let s = 0; s <= 20; s++) { const y = -95 - s * 11, a = Math.sin(s * .45 - t * 3 + i * 2) * (8 + s * 1.3); d += (s ? 'L' : 'M') + (x + a).toFixed(1) + ' ' + y; }
+      const v = $('vapor' + i); v.setAttribute('d', d); v.style.opacity = cl((t - 4.8 - i * .15) * 2) * .9; v.style.strokeDasharray = '260'; v.style.strokeDashoffset = 260 * (1 - io(p(t, 4.8 + i * .15, 1))); });
+    L1.forEach((o, j) => pintaLider(o, t, 5.2 + j * .45)); }
+  // ---- 03 promesa
+  if (t > 6.9 && t < 12) { tipo($('dice2'), 'cliente · mesa 4', 7.55, 30, t, false); const n = tipo($('tip2'), '«Ahora os dejo la reseña»', 8.0, 16, t, t < 10.9);
+    if (t > 10.2) { const k = eo(p(t, 10.2, .4)); $('tip2').innerHTML = '«Ahora os dejo <span style="color:#E9BC46;text-shadow:0 0 20px rgba(233,188,70,.6);border-bottom:4px solid rgba(233,188,70,' + k + ')">la reseña</span>»' + (Math.floor(t * 3) % 2 && t < 10.9 ? '█' : ''); }
+    $('prompt2').style.boxShadow = `0 0 ${40 * cl((t - 8) * 2)}px rgba(233,188,70,.12)`; $('tab2').style.opacity = cl((t - 8.6) * 3); $('tab2').style.transform = `translateY(${(1 - eo(p(t, 8.6, .5))) * 40}px)`;
+    // las letras se sueltan y caen hacia el pozo
+    if (t > 10.9) { const tp = $('tip2'); if (!tp._sp) { tp.innerHTML = [...'«Ahora os dejo la reseña»'].map((c, i) => `<span style="display:inline-block;white-space:pre;${i > 14 && i < 24 ? 'color:#E9BC46' : ''}">${c}</span>`).join(''); tp._sp = [...tp.children]; }
+      tp._sp.forEach((s, i) => { const u = Math.max(0, t - 10.95 - i * .018), g = u * u * 1100; s.style.transform = `translate(${Math.sin(i) * u * 60}px,${g}px) rotate(${u * (i % 2 ? 90 : -70)}deg)`; s.style.filter = `blur(${u * 8}px)`; s.style.opacity = 1 - cl(u * 1.3); }); } }
+  // ---- 04 olvido
+  if (t > 10.8 && t < 16) { curvas(t); $('terr').style.transform = `perspective(1000px) rotateX(${58 - 6 * p(t, 11, 4)}deg) rotateZ(${(t - 11) * 4}deg)`;
+    $('tp3').setAttribute('startOffset', `${lerp(-2, 44, io(p(t, 11.4, 3.6)))}%`); }
+  // ---- 05 fricción: la cámara avanza entre los pasos
+  if (t > 14.9 && t < 20.3) { const vz = io(p(t, 16.2, 2.6)) * 3000; document.querySelectorAll('.tar4').forEach((c, i) => { const z = -600 * i - 300 + vz, op = z > 700 ? 0 : cl((z + 3000) / 800);
+      c.style.transform = `translateZ(${z}px) translateX(${(i % 2 ? 1 : -1) * 80}px) translateY(${-i * 60}px) rotateY(${(i % 2 ? -1 : 1) * 14}deg)`; c.style.opacity = op * cl((t - 15.6 - i * .08) * 3); });
+    const tk = io(p(t, 18.75, .3)); $('tacha4').style.transform = `rotate(-8deg) scaleX(${tk})`; $('tacha4').style.opacity = t > 18.7 ? 1 : 0; }
+  // ---- 06 toque
+  if (t > 19.3 && t < 24.6) { const fu = ei(p(t, 21.6, 2.7)); const c = pozo(t, fu); const ar = $('aro5');
+    ar.setAttribute('transform', `translate(${c[0]} ${c[1]}) scale(1 .42) rotate(${-t * 34})`); ar.style.opacity = cl((t - 20.4) * 2);  }
+  // ---- 07 nfc
+  if (t > 24.2 && t < 28.8) { $('placa6').querySelectorAll('path').forEach((e, j) => trazo(e, io(p(t, 24.45 + j * .07, .7))));
+    const k = io(p(t, 25.2, 1.1)), mx = lerp(950, 540, k), my = lerp(420, 860, k), rot = lerp(28, 0, k), bump = t > 26.3 ? Math.exp(-(t - 26.3) * 9) * Math.sin((t - 26.3) * 40) * 6 : 0;
+    $('movil6').setAttribute('transform', `translate(${mx} ${my + bump}) rotate(${rot})`); $('movil6').querySelectorAll('path').forEach((e, j) => trazo(e, io(p(t, 25.15 + j * .1, .8))));
+    const pn = $('pant6'); pn.style.opacity = t < 26.3 ? 0 : Math.min(1, (t - 26.3) * 5); $('est6').querySelectorAll('path').forEach((e, i) => { const q = muelle(t, 26.6 + i * .09, 3, .5); e.style.opacity = t > 26.6 + i * .09 ? 1 : 0; }); $('lin6').style.opacity = t > 26.9 ? .5 : 0;
+    for (let i = 0; i < 4; i++) { const u = t - 26.3 - i * .22, e = $('on6' + i); e.setAttribute('cx', 540); e.setAttribute('cy', 1170); const r = u > 0 ? 40 + u * 700 : 0; e.setAttribute('rx', r); e.setAttribute('ry', r * .55); e.style.opacity = u > 0 ? cl(1 - u * .9) : 0; }
+    L6.forEach((o, j) => pintaLider(o, t, 26.6 + j * .5)); }
+  // ---- 08 ficha
+  if (t > 27.8 && t < 33.4) { const k = muelle(t, 28.6, 1.6, .7), pa = $('papel7');
+    pa.style.transform = `rotateX(${8 + (1 - Math.min(k, 1)) * 30}deg) rotateZ(${-3 + Math.sin(t * .7) * 1.2}deg) translateY(${(1 - Math.min(k, 1.05)) * 900}px) rotateY(${Math.sin(t * .5) * 4}deg)`;
+    [0, 1, 2, 3, 4].forEach(i => { const a = 29.85 + i * .17, q = muelle(t, a, 3, .5), sv = $('st7' + i); sv.firstChild.setAttribute('fill', t > a ? '#E9BC46' : 'transparent'); sv.style.transform = `scale(${t > a ? .7 + .3 * Math.min(q, 1.25) : 1})`; });
+    tipo($('esc7'), 'Volveremos.', 30.95, 15, t, t < 32.2); const pk = t > 32.2 && t < 32.45 ? .92 : 1; $('pub7').style.transform = `scale(${pk})`;
+    const ks = muelle(t, 32.3, 2.5, .5); $('sello7').style.transform = `rotate(-8deg) scale(${t < 32.3 ? 0 : 2.2 - 1.2 * Math.min(ks, 1.1)})`; $('sello7').style.opacity = t < 32.3 ? 0 : 1; }
+  // ---- 09 producto
+  if (t > 32.4 && t < 38) { [...$('p8a').children].forEach((c, i) => { const k = eo(p(t, 33.3 + i * .06, .6)); c.style.transform = `translateY(${(1 - k) * 260}px)`; });
+    const kb = eo(p(t, 34.25, .8)); $('p8b').style.transform = `translateX(${(1 - kb) * -1200}px) skewX(${(1 - kb) * -20}deg)`; $('p8b').style.opacity = kb;
+    [...$('p8c').children].forEach((c, i) => { const k = eo(p(t, 35.15 + i * .04, .6)); c.style.opacity = k; c.style.filter = `blur(${(1 - k) * 18}px)`; c.style.transform = `translateY(${(1 - k) * 40}px)`; });
+    ['m8a', 'm8b', 'm8c'].forEach((id, j) => trazo($(id), io(p(t, 35.8 + j * .2, .6)))); L8.forEach((o, j) => pintaLider(o, t, 36.0 + j * .25)); }
+  // ---- 10 marca
+  if (t > 37) { const kp = eo(p(t, 37.45, .4)); $('punto9').setAttribute('r', t < 38.5 ? 6 + 10 * kp + 3 * Math.sin(t * 20) : Math.max(0, 16 - (t - 38.5) * 60));
+    trazo($('est9'), io(p(t, 37.6, .9))); const kf = eo(p(t, 38.5, .5)); $('estF9').style.opacity = kf; $('cinco9').style.opacity = kf;
+    $('g9').setAttribute('transform', `translate(540 860) scale(${.62 * (t > 38.5 ? 1 + .18 * Math.exp(-(t - 38.5) * 5) : 1) * (1 + .02 * (t - 38.5))}) translate(-512 -512)`);
+    const km = io(p(t, 38.9, .8)); $('marca9').style.clipPath = `inset(0 ${(1 - km) * 50}% 0 ${(1 - km) * 50}%)`; $('marca9').style.filter = `drop-shadow(0 0 ${20 * km}px rgba(233,188,70,.5))`;
+    tipo($('web9'), 'plea5e.es', 39.9, 16, t, t < 41); $('sub9').style.opacity = cl((t - 40.5) * 2); $('sub9').style.transform = `translateY(${(1 - eo(p(t, 40.5, .6))) * 30}px)`;
+    $('s9').style.opacity = t > 41.6 ? 1 - cl((t - 41.6) / .4) : $('s9').style.opacity; }
+  pintaFrases(t);
+  // HUD
+  const f = Math.floor(t * 30); $('tc').textContent = `00:00:${String(Math.floor(t)).padStart(2, '0')}:${String(f % 30).padStart(2, '0')}`; $('rec').style.opacity = Math.floor(t * 2) % 2 ? 1 : .25;
+  $('lab').textContent = ETQ[esc]; $('hud').style.opacity = cl(t * 3) * (t > 41.6 ? 1 - cl((t - 41.6) / .4) : 1);
+  GR.putImageData(GI[f % 6], 0, 0);
+  const PC = $('polvo').getContext('2d'); PC.clearRect(0, 0, 1080, 1920);
+  POL.forEach(q => { const z = q.z, y = ((q.y - t * (18 + 50 * z)) % 2100 + 2100) % 2100 - 90, x = q.x + Math.sin(t * .4 + q.f) * 40 * z, r = .8 + 3.2 * z;
+    PC.fillStyle = `rgba(255,214,140,${(.12 + .5 * z) * (.6 + .4 * Math.sin(t * 2 + q.f))})`; PC.shadowColor = '#FFD27A'; PC.shadowBlur = 6 + 14 * z; PC.beginPath(); PC.arc(x, y, r, 0, 7); PC.fill(); }); PC.shadowBlur = 0;
+  fxRender(t);
+};
+window.render(0); window.LISTO = true;
+</script></body></html>
