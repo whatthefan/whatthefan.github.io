@@ -36,13 +36,14 @@ function servir(raiz) {
       await p.screenshot({ path: `prueba-${nombreCapa}-${t}.png`, omitBackground: true });
     }
   } else {
-    const n = Math.round((await p.evaluate(() => window.TOTAL)) * 30);
+    const FPS = +process.env.FPS || 30;   // FPS=60 + tmix a 30 = desenfoque de movimiento de obturador 180° (como After Effects)
+    const n = Math.round((await p.evaluate(() => window.TOTAL)) * FPS);
     // DESDE/HASTA (segundos) graban solo un tramo, para repartir el render en varios procesos; INTER=h264 guarda un intermedio ligero (sin alfa)
-    const i0 = Math.round((+process.env.DESDE || 0) * 30), i1 = process.env.HASTA ? Math.min(n, Math.round(+process.env.HASTA * 30)) : n;
+    const i0 = Math.round((+process.env.DESDE || 0) * FPS), i1 = process.env.HASTA ? Math.min(n, Math.round(+process.env.HASTA * FPS)) : n;
     const cod = process.env.INTER === 'h264' ? ['-c:v', 'libx264', '-crf', '10', '-preset', 'fast', '-pix_fmt', 'yuv444p'] : ['-c:v', 'png', '-pix_fmt', 'rgba'];
-    const ff = spawn(FF, ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'png', '-i', '-', ...cod, resto[0]], { stdio: ['pipe', 'inherit', 'inherit'] });
+    const ff = spawn(FF, ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'png', '-i', '-', ...cod, resto[0]], { stdio: ['pipe', 'inherit', 'inherit'] });
     for (let i = i0; i < i1; i++) {
-      await p.evaluate(t => render(t), i / 30);
+      await p.evaluate(t => render(t), i / FPS);
       const buf = await p.screenshot({ omitBackground: true, type: 'png' });
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
       if (i % 150 === 0) console.log(capa, i, '/', n);
