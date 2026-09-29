@@ -1,0 +1,215 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:S;src:url(f/instrument-serif-latin-400-normal.woff2)}
+@font-face{font-family:S;src:url(f/instrument-serif-latin-400-italic.woff2);font-style:italic}
+@font-face{font-family:I;src:url(f/inter-tight-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:I;src:url(f/inter-tight-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:I;src:url(f/inter-tight-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:I;src:url(f/inter-tight-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:F;src:url(f/fraunces-latin-900-normal.woff2);font-weight:900}
+@font-face{font-family:F;src:url(f/fraunces-latin-900-italic.woff2);font-weight:900;font-style:italic}
+@font-face{font-family:M;src:url(f/ibm-plex-mono-latin-400-normal.woff2)}
+@font-face{font-family:A;src:url(f/anton-latin.woff2)}
+@font-face{font-family:Mo;src:url(f/montserrat-latin.woff2);font-weight:100 900}
+:root{--noche:#06080E;--papel:#10141D;--tinta:#EDE9DF;--oro:#E9BC46;--gris:#7D8494;--linea:#232A38}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--noche);color:var(--tinta);font-family:Mo}
+.a{position:absolute}
+#grano{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:.05;mix-blend-mode:screen;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency=%271.6%27 numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+#vin{position:absolute;inset:0;z-index:49;pointer-events:none;background:radial-gradient(ellipse 85% 75% at 50% 50%,transparent 50%,rgba(0,0,0,.55) 100%)}
+#halo{position:absolute;inset:0;background:radial-gradient(circle at 50% 47%,rgba(233,188,70,.10),transparent 48%)}
+.burbuja{position:absolute;right:70px;padding:30px 40px;border-radius:40px 40px 10px 40px;background:#1A1F2B;font:500 40px/1.25 Mo;color:var(--tinta);white-space:nowrap}
+#caja{position:absolute;left:70px;width:940px;height:170px;border-radius:44px;background:var(--papel);border:2px solid var(--linea);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(233,188,70,.05)}
+#cajaTxt{position:absolute;left:52px;top:60px;font:500 42px Mo;white-space:nowrap}
+#enviar{position:absolute;right:24px;top:36px;width:98px;height:98px;border-radius:30px;background:var(--oro);display:flex;align-items:center;justify-content:center}
+.car{display:inline-block;width:4px;height:50px;background:var(--oro);vertical-align:-10px;margin-left:3px}
+#film{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;background:var(--noche)}
+.pan{position:absolute;width:360px;height:640px}
+.pan .num{position:absolute;left:22px;top:20px;font:400 22px M;color:var(--gris)}
+.pan .nota{position:absolute;left:22px;bottom:22px;font:italic 30px S;color:var(--gris)}
+.dot{position:absolute;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;border:5px solid var(--tinta)}
+.tile{position:absolute;width:120px;height:120px;transform-style:preserve-3d}
+.tile i{position:absolute;inset:3px;border-radius:14px;backface-visibility:hidden}
+.let{display:inline-block;transform-origin:50% 60%}
+.slot{position:absolute;top:0;width:150px;text-align:center;font:400 300px/1 A;color:#fff;transform-origin:50% 100%}
+</style></head><body>
+<div id="todo" style="position:absolute;inset:0">
+  <div id="film">
+    <div id="halo"></div>
+    <svg id="svgF" class="a" width="1080" height="1920" style="left:0;top:0;overflow:visible">
+      <g id="rejilla" stroke="rgba(237,233,223,.55)" stroke-width="3" stroke-linecap="round" fill="none"></g>
+      <g id="bocetos" stroke="#EDE9DF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"></g>
+      <ellipse id="sombra" cx="540" cy="1188" rx="0" ry="14" fill="rgba(233,188,70,.22)"/>
+      <circle id="bola" cx="540" cy="0" r="72" fill="#E9BC46"/>
+      <g id="chispa" stroke="#E9BC46" stroke-linecap="round"></g>
+    </svg>
+    <div id="panes"></div>
+    <div id="puntos"></div>
+    <div id="cuenta" class="a" style="left:0;right:0;top:810px;text-align:center;font:400 300px/1 S;letter-spacing:-.02em;color:#fff"></div>
+    <div id="palabra" class="a" style="left:0;right:0;top:830px;text-align:center;font:900 italic 250px/1 F;letter-spacing:-.02em;white-space:nowrap;color:#fff"></div>
+    <div id="baldosas" class="a" style="inset:0;perspective:1600px"></div>
+    <!-- nombre: P L E A ★ E -->
+    <svg id="rayos" class="a" width="1080" height="1920" style="left:0;top:0;overflow:visible"><g id="rayosG" stroke="#E9BC46" stroke-linecap="round"></g></svg>
+    <div id="nombre" class="a" style="left:45px;top:760px;width:990px;height:300px"></div>
+    <img id="sello" src="m/estrella5.svg" class="a" style="left:0;top:0;width:320px;height:320px">
+    <div id="sub1" class="a" style="left:0;right:0;top:1170px;text-align:center;font:500 44px Mo;color:rgba(237,233,223,.7)">Sin After Effects.</div>
+    <div id="sub2" class="a" style="left:0;right:0;top:1240px;text-align:center;font:italic 92px S;color:var(--oro)">Solo una conversación.</div>
+    <div id="pensando" class="a" style="left:0;right:0;top:1180px;text-align:center;font:italic 54px S;color:var(--gris)"></div>
+  </div>
+  <!-- chat -->
+  <div id="chat" class="a" style="inset:0;pointer-events:none">
+    <div id="burbuja" class="burbuja" style="top:170px">Hazme un motion de 20 segundos.</div>
+    <div id="respRow" class="a" style="left:70px;top:420px;display:flex;align-items:center;gap:26px">
+      <svg id="avatar" width="72" height="72" viewBox="-36 -36 72 72"><g id="chispaMini" stroke="#E9BC46" stroke-linecap="round"></g></svg>
+      <div id="respTxt" style="font:500 42px Mo;white-space:nowrap"></div></div>
+    <div id="marco" class="a" style="border-radius:34px;border:2px solid rgba(233,188,70,.35)"></div>
+    <div id="otro" class="a" style="left:70px;top:1622px;font:500 42px Mo;white-space:nowrap"></div>
+    <div id="caja"><div id="cajaTxt"></div><div id="enviar"><svg width="44" height="44" viewBox="0 0 44 44"><path d="M22 34V10M11 20l11-11 11 11" fill="none" stroke="#06080E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+  </div>
+</div>
+<div id="vin"></div><div id="grano"></div>
+<script>
+const $ = id => document.getElementById(id);
+const { p, muelle } = E;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), lerp = (a, b, k) => a + (b - a) * k;
+const oE = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x)), iE = x => x <= 0 ? 0 : Math.pow(2, 10 * cl(x) - 10);
+const ioE = x => (x = cl(x)) <= 0 ? 0 : x >= 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+const io = x => (x = cl(x)) < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, oB = x => { x = cl(x); const c = 1.8; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const NS = 'http://www.w3.org/2000/svg', mk = (tag, at, par) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); par && par.appendChild(e); return e; };
+const TOTAL = 20; window.TOTAL = TOTAL;
+const ORO = '#E9BC46', TINTA = '#EDE9DF';
+
+/* ============ SONIDO (uno por suceso, ninguno más de 2 veces; woah-drop en la firma) ============ */
+const FX = /*FX*/[{"t":0.25,"s":"packs2/teclas.mp3","db":-10,"dur":1.85},{"t":2.2,"s":"packs3/click.mp3","db":-6},{"t":2.55,"s":"packs3/pop-limpio.mp3","db":-7},{"t":3.62,"s":"packs3/swoosh-aire.mp3","db":-6},{"t":4.15,"s":"packs3/rafaga-fotos.mp3","db":-9},{"t":5.15,"s":"packs2/whoosh-b.mp3","db":-5},{"t":6.35,"s":"packs4/toque-bot.mp3","db":-4},{"t":6.92,"s":"packs2/pop-imagen.mp3","db":-7},{"t":7.2,"s":"packs2/contador.mp3","db":-10,"dur":0.85},{"t":8.05,"s":"packs/ding.mp3","db":-7},{"t":8.3,"s":"packs3/swoosh-suave.mp3","db":-7},{"t":8.8,"s":"packs3/rafaga-fotos2.mp3","db":-9},{"t":9.55,"s":"packs2/swish-c.mp3","db":-6},{"t":10.45,"s":"packs3/swoosh-corto.mp3","db":-7},{"t":10.95,"s":"packs3/pop-limpio.mp3","db":-7},{"t":11.45,"s":"packs3/rafaga-fotos2.mp3","db":-9},{"t":12.65,"s":"packs4/toque-bot2.mp3","db":-4},{"t":13.3,"s":"packs/woah-drop.mp3","db":-3},{"t":15.6,"s":"packs2/swish-c.mp3","db":-8},{"t":17.2,"s":"packs2/whoosh-mov.mp3","db":-6},{"t":17.7,"s":"packs4/respuesta.mp3","db":-7},{"t":18.3,"s":"packs2/teclas.mp3","db":-11,"dur":0.6}]/*FX*/;
+
+/* ============ la chispa-estrella: 5 puntas largas + 5 cortas ============ */
+const RAYOS = [...Array(10)].map((_, i) => [-90 + i * 36, i % 2 ? .46 : 1]);
+const chispa = (g, ancho) => RAYOS.map(() => mk('line', { 'stroke-width': ancho, x1: 0, y1: 0, x2: 0, y2: 0 }, g));
+const RC = chispa($('chispa'), 34), RM = chispa($('chispaMini'), 7), RR = chispa($('rayosG'), 26);
+function pintaChispa(lines, cx, cy, R, k, t, rot = 0, piensa = 0, w) {
+  lines.forEach((ln, i) => { const [a0, l] = RAYOS[i], kk = oB(cl(k * 1.6 - i * .06)), osc = 1 + piensa * .22 * Math.sin(t * 7 - i * 1.1), a = (a0 + rot) * Math.PI / 180, r0 = R * .16, r1 = R * l * kk * osc;
+    ln.setAttribute('x1', cx + Math.cos(a) * r0 * cl(kk)); ln.setAttribute('y1', cy + Math.sin(a) * r0 * cl(kk)); ln.setAttribute('x2', cx + Math.cos(a) * Math.max(r0, r1)); ln.setAttribute('y2', cy + Math.sin(a) * Math.max(r0, r1));
+    ln.style.opacity = kk > .02 ? 1 : 0; if (w) ln.setAttribute('stroke-width', w); }); }
+
+/* ============ storyboard ============ */
+const REJF = [[360, 0, 360, 1920], [720, 0, 720, 1920], [0, 640, 1080, 640], [0, 1280, 1080, 1280]];
+const REJ = REJF.map(() => mk('line', { x1: 540, y1: 960, x2: 540, y2: 960 }, $('rejilla')));
+const ESTB = (cx, cy, r) => [...Array(10)].map((_, i) => { const a = (-90 + i * 36) * Math.PI / 180, rr = i % 2 ? r * .45 : r; return `${i ? 'L' : 'M'}${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)}`; }).join(' ') + 'Z';
+const BOC = [
+  [0, 'M60 420 C 120 200, 240 200, 300 420 M270 380 L300 420 L320 370'], [1, 'M70 470 Q 180 150 290 470 M 230 470 a 50 50 0 1 0 100 0 a 50 50 0 1 0 -100 0'],
+  [2, 'M90 250 C 100 200, 190 200, 180 260 C 175 300, 100 380, 90 440 L 185 440 M235 220 C 290 220, 300 260, 300 330 C 300 400, 290 440, 245 440 C 205 440, 200 400, 200 330 C 200 260, 210 220, 235 220'],
+  [3, [...Array(20)].map((_, i) => { const a = i / 20 * 6.283 - 1.57; return `M${180 + Math.cos(a) * 110 + 11} ${330 + Math.sin(a) * 110} a11 11 0 1 0 -22 0 a11 11 0 1 0 22 0`; }).join(' ')],
+  [4, 'M180 90 L180 190 M180 220 L180 300 M 180 330 L180 380 M130 500 a50 50 0 1 0 100 0 a50 50 0 1 0 -100 0 M90 560 L270 560'], [5, 'M60 360 C 90 300, 110 300, 120 360 C 130 300, 150 300, 160 360 M 175 340 a 20 22 0 1 0 1 0 M 215 300 L 215 360 M 200 320 L 235 320 M 250 330 L 250 360 M 250 305 L 250 307 M 270 340 a 20 22 0 1 0 1 0 M 310 360 L 310 330 C 320 318, 335 320, 336 340 L 336 360'],
+  [6, [...Array(12)].map((_, i) => `M${70 + (i % 4) * 58} ${220 + Math.floor(i / 4) * 58} h46 v46 h-46 z`).join(' ')],
+  [7, 'M40 380 h50 M110 380 h50 M180 380 h50 M 250 380 h50 ' + ESTB(205, 250, 60) + ' M205 320 L205 360 M195 350 L205 362 L215 350'],
+  [8, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => { const r = (-90 + i * 36) * Math.PI / 180, l = i % 2 ? 50 : 95; return `M${180 + Math.cos(r) * 18} ${320 + Math.sin(r) * 18} L${180 + Math.cos(r) * l} ${320 + Math.sin(r) * l}`; }).join(' ')]];
+const NOTAS = ['entra', 'rebota', 'veinte', 'reloj', 'cae', 'palabra', 'baldosas', 'nombre', 'firma'];
+const bocetos = BOC.map(([i, d]) => { const g = mk('g', { transform: `translate(${(i % 3) * 360} ${Math.floor(i / 3) * 640})` }, $('bocetos')); return mk('path', { d }, g); });
+$('panes').innerHTML = [...Array(9)].map((_, i) => `<div class="pan" style="left:${(i % 3) * 360}px;top:${Math.floor(i / 3) * 640}px"><div class="num">${String(i + 1).padStart(2, '0')}</div><div class="nota">${NOTAS[i]}</div></div>`).join('');
+const trazo = (el, k) => { if (!el._L) el._L = el.getTotalLength(); el.style.strokeDasharray = el._L; el.style.strokeDashoffset = el._L * (1 - cl(k)); };
+
+/* ============ 20 puntos ============ */
+const ND = 20; $('puntos').innerHTML = [...Array(ND)].map(() => '<div class="dot"></div>').join('');
+const DOTS = [...$('puntos').children];
+/* ============ baldosas ============ */
+const COLS = 9, FILAS = 16; $('baldosas').innerHTML = [...Array(COLS * FILAS)].map((_, i) => `<div class="tile" style="left:${(i % COLS) * 120}px;top:${Math.floor(i / COLS) * 120}px"><i style="background:#EDE9DF"></i><i style="background:#E9BC46;transform:rotateY(180deg)"></i></div>`).join('');
+const TILES = [...$('baldosas').children];
+/* ============ «motion» ============ */
+const FUENTES = ['900 italic 250px F', '700 250px I', '400 italic 270px S', '400 210px M', '900 250px F', '400 280px A'];
+$('palabra').innerHTML = [...'motion'].map(c => `<span class="let">${c}</span>`).join('');
+const LETS = [...$('palabra').children];
+/* ============ nombre: P L E A _ E (el hueco es para la estrella) ============ */
+const NOM = ['P', 'L', 'E', 'A', '', 'E'];
+$('nombre').innerHTML = NOM.map((c, i) => `<div class="slot" style="left:${i < 5 ? i * 150 : 840}px">${c}</div>`).join('');
+const SLOTS = [...$('nombre').children];
+
+window.render = t => {
+  const push = 1 + .025 * Math.sin(t * .35);
+  /* ---- A · el prompt ---- */
+  const S = 'Hazme un motion de 20 segundos.', n = Math.floor(cl((t - .25) * 17, 0, S.length));
+  $('cajaTxt').innerHTML = (t < 2.25 ? S.slice(0, n) : '') + (t < 2.25 && (n < S.length || Math.floor(t * 2.6) % 2) ? '<span class="car"></span>' : '');
+  const T2 = 17.3, bajaCaja = ioE(p(t, 2.3, .6)), vuelveCaja = ioE(p(t, T2, .7));
+  $('caja').style.top = (t < T2 ? lerp(875, 2050, bajaCaja) : lerp(2050, 1700, vuelveCaja)) + 'px'; $('caja').style.transform = `scale(${t < 2.3 ? 1 + .02 * (1 - oE(p(t, 0, .6))) : 1})`;
+  $('enviar').style.transform = `scale(${t > 2.12 && t < 2.3 ? .88 : 1})`;
+  const kb = oE(p(t, 2.25, .6)), fueraB = ioE(p(t, 3.55, .4)), dentroB = oE(p(t, T2 + .05, .6));
+  const bub = $('burbuja'); bub.style.opacity = t < 2.25 ? 0 : t < T2 ? 1 - fueraB : dentroB;
+  bub.style.transform = t < T2 ? `translateY(${(1 - kb) * 700 - fueraB * 60}px) scale(${.9 + .1 * kb})` : `translateY(${(1 - dentroB) * -40}px)`;
+  $('respRow').style.opacity = cl((t - 17.6) * 4); pintaChispa(RM, 0, 0, 34, oE(p(t, 17.6, .5)), t, t * 20, t > 18.8 ? 0 : 1, 7);
+  const R1 = 'Aquí lo tienes.', R2 = '¿Hacemos otro?'; $('respTxt').textContent = R1.slice(0, Math.floor(cl((t - 17.8) * 30, 0, R1.length)));
+  $('otro').innerHTML = R2.slice(0, Math.floor(cl((t - 18.3) * 26, 0, R2.length))) + (t > 18.3 && Math.floor(t * 2.6) % 2 ? '<span class="car"></span>' : '');
+
+  /* ---- película ---- */
+  const F = $('film'), kf = ioE(p(t, 17.2, .95)), fs = lerp(1, 600 / 1080, kf);
+  F.style.transform = `translate(${lerp(0, 240, kf)}px,${lerp(0, 530, kf)}px) scale(${fs})`; F.style.borderRadius = kf * 60 + 'px'; F.style.boxShadow = kf > 0 ? `0 ${30 * kf}px ${90 * kf}px rgba(0,0,0,${.7 * kf}), 0 0 ${60 * kf}px rgba(233,188,70,${.12 * kf})` : 'none';
+  F.style.opacity = t < 2.45 ? 0 : 1; F.style.background = t < 3.6 ? 'transparent' : 'var(--noche)'; $('halo').style.opacity = t < 3.6 ? 0 : 1;
+  const marco = $('marco'); marco.style.display = kf > .98 ? 'block' : 'none'; Object.assign(marco.style, { left: '240px', top: '530px', width: '600px', height: '1067px' });
+  // chispa: nace, piensa, sus rayos se vuelven la rejilla
+  const kCh = oE(p(t, 2.5, .6)), kSal = iE(p(t, 3.5, .35));
+  if (t < 4.0) { const R = lerp(0, 200, kCh) * (1 - kSal * .8); pintaChispa(RC, 540, 900, R, kCh, t, t * 30 + kSal * 72, 1 - kSal, 30); $('chispa').style.opacity = 1 - kSal; } else $('chispa').style.opacity = 0;
+  $('pensando').innerHTML = t > 2.75 && t < 3.6 ? [...'Pensando…'].map((c, i) => `<span style="opacity:${.35 + .65 * (.5 + .5 * Math.sin(t * 9 - i * .6))}">${c}</span>`).join('') : '';
+  $('pensando').style.opacity = cl((t - 2.75) * 5) * (1 - p(t, 3.45, .15));
+  REJ.forEach((l, i) => { const [x1, y1, x2, y2] = REJF[i], k = ioE(p(t, 3.6 + i * .06, .55)); l.setAttribute('x1', lerp(540, x1, k)); l.setAttribute('y1', lerp(960, y1, k)); l.setAttribute('x2', lerp(540, x2, k)); l.setAttribute('y2', lerp(960, y2, k)); });
+  const fueraSB = 1 - p(t, 5.92, .3); $('rejilla').style.opacity = t < 3.6 ? 0 : fueraSB;
+  bocetos.forEach((b, j) => trazo(b, io(p(t, 4.0 + j * .07, .55)))); $('bocetos').style.opacity = fueraSB;
+  $('panes').style.opacity = cl((t - 4.0) * 3) * fueraSB;
+  const kz = ioE(p(t, 5.1, .85)), zs = lerp(1, 3, kz), zx = lerp(0, -1080, kz), zy = lerp(0, -1920, kz);
+  [$('svgF'), $('panes')].forEach(e => { e.style.transformOrigin = '0 0'; e.style.transform = t < 6.25 ? `translate(${zx}px,${zy}px) scale(${zs})` : 'none'; });
+  $('svgF').style.filter = t > 5.1 && t < 5.95 ? `blur(${Math.sin(kz * Math.PI) * 6}px)` : 'none';
+  // E1 · bola
+  const bola = $('bola'), som = $('sombra');
+  if (t >= 5.9 && t < 6.95) { const u = t - 5.9; let y, sx = 1, sy = 1;
+    if (u < .45) { y = lerp(-120, 1116, Math.pow(u / .45, 2)); sy = 1 + .25 * (u / .45); sx = 1 - .12 * (u / .45); }
+    else if (u < .55) { const k = (u - .45) / .1; y = 1116 + 20 * Math.sin(k * Math.PI); sx = 1 + .38 * Math.sin(k * Math.PI); sy = 1 - .34 * Math.sin(k * Math.PI); }
+    else { const k = (u - .55) / .4; y = 1116 - 190 * Math.sin(Math.min(k, 1) * Math.PI) * (1 - .15 * k); sx = 1 + .05 * Math.sin(k * 9) * (1 - k); sy = 1 - .05 * Math.sin(k * 9) * (1 - k); }
+    bola.setAttribute('cy', y); bola.setAttribute('transform', `translate(540 ${y + 72}) scale(${sx} ${sy}) translate(-540 ${-y - 72})`); bola.style.opacity = 1;
+    som.setAttribute('rx', 90 * cl(1 - (1116 - y) / 900)); som.style.opacity = 1; }
+  else { bola.style.opacity = 0; som.style.opacity = 0; }
+  // E2 · 20 puntos en reloj → «20s»
+  DOTS.forEach((d, i) => { const a = i / ND * Math.PI * 2 - Math.PI / 2 + (t - 7) * .35, k = oB(p(t, 6.92 + i * .01, .5)), conv = ioE(p(t, 8.15 + i * .008, .45));
+    const x1 = 540 + Math.cos(a) * 310, y1 = 960 + Math.sin(a) * 310, x2 = 540 - 400 + i * (800 / (ND - 1));
+    const x = t < 8.15 ? lerp(540, x1, k) : lerp(x1, x2, conv), y = t < 8.15 ? lerp(1044, y1, k) : lerp(y1, 960, conv);
+    d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.display = t >= 6.92 && t < 8.7 ? 'block' : 'none';
+    const ti = 7.2 + i * (.8 / ND), on = t > ti; d.style.background = on ? ORO : 'transparent'; d.style.borderColor = on ? ORO : TINTA;
+    d.style.transform = `scale(${on && t < ti + .15 ? 1.35 : 1}) scaleX(${1 + conv * 2}) scaleY(${1 - conv * .8})`; d.style.opacity = 1 - p(t, 8.5, .2); });
+  const cnt = Math.min(ND, Math.floor(cl((t - 7.2) / .8) * ND) + (t > 7.2 ? 1 : 0)); $('cuenta').innerHTML = t > 7.15 && t < 8.3 ? (cnt + (t > 8.02 ? '<span style="font-style:italic;color:#E9BC46">s</span>' : '')) : '';
+  $('cuenta').style.transform = `scale(${t > 8.02 ? 1 + .06 * Math.exp(-(t - 8.02) * 8) : 1})`; $('cuenta').style.opacity = 1 - p(t, 8.15, .15);
+  // E3 · «motion»
+  const Pw = $('palabra'); Pw.style.display = t > 8.3 && t < 9.62 ? 'block' : 'none'; Pw.style.clipPath = `inset(0 ${100 - 100 * ioE(p(t, 8.3, .45))}% 0 0)`;
+  LETS.forEach((l, i) => { const u = t - (8.8 + i * .07), idx = u < 0 ? 0 : u > .42 ? 5 : Math.floor(u / .07) % 5; l.style.font = FUENTES[idx];
+    l.style.color = u > .42 ? ORO : '#fff'; l.style.transform = `rotateX(${u > 0 && u < .42 ? Math.sin(u / .42 * Math.PI) * 60 : 0}deg) translateY(${u > .42 ? -10 * Math.exp(-(u - .42) * 10) : 0}px)`; });
+  Pw.style.transform = `scale(${1 + .04 * p(t, 8.3, 1.3)})`;
+  // E4 · baldosas
+  $('baldosas').style.display = t > 9.5 && t < 10.95 ? 'block' : 'none';
+  TILES.forEach((tl, i) => { const c = i % COLS, f = Math.floor(i / COLS), d = (c + f) * .035, dc = Math.hypot(c - 4, f - 7.5);
+    const r1 = ioE(p(t, 9.55 + d, .35)) * 180, r2 = ioE(p(t, 9.95 + d, .35)) * 180, kc = iE(p(t, 10.4 + (9 - dc) * .015, .45));
+    tl.style.transform = `translate(${(480 - c * 120) * kc}px,${(900 - f * 120) * kc}px) rotateY(${r1 + r2}deg) scale(${(1 - kc) * (1 - .08 * Math.sin(Math.PI * cl((t - 9.55 - d) / .7)))})`;
+    tl.style.opacity = t < 9.55 + d ? cl((t - 9.5) * 8) : 1; });
+  /* ---- E5 · del punto nace la estrella; caen las letras; la estrella ocupa el hueco del 5 ---- */
+  const se = $('sello'), SX = 45 + 720, SY = 760 + 135;   // centro del hueco
+  let sx0 = 540, sy0 = 960, ss = 0, sr = 0;
+  if (t > 10.9) {
+    const kp = oB(p(t, 10.92, .5)); ss = kp * 1.5; sr = (1 - oE(p(t, 10.92, .8))) * -300;
+    const ku = ioE(p(t, 11.3, .5)); sy0 = lerp(960, 430, ku); sx0 = lerp(540, SX, ku); ss = lerp(ss, 1, ku) * (1 + .03 * Math.sin(t * 6) * (1 - p(t, 12.3, .2)));
+    if (t > 12.35) { const kd = p(t, 12.35, .3); sy0 = lerp(430, SY, kd * kd); sr = lerp(0, 360, kd); if (t > 12.65) { const s = Math.sin(p(t, 12.65, .16) * Math.PI); ss = 1 + .18 * s; sy0 = SY + 14 * s; sr = 0; } }
+  }
+  // firma: la estrella late y gira 72° otra vez a 15,6
+  if (t > 15.6) sr = 360 * cl(muelle(t, 15.6, 2.2, .45), -.2, 1.2);
+  se.style.display = t > 10.9 ? 'block' : 'none'; se.style.transform = `translate(${sx0 - 160}px,${sy0 - 160}px) rotate(${sr}deg) scale(${ss})`;
+  // letras: caen con peso y rebotan; al llegar la estrella todas dan un salto
+  const onda = t > 12.65 ? Math.sin(p(t, 12.65, .5) * Math.PI) : 0;
+  SLOTS.forEach((s, i) => { if (!NOM[i]) return; const t0 = 11.45 + [0, .08, .16, .24, 0, .32][i], u = t - t0; let y;
+    if (u < 0) y = -1200; else if (u < .28) y = lerp(-1100, 0, Math.pow(u / .28, 2)); else y = -60 * Math.abs(Math.sin((u - .28) * 9)) * Math.exp(-(u - .28) * 7);
+    const imp = u > .28 && u < .4 ? Math.sin((u - .28) / .12 * Math.PI) : 0, dist = Math.abs(i - 4);
+    const salto = onda * (dist === 1 ? 60 : 30) , lado = (i < 4 ? -1 : 1) * onda * (dist === 1 ? 28 : 12);
+    const ola = t > 15.6 ? -40 * Math.max(0, Math.sin(p(t, 15.6 + i * .06, .45) * Math.PI)) : 0;
+    s.style.transform = `translate(${lado}px,${y - salto + ola}px) scale(${1 + imp * .2},${1 - imp * .22})`; s.style.opacity = u > 0 ? 1 : 0; s.style.color = t > 13.3 ? '#fff' : '#fff'; });
+  const Nm = $('nombre'), kN = ioE(p(t, 13.3, .7)); Nm.style.display = t > 11.3 ? 'block' : 'none';
+  Nm.style.transform = `scale(${1 + .04 * kN})`; se.style.filter = t > 13.3 ? `drop-shadow(0 0 ${30 * Math.exp(-(t - 13.3) * 1.5) + 8}px rgba(233,188,70,.55))` : 'none';
+  // rayos detrás de la estrella con el woah-drop
+  const kR = oE(p(t, 13.3, 1.0)); pintaChispa(RR, SX, SY, lerp(120, 520, kR), kR, t, (t - 13.3) * 10, .12, lerp(30, 6, kR)); $('rayos').style.opacity = t > 13.3 ? 1 - p(t, 13.8, .6) : 0;
+  const k1 = oE(p(t, 13.9, .6)), k2 = oE(p(t, 14.15, .7));
+  $('sub1').style.opacity = k1; $('sub1').style.transform = `translateY(${(1 - k1) * 30}px)`; $('sub2').style.opacity = k2; $('sub2').style.filter = `blur(${(1 - k2) * 12}px)`; $('sub2').style.transform = `translateY(${(1 - k2) * 30}px)`;
+  document.getElementById('todo').style.transform = `scale(${push * (t > 12.65 && t < 12.9 ? 1 + .015 * Math.sin(p(t, 12.65, .25) * Math.PI) : 1)})`;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>
