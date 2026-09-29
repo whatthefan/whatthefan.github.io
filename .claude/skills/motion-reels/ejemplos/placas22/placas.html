@@ -1,0 +1,243 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:S;src:url(f/instrument-serif-latin-400-normal.woff2)}
+@font-face{font-family:S;src:url(f/instrument-serif-latin-400-italic.woff2);font-style:italic}
+@font-face{font-family:I;src:url(f/inter-tight-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:F;src:url(f/fraunces-latin-900-italic.woff2);font-weight:900;font-style:italic}
+@font-face{font-family:M;src:url(f/ibm-plex-mono-latin-400-normal.woff2)}
+@font-face{font-family:A;src:url(f/anton-latin.woff2)}
+@font-face{font-family:Mo;src:url(f/montserrat-latin.woff2);font-weight:100 900}
+:root{--noche:#06080E;--papel:#10141D;--tinta:#EDE9DF;--oro:#E9BC46;--gris:#7D8494;--linea:#232A38}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--noche);color:var(--tinta);font-family:Mo}
+.a{position:absolute}
+#grano{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:.05;mix-blend-mode:screen;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency=%271.6%27 numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+#vin{position:absolute;inset:0;z-index:49;pointer-events:none;background:radial-gradient(ellipse 85% 75% at 50% 50%,transparent 50%,rgba(0,0,0,.55) 100%)}
+#halo{position:absolute;inset:0;background:radial-gradient(circle at 50% 47%,rgba(233,188,70,.10),transparent 48%)}
+.burbuja{position:absolute;right:70px;padding:30px 40px;border-radius:40px 40px 10px 40px;background:#1A1F2B;font:500 40px/1.25 Mo;color:var(--tinta);white-space:nowrap}
+#caja{position:absolute;left:70px;width:940px;height:170px;border-radius:44px;background:var(--papel);border:2px solid var(--linea);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#cajaTxt{position:absolute;left:52px;top:60px;font:500 42px Mo;white-space:nowrap}
+#enviar{position:absolute;right:24px;top:36px;width:98px;height:98px;border-radius:30px;background:var(--oro);display:flex;align-items:center;justify-content:center}
+.car{display:inline-block;width:4px;height:50px;background:var(--oro);vertical-align:-10px;margin-left:3px}
+.carN{display:inline-block;width:4px;height:48px;background:#1a73e8;vertical-align:-10px;margin-left:3px}
+#film{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;background:var(--noche)}
+.pan{position:absolute;width:360px;height:640px}
+.pan .num{position:absolute;left:22px;top:20px;font:400 22px M;color:var(--gris)}
+.pan .nota{position:absolute;left:22px;bottom:22px;font:italic 30px S;color:var(--gris)}
+.let{display:inline-block;transform-origin:50% 60%}
+.slot{position:absolute;top:0;width:150px;text-align:center;font:400 300px/1 A;color:#fff;transform-origin:50% 100%}
+.est5{position:absolute;width:150px;height:150px;margin:-75px 0 0 -75px}
+#busca{position:absolute;left:70px;top:640px;width:940px;height:124px;border-radius:62px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+#buscaTxt{position:absolute;left:110px;top:36px;font:500 44px Mo;color:#202124;white-space:nowrap}
+.res{position:absolute;left:70px;width:940px;border-radius:30px;background:#141925;border:2px solid #222838;padding:36px 40px}
+.linea{height:18px;border-radius:9px;background:#252c3c;margin-top:16px}
+#cursor{position:absolute;left:0;top:0;width:70px;height:90px}
+#pedir{position:absolute;left:290px;top:1330px;width:500px;height:130px;border-radius:65px;background:var(--oro);color:#06080E;font:700 46px/130px Mo;text-align:center;box-shadow:0 20px 60px rgba(233,188,70,.25)}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><filter id="mb" x="0" y="-5%" width="100%" height="110%"><feGaussianBlur id="mbG" stdDeviation="0 0"/></filter></svg>
+<div id="todo" style="position:absolute;inset:0">
+  <div id="film">
+    <div id="halo"></div>
+    <svg id="svgF" class="a" width="1080" height="1920" style="left:0;top:0;overflow:visible">
+      <g id="rejilla" stroke="rgba(237,233,223,.55)" stroke-width="3" stroke-linecap="round" fill="none"></g>
+      <g id="bocetos" stroke="#EDE9DF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"></g>
+      <ellipse id="sombra" cx="540" cy="1188" rx="0" ry="14" fill="rgba(233,188,70,.22)"/>
+      <circle id="bola" cx="540" cy="0" r="72" fill="#E9BC46"/>
+      <g id="chispa" stroke="#E9BC46" stroke-linecap="round"></g>
+    </svg>
+    <div id="panes"></div>
+    <div id="cinco"></div>
+    <div id="palabra" class="a" style="left:0;right:0;top:830px;text-align:center;font:900 italic 250px/1 F;letter-spacing:-.02em;white-space:nowrap;color:#fff"></div>
+    <!-- búsqueda -->
+    <div id="buscanos" class="a" style="left:0;right:0;top:470px;text-align:center;font:italic 96px S;color:var(--oro)">Búscanos en Google.</div>
+    <div id="busca"><svg class="a" style="left:40px;top:38px" width="48" height="48" viewBox="0 0 48 48"><circle cx="20" cy="20" r="13" fill="none" stroke="#5f6368" stroke-width="5"/><path d="M30 30l12 12" stroke="#5f6368" stroke-width="5" stroke-linecap="round"/></svg><div id="buscaTxt"></div></div>
+    <div id="r1" class="res" style="top:830px">
+      <div style="display:flex;align-items:center;gap:20px"><img src="m/sello-plea5e.svg" style="width:60px;height:60px;border-radius:14px"><div><div style="font:600 30px Mo;color:#fff">PLEA5E</div><div style="font:400 24px Mo;color:#9aa0ac">https://plea5e.es</div></div></div>
+      <div style="font:600 40px/1.2 Mo;color:#8ab4f8;margin-top:22px">Placas y tarjetas NFC para reseñas de Google | PLEA5E</div>
+      <div style="font:400 28px/1.4 Mo;color:#b7bcc6;margin-top:14px">Placas, expositores y tarjetas NFC y QR para conseguir más reseñas en Google en tu bar, restaurante, cafetería o tienda.</div>
+    </div>
+    <div id="r2" class="res" style="top:1330px"><div class="linea" style="width:40%;margin:0"></div><div class="linea" style="width:85%;height:26px"></div><div class="linea" style="width:70%"></div></div>
+    <div id="r3" class="res" style="top:1600px"><div class="linea" style="width:35%;margin:0"></div><div class="linea" style="width:80%;height:26px"></div><div class="linea" style="width:60%"></div></div>
+    <!-- la web -->
+    <div id="web" class="a" style="inset:0;overflow:hidden;background:#06080E"><div id="webMb" class="a" style="inset:0;overflow:hidden"><img id="webImg" src="web/pagina.jpg" class="a" style="left:0;top:0;width:1080px"></div>
+      <div id="webOsc" class="a" style="inset:0;background:#06080E;opacity:0"></div></div>
+    <div id="estela" class="a" style="left:510px;width:60px;border-radius:30px;background:linear-gradient(to bottom,rgba(233,188,70,0),rgba(233,188,70,.8))"></div>
+    <!-- nombre -->
+    <svg id="rayos" class="a" width="1080" height="1920" style="left:0;top:0;overflow:visible"><g id="rayosG" stroke="#E9BC46" stroke-linecap="round"></g></svg>
+    <div id="nombre" class="a" style="left:45px;top:640px;width:990px;height:300px"></div>
+    <img id="sello" src="m/estrella5.svg" class="a" style="left:0;top:0;width:320px;height:320px">
+    <div id="pide" class="a" style="left:0;right:0;top:1060px;text-align:center;font:italic 130px S;color:var(--oro)">Pide tu placa.</div>
+    <div id="pedir">Pedir diseño</div>
+    <div id="onda" class="a" style="width:10px;height:10px;border-radius:50%;border:4px solid #fff"></div>
+    <svg id="cursor" viewBox="0 0 70 90"><path d="M6 4 L6 70 L22 55 L34 82 L46 77 L34 50 L56 50 Z" fill="#fff" stroke="#06080E" stroke-width="4" stroke-linejoin="round"/></svg>
+    <div id="pensando" class="a" style="left:0;right:0;top:1180px;text-align:center;font:italic 54px S;color:var(--gris)"></div>
+  </div>
+  <!-- chat -->
+  <div id="chat" class="a" style="inset:0;pointer-events:none">
+    <div id="burbuja" class="burbuja" style="top:170px">Quiero placas para mi negocio.</div>
+    <div id="respRow" class="a" style="left:70px;top:420px;display:flex;align-items:center;gap:26px">
+      <svg width="72" height="72" viewBox="-36 -36 72 72"><g id="chispaMini" stroke="#E9BC46" stroke-linecap="round"></g></svg>
+      <div id="respTxt" style="font:500 42px Mo;white-space:nowrap"></div></div>
+    <div id="marco" class="a" style="border-radius:34px;border:2px solid rgba(233,188,70,.35)"></div>
+    <div id="otro" class="a" style="left:70px;top:1622px;font:500 42px Mo;white-space:nowrap"></div>
+    <div id="caja"><div id="cajaTxt"></div><div id="enviar"><svg width="44" height="44" viewBox="0 0 44 44"><path d="M22 34V10M11 20l11-11 11 11" fill="none" stroke="#06080E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+  </div>
+</div>
+<div id="vin"></div><div id="grano"></div>
+<script>
+const $ = id => document.getElementById(id);
+const { p, muelle } = E;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), lerp = (a, b, k) => a + (b - a) * k;
+const oE = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x)), iE = x => x <= 0 ? 0 : Math.pow(2, 10 * cl(x) - 10);
+const ioE = x => (x = cl(x)) <= 0 ? 0 : x >= 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+const io = x => (x = cl(x)) < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, oB = x => { x = cl(x); const c = 1.8; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const NS = 'http://www.w3.org/2000/svg', mk = (tag, at, par) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); par && par.appendChild(e); return e; };
+const TOTAL = 22; window.TOTAL = TOTAL;
+const ORO = '#E9BC46', TINTA = '#EDE9DF';
+
+/* ============ SONIDO (uno por suceso, ninguno más de 2 veces; woah-drop en la firma) ============ */
+const FX = /*FX*/[{"t":0.25,"s":"packs2/teclas.mp3","db":-10,"dur":1.85},{"t":2.2,"s":"packs3/click.mp3","db":-6},{"t":2.55,"s":"packs3/pop-limpio.mp3","db":-7},{"t":3.62,"s":"packs3/swoosh-aire.mp3","db":-6},{"t":4.15,"s":"packs3/rafaga-fotos.mp3","db":-9},{"t":5.15,"s":"packs2/whoosh-b.mp3","db":-5},{"t":6.35,"s":"packs4/toque-bot.mp3","db":-4},{"t":6.95,"s":"packs2/pop-imagen.mp3","db":-7},{"t":7.2,"s":"packs2/contador.mp3","db":-10,"dur":0.75},{"t":7.95,"s":"packs/ding.mp3","db":-7},{"t":8.3,"s":"packs3/swoosh-suave.mp3","db":-7},{"t":8.8,"s":"packs3/rafaga-fotos2.mp3","db":-9},{"t":9.85,"s":"packs2/swish-c.mp3","db":-6},{"t":10.4,"s":"packs/mac-typing.mp3","db":-9,"dur":0.7},{"t":11.2,"s":"packs3/pop-limpio.mp3","db":-8},{"t":11.9,"s":"packs3/click.mp3","db":-6},{"t":12.1,"s":"packs2/zoom-digital.mp3","db":-7},{"t":12.9,"s":"packs2/whoosh-dramatico.mp3","db":-6},{"t":16.25,"s":"packs4/toque-bot2.mp3","db":-4},{"t":16.6,"s":"packs3/rafaga-fotos2.mp3","db":-9},{"t":17.3,"s":"packs/woah-drop.mp3","db":-3},{"t":18.6,"s":"packs3/tap.mp3","db":-4},{"t":19.3,"s":"packs2/whoosh-mov.mp3","db":-6},{"t":19.75,"s":"packs4/respuesta.mp3","db":-7},{"t":20.35,"s":"packs2/teclas.mp3","db":-11,"dur":0.6}]/*FX*/;
+
+/* ============ chispa-estrella ============ */
+const RAYOS = [...Array(10)].map((_, i) => [-90 + i * 36, i % 2 ? .46 : 1]);
+const chispa = (g, ancho) => RAYOS.map(() => mk('line', { 'stroke-width': ancho, x1: 0, y1: 0, x2: 0, y2: 0 }, g));
+const RC = chispa($('chispa'), 34), RM = chispa($('chispaMini'), 7), RR = chispa($('rayosG'), 26);
+function pintaChispa(lines, cx, cy, R, k, t, rot = 0, piensa = 0, w) {
+  lines.forEach((ln, i) => { const [a0, l] = RAYOS[i], kk = oB(cl(k * 1.6 - i * .06)), osc = 1 + piensa * .22 * Math.sin(t * 7 - i * 1.1), a = (a0 + rot) * Math.PI / 180, r0 = R * .16, r1 = R * l * kk * osc;
+    ln.setAttribute('x1', cx + Math.cos(a) * r0 * cl(kk)); ln.setAttribute('y1', cy + Math.sin(a) * r0 * cl(kk)); ln.setAttribute('x2', cx + Math.cos(a) * Math.max(r0, r1)); ln.setAttribute('y2', cy + Math.sin(a) * Math.max(r0, r1));
+    ln.style.opacity = kk > .02 ? 1 : 0; if (w) ln.setAttribute('stroke-width', w); }); }
+
+/* ============ storyboard ============ */
+const REJF = [[360, 0, 360, 1920], [720, 0, 720, 1920], [0, 640, 1080, 640], [0, 1280, 1080, 1280]];
+const REJ = REJF.map(() => mk('line', { x1: 540, y1: 960, x2: 540, y2: 960 }, $('rejilla')));
+const ESTB = (cx, cy, r) => [...Array(10)].map((_, i) => { const a = (-90 + i * 36) * Math.PI / 180, rr = i % 2 ? r * .45 : r; return `${i ? 'L' : 'M'}${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)}`; }).join(' ') + 'Z';
+const BOC = [
+  [0, 'M60 420 C 120 200, 240 200, 300 420 M270 380 L300 420 L320 370'], [1, 'M70 470 Q 180 150 290 470 M 230 470 a 50 50 0 1 0 100 0 a 50 50 0 1 0 -100 0'],
+  [2, [0, 1, 2, 3, 4].map(i => ESTB(76 + i * 52, 330, 24)).join(' ')],
+  [3, ESTB(180, 320, 110) + ' M180 470 L180 540 M160 520 L180 545 L200 520'],
+  [4, 'M180 90 L180 190 M180 220 L180 300 M 180 330 L180 380 M130 500 a50 50 0 1 0 100 0 a50 50 0 1 0 -100 0 M90 560 L270 560'],
+  [5, 'M50 300 h260 v90 h-260 z M80 330 h120 M80 360 h80'],
+  [6, 'M40 250 h280 a40 40 0 0 1 0 80 h-280 a40 40 0 0 1 0 -80 M70 290 a18 18 0 1 0 1 0 M84 304 l14 14'],
+  [7, 'M70 90 h220 v500 h-220 z M100 140 h120 M100 170 h90 M100 260 h160 M100 290 h140 M100 400 h150 M100 430 h100 ' + ESTB(180, 210, 26) + ' M180 250 L180 470 M165 450 L180 475 L195 450'],
+  [8, 'M70 300 h220 a45 45 0 0 1 0 90 h-220 a45 45 0 0 1 0 -90 M230 360 L230 440 L248 425 L258 450 L266 446 L256 421 L276 421 Z']];
+const NOTAS = ['entra', 'rebota', 'cinco', 'estrella', 'cae', 'placas', 'busca', 'web', 'pide'];
+const bocetos = BOC.map(([i, d]) => { const g = mk('g', { transform: `translate(${(i % 3) * 360} ${Math.floor(i / 3) * 640})` }, $('bocetos')); return mk('path', { d }, g); });
+$('panes').innerHTML = [...Array(9)].map((_, i) => `<div class="pan" style="left:${(i % 3) * 360}px;top:${Math.floor(i / 3) * 640}px"><div class="num">${String(i + 1).padStart(2, '0')}</div><div class="nota">${NOTAS[i]}</div></div>`).join('');
+const trazo = (el, k) => { if (!el._L) el._L = el.getTotalLength(); el.style.strokeDasharray = el._L; el.style.strokeDashoffset = el._L * (1 - cl(k)); };
+
+/* ============ cinco estrellas ============ */
+$('cinco').innerHTML = [...Array(5)].map(() => `<svg class="est5" viewBox="-80 -80 160 160"><path d="${ESTB(0, 6, 66)}" fill="none" stroke="#EDE9DF" stroke-width="7" stroke-linejoin="round"/><path class="lleno" d="${ESTB(0, 6, 66)}" fill="#E9BC46" stroke="#E9BC46" stroke-width="10" stroke-linejoin="round"/></svg>`).join('');
+const CINCO = [...$('cinco').children];
+/* ============ «placas» ============ */
+const FUENTES = ['900 italic 250px F', '700 250px I', '400 italic 270px S', '400 210px M', '900 250px F', '400 280px A'];
+$('palabra').innerHTML = [...'placas'].map(c => `<span class="let">${c}</span>`).join('');
+const LETS = [...$('palabra').children];
+/* ============ nombre ============ */
+const NOM = ['P', 'L', 'E', 'A', '', 'E'];
+$('nombre').innerHTML = NOM.map((c, i) => `<div class="slot" style="left:${i < 5 ? i * 150 : 840}px">${c}</div>`).join('');
+const SLOTS = [...$('nombre').children];
+/* ============ web ============ */
+const WEB_H = 19605, SCROLL = WEB_H - 1920;
+const scrollDe = t => SCROLL * io(p(t, 12.85, 3.35));
+
+window.render = t => {
+  const push = 1 + .025 * Math.sin(t * .35);
+  /* ---- A · prompt ---- */
+  const S = 'Quiero placas para mi negocio.', n = Math.floor(cl((t - .25) * 17, 0, S.length));
+  $('cajaTxt').innerHTML = (t < 2.25 ? S.slice(0, n) : '') + (t < 2.25 && (n < S.length || Math.floor(t * 2.6) % 2) ? '<span class="car"></span>' : '');
+  const T2 = 19.4, bajaCaja = ioE(p(t, 2.3, .6)), vuelveCaja = ioE(p(t, T2, .7));
+  $('caja').style.top = (t < T2 ? lerp(875, 2050, bajaCaja) : lerp(2050, 1700, vuelveCaja)) + 'px'; $('caja').style.transform = `scale(${t < 2.3 ? 1 + .02 * (1 - oE(p(t, 0, .6))) : 1})`;
+  $('enviar').style.transform = `scale(${t > 2.12 && t < 2.3 ? .88 : 1})`;
+  const kb = oE(p(t, 2.25, .6)), fueraB = ioE(p(t, 3.55, .4)), dentroB = oE(p(t, T2 + .05, .6));
+  const bub = $('burbuja'); bub.style.opacity = t < 2.25 ? 0 : t < T2 ? 1 - fueraB : dentroB;
+  bub.style.transform = t < T2 ? `translateY(${(1 - kb) * 700 - fueraB * 60}px) scale(${.9 + .1 * kb})` : `translateY(${(1 - dentroB) * -40}px)`;
+  $('respRow').style.opacity = cl((t - 19.7) * 4); pintaChispa(RM, 0, 0, 34, oE(p(t, 19.7, .5)), t, t * 20, t > 20.9 ? 0 : 1, 7);
+  const R1 = 'Pídela en plea5e.es', R2 = '¿Hacemos la tuya?'; $('respTxt').textContent = R1.slice(0, Math.floor(cl((t - 19.9) * 34, 0, R1.length)));
+  $('otro').innerHTML = R2.slice(0, Math.floor(cl((t - 20.35) * 28, 0, R2.length))) + (t > 20.35 && Math.floor(t * 2.6) % 2 ? '<span class="car"></span>' : '');
+
+  /* ---- película ---- */
+  const F = $('film'), kf = ioE(p(t, 19.3, .95));
+  F.style.transform = `translate(${lerp(0, 240, kf)}px,${lerp(0, 530, kf)}px) scale(${lerp(1, 600 / 1080, kf)})`; F.style.borderRadius = kf * 60 + 'px'; F.style.boxShadow = kf > 0 ? `0 ${30 * kf}px ${90 * kf}px rgba(0,0,0,${.7 * kf}), 0 0 ${60 * kf}px rgba(233,188,70,${.12 * kf})` : 'none';
+  F.style.opacity = t < 2.45 ? 0 : 1; F.style.background = t < 3.6 ? 'transparent' : 'var(--noche)'; $('halo').style.opacity = t < 3.6 ? 0 : 1;
+  const marco = $('marco'); marco.style.display = kf > .98 ? 'block' : 'none'; Object.assign(marco.style, { left: '240px', top: '530px', width: '600px', height: '1067px' });
+  const kCh = oE(p(t, 2.5, .6)), kSal = iE(p(t, 3.5, .35));
+  if (t < 4.0) { const R = lerp(0, 200, kCh) * (1 - kSal * .8); pintaChispa(RC, 540, 900, R, kCh, t, t * 30 + kSal * 72, 1 - kSal, 30); $('chispa').style.opacity = 1 - kSal; } else $('chispa').style.opacity = 0;
+  $('pensando').innerHTML = t > 2.75 && t < 3.6 ? [...'Pensando…'].map((c, i) => `<span style="opacity:${.35 + .65 * (.5 + .5 * Math.sin(t * 9 - i * .6))}">${c}</span>`).join('') : '';
+  $('pensando').style.opacity = cl((t - 2.75) * 5) * (1 - p(t, 3.45, .15));
+  REJ.forEach((l, i) => { const [x1, y1, x2, y2] = REJF[i], k = ioE(p(t, 3.6 + i * .06, .55)); l.setAttribute('x1', lerp(540, x1, k)); l.setAttribute('y1', lerp(960, y1, k)); l.setAttribute('x2', lerp(540, x2, k)); l.setAttribute('y2', lerp(960, y2, k)); });
+  const fueraSB = 1 - p(t, 5.92, .3); $('rejilla').style.opacity = t < 3.6 ? 0 : fueraSB;
+  bocetos.forEach((b, j) => trazo(b, io(p(t, 4.0 + j * .07, .55)))); $('bocetos').style.opacity = fueraSB;
+  $('panes').style.opacity = cl((t - 4.0) * 3) * fueraSB;
+  const kz = ioE(p(t, 5.1, .85)), zs = lerp(1, 3, kz);
+  [$('svgF'), $('panes')].forEach(e => { e.style.transformOrigin = '0 0'; e.style.transform = t < 6.25 ? `translate(${lerp(0, -1080, kz)}px,${lerp(0, -1920, kz)}px) scale(${zs})` : 'none'; });
+  $('svgF').style.filter = t > 5.1 && t < 5.95 ? `blur(${Math.sin(kz * Math.PI) * 6}px)` : 'none';
+  // bola
+  const bola = $('bola'), som = $('sombra');
+  if (t >= 5.9 && t < 7.0) { const u = t - 5.9; let y, sx = 1, sy = 1;
+    if (u < .45) { y = lerp(-120, 1116, Math.pow(u / .45, 2)); sy = 1 + .25 * (u / .45); sx = 1 - .12 * (u / .45); }
+    else if (u < .55) { const k = (u - .45) / .1; y = 1116 + 20 * Math.sin(k * Math.PI); sx = 1 + .38 * Math.sin(k * Math.PI); sy = 1 - .34 * Math.sin(k * Math.PI); }
+    else { const k = (u - .55) / .4; y = 1116 - 190 * Math.sin(Math.min(k, 1) * Math.PI) * (1 - .15 * k); sx = 1 + .05 * Math.sin(k * 9) * (1 - k); sy = 1 - .05 * Math.sin(k * 9) * (1 - k); }
+    bola.setAttribute('cy', y); bola.setAttribute('transform', `translate(540 ${y + 72}) scale(${sx} ${sy}) translate(-540 ${-y - 72})`); bola.style.opacity = t < 6.95 ? 1 : 0;
+    som.setAttribute('rx', 90 * cl(1 - (1116 - y) / 900)); som.style.opacity = 1; }
+  else { bola.style.opacity = 0; som.style.opacity = 0; }
+  // cinco estrellas: salen de la bola, se llenan, se juntan en una raya
+  CINCO.forEach((s, i) => { const k = oB(p(t, 6.95 + i * .03, .5)), conv = ioE(p(t, 8.25 + i * .02, .4)), x1 = 540 + (i - 2) * 190;
+    const x = t < 8.25 ? lerp(540, x1, k) : lerp(x1, 540 + (i - 2) * 150, conv), y = t < 8.25 ? lerp(1044, 960, k) : 960;
+    s.style.left = x + 'px'; s.style.top = y + 'px'; s.style.display = t > 6.95 && t < 8.7 ? 'block' : 'none';
+    const ti = 7.2 + i * .16, u = t - ti; s.querySelector('.lleno').style.opacity = u > 0 ? 1 : 0;
+    s.style.transform = `scale(${cl(k * 1.2) * (u > 0 && u < .3 ? 1 + .3 * Math.sin(u / .3 * Math.PI) : 1)}) scaleX(${1 + conv * 1.2}) scaleY(${1 - conv * .88}) rotate(${u > 0 ? (1 - oE(p(t, ti, .4))) * -72 : 0}deg)`;
+    s.style.filter = i === 4 && t > 7.95 ? `drop-shadow(0 0 ${24 * Math.exp(-(t - 7.95) * 3)}px #E9BC46)` : 'none'; s.style.opacity = 1 - p(t, 8.5, .2); });
+  // «placas»: cambia de fuente y queda en Anton dorada; luego entra en el buscador
+  const Pw = $('palabra'), kIn = ioE(p(t, 9.85, .55)); Pw.style.display = t > 8.3 && t < 10.45 ? 'block' : 'none'; Pw.style.clipPath = t < 9.5 ? `inset(0 ${100 - 100 * ioE(p(t, 8.3, .45))}% 0 0)` : 'none';
+  LETS.forEach((l, i) => { const u = t - (8.8 + i * .07), idx = u < 0 ? 0 : u > .42 ? 5 : Math.floor(u / .07) % 5; l.style.font = FUENTES[idx];
+    l.style.color = u > .42 ? ORO : '#fff'; l.style.transform = `rotateX(${u > 0 && u < .42 ? Math.sin(u / .42 * Math.PI) * 60 : 0}deg) translateY(${u > .42 ? -10 * Math.exp(-(u - .42) * 10) : 0}px)`; });
+  Pw.style.transformOrigin = '50% 50%'; Pw.style.transform = `translate(${kIn * -290}px,${kIn * -268}px) scale(${lerp(1 + .04 * p(t, 8.3, 1.3), .2, kIn)})`; Pw.style.opacity = 1 - p(t, 10.25, .2);
+  /* ---- búsqueda ---- */
+  const kBar = oE(p(t, 9.85, .6)), bu = $('busca'); bu.style.display = t > 9.8 && t < 12.7 ? 'block' : 'none';
+  bu.style.transform = `scaleX(${lerp(.2, 1, kBar)})`; bu.style.opacity = cl((t - 9.85) * 6);
+  $('buscanos').style.opacity = oE(p(t, 9.95, .6)) * (t < 12.1 ? 1 : 0); $('buscanos').style.filter = `blur(${(1 - oE(p(t, 9.95, .6))) * 12}px)`;
+  const Q = 'placas', Q2 = ' nfc reseñas', nq = Math.floor(cl((t - 10.4) * 18, 0, Q2.length));
+  $('buscaTxt').innerHTML = (t > 10.25 ? Q : '') + Q2.slice(0, nq) + (t > 10.25 && t < 11.15 && (nq < Q2.length || Math.floor(t * 3) % 2) ? '<span class="carN"></span>' : '');
+  [['r1', 11.2], ['r2', 11.3], ['r3', 11.38]].forEach(([id, t0]) => { const k = oE(p(t, t0, .6)), e = $(id); e.style.display = t > t0 && t < 12.7 ? 'block' : 'none'; e.style.opacity = k * (id === 'r1' ? 1 : .55); e.style.transform = `translateY(${(1 - k) * 120}px)`; });
+  const r1 = $('r1'); r1.style.boxShadow = t > 11.85 ? `0 0 0 ${3 * oE(p(t, 11.85, .3))}px #E9BC46` : 'none'; if (t > 11.88 && t < 12.02) r1.style.transform = 'scale(.98)';
+  // cursor: va al primer resultado y pulsa; más tarde pulsa «Pedir diseño»
+  const cu = $('cursor'); let cx = 1200, cy = 1500, cs = 1;
+  if (t > 11.35 && t < 12.1) { const k = io(p(t, 11.35, .5)); cx = lerp(1150, 520, k); cy = lerp(1500, 1010, k); cs = t > 11.88 && t < 12.0 ? .85 : 1; }
+  if (t > 17.9 && t < 19.3) { const k = io(p(t, 17.95, .55)); cx = lerp(1150, 600, k); cy = lerp(1750, 1390, k); cs = t > 18.55 && t < 18.7 ? .85 : 1; }
+  cu.style.display = (t > 11.35 && t < 12.1) || (t > 17.9 && t < 19.3) ? 'block' : 'none'; cu.style.transform = `translate(${cx}px,${cy}px) scale(${cs})`;
+  /* ---- la web: se abre desde el resultado y la estrella cae hasta abajo ---- */
+  const kW = ioE(p(t, 12.05, .55)), we = $('web'); we.style.display = t > 12.05 && t < 19.35 ? 'block' : 'none';
+  we.style.clipPath = `inset(${lerp(830, 0, kW)}px ${lerp(70, 0, kW)}px ${lerp(1920 - 1250, 0, kW)}px ${lerp(70, 0, kW)}px round ${lerp(30, 0, kW)}px)`;
+  const sc = scrollDe(t), vel = (scrollDe(t + 1 / 30) - sc); $('webImg').style.transform = `translateY(${-sc}px)`;
+  $('mbG').setAttribute('stdDeviation', `0 ${Math.min(30, vel / 4)}`); $('webMb').style.filter = vel > 3 ? 'url(#mb)' : 'none';
+  const kO = p(t, 16.3, .5); $('webOsc').style.opacity = .88 * kO; $('webMb').style.transform = `scale(${1 + .05 * kO})`;
+  /* ---- la estrella ---- */
+  const se = $('sello'), SX = 45 + 720, SY = 640 + 135; let ex = 540, ey = 900, es = 0, er = 0;
+  if (t > 12.6) {
+    es = oB(p(t, 12.6, .4)) * .8; const kc = io(p(t, 12.85, 3.35));
+    ey = 900 + 520 * Math.sin(kc * Math.PI / 2) + 30 * Math.sin(t * 5) * (1 - kc); ex = 540 + 60 * Math.sin(t * 3.1) * Math.sin(kc * Math.PI); er = 360 * 3 * kc;
+    if (t > 16.2) { const s = Math.sin(p(t, 16.22, .16) * Math.PI); es = .8 * (1 + .25 * s); ey = 1420 + 20 * s; }
+    if (t > 16.35) { const ku = ioE(p(t, 16.35, .5)); ey = lerp(1420, 330, ku); ex = lerp(540, SX, ku); es = lerp(.8, 1, ku); er = 1080 + ku * 360; }
+    if (t > 16.98) { const kd = p(t, 16.98, .32); ey = lerp(330, SY, kd * kd); er = 1440 + 360 * kd; if (t > 17.3) { const s = Math.sin(p(t, 17.3, .16) * Math.PI); es = 1 + .18 * s; ey = SY + 14 * s; } }
+    if (t > 17.3) er = 0;
+  }
+  se.style.display = t > 12.6 ? 'block' : 'none'; se.style.transform = `translate(${ex - 160}px,${ey - 160}px) rotate(${er}deg) scale(${es})`;
+  se.style.filter = t > 17.3 ? `drop-shadow(0 0 ${30 * Math.exp(-(t - 17.3) * 1.5) + 8}px rgba(233,188,70,.55))` : t > 12.6 ? 'drop-shadow(0 10px 40px rgba(0,0,0,.6))' : 'none';
+  const es2 = $('estela'), L = t > 12.9 && t < 16.2 ? Math.min(700, vel * 2.2) : 0; es2.style.display = L > 10 ? 'block' : 'none'; es2.style.height = L + 'px'; es2.style.top = (ey - L) + 'px'; es2.style.left = (ex - 30) + 'px';
+  // letras
+  const onda = t > 17.3 ? Math.sin(p(t, 17.3, .5) * Math.PI) : 0;
+  SLOTS.forEach((s, i) => { if (!NOM[i]) return; const t0 = 16.6 + [0, .08, .16, .24, 0, .32][i], u = t - t0; let y;
+    if (u < 0) y = -1200; else if (u < .28) y = lerp(-1100, 0, Math.pow(u / .28, 2)); else y = -60 * Math.abs(Math.sin((u - .28) * 9)) * Math.exp(-(u - .28) * 7);
+    const imp = u > .28 && u < .4 ? Math.sin((u - .28) / .12 * Math.PI) : 0, dist = Math.abs(i - 4);
+    s.style.transform = `translate(${(i < 4 ? -1 : 1) * onda * (dist === 1 ? 28 : 12)}px,${y - onda * (dist === 1 ? 60 : 30)}px) scale(${1 + imp * .2},${1 - imp * .22})`; s.style.opacity = u > 0 ? 1 : 0; });
+  $('nombre').style.display = t > 16.5 ? 'block' : 'none';
+  const kR = oE(p(t, 17.3, 1.0)); pintaChispa(RR, SX, SY, lerp(120, 520, kR), kR, t, (t - 17.3) * 10, .12, lerp(30, 6, kR)); $('rayos').style.opacity = t > 17.3 ? 1 - p(t, 17.8, .6) : 0;
+  // Pide tu placa + botón
+  const kP = oE(p(t, 17.75, .7)); $('pide').style.opacity = kP; $('pide').style.filter = `blur(${(1 - kP) * 14}px)`; $('pide').style.transform = `translateY(${(1 - kP) * 40}px)`;
+  const kB = muelle(t, 18.0, 2.4, .45), pb = $('pedir'); pb.style.opacity = t > 18 ? 1 : 0; pb.style.transform = `scale(${cl(kB, 0, 1.3) * (t > 18.58 && t < 18.72 ? .93 : 1)})`;
+  pb.style.boxShadow = t > 18.6 ? `0 0 0 ${24 * oE(p(t, 18.6, .5))}px rgba(233,188,70,${.35 * (1 - p(t, 18.6, .6))}), 0 20px 60px rgba(233,188,70,.25)` : '0 20px 60px rgba(233,188,70,.25)';
+  const ko = p(t, 18.6, .5), on = $('onda'); on.style.display = t > 18.6 && ko < 1 ? 'block' : 'none'; on.style.left = '618px'; on.style.top = '1398px'; on.style.transform = `translate(-50%,-50%) scale(${1 + ko * 14})`; on.style.opacity = 1 - ko;
+  document.getElementById('todo').style.transform = `scale(${push * (t > 17.3 && t < 17.55 ? 1 + .015 * Math.sin(p(t, 17.3, .25) * Math.PI) : 1)})`;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>
