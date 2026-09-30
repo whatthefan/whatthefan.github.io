@@ -5,7 +5,19 @@
 (function () {
   "use strict";
 
-  var rec = (window.__rec = { chapters: [], done: false, t0: 0 });
+  var rec = (window.__rec = { chapters: [], sfx: [], done: false, t0: 0 });
+  // Mismo guion en los dos idiomas: la página decide con ?lang=.
+  var EN = document.documentElement.lang === "en";
+  var T = function (es, en) { return EN ? en : es; };
+  // Cada efecto de sonido queda apuntado con su instante; sonido.py los
+  // sintetiza y los mezcla con el vídeo.
+  function sound(name, extra) {
+    if (!rec.t0) return;
+    var e = { n: name, t: Math.round(performance.now() - rec.t0) / 1000 };
+    if (extra) for (var k in extra) e[k] = extra[k];
+    rec.sfx.push(e);
+  }
+  window.__sfx = function (name) { sound(name); };
   var $ = function (s) { return document.querySelector(s); };
   var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
@@ -65,6 +77,7 @@
     ".vScreen li{display:flex;gap:12px;align-items:center;color:#e3ebe6;font:500 18px Inter,sans-serif;opacity:0;transform:translateY(10px);transition:all .5s ease}",
     ".vScreen li.on{opacity:1;transform:none}",
     ".vScreen li i{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#39ff88;color:#03140a;display:grid;place-items:center;font:700 15px Inter,sans-serif;font-style:normal}",
+    EN ? ".vScreen h1{font-size:40px}.vScreen .cta{font-size:22px;padding:18px 24px}" : "",
     ".vScreen .foot{position:absolute;bottom:34px;left:0;right:0;color:#5d6761;font:500 13px Inter,sans-serif}"
   ].join("\n");
   document.head.appendChild(css);
@@ -75,6 +88,7 @@
   var novaSvg = document.querySelector("#nova svg").outerHTML.replace("<svg ", '<svg class="nv" ');
   var fx = innerWidth / 2, fy = innerHeight * 0.7;
   finger.style.transform = "";
+  function fx0() { return fx / innerWidth; }
   function placeFinger() { finger.style.left = fx + "px"; finger.style.top = fy + "px"; }
   placeFinger();
 
@@ -82,6 +96,7 @@
   function chapter(name) { rec.chapters.push({ name: name, t: Math.round((performance.now() - rec.t0) / 100) / 10 }); }
   async function caption(step, title, text) {
     if (cap.classList.contains("on")) { cap.classList.remove("on"); await sleep(260); }
+    sound("whoosh");
     cap.querySelector("small").textContent = step;
     cap.querySelector("b").textContent = title;
     cap.querySelector("span").textContent = text || "";
@@ -101,6 +116,7 @@
     var el = typeof target === "string" ? $(target) : target;
     await point(el, dx, dy);
     finger.classList.add("down");
+    sound(el.tagName === "INPUT" ? "tapsoft" : "tap", { x: Math.round(fx0() * 100) / 100 });
     var rp = document.createElement("div"); rp.className = "vRipple"; rp.style.left = fx + "px"; rp.style.top = fy + "px"; document.body.appendChild(rp);
     setTimeout(function () { rp.remove(); }, 700);
     await sleep(140);
@@ -113,6 +129,7 @@
     await tap(el);
     for (var i = 0; i < text.length; i++) {
       el.value = el.value + text.charAt(i);
+      window.__sfxKey();
       try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {}
       el.dispatchEvent(new Event("input", { bubbles: true }));
       await sleep(gap || 120);
@@ -123,10 +140,11 @@
     var s = document.createElement("div"); s.className = "vScreen"; s.innerHTML = html; document.body.appendChild(s);
     await sleep(30); s.classList.add("on");
     var lis = s.querySelectorAll("li");
-    for (var i = 0; i < lis.length; i++) { await sleep(i ? 420 : 700); lis[i].classList.add("on"); }
+    for (var i = 0; i < lis.length; i++) { await sleep(i ? 420 : 700); lis[i].classList.add("on"); sound("li", { i: i }); }
     await sleep(ms);
     return s;
   }
+  window.__sfxKey = function () { sound("key"); };
   async function closeScreen(s) { s.classList.remove("on"); await sleep(650); s.remove(); }
 
   (function progress() {
@@ -139,13 +157,15 @@
 
     // ---------- Intro ----------
     chapter("intro");
-    var intro = await screen(novaSvg + '<h1>¿En cuántos meses se <em>paga sola</em> tu carrera en Tech?</h1><p>Te lo enseño paso a paso.<br>Sin registro. Desde tu móvil.</p><div class="tag">Career ROI Lab · TripleTen</div>', 3600);
+    sound("intro");
+    var intro = await screen(novaSvg + T('<h1>¿En cuántos meses se <em>paga sola</em> tu carrera en Tech?</h1><p>Te lo enseño paso a paso.<br>Sin registro. Desde tu móvil.</p>', '<h1>How many months until your tech career <em>pays for itself</em>?</h1><p>I\'ll show you step by step.<br>No sign-up. Right from your phone.</p>') + '<div class="tag">Career ROI Lab · TripleTen</div>', 3600);
+    sound("swoosh");
     await closeScreen(intro);
 
     // ---------- 1. Perfil ----------
     chapter("perfil");
     await scrollToEl("#perfil", 140, 900);
-    await caption("PASO 1 DE 5", "Cuéntame de dónde vienes", "Tu nombre, tu sector y lo que te hace ilusión");
+    await caption(T("PASO 1 DE 5", "STEP 1 OF 5"), T("Cuéntame de dónde vienes", "Tell me where you're coming from"), T("Tu nombre, tu sector y lo que te hace ilusión", "Your name, your field and what excites you"));
     await sleep(400);
     await type("#name", "Laura", 130);
     await sleep(500);
@@ -156,7 +176,7 @@
     await sleep(700);
     await tap('#interests .chip[data-id="automate"]');
     await sleep(900);
-    await caption("PASO 1 DE 5", "Tu programa ideal, y por qué", "Encaje calculado con tu perfil");
+    await caption(T("PASO 1 DE 5", "STEP 1 OF 5"), T("Tu programa ideal, y por qué", "Your ideal program, and why"), T("Encaje calculado con tu perfil", "Fit calculated from your profile"));
     await scrollToEl("#matchCard", 170, 1000);
     await point("#matchPct", 0, 0, 700);
     await sleep(2200);
@@ -167,23 +187,24 @@
 
     // ---------- 2. Números ----------
     chapter("numeros");
-    await caption("PASO 2 DE 5", "Pon tu sueldo actual", "Precio y salario del programa ya vienen rellenos");
+    await caption(T("PASO 2 DE 5", "STEP 2 OF 5"), T("Pon tu sueldo actual", "Enter your current salary"), T("Precio y salario del programa ya vienen rellenos", "The program's price and salary are already filled in"));
     await scrollToEl("#current", 260, 700);
     await type("#current", "24000", 150);
     await sleep(500);
-    await caption("PASO 2 DE 5", "Y pulsa el botón gigante", "");
+    await caption(T("PASO 2 DE 5", "STEP 2 OF 5"), T("Y pulsa el botón gigante", "And hit the big button"), "");
     await scrollToEl("#calcBtn", 380, 600);
     await tap("#calcBtn");
     finger.classList.remove("on");
     await sleep(900);
     await scrollToEl("#resultCol", 232, 600);
-    await caption("PASO 2 DE 5", "Meses exactos para recuperar tu inversión", "Con tu nombre, tu fecha y tu subida al mes");
+    await caption(T("PASO 2 DE 5", "STEP 2 OF 5"), T("Meses exactos para recuperar tu inversión", "Exact months to earn back your investment"), T("Con tu nombre, tu fecha y tu subida al mes", "With your name, your date and your monthly raise"));
     await sleep(3600);
     await scrollToEl("#chartCard", 190, 900);
-    await caption("PASO 2 DE 5", "Tu dinero, mes a mes", "Desliza el dedo: ves cuándo empiezas a ganar");
+    await caption(T("PASO 2 DE 5", "STEP 2 OF 5"), T("Tu dinero, mes a mes", "Your money, month by month"), T("Desliza el dedo: ves cuándo empiezas a ganar", "Drag your finger: see when you start coming out ahead"));
     var hit = $("#hit"), r = hit.getBoundingClientRect(), cy = r.top + r.height * 0.55;
     await point(hit, -r.width / 2 + 10, r.height * 0.05, 500);
     finger.classList.add("down");
+    sound("scrub", { d: 2.2 });
     await tween(2200, function (e) {
       fx = r.left + 10 + (r.width - 20) * e; fy = cy; placeFinger();
       hit.dispatchEvent(new PointerEvent("pointermove", { clientX: fx, clientY: fy, bubbles: true }));
@@ -192,14 +213,14 @@
     hit.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true }));
     await sleep(300);
     finger.classList.remove("on");
-    await caption("TU VIAJE", "Fecha a fecha, hasta tu nueva vida", "Nova te acompaña por cada hito");
+    await caption(T("TU VIAJE", "YOUR JOURNEY"), T("Fecha a fecha, hasta tu nueva vida", "Date by date, to your new life"), T("Nova te acompaña por cada hito", "Nova walks you through every milestone"));
     await scrollToEl("#viaje", 70, 900);
     await scrollY(window.pageYOffset + 520, 2600);
     await sleep(600);
 
     // ---------- 3. Semana ----------
     chapter("semana");
-    await caption("PASO 3 DE 5", "Encaja 20 h en tu semana", "Toca tus huecos libres, sin dejar tu trabajo");
+    await caption(T("PASO 3 DE 5", "STEP 3 OF 5"), T("Encaja 20 h en tu semana", "Fit 20 h into your week"), T("Toca tus huecos libres, sin dejar tu trabajo", "Tap your free slots, without quitting your job"));
     await scrollToEl("#week", 250, 900);
     await tap('#presets .chip[data-i="0"]');
     await sleep(900);
@@ -207,14 +228,14 @@
     await sleep(500);
     await tap('.slot[data-k="6t"]');
     await sleep(1500);
-    await caption("PASO 3 DE 5", "Y llévalo a tu calendario", "Tus sesiones de estudio, cada semana");
+    await caption(T("PASO 3 DE 5", "STEP 3 OF 5"), T("Y llévalo a tu calendario", "And send it to your calendar"), T("Tus sesiones de estudio, cada semana", "Your study sessions, every week"));
     await scrollToEl("#icsWeek", 420, 700);
     await tap("#icsWeek");
     await sleep(1200);
 
     // ---------- 4. Recompensa ----------
     chapter("recompensa");
-    await caption("PASO 4 DE 5", "¿Qué harás con la diferencia?", "Cada sueño, en meses de subida");
+    await caption(T("PASO 4 DE 5", "STEP 4 OF 5"), T("¿Qué harás con la diferencia?", "What will you do with the difference?"), T("Cada sueño, en meses de subida", "Every dream, in months of your raise"));
     await scrollToEl("#dreams", 250, 900);
     await tap('.dream[data-id="viaje"]');
     await sleep(900);
@@ -226,11 +247,11 @@
 
     // ---------- 5. Tarjeta ----------
     chapter("tarjeta");
-    await caption("PASO 5 DE 5", "Tu tarjeta, lista para compartir", "Hecha con tus datos, para post o story");
+    await caption(T("PASO 5 DE 5", "STEP 5 OF 5"), T("Tu tarjeta, lista para compartir", "Your card, ready to share"), T("Hecha con tus datos, para post o story", "Made with your numbers, for a post or a story"));
     await scrollToEl("#cardPreview", 222, 900);
     await sleep(2000);
     await scrollToEl(".seg", 380, 600);
-    await caption("PASO 5 DE 5", "Post o story, tú eliges", "1080 px, lista para subir");
+    await caption(T("PASO 5 DE 5", "STEP 5 OF 5"), T("Post o story, tú eliges", "Post or story, your choice"), T("1080 px, lista para subir", "1080 px, ready to post"));
     await tap('.seg button[data-fmt="story"]');
     await sleep(300);
     finger.classList.remove("on");
@@ -244,16 +265,16 @@
 
     // ---------- Nova responde ----------
     chapter("nova");
-    await caption("PREGÚNTALE A NOVA", "Tu asistente, con datos reales", "Precios, garantía, horarios… y tu propio plan");
+    await caption(T("PREGÚNTALE A NOVA", "ASK NOVA"), T("Tu asistente, con datos reales", "Your assistant, with real data"), T("Precios, garantía, horarios… y tu propio plan", "Prices, the guarantee, schedules… and your own plan"));
     await tap("#nova");
     await sleep(1400);
     hideCaption();
     await sleep(300);
     var chips = document.querySelectorAll("#chatQuick button"), gBtn = null;
-    for (var ci = 0; ci < chips.length; ci++) if (/garant/i.test(chips[ci].textContent)) gBtn = chips[ci];
+    for (var ci = 0; ci < chips.length; ci++) if (/garant|guarant/i.test(chips[ci].textContent)) gBtn = chips[ci];
     if (gBtn) { await tap(gBtn); }
     await sleep(3400);
-    await type("#chatInput", "¿Cuánto cuesta QA?", 70);
+    await type("#chatInput", T("¿Cuánto cuesta QA?", "How much does QA cost?"), 70);
     await tap("#chatSend");
     await sleep(3600);
     await tap("#chatClose");
@@ -262,7 +283,7 @@
     // ---------- Lo que aporta TripleTen ----------
     chapter("tripleten");
     finger.classList.remove("on");
-    await caption("TRIPLETEN", "Y no lo haces en solitario", "Esto es lo que te aporta TripleTen");
+    await caption("TRIPLETEN", T("Y no lo haces en solitario", "You won't do it alone"), T("Esto es lo que te aporta TripleTen", "Here's what TripleTen gives you"));
     await scrollToEl(".features", 200, 1000);
     await sleep(1800);
     await scrollY(window.pageYOffset + 380, 1600);
@@ -270,7 +291,7 @@
 
     // ---------- Growth mode ----------
     chapter("growth");
-    await caption("PARA EL EQUIPO", "Growth mode", "Lead score, eventos y embudo en directo");
+    await caption(T("PARA EL EQUIPO", "FOR THE TEAM"), "Growth mode", T("Lead score, eventos y embudo en directo", "Lead score, events and funnel, live"));
     await tap("#growthBtn");
     await sleep(3200);
     await tap("#drawerClose");
@@ -278,7 +299,7 @@
 
     // ---------- EE. UU. y México ----------
     chapter("mercados");
-    await caption("DATOS REALES", "EE. UU. y México", "Precios, sueldos y garantía de cada país");
+    await caption(T("DATOS REALES", "REAL DATA"), T("EE. UU. y México", "US and Mexico"), T("Precios, sueldos y garantía de cada país", "Prices, salaries and guarantee by country"));
     await scrollY(0, 1200);
     await scrollToEl("#market", 330, 600);
     await tap('#market button[data-m="mx"]');
@@ -291,7 +312,8 @@
 
     // ---------- Cierre ----------
     chapter("cierre");
-    var outro = await screen(novaSvg + '<h1>Tu plan ya existe.<br><em>Solo falta empezar.</em></h1><ul><li><i>✓</i>Programa elegido para ti</li><li><i>✓</i>Coach de carrera y bolsa de empleo</li><li><i>✓</i>Garantía de empleo de 10 meses</li><li><i>✓</i>20 h/semana, sin dejar tu trabajo</li></ul><div class="cta">Cambia tu carrera hoy →</div><div class="foot">Career ROI Lab · concepto independiente para TripleTen</div>', 3600);
+    sound("outro");
+    var outro = await screen(novaSvg + T('<h1>Tu plan ya existe.<br><em>Solo falta empezar.</em></h1><ul><li><i>✓</i>Programa elegido para ti</li><li><i>✓</i>Coach de carrera y bolsa de empleo</li><li><i>✓</i>Garantía de empleo de 10 meses</li><li><i>✓</i>20 h/semana, sin dejar tu trabajo</li></ul><div class="cta">Cambia tu carrera hoy →</div><div class="foot">Career ROI Lab · concepto independiente para TripleTen</div>', '<h1>Your plan already exists.<br><em>All that\'s left is to start.</em></h1><ul><li><i>✓</i>A program picked for you</li><li><i>✓</i>Career coaching and a job board</li><li><i>✓</i>10-month job guarantee</li><li><i>✓</i>20 h/week, without quitting your job</li></ul><div class="cta">Change your career today →</div><div class="foot">Career ROI Lab · independent concept for TripleTen</div>'), 3600);
     rec.done = true;
   };
 })();

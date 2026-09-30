@@ -1,6 +1,11 @@
 // Graba el vídeo de demo (vertical, 1080x1920, 30 fps) a partir de la página real.
 //
-//   node tripleten/video/grabar.js [carpeta-de-fotogramas]
+//   REC_LANG=es node tripleten/video/grabar.js   -> demo.mp4
+//   REC_LANG=en node tripleten/video/grabar.js   -> demo-en.mp4
+//
+// Después pone el sonido con sonido.py (Python 3 + numpy): efectos sincronizados
+// con cada toque, mensaje y animación, y una base musical suave. Sin numpy, el
+// vídeo sale sin sonido.
 //
 // Necesita Playwright con Chromium y un ffmpeg con libx264 (variable FFMPEG o
 // el del PATH). El reloj de la página es virtual: cada fotograma avanza 1/30 s
@@ -19,7 +24,9 @@ let playwright;
 try { playwright = require("playwright"); } catch (e) { playwright = require("/opt/node22/lib/node_modules/playwright"); }
 
 const ROOT = path.resolve(__dirname, "..");
-const FRAMES = path.resolve(process.argv[2] || path.join(require("os").tmpdir(), "croi-frames"));
+const LANG = process.env.REC_LANG === "en" ? "en" : "es";
+const SUFFIX = LANG === "en" ? "-en" : "";
+const FRAMES = path.resolve(process.argv[2] || path.join(os.tmpdir(), "croi-frames-" + LANG));
 const FFMPEG = process.env.FFMPEG || "ffmpeg";
 const FPS = Number(process.env.FPS) || 30;
 const VIEW = { width: 432, height: 768 }; // x2.5 = 1080x1920
@@ -52,12 +59,12 @@ function syncAnimations() {
 
 (async () => {
   await new Promise((r) => server.listen(0, r));
-  const url = "http://localhost:" + server.address().port + "/";
+  const url = "http://localhost:" + server.address().port + "/?lang=" + LANG;
   fs.rmSync(FRAMES, { recursive: true, force: true });
   fs.mkdirSync(FRAMES, { recursive: true });
 
   const browser = await playwright.chromium.launch();
-  const ctx = await browser.newContext({ viewport: VIEW, deviceScaleFactor: 2.5, isMobile: true, hasTouch: true, ignoreHTTPSErrors: true, acceptDownloads: true, locale: "es-ES" });
+  const ctx = await browser.newContext({ viewport: VIEW, deviceScaleFactor: 2.5, isMobile: true, hasTouch: true, ignoreHTTPSErrors: true, acceptDownloads: true, locale: LANG === "en" ? "en-US" : "es-ES" });
   await ctx.addInitScript(() => { try { localStorage.setItem("croi_ab", '"A"'); } catch (e) {} });
   fs.mkdirSync(FONT_CACHE, { recursive: true });
   await ctx.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, async (route) => {
@@ -87,19 +94,32 @@ function syncAnimations() {
     if (done && ++tail > 2) break;
   }
   const chapters = await page.evaluate(() => window.__rec.chapters);
+  const sfx = await page.evaluate(() => window.__rec.sfx);
   await browser.close();
   server.close();
   console.log("fotogramas:", i, "duración:", (i / FPS).toFixed(1), "s");
   console.log("capítulos:", JSON.stringify(chapters));
-  fs.writeFileSync(path.join(__dirname, "capitulos.json"), JSON.stringify(chapters, null, 2) + "\n");
+  fs.writeFileSync(path.join(__dirname, "capitulos" + SUFFIX + ".json"), JSON.stringify(chapters, null, 2) + "\n");
+  const sfxFile = path.join(__dirname, "efectos" + SUFFIX + ".json");
+  fs.writeFileSync(sfxFile, JSON.stringify({ duration: i / FPS, offset: 1 / FPS, events: sfx }) + "\n");
+  console.log("efectos de sonido:", sfx.length);
 
   if (process.env.SKIP_VIDEO) { console.log("sin vídeo (SKIP_VIDEO)"); return; }
-  execFileSync(FFMPEG, ["-y", "-v", "error", "-framerate", String(FPS), "-i", path.join(FRAMES, "f%05d.jpg"),
-    "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
-    path.join(ROOT, "demo.mp4")], { stdio: "inherit" });
+  const out = path.join(ROOT, "demo" + SUFFIX + ".mp4");
+  const wav = path.join(FRAMES, "sonido.wav");
+  let audio = false;
+  try {
+    execFileSync(process.env.PYTHON || "python3", [path.join(__dirname, "sonido.py"), sfxFile, wav], { stdio: "inherit" });
+    audio = fs.existsSync(wav);
+  } catch (e) { console.error("sin sonido:", e.message); }
+  execFileSync(FFMPEG, ["-y", "-v", "error", "-framerate", String(FPS), "-i", path.join(FRAMES, "f%05d.jpg")]
+    .concat(audio ? ["-i", wav] : [])
+    .concat(["-c:v", "libx264", "-preset", "slow", "-crf", "24", "-pix_fmt", "yuv420p"])
+    .concat(audio ? ["-c:a", "aac", "-b:a", "160k", "-shortest"] : [])
+    .concat(["-movflags", "+faststart", out]), { stdio: "inherit" });
   const poster = chapters.find((c) => c.name === "numeros");
   const posterFrame = Math.round(((poster ? poster.t : 20) + 7.1) * FPS);
   execFileSync(FFMPEG, ["-y", "-v", "error", "-i", path.join(FRAMES, "f" + String(posterFrame).padStart(5, "0") + ".jpg"),
-    "-vf", "scale=720:-2", "-q:v", "4", path.join(ROOT, "demo-poster.jpg")], { stdio: "inherit" });
-  console.log("listo:", path.join(ROOT, "demo.mp4"));
+    "-vf", "scale=720:-2", "-q:v", "4", path.join(ROOT, "demo-poster" + SUFFIX + ".jpg")], { stdio: "inherit" });
+  console.log("listo:", out, audio ? "(con sonido)" : "(sin sonido)");
 })().catch((e) => { console.error(e); server.close(); process.exit(1); });
