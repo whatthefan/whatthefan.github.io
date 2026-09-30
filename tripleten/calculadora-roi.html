@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070a">
+<title>Calculadora ROI · Bootcamps TripleTen</title>
+<meta name="description" content="Calcula en cuántos meses recuperas la inversión de tu bootcamp de TripleTen con tu nuevo sueldo en Tech.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05070a;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-strong: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #f2f5f3;
+    --muted: #8b958f;
+    --neon: #39ff88;
+    --neon-2: #00e5a0;
+    --neon-soft: rgba(57, 255, 136, 0.14);
+    --neon-glow: 0 0 24px rgba(57, 255, 136, 0.45), 0 0 64px rgba(57, 255, 136, 0.18);
+    --danger: #ff6b6b;
+    --radius: 20px;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Fondo: halos verdes + rejilla sutil */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(60vmax 60vmax at 85% -10%, rgba(57, 255, 136, 0.16), transparent 60%),
+      radial-gradient(50vmax 50vmax at -10% 110%, rgba(0, 229, 160, 0.10), transparent 60%),
+      var(--bg);
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));
+  }
+
+  /* ---------- Cabecera ---------- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid rgba(57, 255, 136, 0.35);
+    border-radius: 999px;
+    background: var(--neon-soft);
+    color: var(--neon);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--neon);
+    box-shadow: 0 0 10px var(--neon);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  h1 {
+    margin: 18px 0 12px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 9vw, 46px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+  h1 .hl {
+    background: linear-gradient(92deg, var(--neon), var(--neon-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px rgba(57, 255, 136, 0.25);
+  }
+  .lead {
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  /* ---------- Tarjeta / formulario ---------- */
+  .card {
+    position: relative;
+    padding: 22px 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--surface-strong), var(--surface));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+  }
+
+  .field + .field { margin-top: 18px; }
+
+  .field label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .field label small {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.35);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input:focus-within {
+    border-color: rgba(57, 255, 136, 0.7);
+    box-shadow: 0 0 0 4px rgba(57, 255, 136, 0.12);
+  }
+  .input.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.12);
+  }
+  .input span {
+    padding-left: 16px;
+    color: var(--neon);
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .input input {
+    flex: 1;
+    min-width: 0;
+    height: 56px;
+    padding: 0 16px 0 8px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 20px; /* >=16px evita el zoom en iOS */
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .input input::placeholder { color: #4b544f; }
+
+  .error {
+    min-height: 20px;
+    margin: 14px 0 0;
+    color: var(--danger);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .error:empty { min-height: 0; margin: 0; }
+
+  /* ---------- Botón principal ---------- */
+  .btn-calc {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 76px;
+    margin-top: 24px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    background: linear-gradient(92deg, var(--neon), var(--neon-2));
+    color: #03140a;
+    font-family: var(--font-display);
+    font-size: clamp(19px, 5.8vw, 24px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: var(--neon-glow);
+    transition: transform 0.15s ease, box-shadow 0.25s ease;
+    animation: breathe 2.6s ease-in-out infinite;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-calc::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-20deg);
+    animation: shine 3.2s ease-in-out infinite;
+  }
+  .btn-calc svg { flex-shrink: 0; width: 26px; height: 26px; transition: transform 0.2s; }
+  .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 0 32px rgba(57, 255, 136, 0.6), 0 0 90px rgba(57, 255, 136, 0.25); }
+  .btn-calc:hover svg { transform: translateX(4px); }
+  .btn-calc:active { transform: scale(0.98); }
+  .btn-calc:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+  /* ---------- Resultado ---------- */
+  .result {
+    display: none;
+    margin-top: 22px;
+    padding: 28px 20px 22px;
+    border: 1px solid rgba(57, 255, 136, 0.35);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(57, 255, 136, 0.16), transparent 70%),
+      linear-gradient(180deg, rgba(10, 22, 15, 0.95), rgba(6, 10, 8, 0.95));
+    box-shadow: 0 0 0 1px rgba(57, 255, 136, 0.05), 0 30px 90px -20px rgba(57, 255, 136, 0.25);
+    text-align: center;
+    scroll-margin-top: 16px;
+  }
+  .result.show {
+    display: block;
+    animation: rise 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+  }
+  .result.show > * { animation: fadeUp 0.6s ease both; }
+  .result.show > *:nth-child(2) { animation-delay: 0.08s; }
+  .result.show > *:nth-child(3) { animation-delay: 0.16s; }
+  .result.show > *:nth-child(4) { animation-delay: 0.24s; }
+  .result.show > *:nth-child(5) { animation-delay: 0.32s; }
+  .result.show > *:nth-child(6) { animation-delay: 0.40s; }
+
+  .result .kicker {
+    margin: 0;
+    color: var(--neon);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .big {
+    margin: 6px 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(88px, 30vw, 132px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--neon);
+    text-shadow: 0 0 30px rgba(57, 255, 136, 0.55), 0 0 80px rgba(57, 255, 136, 0.25);
+    font-variant-numeric: tabular-nums;
+  }
+  .big-unit {
+    margin: 4px 0 0;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .exact {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .headline {
+    margin: 20px 0 0;
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .headline strong { color: var(--neon); }
+  .sub {
+    margin: 8px 0 0;
+    color: #b7c1bb;
+    font-size: 15px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 24px 0 0;
+  }
+  .stat {
+    padding: 12px 6px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .stat b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .stat b.pos { color: var(--neon); }
+  .stat span {
+    display: block;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  /* Barra de recuperación: 0 → 12 meses */
+  .timeline { margin: 24px 0 0; text-align: left; }
+  .timeline-head {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .bar {
+    position: relative;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+  }
+  .bar i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--neon-2), var(--neon));
+    box-shadow: 0 0 16px var(--neon);
+    transition: width 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .btn-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 64px;
+    margin-top: 26px;
+    padding: 0 14px;
+    border: 2px solid var(--neon);
+    border-radius: 16px;
+    background: #fff;
+    color: #03140a;
+    font-family: var(--font-display);
+    font-size: clamp(18px, 5.4vw, 21px);
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 0 0 6px rgba(57, 255, 136, 0.12), var(--neon-glow);
+    transition: transform 0.15s ease, background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-cta:hover { transform: translateY(-2px); background: var(--neon); }
+  .btn-cta:active { transform: scale(0.98); }
+  .btn-cta:focus-visible { outline: 3px solid var(--neon); outline-offset: 4px; }
+  .btn-cta svg { flex-shrink: 0; width: 22px; height: 22px; }
+
+  .fineprint {
+    margin: 14px 0 0;
+    color: #5f6a64;
+    font-size: 12px;
+  }
+
+  /* Estado "sin subida de sueldo" */
+  .result.neutral { border-color: rgba(255, 255, 255, 0.14); }
+  .result.neutral .big { font-size: clamp(64px, 22vw, 96px); }
+
+  footer {
+    margin-top: 28px;
+    color: #4f5953;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  /* ---------- Animaciones ---------- */
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @keyframes shine { 0% { left: -60%; } 55%, 100% { left: 130%; } }
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 0 22px rgba(57, 255, 136, 0.40), 0 0 60px rgba(57, 255, 136, 0.15); }
+    50% { box-shadow: 0 0 34px rgba(57, 255, 136, 0.65), 0 0 90px rgba(57, 255, 136, 0.28); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); filter: blur(6px); }
+    to { opacity: 1; transform: none; filter: none; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (min-width: 600px) {
+    .wrap { padding-top: 64px; }
+    .card { padding: 30px 28px; }
+    .result { padding: 36px 32px 28px; }
+    .stat b { font-size: 19px; }
+    .stat span { font-size: 12px; }
+  }
+
+  @media (max-width: 360px) {
+    .stats { grid-template-columns: 1fr; }
+    .btn-calc { font-size: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <span class="badge"><span class="dot"></span>Calculadora de ROI · TripleTen</span>
+  <h1>¿En cuántos meses se <span class="hl">paga sola</span> tu carrera en Tech?</h1>
+  <p class="lead">Mete tus números y descubre cuándo tu nuevo sueldo te devuelve cada dólar invertido en el bootcamp.</p>
+
+  <form class="card" id="roi-form" novalidate>
+    <div class="field">
+      <label for="current">Tu salario anual actual <small>USD / año</small></label>
+      <div class="input">
+        <span aria-hidden="true">$</span>
+        <input id="current" name="current" type="text" inputmode="numeric" autocomplete="off" placeholder="30,000">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="cost">Coste del Bootcamp de TripleTen <small>Pago único</small></label>
+      <div class="input">
+        <span aria-hidden="true">$</span>
+        <input id="cost" name="cost" type="text" inputmode="numeric" autocomplete="off" value="9,700">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="expected">Salario esperado en Tech <small>USD / año</small></label>
+      <div class="input">
+        <span aria-hidden="true">$</span>
+        <input id="expected" name="expected" type="text" inputmode="numeric" autocomplete="off" value="70,000">
+      </div>
+    </div>
+
+    <p class="error" id="error" role="alert"></p>
+
+    <button class="btn-calc" type="submit">
+      Calcular mi retorno
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </button>
+  </form>
+
+  <section class="result" id="result" aria-live="polite"></section>
+
+  <footer>Estimación orientativa antes de impuestos. Tu resultado real depende de tu mercado y tu esfuerzo.</footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var CTA_URL = "https://tripleten.com/?utm_source=roi_calculator&utm_medium=web&utm_campaign=cambia_tu_carrera";
+  var DAYS_PER_MONTH = 30.44;
+
+  var form = document.getElementById("roi-form");
+  var errorEl = document.getElementById("error");
+  var resultEl = document.getElementById("result");
+  var fields = {
+    current: document.getElementById("current"),
+    cost: document.getElementById("cost"),
+    expected: document.getElementById("expected")
+  };
+
+  var nf = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 0 });
+  var money = function (n) { return (n < 0 ? "-$" : "$") + nf.format(Math.abs(Math.round(n))); };
+  var compact = function (n) {
+    var abs = Math.abs(n);
+    var s = abs >= 1e6 ? (abs / 1e6).toFixed(1).replace(/\.0$/, "") + "M"
+          : abs >= 1e4 ? Math.round(abs / 1e3) + "k"
+          : nf.format(Math.round(abs));
+    return (n < 0 ? "-$" : "$") + s;
+  };
+  var parse = function (el) {
+    var digits = el.value.replace(/[^\d]/g, "");
+    return digits === "" ? null : Number(digits);
+  };
+
+  // Separador de miles mientras se escribe, sin que el cursor salte al final.
+  Object.keys(fields).forEach(function (key) {
+    var el = fields[key];
+    el.addEventListener("input", function () {
+      var pos = el.selectionStart || 0;
+      var digitsBefore = el.value.slice(0, pos).replace(/[^\d]/g, "").length;
+      var digits = el.value.replace(/[^\d]/g, "").replace(/^0+(?=\d)/, "").slice(0, 9);
+      el.value = digits ? nf.format(Number(digits)) : "";
+      var i = 0, seen = 0;
+      while (i < el.value.length && seen < digitsBefore) {
+        if (/\d/.test(el.value[i])) seen++;
+        i++;
+      }
+      try { el.setSelectionRange(i, i); } catch (e) { /* algunos navegadores no lo permiten */ }
+      el.parentNode.classList.remove("invalid");
+      errorEl.textContent = "";
+    });
+  });
+
+  function fail(el, msg) {
+    el.parentNode.classList.add("invalid");
+    errorEl.textContent = msg;
+    el.focus();
+  }
+
+  function motivation(months) {
+    if (months <= 3) return { title: "Es prácticamente <strong>dinero gratis</strong>.", text: "En menos de un trimestre ya estás ganando más de lo que invertiste. Todo lo que venga después es beneficio puro." };
+    if (months <= 6) return { title: "Antes de medio año, <strong>la inversión está pagada</strong>.", text: "Pocas decisiones financieras se amortizan tan rápido. Tu yo del futuro te lo va a agradecer." };
+    if (months <= 12) return { title: "En menos de un año <strong>recuperas cada dólar</strong>.", text: "Y a partir de ahí, la diferencia de sueldo es tuya para siempre, año tras año." };
+    if (months <= 24) return { title: "Una inversión que <strong>trabaja para ti</strong>.", text: "En unos meses la has recuperado y tu carrera crece sin techo durante décadas." };
+    return { title: "El camino largo también <strong>merece la pena</strong>.", text: "Cada ascenso en Tech acorta este plazo. Lo difícil es empezar; lo demás es crecer." };
+  }
+
+  function exactLabel(months) {
+    var whole = Math.floor(months);
+    var days = Math.round((months - whole) * DAYS_PER_MONTH);
+    if (days >= 30) { whole += 1; days = 0; }
+    var parts = [];
+    if (whole) parts.push(whole + (whole === 1 ? " mes" : " meses"));
+    if (days) parts.push(days + (days === 1 ? " día" : " días"));
+    return parts.length ? "Exactamente " + parts.join(" y ") : "Desde el primer día";
+  }
+
+  function countUp(el, target, decimals, duration) {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var fmt = function (v) { return v.toLocaleString("es-MX", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }); };
+    if (reduce) { el.textContent = fmt(target); return; }
+    var start = null;
+    function frame(t) {
+      if (start === null) start = t;
+      var p = Math.min((t - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(target * eased);
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function arrow() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+  }
+
+  function render(html, neutral) {
+    resultEl.classList.remove("show", "neutral");
+    void resultEl.offsetWidth; // reinicia la animación en cada cálculo
+    resultEl.innerHTML = html;
+    if (neutral) resultEl.classList.add("neutral");
+    resultEl.classList.add("show");
+    setTimeout(function () {
+      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    Object.keys(fields).forEach(function (k) { fields[k].parentNode.classList.remove("invalid"); });
+
+    var current = parse(fields.current);
+    var cost = parse(fields.cost);
+    var expected = parse(fields.expected);
+
+    if (current === null) return fail(fields.current, "Escribe tu salario anual actual (pon 0 si ahora no tienes ingresos).");
+    if (!cost) return fail(fields.cost, "Indica el coste del bootcamp.");
+    if (!expected) return fail(fields.expected, "Indica el salario que esperas ganar en Tech.");
+
+    var monthlyGain = (expected - current) / 12;
+
+    if (monthlyGain <= 0) {
+      render(
+        '<p class="kicker">Tu punto de partida ya es alto</p>' +
+        '<p class="big">¡Top!</p>' +
+        '<p class="headline">Con estos números el salto no es de sueldo, es de <strong>propósito</strong>.</p>' +
+        '<p class="sub">Prueba con un salario objetivo más ambicioso: los perfiles Tech con experiencia crecen muy rápido.</p>' +
+        '<a class="btn-cta" href="' + CTA_URL + '" target="_blank" rel="noopener"><span>Cambia tu carrera hoy</span>' + arrow() + '</a>',
+        true
+      );
+      return;
+    }
+
+    var months = cost / monthlyGain;
+    var yearOne = monthlyGain * 12 - cost;
+    var fiveYears = monthlyGain * 60 - cost;
+    var roi = (yearOne / cost) * 100;
+    var decimals = months < 10 ? 1 : 0;
+    var shown = Number(months.toFixed(decimals));
+    var msg = motivation(months);
+    var barPct = Math.min(months / 12, 1) * 100;
+
+    render(
+      '<p class="kicker">Recuperas tu inversión en</p>' +
+      '<p class="big" id="months">0</p>' +
+      '<p class="big-unit">' + (shown === 1 ? "mes" : "meses") + '</p>' +
+      '<p class="exact">' + exactLabel(months) + '<br>cobrando +' + money(monthlyGain) + ' más al mes</p>' +
+      '<p class="headline">' + msg.title + '</p>' +
+      '<p class="sub">' + msg.text + '</p>' +
+      '<div class="stats">' +
+        '<div class="stat"><b class="pos">+' + compact(monthlyGain) + '</b><span>más cada mes</span></div>' +
+        '<div class="stat"><b class="' + (yearOne >= 0 ? "pos" : "") + '">' + compact(yearOne) + '</b><span>neto el 1<sup>er</sup> año</span></div>' +
+        '<div class="stat"><b class="pos">' + compact(fiveYears) + '</b><span>neto en 5 años</span></div>' +
+      '</div>' +
+      '<div class="timeline">' +
+        '<div class="timeline-head"><span>Hoy</span><span>' + (roi >= 0 ? "ROI el 1er año: +" + nf.format(Math.round(roi)) + "%" : "Recuperación en tu 1er año") + '</span><span>12 meses</span></div>' +
+        '<div class="bar"><i id="bar"></i></div>' +
+      '</div>' +
+      '<a class="btn-cta" href="' + CTA_URL + '" target="_blank" rel="noopener"><span>Cambia tu carrera hoy</span>' + arrow() + '</a>' +
+      '<p class="fineprint">Cálculo: coste ÷ (diferencia de salario anual ÷ 12).</p>'
+    );
+
+    countUp(document.getElementById("months"), shown, decimals, 1400);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.getElementById("bar").style.width = barPct + "%";
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
