@@ -1,0 +1,38 @@
+[
+  {
+    "name": "intro",
+    "t": 0
+  },
+  {
+    "name": "perfil",
+    "t": 4.3
+  },
+  {
+    "name": "numeros",
+    "t": 22.6
+  },
+  {
+    "name": "semana",
+    "t": 41.5
+  },
+  {
+    "name": "recompensa",
+    "t": 51.6
+  },
+  {
+    "name": "tarjeta",
+    "t": 58.6
+  },
+  {
+    "name": "tripleten",
+    "t": 70.7
+  },
+  {
+    "name": "growth",
+    "t": 76.8
+  },
+  {
+    "name": "cierre",
+    "t": 82.5
+  }
+]
