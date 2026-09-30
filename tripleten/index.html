@@ -455,7 +455,7 @@
   <h1>¿En cuántos meses se <span class="hl">paga sola</span> tu carrera en Tech?</h1>
   <p class="lead">Mete tus números y descubre cuándo tu nuevo sueldo te devuelve cada dólar invertido en el bootcamp.</p>
 
-  <form class="card" id="roi-form" novalidate>
+  <div class="card">
     <div class="field">
       <label for="current">Tu salario anual actual <small>USD / año</small></label>
       <div class="input">
@@ -482,11 +482,11 @@
 
     <p class="error" id="error" role="alert"></p>
 
-    <button class="btn-calc" type="submit">
+    <button class="btn-calc" id="calc" type="button">
       Calcular mi retorno
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
     </button>
-  </form>
+  </div>
 
   <section class="result" id="result" aria-live="polite"></section>
 
@@ -500,7 +500,7 @@
   var CTA_URL = "https://tripleten.com/?utm_source=roi_calculator&utm_medium=web&utm_campaign=cambia_tu_carrera";
   var DAYS_PER_MONTH = 30.44;
 
-  var form = document.getElementById("roi-form");
+  var calcBtn = document.getElementById("calc");
   var errorEl = document.getElementById("error");
   var resultEl = document.getElementById("result");
   var fields = {
@@ -596,8 +596,9 @@
     }, 120);
   }
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  // Sin <form>: en vistas previas y webviews con sandbox el navegador bloquea
+  // el envío de formularios y el botón no haría nada.
+  function calculate() {
     Object.keys(fields).forEach(function (k) { fields[k].parentNode.classList.remove("invalid"); });
 
     var current = parse(fields.current);
@@ -656,6 +657,13 @@
       requestAnimationFrame(function () {
         document.getElementById("bar").style.width = barPct + "%";
       });
+    });
+  }
+
+  calcBtn.addEventListener("click", calculate);
+  Object.keys(fields).forEach(function (k) {
+    fields[k].addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); fields[k].blur(); calculate(); }
     });
   });
 })();
