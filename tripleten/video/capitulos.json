@@ -24,15 +24,23 @@
     "t": 58.6
   },
   {
-    "name": "tripleten",
+    "name": "nova",
     "t": 70.7
   },
   {
+    "name": "tripleten",
+    "t": 86.1
+  },
+  {
     "name": "growth",
-    "t": 76.8
+    "t": 91.9
+  },
+  {
+    "name": "mercados",
+    "t": 97.6
   },
   {
     "name": "cierre",
-    "t": 82.5
+    "t": 105
   }
 ]

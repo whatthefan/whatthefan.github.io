@@ -480,6 +480,66 @@
   .sign b { display: block; font-family: var(--display); font-size: 17px; }
   .sign span { color: var(--muted); font-size: 13px; }
 
+  /* Mercado, estadísticas y fuentes */
+  .market-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 18px; }
+  .market-wrap small { color: var(--dim); font-size: 12px; }
+  .market { display: inline-flex; gap: 4px; padding: 4px; border-radius: 14px; background: rgba(0,0,0,.4); border: 1px solid var(--border-2); }
+  .market button { height: 40px; padding: 0 14px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font-weight: 600; font-size: 14px; cursor: pointer; transition: background .2s, color .2s; }
+  .market button[aria-pressed="true"] { background: var(--neon); color: #03140a; box-shadow: 0 0 18px rgba(57,255,136,.4); }
+  .stats-note { grid-column: 1 / -1; margin: 2px 0 0; color: var(--dim); font-size: 11.5px; text-align: left; line-height: 1.4; }
+  .ratings { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .rating { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); text-decoration: none; font-size: 13px; color: var(--muted); transition: border-color .2s; }
+  .rating:hover { border-color: rgba(57,255,136,.5); }
+  .rating b { color: var(--neon); font-family: var(--display); font-size: 16px; }
+  .rating svg { width: 14px; height: 14px; }
+  .feature .ask { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(57,255,136,.4); background: var(--neon-soft); color: var(--neon); font-weight: 600; font-size: 13px; cursor: pointer; }
+  .feature .ask svg { width: 15px; height: 15px; }
+  .feature .ask:hover { background: rgba(57,255,136,.2); }
+  .skills .skill-link { padding: 4px 10px; border-radius: 999px; background: transparent; border: 1px solid rgba(57,255,136,.4); color: var(--neon); font-size: 12px; text-decoration: none; font-weight: 600; }
+  .sources { color: var(--muted); }
+  .sources a { color: var(--neon); }
+  .needs-result.soft { opacity: .62; }
+  .flash { animation: flash 1.4s ease 1; }
+  @keyframes flash { 0%, 100% { box-shadow: none; } 30%, 70% { box-shadow: 0 0 0 4px rgba(57,255,136,.55), 0 0 34px rgba(57,255,136,.4); } }
+  .hero-visual { cursor: pointer; }
+  .bubble { cursor: pointer; }
+  .bubble u { text-decoration-color: #39ff88; text-decoration-thickness: 2px; }
+  .nova-dock.hide { visibility: hidden; }
+
+  /* Chat de Nova */
+  .chat { position: fixed; z-index: 75; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); height: min(80vh, 640px); display: flex; flex-direction: column; border-radius: 22px; border: 1px solid rgba(57,255,136,.45); background: #070b09; box-shadow: 0 30px 80px rgba(0,0,0,.7), 0 0 40px rgba(57,255,136,.15); isolation: isolate; transform: translateY(24px) scale(.97); opacity: 0; visibility: hidden; transition: transform .35s cubic-bezier(.2,.9,.25,1.2), opacity .25s, visibility 0s .35s; }
+  .chat.open { transform: none; opacity: 1; visibility: visible; transition: transform .35s cubic-bezier(.2,.9,.25,1.2), opacity .25s; }
+  .chat-h { display: flex; align-items: center; gap: 12px; padding: 14px 14px 12px; border-bottom: 1px solid var(--border); }
+  .chat-av { width: 42px; height: 42px; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(57,255,136,.5)); }
+  .chat-av svg { width: 100%; height: 100%; }
+  .chat-h b { display: block; font-family: var(--display); font-size: 17px; }
+  .chat-h small { display: block; color: var(--muted); font-size: 11.5px; line-height: 1.3; }
+  .chat-h .icon-btn { margin-left: auto; }
+  .chat-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+  .msg { max-width: 90%; padding: 10px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.45; animation: fadeUp .3s ease both; overflow-wrap: anywhere; }
+  .msg.bot { align-self: flex-start; background: #f4fff8; color: #06140c; border-bottom-left-radius: 4px; }
+  .msg.me { align-self: flex-end; background: var(--neon); color: #03140a; font-weight: 500; border-bottom-right-radius: 4px; }
+  .msg.bot b { color: #006b3a; }
+  .msg.bot a { color: #007a41; font-weight: 600; }
+  .msg ul { margin: 6px 0 0; padding-left: 18px; }
+  .msg li + li { margin-top: 3px; }
+  .msg .src { display: block; margin-top: 8px; font-size: 11.5px; color: #55645c; }
+  .msg .acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .msg .acts button, .msg .acts a { padding: 8px 11px; border-radius: 10px; border: 0; background: #06140c; color: #39ff88 !important; font-weight: 600; font-size: 12.5px; cursor: pointer; text-decoration: none; }
+  .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
+  .typing i { width: 7px; height: 7px; border-radius: 50%; background: #06140c; animation: tdot 1s infinite; }
+  .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes tdot { 0%, 100% { opacity: .25; transform: translateY(0); } 50% { opacity: .9; transform: translateY(-3px); } }
+  .chat-quick { display: flex; gap: 6px; overflow-x: auto; padding: 8px 14px; scrollbar-width: none; }
+  .chat-quick::-webkit-scrollbar { display: none; }
+  .chat-quick button { flex-shrink: 0; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(57,255,136,.4); background: var(--neon-soft); color: var(--neon); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .chat-in { display: flex; gap: 8px; padding: 10px 12px 12px; border-top: 1px solid var(--border); }
+  .chat-in input { flex: 1; min-width: 0; height: 46px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--border-2); background: rgba(0,0,0,.4); outline: 0; font-size: 16px; }
+  .chat-in input:focus { border-color: rgba(57,255,136,.7); }
+  .chat-in button { flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; border: 0; background: var(--neon); color: #03140a; display: grid; place-items: center; cursor: pointer; }
+  @media (min-width: 640px) { .chat { left: 16px; right: auto; width: 410px; bottom: 24px; } }
+  @media (min-width: 1000px) { .market-wrap { align-items: flex-start; } }
+
   footer { padding: 48px 0 calc(110px + env(safe-area-inset-bottom)); color: var(--dim); font-size: 12px; text-align: center; }
   footer p { margin: 6px auto; max-width: 720px; }
   footer button { margin-top: 10px; background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; }
@@ -668,27 +728,24 @@
       <span class="badge"><span class="dot"></span>Tu salto a Tech · Bootcamps TripleTen</span>
       <h1>¿En cuántos meses se <span class="grad">paga sola</span> tu carrera en Tech?</h1>
       <p class="hero-sub" id="heroSub">Descubre cuándo recuperas cada dólar. Te decimos qué programa encaja contigo, cómo organizar tu semana y en qué fecha tendrás tu inversión de vuelta.</p>
-      <p class="rotator">De tu trabajo actual a <span class="role" id="role">QA Engineer</span><span class="caret" aria-hidden="true"></span></p>
+      <p class="rotator"><span id="rotFrom">De tu trabajo actual a</span> <span class="role" id="role">QA Engineer</span><span class="caret" aria-hidden="true"></span></p>
       <div class="hero-ctas">
-        <a class="btn primary" href="#perfil" id="startBtn">Empezar mi plan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        <a class="btn primary" href="#perfil" id="startBtn"><span id="startTxt">Empezar mi plan</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        <button class="btn" type="button" id="askNova"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.1A8 8 0 1 1 21 12z"/></svg>Pregúntale a Nova</button>
         <a class="btn" href="#video" id="watchBtn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Ver cómo funciona</a>
       </div>
+      <div class="market-wrap"><div class="market" id="market" role="group" aria-label="País del programa"><button type="button" data-m="us" aria-pressed="true">🇺🇸 EE. UU. · USD</button><button type="button" data-m="mx" aria-pressed="false">🇲🇽 México · MXN</button></div><small id="heroMarketNote"></small></div>
     </div>
     <div class="hero-visual" id="heroVisual">
       <div class="card-stack" id="cardStack">
         <div class="ghost-card g1"></div><div class="ghost-card g2"></div>
         <img id="heroCard" alt="Ejemplo de tarjeta de plan Tech: de hostelería a QA Engineer, inversión recuperada en 2,3 meses" width="1080" height="1350">
       </div>
-      <span class="float-chip c1">Encaje <b>97%</b></span>
-      <span class="float-chip c2">+<b>$3,166</b>/mes</span>
-      <span class="hero-tag">Así será tu tarjeta</span>
+      <span class="float-chip c1" id="heroChip1">Encaje <b>97%</b></span>
+      <span class="float-chip c2" id="heroChip2">+<b>$3,166</b>/mes</span>
+      <span class="hero-tag" id="heroTag">Así será tu tarjeta</span>
     </div>
-    <div class="hero-stats">
-      <div class="hstat reveal"><b data-count="16300" data-prefix="+$">+$16,300</b><span>aumento medio de sueldo de sus graduados</span></div>
-      <div class="hstat reveal"><b data-count="88" data-suffix="%">88%</b><span>sigue trabajando en Tech un año después</span></div>
-      <div class="hstat reveal"><b data-count="10" data-suffix=" meses">10 meses</b><span>de garantía de empleo o te devuelven la matrícula</span></div>
-      <div class="hstat reveal"><b data-count="20" data-suffix=" h">20 h</b><span>a la semana: compatible con tu trabajo</span></div>
-    </div>
+    <div class="hero-stats" id="heroStats"></div>
     <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
   </header>
 
@@ -751,22 +808,23 @@
         <p class="sub-title">Programa <small id="progHint">Opcional: rellena coste y salario</small></p>
         <div class="programs" id="programs" role="group" aria-label="Programas de TripleTen"></div>
         <div class="field" style="margin-top:16px">
-          <label for="current">Tu salario anual actual <small>USD / año</small></label>
+          <label for="current"><span id="lblCur">Tu salario anual actual</span> <small id="unitCur">USD / año</small></label>
           <div class="input"><span class="cur" aria-hidden="true">$</span><input id="current" type="text" inputmode="numeric" autocomplete="off" placeholder="30,000"></div>
           <input type="range" id="currentR" min="0" max="150000" step="500" value="0" aria-label="Ajustar salario actual">
         </div>
         <div class="row-2">
           <div class="field" style="margin:0">
-            <label for="cost">Coste del Bootcamp <small>Pago único</small></label>
+            <label for="cost">Coste del bootcamp <small id="unitCost">USD, pago único</small></label>
             <div class="input"><span class="cur" aria-hidden="true">$</span><input id="cost" type="text" inputmode="numeric" autocomplete="off" value="9,700"></div>
             <input type="range" id="costR" min="1000" max="20000" step="50" value="9700" aria-label="Ajustar coste del bootcamp">
           </div>
           <div class="field" style="margin:0">
-            <label for="expected">Salario en Tech <small>USD / año</small></label>
+            <label for="expected">Salario en Tech <small id="unitExp">USD / año</small></label>
             <div class="input"><span class="cur" aria-hidden="true">$</span><input id="expected" type="text" inputmode="numeric" autocomplete="off" value="70,000"></div>
             <input type="range" id="expectedR" min="20000" max="200000" step="500" value="70000" aria-label="Ajustar salario esperado">
           </div>
         </div>
+        <p class="chip-note" id="salaryNote"></p>
         <div class="field" style="margin-top:18px">
           <label for="search">Meses buscando tu primer empleo Tech <small id="searchOut">3 meses</small></label>
           <input type="range" id="search" min="0" max="10" step="1" value="3">
@@ -809,12 +867,12 @@
           <div class="card pad">
             <div class="guarantee">
               <div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
-              <div><h3>Riesgo cubierto: <span id="riskAmt" style="color:var(--neon)">$9,700</span></h3><p>Si completas el programa, sigues el plan de búsqueda con tu coach y no te contratan en 10 meses, te devuelven la matrícula. <small>Según las condiciones de la garantía de TripleTen.</small></p></div>
+              <div><h3 id="guarTitle">Riesgo cubierto: <span id="riskAmt" style="color:var(--neon)">$9,700</span></h3><p id="guarText"></p></div>
             </div>
           </div>
           <div class="card cta-card">
             <p id="ctaLead">Tu versión con mejor sueldo empieza con una decisión.</p>
-            <a class="btn-cta" id="cta" href="https://tripleten.com/" target="_blank" rel="noopener"><span>Cambia tu carrera hoy</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="btn-cta" id="cta" href="https://tripleten.com/" target="_blank" rel="noopener"><span id="ctaTxt">Cambia tu carrera hoy</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
             <div class="cta-row">
               <button class="ghost" id="shareBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Compartir</button>
               <button class="ghost" id="copyBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copiar enlace</button>
@@ -860,7 +918,7 @@
           <div><h3 id="weekTitle">Empieza tocando tus huecos</h3><p id="weekText">Mañana, tarde o noche: tú decides cuándo estudias.</p></div>
         </div>
         <div class="actions">
-          <button class="ghost" id="icsWeek" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>Añadir mis sesiones al calendario</button>
+          <button class="ghost" id="icsWeek" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>Añadir mis sesiones al calendario</button>
         </div>
       </div>
     </div>
@@ -900,10 +958,10 @@
         <p class="sub-title">Formato <small>1080 px, lista para subir</small></p>
         <div class="seg" role="group" aria-label="Formato de la tarjeta"><button type="button" data-fmt="feed" aria-pressed="true">Post 4:5</button><button type="button" data-fmt="story" aria-pressed="false">Story 9:16</button></div>
         <div class="share-grid">
-          <button class="btn small primary wide" id="dlCard" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Descargar imagen</button>
-          <button class="ghost" id="shareCard" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Compartir</button>
-          <button class="ghost" id="icsDates" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Fechas clave</button>
-          <button class="ghost wide" id="mailPlan" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 7 10-7"/></svg>Enviarme mi plan por email</button>
+          <button class="btn small primary wide needs-result" id="dlCard" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Descargar imagen</button>
+          <button class="ghost needs-result" id="shareCard" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Compartir</button>
+          <button class="ghost needs-result" id="icsDates" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Fechas clave</button>
+          <button class="ghost wide needs-result" id="mailPlan" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 7 10-7"/></svg>Enviarme mi plan por email</button>
         </div>
         <p class="chip-note">Todo se genera en tu navegador. Nada sale de tu móvil salvo lo que tú decidas compartir.</p>
       </div>
@@ -926,15 +984,11 @@
     </div>
   </section>
 
-  <!-- POR QUÉ TRIPLETEN -->
-  <section class="section wrap">
-    <div class="section-head reveal"><span class="step-label">Lo que te aporta TripleTen</span><h2>Diseñado para que el salto salga bien</h2></div>
-    <div class="features">
-      <div class="card feature spot reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><h3>Part-time de verdad</h3><p>Unas 20 horas a la semana, online. Sigues cobrando tu sueldo mientras aprendes.</p></div>
-      <div class="card feature spot reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></div><h3>IA en cada programa</h3><p>Proyectos listos para producción y herramientas de IA integradas en todo el temario.</p></div>
-      <div class="card feature spot reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></div><h3>Career coaching</h3><p>Un coach te acompaña en la búsqueda, con una bolsa de más de 300 ofertas diarias.</p></div>
-      <div class="card feature spot reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Garantía de empleo</h3><p>Si cumples el plan y no te contratan en 10 meses, recuperas lo que pagaste.</p></div>
-    </div>
+  <!-- LO QUE APORTA TRIPLETEN -->
+  <section class="section wrap" id="beneficios">
+    <div class="section-head reveal"><span class="step-label">Lo que te aporta TripleTen</span><h2>Diseñado para que el salto salga bien</h2><p>Datos públicos de TripleTen. Toca «Pregúntale a Nova» y te lo explica con la fuente.</p></div>
+    <div class="features" id="features"></div>
+    <div class="ratings" id="ratings"></div>
   </section>
 
   <!-- PITCH -->
@@ -974,7 +1028,8 @@
 
   <footer class="wrap">
     <p id="byline"></p>
-    <p>Proyecto conceptual independiente. No es una página oficial de TripleTen. Precios, duraciones y cifras de resultados tomados de la información pública de tripleten.com (2026). Los salarios por programa y el temario son referencias editables. Estimación orientativa antes de impuestos.</p>
+    <p>Proyecto conceptual independiente. No es una página oficial de TripleTen. Precios, duraciones, garantías y resultados tomados de la información pública de tripleten.com y tripleten.mx (septiembre de 2026): pueden cambiar, confírmalos en su web. Estimación orientativa antes de impuestos.</p>
+    <p class="sources" id="sources"></p>
     <button type="button" id="resetAll">Borrar mis datos y empezar de cero</button>
   </footer>
 </main>
@@ -1041,6 +1096,16 @@
     </div>
   </div>
 </aside>
+<div class="chat" id="chat" role="dialog" aria-label="Chat con Nova" aria-hidden="true">
+  <div class="chat-h">
+    <div class="chat-av"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="22" width="84" height="80" rx="34" fill="#39ff88"/><rect x="27" y="36" width="66" height="42" rx="21" fill="#06140c"/><g class="eye"><ellipse cx="47" cy="55" rx="7.5" ry="8.5" fill="#eafff2"/><circle class="pupil" cx="47" cy="56" r="3.8" fill="#06140c"/></g><g class="eye"><ellipse cx="73" cy="55" rx="7.5" ry="8.5" fill="#eafff2"/><circle class="pupil" cx="73" cy="56" r="3.8" fill="#06140c"/></g><path class="mouth" d="M52 68 Q60 74 68 68" stroke="#39ff88" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <div><b>Nova</b><small>Responde con datos públicos de TripleTen y con tu plan</small></div>
+    <button class="icon-btn" id="chatClose" type="button" aria-label="Cerrar chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="chat-body" id="chatBody" aria-live="polite"></div>
+  <div class="chat-quick" id="chatQuick"></div>
+  <div class="chat-in"><input id="chatInput" type="text" autocomplete="off" maxlength="200" placeholder="Pregúntame: precio, garantía, horas…" aria-label="Escribe tu pregunta"><button id="chatSend" type="button" aria-label="Enviar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -1054,12 +1119,11 @@
     author: "",                     // Tu nombre, p. ej. "Laura Pérez"
     role: "AI Growth Marketing Manager",
     linkedin: "",                   // https://www.linkedin.com/in/...
-    email: "",                      // tu@email.com
-    ctaBase: "https://tripleten.com/"
+    email: ""                       // tu@email.com
   };
 
   // =================================================================
-  // Datos
+  // Iconos
   // =================================================================
   var IC = {
     code: '<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>',
@@ -1069,6 +1133,7 @@
     zap: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
     spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
     cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+    pen: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
     coffee: '<path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 9h1.5a2.5 2.5 0 0 1 0 5H17M8 2v3M12 2v3"/>',
     bag: '<path d="M5 7h14l-1 13H6zM9 7V5a3 3 0 0 1 6 0v2"/>',
     brief: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5h8v2M3 12h18"/>',
@@ -1093,52 +1158,138 @@
     trophy: '<path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/>',
     start: '<circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/>',
     mail: '<rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 7 10-7"/>',
-    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+    chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.1A8 8 0 1 1 21 12z"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+    layers: '<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+    ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
   };
   function icon(k) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (IC[k] || "") + '</svg>'; }
 
-  // Programas publicados en tripleten.com (2026). Precio por adelantado.
-  var PROGRAMS = [
-    { id: "ai-se",   name: "AI Software Engineering", role: "AI Software Engineer",     icon: "code",   tag: "Entry-level", months: 7,   price: 9800,  salary: 65000, skills: ["JavaScript y React", "Backend y APIs", "IA para programar"] },
-    { id: "da",      name: "Data Analytics",          role: "Data Analyst",             icon: "bars",   tag: "Entry-level", months: 4,   price: 5950,  salary: 62000, skills: ["SQL y Python", "Dashboards", "Estadística aplicada"] },
-    { id: "qa",      name: "Quality Assurance",       role: "QA Engineer",              icon: "bug",    tag: "Entry-level", months: 5,   price: 4935,  salary: 62000, skills: ["Testing manual y automático", "Pruebas de APIs", "Selenium"] },
-    { id: "cyber",   name: "Cybersecurity",           role: "Cybersecurity Analyst",    icon: "shield", tag: "Entry-level", months: 7,   price: 9800,  salary: 68300, skills: ["Redes y sistemas", "Detección de amenazas", "Respuesta a incidentes"] },
-    { id: "ai-auto", name: "AI Automation",           role: "AI Automation Specialist", icon: "zap",    tag: "Entry-level", months: 4,   price: 5950,  salary: 68300, skills: ["Flujos con IA", "Integraciones y APIs", "Agentes para tareas"] },
-    { id: "ai-ml",   name: "AI & Machine Learning",   role: "ML Engineer",              icon: "spark",  tag: "Accelerator", months: 4.5, price: 12600, salary: 85000, skills: ["Machine learning", "LLMs en producción", "MLOps"] },
-    { id: "ai-sys",  name: "AI Systems Engineering",  role: "AI Systems Engineer",      icon: "cpu",    tag: "Accelerator", months: 5,   price: 12600, salary: 68300, skills: ["Arquitectura con IA", "Agentes y RAG", "Despliegue a escala"] }
-  ];
+  // =================================================================
+  // Datos públicos de TripleTen (revisados en septiembre de 2026).
+  // Estados Unidos: tripleten.com y sus páginas de programa.
+  // México: tripleten.mx y sus páginas de programa (precio con descuento).
+  // =================================================================
+  var SRC = {
+    faq: "https://tripleten.com/faq/",
+    home: "https://tripleten.com/",
+    outcomes: "https://tripleten.com/blog/posts/tripleten-job-placement-and-salaries-outcomes",
+    mx: "https://tripleten.mx/",
+    cr: "https://www.coursereport.com/schools/tripleten",
+    tp: "https://www.trustpilot.com/review/tripleten.com",
+    su: "https://www.switchup.org/bootcamps/tripleten"
+  };
+  var MARKETS = {
+    us: {
+      id: "us", name: "Estados Unidos", short: "EE. UU.", cur: "USD", suffix: "", period: "year",
+      site: SRC.home, guaranteeMonths: 10, hours: "15–20 h",
+      defaults: { cost: 9700, expected: 70000 },
+      ranges: { current: [0, 150000, 500], cost: [1000, 20000, 50], expected: [20000, 300000, 500] },
+      sampleCurrent: 24000,
+      stats: [
+        ["+$16,300", "subida mediana de sueldo de sus graduados"],
+        ["88%", "sigue en su puesto Tech un año después"],
+        ["10 meses", "de garantía: empleo o te devuelven la matrícula*"],
+        ["7,500+", "alumni en todo el mundo"]
+      ],
+      statsNote: "* En los programas de nivel inicial, completando Career Services y buscando empleo de buena fe. Los Accelerator no incluyen garantía. Fuente: tripleten.com.",
+      features: [
+        ["clock", "15–20 h a la semana, sin horarios fijos", "Solo fechas de entrega de proyectos. El 77% de sus alumnos estudia mientras trabaja a jornada completa.", "¿Puedo estudiar mientras trabajo?"],
+        ["spark", "Dot, su asistente de IA 24/7", "Pistas personalizadas mientras practicas, a cualquier hora del día.", "¿Qué es Dot?"],
+        ["users", "Career coaching y externships", "CV, entrevistas y portfolio, una bolsa con más de 300 ofertas nuevas al día y proyectos con empresas reales.", "¿Qué incluye el bootcamp?"],
+        ["shield", "Garantía de empleo de 10 meses", "En los programas de nivel inicial: o te contratan o te devuelven la matrícula. Y tienes 14 días para echarte atrás.", "¿Cómo funciona la garantía?"]
+      ],
+      ratings: [["4.7/5", "Trustpilot", SRC.tp], ["4.87/5", "Course Report", SRC.cr], ["Best Bootcamp 2025", "SwitchUp", SRC.su]],
+      sources: [["tripleten.com", SRC.home], ["Preguntas frecuentes", SRC.faq], ["Informe de empleo y salarios 2026", SRC.outcomes]],
+      programs: [
+        { id: "ai-se", fam: "se", name: "AI Software Engineering", role: "Software Engineer", icon: "code", tag: "Entry", months: 7, price: 9800, salary: 65000, salaryNote: "mediana de sueldo inicial de Software Engineer según TripleTen", guarantee: true, url: "https://tripleten.com/software-engineer/", skills: ["JavaScript y React", "Node.js y MongoDB", "IA para programar"] },
+        { id: "da", fam: "da", name: "Data Analytics", role: "Data Analyst", icon: "bars", tag: "Entry", months: 4, price: 5950, salary: 62000, salaryNote: "mediana de sueldo inicial según TripleTen", guarantee: true, url: "https://tripleten.com/data-analyst/", skills: ["Excel, SQL y Python", "Power BI y Tableau", "IA para análisis"] },
+        { id: "qa", fam: "qa", name: "Quality Assurance", role: "QA Engineer", icon: "bug", tag: "Entry", months: 5, price: 5950, salary: 62000, salaryNote: "mediana de sueldo inicial de QA Engineer según TripleTen", guarantee: true, url: "https://tripleten.com/qa-engineer/", skills: ["Testing manual y automático", "APIs con Postman", "Python y Selenium"] },
+        { id: "cyber", fam: "cyber", name: "Cybersecurity", role: "Cybersecurity Analyst", icon: "shield", tag: "Entry", months: 7, price: 9800, salary: 68300, salaryNote: "sueldo inicial medio de todos sus graduados (no publica uno específico)", guarantee: true, url: SRC.home, skills: ["Redes y sistemas", "Detección de amenazas", "Respuesta a incidentes"] },
+        { id: "ai-auto", fam: "auto", name: "AI Automation", role: "AI Automation Specialist", icon: "zap", tag: "Entry", months: 4, price: 5950, salary: 79000, salaryNote: "sueldo medio de entrada en AI Automation según TripleTen", guarantee: true, url: "https://tripleten.com/ai-automation/", skills: ["ChatGPT, Claude y Gemini", "Zapier, Make y n8n", "APIs y webhooks"] },
+        { id: "ai-ml", fam: "ml", name: "AI & Machine Learning", role: "AI/ML Engineer", icon: "spark", tag: "Accel.", months: 4.5, price: 12600, salary: 150000, salaryNote: "parte baja del rango de mercado ($150K–$280K) que cita TripleTen, sin prometer salario", guarantee: false, needsExp: "2+ años programando en producción", plan: { text: "Financiación desde $350/mes ($17,950 en total)", total: 17950 }, url: "https://tripleten.com/ai-machine-learning/", skills: ["Entrenar y desplegar modelos", "RAG y agentes", "IA en producción"] },
+        { id: "ai-sys", fam: "sys", name: "AI Systems Engineering", role: "AI Systems Engineer", icon: "cpu", tag: "Accel.", months: 5, price: 12600, salary: 150000, salaryNote: "referencia: rango de mercado de IA que cita TripleTen, sin prometer salario", guarantee: false, needsExp: "varios años de experiencia técnica", url: SRC.home, skills: ["Arquitectura con IA", "Agentes y RAG", "Despliegue a escala"] }
+      ],
+      dreams: [3000, 10000, 1500, 20000, 15000, 5000, 5000, 800]
+    },
+    mx: {
+      id: "mx", name: "México", short: "México", cur: "MXN", suffix: " MXN", period: "month",
+      site: SRC.mx, guaranteeMonths: 6, hours: "15–20 h",
+      defaults: { cost: 46799, expected: 35000 },
+      ranges: { current: [0, 80000, 500], cost: [10000, 120000, 100], expected: [10000, 120000, 500] },
+      sampleCurrent: 12000,
+      stats: [
+        ["93%", "consigue empleo en los 6 meses tras graduarse"],
+        ["6 meses", "de garantía: empleo en tech o reembolso del 100%*"],
+        ["72%", "empezó sin experiencia en tech"],
+        ["6,000+", "personas que cambiaron su vida con tech"]
+      ],
+      statsNote: "* Participando activamente en el Acelerador de Carrera. Fuente: tripleten.mx.",
+      features: [
+        ["clock", "15–20 h a la semana, en español", "Aprendes a tu ritmo, con sesiones en vivo y mentores que hablan tu idioma.", "¿Puedo estudiar mientras trabajo?"],
+        ["users", "Acelerador de Carrera", "CV, portafolio, entrevistas y acompañamiento en la búsqueda durante 6 meses tras graduarte.", "¿Qué incluye el bootcamp?"],
+        ["layers", "Proyectos reales de portafolio", "Entre 9 y 16 proyectos según el programa, para enseñar lo que sabes hacer.", "¿Qué programas hay?"],
+        ["shield", "Garantía de 6 meses", "Si no consigues trabajo en tech 6 meses después de graduarte, te reembolsan el 100% de la matrícula.", "¿Cómo funciona la garantía?"]
+      ],
+      ratings: [["4.7/5", "Google (470 reseñas)", SRC.mx], ["4.85/5", "Course Report (475)", SRC.cr], ["4.87/5", "SwitchUp (251)", SRC.su]],
+      sources: [["tripleten.mx", SRC.mx], ["Tester QA", "https://tripleten.mx/qa/"], ["Analista de Datos", "https://tripleten.mx/analista-de-dados/"], ["Desarrollo Web", "https://tripleten.mx/desarrollo-web/"]],
+      programs: [
+        { id: "mx-qa", fam: "qa", name: "Tester QA", role: "Tester QA", icon: "bug", tag: "Español", months: 5, price: 32999, listPrice: 54999, salary: 30000, salaryNote: "sueldo inicial de referencia (Glassdoor) que publica TripleTen", guarantee: true, plan: { n: 18, amount: 2515 }, url: "https://tripleten.mx/qa/", skills: ["Pruebas manuales y de API", "Python y Selenium", "Jira, Postman y SQL"] },
+        { id: "mx-da", fam: "da", name: "Analista de Datos + IA", role: "Analista de Datos", icon: "bars", tag: "Español", months: 6, price: 46799, listPrice: 77999, salary: 35000, salaryNote: "sueldo inicial de referencia que publica TripleTen", guarantee: true, plan: { n: 18, amount: 3568 }, url: "https://tripleten.mx/analista-de-dados/", skills: ["Excel y SQL", "Python", "Visualización e IA"] },
+        { id: "mx-ux", fam: "ux", name: "Diseñador UX/UI", role: "Diseñador UX/UI", icon: "pen", tag: "Español", months: 7, price: 47759, listPrice: 79599, salary: 35000, salaryNote: "sueldo inicial de referencia que publica TripleTen", guarantee: true, plan: { n: 18, amount: 3642 }, url: "https://tripleten.mx/curso-ux-ui/", skills: ["Investigación de usuarios", "Figma y prototipos", "13 proyectos"] },
+        { id: "mx-web", fam: "se", name: "Desarrollador Web", role: "Desarrollador Web", icon: "code", tag: "Español", months: 8, price: 55199, listPrice: 91999, salary: 45000, salaryNote: "sueldo inicial de referencia que publica TripleTen", guarantee: true, plan: { n: 24, amount: 4819 }, url: "https://tripleten.mx/desarrollo-web/", skills: ["Full stack", "16 proyectos", "Curso extra de SQL"] },
+        { id: "mx-cyber", fam: "cyber", name: "Especialista en Ciberseguridad", role: "Especialista en Ciberseguridad", icon: "shield", tag: "Español", months: 7, price: 58799, listPrice: 97999, salary: 45000, salaryNote: "sueldo inicial de referencia que publica TripleTen", guarantee: true, plan: { n: 0, amount: 4483 }, url: "https://tripleten.mx/ciberseguridad/", skills: ["12 proyectos de seguridad", "700+ horas de práctica", "Clases en español"] },
+        { id: "mx-ds", fam: "ds", name: "Data Scientist", role: "Data Scientist", icon: "spark", tag: "Español", months: 9, price: 56799, listPrice: 97999, salary: 50000, salaryNote: "sueldo inicial de referencia que publica TripleTen", guarantee: true, plan: { n: 18, amount: 4483 }, url: "https://tripleten.mx/cientifico-de-datos/", skills: ["Python y estadística", "Machine learning", "Proyectos reales"] }
+      ],
+      dreams: [40000, 100000, 25000, 300000, 250000, 50000, 50000, 10000]
+    }
+  };
+  var FAMILY_WORDS = {
+    ds: ["data scien", "cientifico de datos", "ciencia de datos", "data scientist"],
+    ml: ["machine learning", "aprendizaje automatico", "ml engineer", "ai & ml", "ia y ml"],
+    sys: ["ai systems", "sistemas de ia", "systems engineering"],
+    da: ["analista", "analytics", "analisis de datos", "data analyst", "datos"],
+    qa: ["qa", "tester", "testing", "pruebas", "calidad"],
+    cyber: ["ciber", "cyber", "seguridad", "hacker"],
+    auto: ["automatiz", "automation", "no code", "zapier", "n8n"],
+    ux: ["ux", "ui", "diseno", "disenador", "figma"],
+    se: ["software", "web", "desarrollador", "programador", "programacion", "full stack", "frontend", "backend"]
+  };
   var JOBS = [
-    { id: "hosteleria", label: "Hostelería", icon: "coffee", from: "hostelería", skill: "trabajar bajo presión y fijarte en cada detalle", boost: { qa: 3, "ai-auto": 1, da: 1 }, quip: "¿Hostelería? Si sobrevives a un sábado a tope, sobrevives a cualquier deploy." },
-    { id: "retail", label: "Comercio", icon: "bag", from: "comercio", skill: "entender a los clientes y vivir pegado a objetivos", boost: { da: 3, "ai-auto": 1 }, quip: "Llevas años leyendo a clientes. Leer datos es lo mismo, pero en tablas." },
-    { id: "admin", label: "Administración", icon: "brief", from: "administración", skill: "dominar procesos, Excel y el orden", boost: { da: 3, "ai-auto": 3 }, quip: "Si eres de Excel, ya tienes medio SQL en la cabeza." },
-    { id: "cliente", label: "Atención al cliente", icon: "headset", from: "atención al cliente", skill: "resolver problemas con calma aunque haya prisa", boost: { qa: 3, cyber: 1, "ai-auto": 1 }, quip: "Resolver problemas con alguien enfadado al teléfono es entrenamiento de élite." },
-    { id: "logistica", label: "Logística", icon: "truck", from: "logística", skill: "optimizar rutas, turnos y procesos", boost: { "ai-auto": 3, da: 2 }, quip: "Optimizar un almacén es pensar como un algoritmo. Vas con ventaja." },
-    { id: "educacion", label: "Educación", icon: "book", from: "educación", skill: "explicar lo complicado de forma simple", boost: { da: 2, "ai-se": 1, qa: 1 }, quip: "Quien sabe explicar, sabe documentar. En Tech eso vale oro." },
-    { id: "sanidad", label: "Sanidad", icon: "pulse", from: "sanidad", skill: "seguir protocolos con precisión", boost: { qa: 3, cyber: 2 }, quip: "Protocolos, precisión y cero errores: eso es QA con bata." },
-    { id: "tech", label: "Ya estoy en Tech", icon: "code", from: "tu puesto actual", skill: "hablar ya el idioma técnico", boost: { "ai-se": 2, "ai-ml": 2, "ai-sys": 2 }, quip: "Vienes con base. Si llevas 2 años programando, mira los Accelerator." },
-    { id: "estudiante", label: "Estudio / sin empleo", icon: "cap", from: "cero", skill: "tener la cabeza fresca para aprender", boost: { "ai-se": 1, da: 1, qa: 1, cyber: 1, "ai-auto": 1 }, quip: "Empezar de cero es empezar sin vicios. Me gusta." },
+    { id: "hosteleria", label: "Hostelería", icon: "coffee", from: "hostelería", skill: "trabajar bajo presión y fijarte en cada detalle", boost: { qa: 3, auto: 1, da: 1, ux: 1 }, quip: "¿Hostelería? Si sobrevives a un sábado a tope, sobrevives a cualquier deploy." },
+    { id: "retail", label: "Comercio", icon: "bag", from: "comercio", skill: "entender a los clientes y vivir pegado a objetivos", boost: { da: 3, auto: 1, ux: 1 }, quip: "Llevas años leyendo a clientes. Leer datos es lo mismo, pero en tablas." },
+    { id: "admin", label: "Administración", icon: "brief", from: "administración", skill: "dominar procesos, Excel y el orden", boost: { da: 3, auto: 3 }, quip: "Si eres de Excel, ya tienes medio SQL en la cabeza." },
+    { id: "cliente", label: "Atención al cliente", icon: "headset", from: "atención al cliente", skill: "resolver problemas con calma aunque haya prisa", boost: { qa: 3, ux: 2, cyber: 1, auto: 1 }, quip: "Resolver problemas con alguien enfadado al teléfono es entrenamiento de élite." },
+    { id: "logistica", label: "Logística", icon: "truck", from: "logística", skill: "optimizar rutas, turnos y procesos", boost: { auto: 3, da: 2 }, quip: "Optimizar un almacén es pensar como un algoritmo. Vas con ventaja." },
+    { id: "educacion", label: "Educación", icon: "book", from: "educación", skill: "explicar lo complicado de forma simple", boost: { da: 2, ux: 2, se: 1, qa: 1 }, quip: "Quien sabe explicar, sabe documentar. En Tech eso vale oro." },
+    { id: "sanidad", label: "Sanidad", icon: "pulse", from: "sanidad", skill: "seguir protocolos con precisión", boost: { qa: 3, cyber: 2, ds: 1 }, quip: "Protocolos, precisión y cero errores: eso es QA con bata." },
+    { id: "tech", label: "Ya estoy en Tech", icon: "code", from: "tu puesto actual", skill: "hablar ya el idioma técnico", boost: { se: 2, ml: 2, sys: 2, ds: 1 }, quip: "Vienes con base. Si llevas años programando, mira los Accelerator." },
+    { id: "estudiante", label: "Estudio / sin empleo", icon: "cap", from: "cero", skill: "tener la cabeza fresca para aprender", boost: { se: 1, da: 1, qa: 1, cyber: 1, auto: 1, ux: 1, ds: 1 }, quip: "Empezar de cero es empezar sin vicios. Me gusta." },
     { id: "otro", label: "Otro sector", icon: "dots", from: "tu sector", skill: "traer una mirada que nadie más tiene", boost: {}, quip: "Los mejores perfiles Tech vienen de sitios inesperados." }
   ];
   var INTERESTS = [
-    { id: "build", label: "Construir apps y webs", icon: "code", score: { "ai-se": 5, "ai-sys": 3, "ai-auto": 1 }, reason: "Te gusta construir cosas que la gente usa", quip: "Construir cosas que la gente usa. Eso engancha." },
-    { id: "data", label: "Descubrir patrones en datos", icon: "bars", score: { da: 5, "ai-ml": 3 }, reason: "Disfrutas encontrando la historia que esconden los números", quip: "Los datos siempre cuentan una historia. Tú la vas a contar." },
+    { id: "build", label: "Construir apps y webs", icon: "code", score: { se: 5, sys: 3, auto: 1 }, reason: "Te gusta construir cosas que la gente usa", quip: "Construir cosas que la gente usa. Eso engancha." },
+    { id: "data", label: "Descubrir patrones en datos", icon: "bars", score: { da: 5, ds: 4, ml: 2 }, reason: "Disfrutas encontrando la historia que esconden los números", quip: "Los datos siempre cuentan una historia. Tú la vas a contar." },
     { id: "break", label: "Cazar fallos antes que nadie", icon: "bug", score: { qa: 5, cyber: 2 }, reason: "Tienes ojo para lo que falla", quip: "Ojo de halcón para los fallos. Las empresas pagan bien por eso." },
     { id: "protect", label: "Proteger sistemas y personas", icon: "shield", score: { cyber: 5, qa: 1 }, reason: "Te motiva proteger a los demás", quip: "Guardián digital. Me encanta." },
-    { id: "automate", label: "Automatizar lo aburrido", icon: "zap", score: { "ai-auto": 5, "ai-se": 1, da: 1 }, reason: "No soportas hacer dos veces la misma tarea", quip: "Si lo haces dos veces, se automatiza. Esa es la actitud." },
-    { id: "ai", label: "Crear con IA", icon: "spark", score: { "ai-ml": 4, "ai-sys": 3, "ai-auto": 3, "ai-se": 1 }, reason: "La IA te despierta curiosidad", quip: "La IA no te va a quitar el trabajo. Te lo va a dar." }
+    { id: "automate", label: "Automatizar lo aburrido", icon: "zap", score: { auto: 5, se: 1, da: 1 }, reason: "No soportas hacer dos veces la misma tarea", quip: "Si lo haces dos veces, se automatiza. Esa es la actitud." },
+    { id: "design", label: "Diseñar apps fáciles de usar", icon: "pen", score: { ux: 5, se: 2 }, reason: "Te importa que las cosas sean fáciles de usar", quip: "Diseñar para personas es el superpoder más infravalorado de Tech." },
+    { id: "ai", label: "Crear con IA", icon: "spark", score: { ml: 4, sys: 3, auto: 3, ds: 3, se: 1 }, reason: "La IA te despierta curiosidad", quip: "La IA no te va a quitar el trabajo. Te lo va a dar." }
   ];
   var DREAMS = [
-    { id: "viaje", label: "El viaje de tu vida", icon: "plane", price: 3000 },
-    { id: "colchon", label: "Colchón de emergencia", icon: "umbrella", price: 10000 },
-    { id: "portatil", label: "Portátil nuevo", icon: "laptop", price: 1500 },
-    { id: "piso", label: "Entrada de un piso", icon: "home", price: 20000 },
-    { id: "coche", label: "Coche", icon: "car", price: 15000 },
-    { id: "familia", label: "Ayudar a tu familia", icon: "heart", price: 5000 },
-    { id: "deuda", label: "Liquidar deudas", icon: "chain", price: 5000 },
-    { id: "regalo", label: "Un capricho", icon: "gift", price: 800 }
+    { id: "viaje", label: "El viaje de tu vida", icon: "plane" },
+    { id: "colchon", label: "Colchón de emergencia", icon: "umbrella" },
+    { id: "portatil", label: "Portátil nuevo", icon: "laptop" },
+    { id: "piso", label: "Entrada de una casa", icon: "home" },
+    { id: "coche", label: "Coche", icon: "car" },
+    { id: "familia", label: "Ayudar a tu familia", icon: "heart" },
+    { id: "deuda", label: "Liquidar deudas", icon: "chain" },
+    { id: "regalo", label: "Un capricho", icon: "gift" }
   ];
   var DAYS = ["L", "M", "X", "J", "V", "S", "D"];
-  var DAY_ICS = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"];
+  var DAY_NAMES = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
   var BLOCKS = [
     { id: "m", label: "Mañana", wk: ["07:00", "09:00"], we: ["09:30", "12:30"] },
     { id: "t", label: "Tarde", wk: ["18:00", "20:00"], we: ["16:00", "19:00"] },
@@ -1150,7 +1301,7 @@
     { label: "Fines de semana a tope", slots: ["1n", "3n", "5m", "5t", "6m", "6t"] }
   ];
   var TARGET_HOURS = 20, CUSTOM_STUDY_MONTHS = 7;
-  var DAYS_PER_MONTH = 30.44, WORKDAYS_PER_MONTH = 21.7, INSTALLMENTS = 4;
+  var DAYS_PER_MONTH = 30.44, WORKDAYS_PER_MONTH = 21.7, US_INSTALLMENTS = 4;
 
   // =================================================================
   // Utilidades
@@ -1159,12 +1310,11 @@
   var each = function (list, fn) { Array.prototype.forEach.call(list, fn); };
   var reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   var nf = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 0 });
-  var money = function (n) { return (n < 0 ? "-$" : "$") + nf.format(Math.abs(Math.round(n))); };
-  var compact = function (n) { var a = Math.abs(n), s; if (a >= 1e6) s = (a / 1e6).toFixed(1).replace(/\.0$/, "") + "M"; else if (a >= 1e4) s = Math.round(a / 1e3) + "k"; else s = nf.format(Math.round(a)); return (n < 0 ? "-$" : "$") + s; };
   var dec = function (n, d) { return n.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d }); };
   var monthsNum = function (m) { var r = Math.round(m * 10) / 10; return r % 1 === 0 ? String(r) : dec(r, 1); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var capWord = function (s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; };
+  var norm = function (s) { return " " + String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9&$ ]+/g, " ").replace(/\s+/g, " ").trim() + " "; };
   var buzz = function () { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {} };
   var byId = function (list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; };
   var addMonths = function (d, m) { var r = new Date(d.getTime()), w = Math.floor(m); r.setMonth(r.getMonth() + w); r.setDate(r.getDate() + Math.round((m - w) * DAYS_PER_MONTH)); return r; };
@@ -1185,22 +1335,38 @@
     } catch (e) { return false; }
   }
   function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function flash(el) { if (!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 
   // =================================================================
   // Estado
   // =================================================================
-  var STORE_KEY = "croi_plan_v1";
+  var STORE_KEY = "croi_plan_v2";
   var state = {
-    name: "", job: null, interests: [], exp: false,
+    market: "us", name: "", job: null, interests: [], exp: false,
     program: null, current: null, cost: 9700, expected: 70000, search: 3, installments: false,
     calculated: false, slots: [], dreams: [], custom: [], shared: false, done: {}
   };
   var result = null;
+  function M() { return MARKETS[state.market]; }
+  function P() { return state.program; }
+  function money(n) { return (n < 0 ? "-$" : "$") + nf.format(Math.abs(Math.round(n))) + M().suffix; }
+  function moneyShort(n) { var a = Math.abs(n), s; if (a >= 1e6) s = (a / 1e6).toFixed(1).replace(/\.0$/, "") + "M"; else if (a >= 1e4) s = Math.round(a / 1e3) + "k"; else s = nf.format(Math.round(a)); return (n < 0 ? "-$" : "$") + s; }
+  function compact(n) { return moneyShort(n) + M().suffix; }
+  function perPeriod() { return M().period === "year" ? "/año" : "/mes"; }
+  function gainMonthly(cur, exp) { return M().period === "year" ? (exp - cur) / 12 : exp - cur; }
+  function effectiveCost() { var p = P(); if (state.installments && p && p.plan) { if (p.plan.total) return p.plan.total; if (p.plan.n) return p.plan.n * p.plan.amount; } return state.cost; }
+  function planText(p) {
+    if (!p) return M().id === "us" ? "TripleTen ofrece cuotas, financiación y préstamos (Climb Credit, Edly)" : "Pago único o mensualidades";
+    if (p.plan && p.plan.text) return p.plan.text;
+    if (p.plan && p.plan.n) return p.plan.n + " mensualidades de " + money(p.plan.amount) + " (" + money(p.plan.n * p.plan.amount) + " en total)";
+    if (p.plan) return "Mensualidades desde " + money(p.plan.amount);
+    return "Hasta " + US_INSTALLMENTS + " pagos al mismo precio (" + money(p.price / US_INSTALLMENTS) + " cada uno)";
+  }
 
   function save() {
     if (state.shared) return;
     store.set(STORE_KEY, {
-      name: state.name, job: state.job, interests: state.interests, exp: state.exp,
+      market: state.market, name: state.name, job: state.job, interests: state.interests, exp: state.exp,
       program: state.program ? state.program.id : null, current: state.current, cost: state.cost, expected: state.expected,
       search: state.search, installments: state.installments, calculated: state.calculated,
       slots: state.slots, dreams: state.dreams, custom: state.custom, done: state.done
@@ -1214,13 +1380,13 @@
   var sessionEvents = {};
   function track(event, props) {
     props = props || {};
-    var payload = { event: event }; for (var k in props) payload[k] = props[k];
+    var payload = { event: event, market: state.market }; for (var k in props) payload[k] = props[k];
     try { window.dataLayer.push(payload); } catch (e) {}
     sessionEvents[event] = (sessionEvents[event] || 0) + 1;
     var li = document.createElement("li");
     li.innerHTML = '<span class="t">' + new Date().toLocaleTimeString("es-ES", { hour12: false }) + '</span> <span class="e">' + event + '</span>' + (Object.keys(props).length ? '<span class="p">' + esc(JSON.stringify(props)) + '</span>' : "");
     var log = $("log"); log.insertBefore(li, log.firstChild);
-    while (log.children.length > 50) log.removeChild(log.lastChild);
+    while (log.children.length > 60) log.removeChild(log.lastChild);
     $("logEmpty").style.display = "none";
     renderGrowth();
   }
@@ -1228,89 +1394,356 @@
     { label: "Nos dice su nombre", pts: 5, on: function () { return !!state.name; } },
     { label: "Completa su perfil", pts: 10, on: function () { return stepDone(0); } },
     { label: "Calcula su ROI", pts: 20, on: function () { return !!result; } },
-    { label: "Encaja 20 h en su semana", pts: 15, on: function () { return hours() >= TARGET_HOURS; } },
+    { label: "Encaja 20 h en su semana", pts: 10, on: function () { return hours() >= TARGET_HOURS; } },
     { label: "Elige su recompensa", pts: 5, on: function () { return state.dreams.length + state.custom.length > 0; } },
     { label: "Descarga o comparte su tarjeta", pts: 15, on: function () { return !!state.done.card; } },
     { label: "Guarda fechas o su plan", pts: 10, on: function () { return !!state.done.ics; } },
+    { label: "Pregunta a Nova sobre precio o garantía", pts: 5, on: function () { return !!(sessionEvents.nova_intent_price || sessionEvents.nova_intent_guarantee || sessionEvents.nova_intent_financing); } },
     { label: "Clic en «Cambia tu carrera hoy»", pts: 20, on: function () { return !!sessionEvents.cta_click; } }
   ];
-  function leadScore() { var s = 0; FACTORS.forEach(function (f) { if (f.on()) s += f.pts; }); return s; }
+  function leadScore() { var s = 0; FACTORS.forEach(function (f) { if (f.on()) s += f.pts; }); return Math.min(100, s); }
   function renderGrowth() {
-    var s = leadScore(), prog = state.program || topMatch(), pn = prog ? prog.name : "su programa";
+    var s = leadScore(), prog = P() || topMatch(), pn = prog ? prog.name : "su programa";
     $("leadNum").textContent = s;
     $("leadRing").style.strokeDashoffset = 213.6 * (1 - s / 100);
     if (s >= 70) { $("leadTier").textContent = "Lead caliente 🔥"; $("leadAction").textContent = "Siguiente acción: llamada de admisiones en menos de 24 h sobre " + pn + "."; }
     else if (s >= 40) { $("leadTier").textContent = "Lead templado"; $("leadAction").textContent = "Siguiente acción: emails con su tarjeta y casos reales de " + pn + "."; }
     else { $("leadTier").textContent = "Lead frío"; $("leadAction").textContent = "Siguiente acción: retargeting con el Reel de " + pn + "."; }
     $("factors").innerHTML = FACTORS.map(function (f) { return '<li class="' + (f.on() ? "on" : "") + '"><span>' + f.label + '</span><b>+' + f.pts + '</b></li>'; }).join("");
-    var steps = [["Visita", 1], ["Perfil completo", stepDone(0)], ["Cálculo", !!result], ["Plan completo", planCount() === 5], ["Clic en el CTA", !!sessionEvents.cta_click]];
-    $("funnel").innerHTML = steps.map(function (st) { return '<div class="fstep"><div class="fh"><span>' + st[0] + '</span><b>' + (st[1] ? "✓" : "–") + '</b></div><div class="fbar"><i style="width:' + (st[1] ? 100 : 0) + '%"></i></div></div>'; }).join("") + '<p class="note" style="margin-top:4px">El recorrido de esta visita. En producción, agregado por fuente, campaña y programa.</p>';
+    var steps = [["Visita", true], ["Perfil completo", stepDone(0)], ["Cálculo", !!result], ["Plan completo", planCount() === 5], ["Clic en el CTA", !!sessionEvents.cta_click]];
+    $("funnel").innerHTML = steps.map(function (st) { return '<div class="fstep"><div class="fh"><span>' + st[0] + '</span><b>' + (st[1] ? "✓" : "–") + '</b></div><div class="fbar"><i style="width:' + (st[1] ? 100 : 0) + '%"></i></div></div>'; }).join("") + '<p class="note" style="margin-top:4px">El recorrido de esta visita. En producción, agregado por fuente, campaña, mercado y programa.</p>';
     $("utmOut").textContent = ctaUrl();
   }
   var AB = {
-    A: "Descubre cuándo recuperas cada dólar. Te decimos qué programa encaja contigo, cómo organizar tu semana y en qué fecha tendrás tu inversión de vuelta.",
-    B: "Tu nuevo sueldo paga el bootcamp en meses, no en años. Descubre qué programa encaja contigo y en qué fecha tendrás tu dinero de vuelta."
+    A: "Descubre cuándo recuperas cada dólar. Te decimos qué programa de TripleTen encaja contigo, cómo organizar tu semana y en qué fecha tendrás tu inversión de vuelta.",
+    B: "Tu nuevo sueldo paga el bootcamp en meses, no en años. Descubre qué programa de TripleTen encaja contigo y en qué fecha tendrás tu dinero de vuelta."
   };
   var variant = store.get("croi_ab");
   if (variant !== "A" && variant !== "B") { variant = Math.random() < 0.5 ? "A" : "B"; store.set("croi_ab", variant); }
   function applyVariant() {
-    $("heroSub").textContent = AB[variant];
+    var cur = state.market === "mx" ? ["cada peso", "tu dinero"] : ["cada dólar", "tu dinero"];
+    $("heroSub").textContent = AB[variant].replace("cada dólar", cur[0]);
     $("variants").innerHTML = ["A", "B"].map(function (v) { return '<div class="variant' + (v === variant ? " on" : "") + '"><small>Variante ' + v + (v === variant ? " · la que ves tú" : "") + '</small><p>' + AB[v] + '</p></div>'; }).join("");
   }
-  $("abSwitch").addEventListener("click", function () { variant = variant === "A" ? "B" : "A"; store.set("croi_ab", variant); applyVariant(); track("ab_preview", { experiment: "hero_copy", variant: variant }); });
+  $("abSwitch").addEventListener("click", function () { variant = variant === "A" ? "B" : "A"; store.set("croi_ab", variant); applyVariant(); flash($("heroSub")); track("ab_preview", { experiment: "hero_copy", variant: variant }); toast("Ahora ves la variante " + variant + " en la portada"); });
 
   // =================================================================
-  // Nova
+  // Nova: mascota + asistente con chat
   // =================================================================
   var nova = $("nova"), bubble = $("bubble"), bubbleTxt = $("bubbleTxt"), bubbleT = null, lastSay = "";
   var MOUTHS = { happy: "M52 68 Q60 74 68 68", big: "M50 66 Q60 80 70 66 Z", wow: "M56 69 a4 5 0 1 0 8 0 a4 5 0 1 0 -8 0", think: "M53 70 L67 68" };
   function mood(m) {
-    var p = nova.querySelector(".mouth");
-    p.setAttribute("d", MOUTHS[m] || MOUTHS.happy);
-    p.setAttribute("fill", m === "big" || m === "wow" ? "#39ff88" : "none");
+    each(document.querySelectorAll(".mouth"), function (p) {
+      p.setAttribute("d", MOUTHS[m] || MOUTHS.happy);
+      p.setAttribute("fill", m === "big" || m === "wow" ? "#39ff88" : "none");
+    });
   }
   function say(html, opts) {
     opts = opts || {};
+    if (chatOpen || tourI >= 0) return;
     if (html === lastSay && bubble.classList.contains("show")) return;
-    lastSay = html;
+    lastSay = html; lastNovaAt = Date.now();
     bubbleTxt.innerHTML = html;
     bubble.classList.add("show");
     mood(opts.mood || "happy");
-    if (opts.cheer) { nova.classList.remove("cheer"); void nova.offsetWidth; nova.classList.add("cheer"); }
+    if (opts.cheer) cheer();
     clearTimeout(bubbleT);
-    bubbleT = setTimeout(function () { bubble.classList.remove("show"); mood("happy"); }, opts.ms || 5200);
+    bubbleT = setTimeout(function () { bubble.classList.remove("show"); mood("happy"); }, opts.ms || 6000);
   }
-  window.__novaSay = say;
-  $("bubbleX").addEventListener("click", function () { bubble.classList.remove("show"); });
-  var TIPS = [
-    "TripleTen es part-time: unas <b>20 h a la semana</b>. Puedes seguir en tu trabajo mientras estudias.",
-    "Sus graduados ganan de media <b>$16,300 más al año</b> que en su trabajo anterior.",
-    "Si completas el programa y sigues el plan con tu coach, tienes <b>10 meses de garantía</b>: o empleo o te devuelven la matrícula.",
-    "El <b>88%</b> de sus graduados sigue trabajando en Tech un año después.",
-    "Puedes pagar la matrícula en <b>varios pagos</b> al mismo precio.",
-    "Toca el gráfico de tu dinero y arrastra: verás mes a mes cuándo empiezas a ganar."
-  ];
-  var tipI = 0;
-  nova.addEventListener("click", function () {
-    buzz();
-    var next = nextStepHint();
-    say(next && tipI % 2 === 0 ? next : TIPS[tipI % TIPS.length], { mood: "big", cheer: true });
-    tipI++;
-    track("nova_tap");
-  });
+  function cheer() { nova.classList.remove("cheer"); void nova.offsetWidth; nova.classList.add("cheer"); }
+  $("bubbleX").addEventListener("click", function (e) { e.stopPropagation(); bubble.classList.remove("show"); });
+  bubbleTxt.addEventListener("click", function () { openChat(); });
+  nova.addEventListener("click", function () { buzz(); cheer(); openChat(); });
   document.addEventListener("pointermove", function (e) {
     var r = nova.getBoundingClientRect();
     var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
     var d = Math.max(1, Math.sqrt(dx * dx + dy * dy)), k = Math.min(2.6, d / 60);
-    each(nova.querySelectorAll(".pupil"), function (p) { p.setAttribute("transform", "translate(" + (dx / d * k).toFixed(2) + " " + (dy / d * k).toFixed(2) + ")"); });
+    each(document.querySelectorAll(".pupil"), function (p) { p.setAttribute("transform", "translate(" + (dx / d * k).toFixed(2) + " " + (dy / d * k).toFixed(2) + ")"); });
   }, { passive: true });
+
+  // --- Chat ---
+  var chat = $("chat"), chatBody = $("chatBody"), chatInput = $("chatInput"), chatOpen = false, chatGreeted = false;
+  function openChat(question) {
+    chatOpen = true;
+    bubble.classList.remove("show");
+    chat.classList.add("open"); chat.setAttribute("aria-hidden", "false");
+    $("novaDock").classList.add("hide");
+    if (!chatGreeted) {
+      chatGreeted = true;
+      var hi = (state.name ? "¡Hola, <b>" + esc(state.name) + "</b>! " : "¡Hola! ") + "Soy Nova. Te respondo con los datos públicos de TripleTen en <b>" + M().name + "</b> y con los de tu plan. ¿Qué quieres saber?";
+      novaMsg({ html: hi }, 250);
+    }
+    renderQuick();
+    track("nova_open");
+    if (question) setTimeout(function () { ask(question); }, chatGreeted ? 350 : 900);
+    else setTimeout(function () { try { chatInput.focus({ preventScroll: true }); } catch (e) {} }, 350);
+  }
+  function closeChat() { chatOpen = false; chat.classList.remove("open"); chat.setAttribute("aria-hidden", "true"); $("novaDock").classList.remove("hide"); }
+  $("chatClose").addEventListener("click", closeChat);
+  function addMsg(cls, html) {
+    var d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html;
+    chatBody.appendChild(d); chatBody.scrollTop = chatBody.scrollHeight;
+    return d;
+  }
+  function novaMsg(ans, delay) {
+    var d = addMsg("bot", '<span class="typing"><i></i><i></i><i></i></span>');
+    mood("think");
+    var text = (ans.html || "").replace(/<[^>]+>/g, "");
+    setTimeout(function () {
+      var h = ans.html;
+      if (ans.acts && ans.acts.length) h += '<span class="acts">' + ans.acts.map(function (a, i) { return a.href ? '<a href="' + a.href + '" target="_blank" rel="noopener">' + a.label + ' ↗</a>' : '<button type="button" data-a="' + i + '">' + a.label + '</button>'; }).join("") + '</span>';
+      if (ans.src) h += '<span class="src">Fuente: <a href="' + ans.src[1] + '" target="_blank" rel="noopener">' + ans.src[0] + '</a></span>';
+      d.innerHTML = h;
+      each(d.querySelectorAll(".acts button"), function (b) { b.addEventListener("click", function () { var a = ans.acts[Number(b.getAttribute("data-a"))]; track("nova_action", { action: a.label }); a.run(); }); });
+      chatBody.scrollTop = chatBody.scrollHeight;
+      mood("big"); setTimeout(function () { mood("happy"); }, 1200);
+    }, delay !== undefined ? delay : Math.min(1500, 450 + text.length * 6));
+  }
+  function ask(q) {
+    q = String(q || "").trim();
+    if (!q) return;
+    addMsg("me", esc(q));
+    var ans = answer(q);
+    track("nova_question", { intent: ans.intent || "fallback" });
+    if (ans.intent) track("nova_intent_" + ans.intent);
+    novaMsg(ans);
+    renderQuick(ans.intent);
+  }
+  $("chatSend").addEventListener("click", function () { ask(chatInput.value); chatInput.value = ""; chatInput.focus(); });
+  chatInput.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); ask(chatInput.value); chatInput.value = ""; } });
+  function renderQuick(last) {
+    var qs = [];
+    if (!stepDone(0)) qs.push("¿Qué programa me recomiendas?");
+    if (result) qs.push("¿Cuándo recupero la inversión?"); else qs.push("Calcula mi retorno");
+    qs = qs.concat(["¿Cuánto cuesta?", "¿Hay garantía de empleo?", "¿Puedo estudiar mientras trabajo?", "¿Cuánto se gana?", "¿Consiguen trabajo sus alumnos?", "¿Qué incluye el bootcamp?", "¿Hay financiación?", "¿Qué opinan los alumnos?", state.market === "us" ? "Ver programas de México" : "Ver programas de EE. UU."]);
+    $("chatQuick").innerHTML = qs.filter(function (x, i) { return qs.indexOf(x) === i; }).slice(0, 9).map(function (x) { return '<button type="button">' + x + '</button>'; }).join("");
+  }
+  $("chatQuick").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) ask(b.textContent); });
+
+  // --- Motor de respuestas ---
+  function detectProgram(t) {
+    var fams = ["ds", "ml", "sys", "da", "qa", "cyber", "auto", "ux", "se"];
+    for (var i = 0; i < fams.length; i++) {
+      var hit = FAMILY_WORDS[fams[i]].some(function (w) { return t.indexOf(" " + w) >= 0 || (w.length > 3 && t.indexOf(w) >= 0); });
+      if (hit) {
+        var p = M().programs.filter(function (x) { return x.fam === fams[i]; })[0];
+        if (p) return p;
+        var other = MARKETS[state.market === "us" ? "mx" : "us"].programs.filter(function (x) { return x.fam === fams[i]; })[0];
+        if (other) return { other: other };
+      }
+    }
+    return null;
+  }
+  var INTENTS = [
+    ["act_mx", ["ver programas de mexico", "cambia a mexico", "mexico", "mxn", "pesos", "latinoamerica", "latam"]],
+    ["act_us", ["ver programas de ee uu", "estados unidos", "eeuu", "ee uu", "usa", "dolares", "usd"]],
+    ["act_calc", ["calcula mi retorno", "calcula", "calcular", "haz el calculo"]],
+    ["act_tour", ["tour", "guiame", "como funciona esto", "como se usa"]],
+    ["act_growth", ["growth"]],
+    ["act_week", ["organiza mi semana", "planifica mi semana", "horario de estudio"]],
+    ["myplan", ["cuando recupero", "mi plan", "mis fechas", "cuando termino", "cuando empiezo", "resumen", "cuando me graduo"]],
+    ["recommend", ["recomiendas", "cual elijo", "que programa", "cual me conviene", "para mi", "mejor programa", "encaja", "no se que elegir"]],
+    ["guarantee", ["garantia", "devuelven", "devolucion", "reembolso", "dinero de vuelta", "si no consigo", "si no encuentro"]],
+    ["refund", ["baja", "cancelar", "14 dias", "arrepiento", "echarme atras"]],
+    ["financing", ["financiacion", "financiar", "cuotas", "plazos", "mensualidad", "prestamo", "credito", "beca", "a meses"]],
+    ["price", ["precio", "precios", "cuesta", "cuestan", "coste", "costo", "vale", "matricula", "caro", "barato"]],
+    ["hours", ["horas", "horario", "compatible", "mientras trabajo", "trabajando", "a la vez", "dedicacion", "part time", "tiempo tengo", "cuanto tiempo al"]],
+    ["duration", ["dura", "duracion", "cuantos meses", "cuanto tiempo"]],
+    ["outcomes", ["consiguen trabajo", "empleo", "contratan", "tasa", "porcentaje", "colocacion", "resultados", "encuentran trabajo", "funciona de verdad"]],
+    ["salary", ["salario", "sueldo", "gana", "ganan", "cobra", "cobran", "pagan"]],
+    ["req", ["requisito", "experiencia", "titulo", "universidad", "estudios", "sin saber", "desde cero", "examen", "nivel"]],
+    ["dot", ["que es dot", " dot ", "asistente de ia de tripleten"]],
+    ["included", ["incluye", "coach", "mentor", "tutor", "externship", "practicas", "proyectos", "bolsa", "career", "acompanamiento", "apoyo", "ayuda a buscar"]],
+    ["reviews", ["opiniones", "opinan", "resenas", "valoracion", "trustpilot", "course report", "switchup", "estrellas", "fiable", "confiable"]],
+    ["language", ["espanol", "ingles", "idioma", "espana"]],
+    ["signup", ["inscribir", "apuntarme", "reservar", "matricularme", "empezar ya", "hablar con", "asesor", "admisiones", "contacto", "telefono"]],
+    ["programs", ["que programas hay", "que programas", "programas hay", "programas", "cursos", "bootcamps", "que ofrecen", "opciones", "carreras", "que hay", "catalogo"]],
+    ["company", ["tripleten", "empresa", "quienes son", "practicum", "que es"]],
+    ["nova", ["quien eres", "eres una ia", "eres un bot", "nova", "que haces"]],
+    ["thanks", ["gracias", "genial", "perfecto", "guay", "top"]],
+    ["greet", ["hola", "buenas", "hey", "que tal"]]
+  ];
+  function detectIntent(t) {
+    var best = null, bestScore = 0;
+    INTENTS.forEach(function (it) {
+      var s = 0;
+      it[1].forEach(function (k) { if (t.indexOf(k.charAt(0) === " " ? k : " " + k) >= 0 || (k.length > 4 && t.indexOf(k) >= 0)) s += k.length; });
+      if (s > bestScore) { bestScore = s; best = it[0]; }
+    });
+    return best;
+  }
+  function list(items) { return "<ul>" + items.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul>"; }
+  function goTo(id, msg) { return function () { closeChat(); scrollToEl($(id)); flash($(id).querySelector(".card") || $(id)); if (msg) setTimeout(function () { say(msg, { mood: "big" }); }, 700); }; }
+  function progLine(p) { return "<b>" + p.name + "</b>: " + money(p.price) + (p.listPrice ? " <s>" + money(p.listPrice) + "</s>" : "") + " · " + monthsNum(p.months) + " meses"; }
+  function progCard(p) {
+    var g = p.guarantee ? "Garantía de empleo: " + M().guaranteeMonths + " meses." : "No incluye garantía de empleo.";
+    return { html: "<b>" + p.name + "</b> (" + p.role + ")" + list([
+      "Precio: " + money(p.price) + (p.listPrice ? " con descuento (antes " + money(p.listPrice) + ")" : " pago único"),
+      "Duración: " + monthsNum(p.months) + " meses, " + M().hours + "/semana",
+      "Sueldo de referencia: " + money(p.salary) + perPeriod() + " (" + p.salaryNote + ")",
+      "Pago: " + planText(p),
+      g + (p.needsExp ? " Requiere " + p.needsExp + "." : "")
+    ]), acts: [{ label: "Usarlo en mis números", run: function () { selectProgram(p.id); closeChat(); scrollToEl($("numeros")); flash($("inputsCard")); say("He puesto <b>" + p.name + "</b> en tus números. Añade tu sueldo y calcula.", { mood: "big" }); } }, { label: "Ver en tripleten", href: withUtm(p.url, p.id) }], src: [M().id === "us" ? "tripleten.com" : "tripleten.mx", p.url] };
+  }
+  function answer(q) {
+    var t = norm(q), intent = detectIntent(t), p = detectProgram(t), m = M(), us = m.id === "us";
+    var srcSite = us ? ["tripleten.com/faq", SRC.faq] : ["tripleten.mx", SRC.mx];
+    if (p && p.other && !intent) return { intent: "program", html: "<b>" + p.other.name + "</b> está en el catálogo de " + MARKETS[state.market === "us" ? "mx" : "us"].name + ", no en " + m.name + ".", acts: [{ label: "Cambiar a " + MARKETS[state.market === "us" ? "mx" : "us"].short, run: function () { setMarket(state.market === "us" ? "mx" : "us"); } }] };
+    if (p && p.other) p = null;
+    switch (intent) {
+      case "act_mx": setMarket("mx", true); return { intent: "market", html: "Hecho: ahora ves los programas de <b>TripleTen México</b>, en español, con precios en MXN y sueldos mensuales. Garantía: 6 meses.", acts: [{ label: "Ver programas", run: goTo("numeros") }] };
+      case "act_us": setMarket("us", true); return { intent: "market", html: "Hecho: ahora ves los programas de <b>TripleTen en EE. UU.</b>, en USD y sueldos anuales. Garantía en los de nivel inicial: 10 meses.", acts: [{ label: "Ver programas", run: goTo("numeros") }] };
+      case "act_calc":
+        if (state.current === null) return { intent: "calc", html: "Para calcular me falta tu sueldo actual. Te llevo al campo: escríbelo y pulsa el botón gigante.", acts: [{ label: "Ir a mis números", run: function () { closeChat(); scrollToEl($("current")); setTimeout(function () { try { $("current").focus(); } catch (e) {} flash($("current").parentNode); }, 700); } }] };
+        closeChat(); calculate(true); return { intent: "calc", html: "¡Calculado! Te he llevado a tu resultado." };
+      case "act_tour": closeChat(); setTimeout(function () { tourShow(0); }, 300); return { intent: "tour", html: "Empiezo el tour." };
+      case "act_growth": closeChat(); setTimeout(function () { openDrawer(true); }, 300); return { intent: "growth", html: "Abro el Growth mode." };
+      case "act_week": return { intent: "week", html: "TripleTen pide " + m.hours + " a la semana. Te llevo a tu semana: toca tus huecos libres o prueba «Después del trabajo».", acts: [{ label: "Ir a mi semana", run: goTo("semana") }] };
+      case "myplan":
+        if (!result) return { intent: "myplan", html: "Aún no tienes números. Pon tu sueldo actual y pulsa <b>Calcular mi retorno</b> y te doy todas tus fechas.", acts: [{ label: "Ir a mis números", run: goTo("numeros") }] };
+        return { intent: "myplan", html: (state.name ? esc(state.name) + ", tu" : "Tu") + " plan:" + list([
+          "Recuperas la inversión en <b>" + monthsNum(result.shown) + " meses</b> con tu primer sueldo Tech (+" + money(result.gain) + "/mes)",
+          "Empiezas: " + fmtDay(result.start), "Te gradúas: " + fmtDay(result.grad), "Primer sueldo Tech: " + fmtDay(result.job),
+          "Todo recuperado: <b>" + fmtDay(result.back) + "</b>", "En 5 años: " + money(result.five) + " netos más"
+        ]), acts: [{ label: "Guardar fechas en mi calendario", run: saveDates }, { label: "Ver mi viaje", run: goTo("viaje") }] };
+      case "recommend":
+        if (!stepDone(0)) return { intent: "recommend", html: "Dime a qué te dedicas y qué te hace ilusión (3 toques) y te digo qué programa encaja contigo y por qué.", acts: [{ label: "Hacer mi perfil", run: goTo("perfil") }] };
+        var top = scores()[0];
+        return { intent: "recommend", html: "Con tu perfil, tu mejor encaje es <b>" + top.p.name + "</b> (" + top.pct + "%)." + list(reasonsFor(top.p).map(function (r) { return esc(r.t); })), acts: [{ label: "Usar " + top.p.name, run: function () { selectProgram(top.p.id); closeChat(); scrollToEl($("numeros")); flash($("inputsCard")); } }, { label: "Comparar programas", run: goTo("perfil") }] };
+      case "guarantee":
+        if (us) return { intent: "guarantee", html: "En los programas de nivel inicial: si completas el programa y el paquete de <b>Career Services</b> y buscas empleo de buena fe, y no consigues un trabajo relevante en <b>10 meses</b> desde que te gradúas, te devuelven la matrícula." + list(["Los <b>Accelerator</b> (AI & Machine Learning, AI Systems Engineering) no incluyen garantía de empleo.", "Además, reembolso completo si te das de baja en los primeros <b>14 días</b>."]), src: srcSite };
+        return { intent: "guarantee", html: "Si no consigues trabajo en tech <b>6 meses</b> después de graduarte, participando activamente en el <b>Acelerador de Carrera</b>, te reembolsan el <b>100%</b> de tu matrícula.", src: srcSite };
+      case "refund": return us ? { intent: "refund", html: "Si te das de baja en las primeras <b>2 semanas (14 días)</b>, te devuelven todo. Y en los programas de nivel inicial tienes además la garantía de empleo de 10 meses.", src: srcSite } : { intent: "refund", html: "Las condiciones de baja dependen del plan de pago. La garantía cubre el 100% si no consigues trabajo en tech en 6 meses tras graduarte. Para tu caso concreto, consulta con admisiones.", acts: [{ label: "Hablar con TripleTen", href: withUtm(m.site, "nova_refund") }] };
+      case "financing":
+        if (p) return { intent: "financing", html: "<b>" + p.name + "</b>: " + planText(p) + ".", src: [p.name, p.url] };
+        if (us) return { intent: "financing", html: "Puedes pagar por adelantado (entre $4,935 y $12,600 según programa), a plazos con TripleTen o con financiación y préstamos de <b>Climb Credit</b> o <b>Edly</b>, que tienen opciones de pago totalmente diferido. Ejemplo real: AI & Machine Learning, desde $350/mes.", src: srcSite };
+        return { intent: "financing", html: "Pago único con descuento o mensualidades:" + list(m.programs.map(function (x) { return "<b>" + x.name + "</b>: " + planText(x); })), src: srcSite };
+      case "price":
+        if (p) return Object.assign(progCard(p), { intent: "price" });
+        return { intent: "price", html: us ? "Precios por adelantado en EE. UU.:" + list(m.programs.map(progLine)) + "También hay cuotas y financiación." : "Precios en México (pago único con descuento):" + list(m.programs.map(progLine)) + "También hay mensualidades.", acts: [{ label: "Calcular mi retorno", run: goTo("numeros") }], src: srcSite };
+      case "hours": return { intent: "hours", html: us ? "Entre <b>15 y 20 h a la semana</b>, sin horarios obligatorios: solo fechas de entrega de proyectos. El <b>77%</b> de sus alumnos estudia mientras trabaja a jornada completa." : "Entre <b>15 y 20 h a la semana</b>, a tu ritmo, con sesiones en vivo y mentores. Está pensado para compaginarlo con tu trabajo.", acts: [{ label: "Organizar mi semana", run: goTo("semana", "Toca tus huecos libres o prueba una semana tipo.") }], src: srcSite };
+      case "duration":
+        if (p) return { intent: "duration", html: "<b>" + p.name + "</b> dura " + monthsNum(p.months) + " meses, con " + m.hours + " a la semana.", src: [p.name, p.url] };
+        return { intent: "duration", html: "Duración de cada programa:" + list(m.programs.map(function (x) { return "<b>" + x.name + "</b>: " + monthsNum(x.months) + " meses"; })), src: srcSite };
+      case "outcomes": return us ? { intent: "outcomes", html: "Datos de su informe de 2026 (empleo en 2025):" + list(["Cerca de <b>dos tercios</b> de sus graduados consiguieron empleo en el último año, en un mercado Tech duro.", "Subida mediana de sueldo: <b>+$16,300</b>. Sueldo inicial medio: <b>$68,300</b>.", "El <b>88%</b> sigue en su puesto un año después."]) + "Y si no encuentras trabajo, en los programas de nivel inicial tienes la garantía de 10 meses.", src: ["Informe de empleo 2026", SRC.outcomes] } : { intent: "outcomes", html: "Según TripleTen México, el <b>93%</b> de sus graduados consigue empleo en los 6 meses posteriores a graduarse, y el <b>72%</b> empezó sin experiencia en tech.", src: srcSite };
+      case "salary":
+        if (p) return { intent: "salary", html: "<b>" + p.role + "</b>: " + money(p.salary) + perPeriod() + " de referencia (" + p.salaryNote + ").", src: [p.name, p.url] };
+        return { intent: "salary", html: "Sueldos de referencia que publica TripleTen:" + list(m.programs.map(function (x) { return "<b>" + x.role + "</b>: " + money(x.salary) + perPeriod(); })) + (us ? "Subida mediana de sus graduados: +$16,300 al año." : "Referencias mensuales para puestos iniciales."), src: srcSite };
+      case "req": return us ? { intent: "req", html: "La mayoría de programas <b>no piden experiencia ni examen de acceso</b>. El 61% de sus graduados no tiene título universitario. Solo los Accelerator piden experiencia: AI & Machine Learning, 2+ años programando en producción.", src: srcSite } : { intent: "req", html: "No necesitas experiencia previa en tecnología: solo una computadora y una conexión a internet estable. El 72% de sus alumnos empezó desde cero.", src: srcSite };
+      case "dot": return { intent: "dot", html: us ? "<b>Dot</b> es el asistente de IA de TripleTen: te da pistas personalizadas mientras practicas, 24/7. Yo no soy Dot: soy Nova, la guía de esta calculadora." : "En México, el apoyo es de mentores y sesiones en vivo. Dot es el asistente de IA de los programas de EE. UU.", src: srcSite };
+      case "included": return us ? { intent: "included", html: "Qué incluye:" + list(["Career coaching: CV, entrevistas y portfolio", "Bolsa con más de 300 ofertas nuevas al día", "Externships: proyectos para empresas colaboradoras", "Instructores, learning coaches y soporte técnico", "Dot, asistente de IA 24/7, y comunidad"]), src: srcSite } : { intent: "included", html: "Qué incluye:" + list(["Acelerador de Carrera: CV, portafolio y entrevistas", "Acompañamiento en la búsqueda 6 meses tras graduarte", "Mentores y sesiones en vivo", "Entre 9 y 16 proyectos de portafolio"]), src: srcSite };
+      case "reviews": return { intent: "reviews", html: "Valoraciones públicas:" + list(m.ratings.map(function (r) { return "<b>" + r[0] + "</b> en " + r[1]; })), src: [m.ratings[1][1], m.ratings[1][2]] };
+      case "language": return { intent: "language", html: "En EE. UU. los programas son en inglés. En Latinoamérica (México, Chile, Perú, Ecuador…) TripleTen tiene programas <b>en español</b>. Ahora estás viendo: <b>" + m.name + "</b>.", acts: [{ label: us ? "Ver programas de México" : "Ver programas de EE. UU.", run: function () { setMarket(us ? "mx" : "us"); } }] };
+      case "signup": return { intent: "signup", html: "Para reservar plaza o hablar con admisiones, entra en su web" + (P() ? " de <b>" + P().name + "</b>" : "") + ". Llévate tu plan: lo tienes en la sección de la tarjeta.", acts: [{ label: "Ir a TripleTen", href: ctaUrl() }] };
+      case "programs": return { intent: "programs", html: "Programas de TripleTen en <b>" + m.name + "</b>:" + list(m.programs.map(progLine)), acts: [{ label: "¿Cuál me recomiendas?", run: function () { ask("¿Qué programa me recomiendas?"); } }], src: srcSite };
+      case "company": return { intent: "company", html: "TripleTen es un bootcamp online y part-time para pasar a Tech sin experiencia previa. Antes se llamaba <b>Practicum</b> y cambió de nombre en junio de 2023. Tiene " + (us ? "más de <b>7,500 alumni</b>" : "más de <b>6,000</b> personas formadas en Latinoamérica") + " y programas en EE. UU. y Latinoamérica.", src: us ? ["tripleten.com", SRC.home] : srcSite };
+      case "nova": return { intent: "nova", html: "Soy <b>Nova</b>, la guía de Career ROI Lab. No soy de TripleTen: respondo con sus <b>datos públicos</b> (con la fuente de cada uno) y con los números de tu plan, que se quedan en tu navegador." };
+      case "thanks": return { intent: "thanks", html: "¡A ti! " + (nextStepHint() ? "Siguiente paso: " + nextStepHint() : "Tu plan está completo. ¿Le damos a «Cambia tu carrera hoy»?") };
+      case "greet": return { intent: "greet", html: "¡Hola" + (state.name ? ", " + esc(state.name) : "") + "! Pregúntame por precios, garantía, horarios, sueldos o por tu plan." };
+    }
+    if (p) return Object.assign(progCard(p), { intent: "program" });
+    return { intent: null, html: "No tengo ese dato verificado y prefiero no inventarlo. Puedo contarte precios, duración, garantía, horarios, sueldos, requisitos, financiación u opiniones. Para lo demás, su equipo de admisiones te responde.", acts: [{ label: "Preguntar a TripleTen", href: withUtm(m.site, "nova_fallback") }] };
+  }
+
+  // --- Nova proactiva ---
+  var lastNovaAt = 0, lastInteraction = Date.now(), idleNudges = 0, sectionSaid = {};
+  ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) { window.addEventListener(ev, function () { lastInteraction = Date.now(); }, { passive: true }); });
+  setInterval(function () {
+    if (chatOpen || tourI >= 0 || idleNudges >= 6 || document.hidden) return;
+    if (Date.now() - lastInteraction > 16000 && Date.now() - lastNovaAt > 16000) {
+      idleNudges++;
+      var h = nextStepHint();
+      say((h ? h : TIPS[idleNudges % TIPS.length]) + ' <u>Pregúntame</u> lo que quieras.', { mood: "big", cheer: true, ms: 7000 });
+      track("nova_nudge");
+    }
+  }, 4000);
+  var TIPS = [
+    "TripleTen es part-time: 15–20 h a la semana, compatible con tu trabajo.",
+    "Toca el gráfico de tu dinero y arrastra: verás mes a mes cuándo empiezas a ganar.",
+    "Puedes cambiar entre EE. UU. y México arriba del todo: cambian precios, sueldos y garantía."
+  ];
+  function sectionLine(id) {
+    var m = M();
+    return {
+      perfil: stepDone(0) ? null : "Tres toques y te digo qué programa de TripleTen encaja contigo.",
+      numeros: result ? null : (state.current === null ? "Escribe tu sueldo " + (m.period === "year" ? "anual" : "mensual") + " actual y pulsa el botón gigante." : "Ya casi: pulsa <b>Calcular mi retorno</b>."),
+      viaje: result ? "Baja despacio: yo voy avanzando por tus hitos." : null,
+      semana: hours() >= TARGET_HOURS ? null : "TripleTen pide " + m.hours + ". ¿Probamos con «Después del trabajo»?",
+      recompensa: state.dreams.length ? null : "Elige un sueño y te digo en cuántos meses de subida lo tienes.",
+      tarjeta: result ? (state.done.card ? null : "Descárgala y súbela: decirlo en público engancha.") : "Tu tarjeta se desbloquea al calcular tus números.",
+      video: "¿Prefieres verlo? Menos de 2 minutos, sin voz, paso a paso.",
+      beneficios: "¿Dudas sobre la garantía o el horario? Toca «Pregúntale a Nova» en cualquier tarjeta.",
+      equipo: "Esta parte es para el equipo de TripleTen: prueba el <b>Growth mode</b>."
+    }[id];
+  }
+  var secIO = "IntersectionObserver" in window ? new IntersectionObserver(function (en) {
+    en.forEach(function (x) {
+      if (!x.isIntersecting) return;
+      var id = x.target.id;
+      if (sectionSaid[id]) return;
+      var line = sectionLine(id);
+      if (!line) return;
+      sectionSaid[id] = true;
+      setTimeout(function () { say(line, { mood: "happy" }); }, 500);
+    });
+  }, { threshold: 0.35 }) : null;
+  ["perfil", "numeros", "viaje", "semana", "recompensa", "tarjeta", "video", "beneficios", "equipo"].forEach(function (id) { if (secIO && $(id)) secIO.observe($(id)); });
+
+  // =================================================================
+  // Mercado
+  // =================================================================
+  function setMarket(id, silent) {
+    if (!MARKETS[id] || (id === state.market && !silent)) { if (id === state.market) toast("Ya estás viendo " + MARKETS[id].name); return; }
+    var changed = id !== state.market;
+    state.market = id;
+    if (changed) {
+      state.program = null; state.cost = MARKETS[id].defaults.cost; state.expected = MARKETS[id].defaults.expected;
+      state.current = null; state.calculated = false; state.installments = false; state.custom = []; result = null; matchView = null;
+      $("result").classList.remove("show"); $("emptyRes").style.display = "";
+      track("market_switch", { market: id });
+    }
+    renderMarket(); renderProfile(); renderNumbers(); applyVariant(); save(); refreshAll();
+    if (changed && !silent) say("Ahora ves <b>TripleTen " + MARKETS[id].name + "</b>: " + (id === "mx" ? "programas en español, precios en MXN, sueldos mensuales y garantía de 6 meses." : "precios en USD, sueldos anuales y garantía de 10 meses en los programas de nivel inicial."), { mood: "big", cheer: true, ms: 7000 });
+  }
+  function renderMarket() {
+    var m = M();
+    each($("market").children, function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-m") === m.id)); });
+    $("heroStats").innerHTML = m.stats.map(function (s) { return '<div class="hstat"><b data-stat="' + esc(s[0]) + '">' + esc(s[0]) + '</b><span>' + s[1] + '</span></div>'; }).join("") + '<p class="stats-note">' + m.statsNote + '</p>';
+    animateStats();
+    $("features").innerHTML = m.features.map(function (f) { return '<div class="card feature spot"><div class="ic">' + icon(f[0]) + '</div><h3>' + f[1] + '</h3><p>' + f[2] + '</p><button type="button" class="ask" data-q="' + esc(f[3]) + '">' + icon("chat") + 'Pregúntale a Nova</button></div>'; }).join("");
+    $("ratings").innerHTML = m.ratings.map(function (r) { return '<a class="rating" href="' + r[2] + '" target="_blank" rel="noopener"><b>' + r[0] + '</b><span>' + r[1] + '</span>' + icon("ext") + '</a>'; }).join("");
+    $("sources").innerHTML = "Fuentes (" + m.name + "): " + m.sources.map(function (s) { return '<a href="' + s[1] + '" target="_blank" rel="noopener">' + s[0] + '</a>'; }).join(" · ");
+    $("guarTitle").innerHTML = "Riesgo cubierto: <span id=\"riskAmt\" style=\"color:var(--neon)\">" + money(effectiveCost()) + "</span>";
+    $("heroMarketNote").textContent = m.id === "us" ? "Programas en inglés · precios en USD" : "Programas en español · precios en MXN";
+    var cu = m.period === "year";
+    $("lblCur").textContent = cu ? "Tu salario anual actual" : "Tu salario mensual actual";
+    $("unitCur").textContent = cu ? "USD / año" : "MXN / mes";
+    $("unitCost").textContent = m.cur + ", pago único";
+    $("unitExp").textContent = cu ? "USD / año" : "MXN / mes";
+    $("current").placeholder = cu ? "30,000" : "12,000";
+    [["current", "currentR"], ["cost", "costR"], ["expected", "expectedR"]].forEach(function (k) { var r = m.ranges[k[0]], el = $(k[1]); el.min = r[0]; el.max = r[1]; el.step = r[2]; });
+    $("programs").innerHTML = m.programs.map(function (p) {
+      return '<button type="button" class="prog" aria-pressed="false" data-id="' + p.id + '"><span class="pi">' + icon(p.icon) + '</span><span class="tag' + (p.tag === "Accel." ? " acc" : "") + '">' + p.tag + '</span><b>' + p.name + '</b><span class="meta"><span>' + monthsNum(p.months) + ' meses</span><strong>' + moneyShort(p.price) + '</strong></span></button>';
+    }).join("");
+    rotator.start();
+  }
+  each($("market").children, function (b) { b.addEventListener("click", function () { buzz(); setMarket(b.getAttribute("data-m")); }); });
+  $("features").addEventListener("click", function (e) { var b = e.target.closest(".ask"); if (b) { track("feature_ask", { q: b.getAttribute("data-q") }); openChat(b.getAttribute("data-q")); } });
+  function animateStats() {
+    each(document.querySelectorAll("[data-stat]"), function (el) {
+      var mm = /^([^\d]*)([\d,.]+)(.*)$/.exec(el.getAttribute("data-stat"));
+      if (!mm || reduceMotion) return;
+      var target = Number(mm[2].replace(/,/g, "")), pre = mm[1], suf = mm[3], useComma = mm[2].indexOf(",") >= 0;
+      el._v = 0;
+      tween(el, target, function (v) { var r = Math.round(v); return pre + (useComma ? r.toLocaleString("en-US") : String(r)) + suf; }, 1500);
+    });
+  }
 
   // =================================================================
   // Paso 1: perfil y encaje
   // =================================================================
   $("jobs").innerHTML = JOBS.map(function (j) { return '<button type="button" class="chip" aria-pressed="false" data-id="' + j.id + '">' + icon(j.icon) + '<span>' + j.label + '</span></button>'; }).join("");
   $("interests").innerHTML = INTERESTS.map(function (j) { return '<button type="button" class="chip wide" aria-pressed="false" data-id="' + j.id + '">' + icon(j.icon) + '<span>' + j.label + '</span></button>'; }).join("");
-
   var nameT, matchView = null, profileTracked = false;
   $("name").addEventListener("input", function () {
     state.name = capWord(($("name").value.trim().split(/\s+/)[0] || "").slice(0, 24));
@@ -1320,8 +1753,7 @@
   });
   $("jobs").addEventListener("click", function (e) {
     var b = e.target.closest(".chip"); if (!b) return;
-    buzz();
-    state.job = b.getAttribute("data-id"); matchView = null;
+    buzz(); state.job = b.getAttribute("data-id"); matchView = null;
     say(byId(JOBS, state.job).quip, { mood: "big" });
     track("job_select", { job: state.job });
     save(); renderProfile(); refreshAll();
@@ -1332,28 +1764,25 @@
     var id = b.getAttribute("data-id"), i = state.interests.indexOf(id);
     if (i >= 0) state.interests.splice(i, 1);
     else {
-      if (state.interests.length >= 3) { say("Máximo 3 intereses. Quita uno para elegir otro.", { mood: "think" }); return; }
-      state.interests.push(id);
-      say(byId(INTERESTS, id).quip, { mood: "big" });
+      if (state.interests.length >= 3) { say("Máximo 3 intereses. Quita uno para elegir otro.", { mood: "think" }); flash($("interests")); return; }
+      state.interests.push(id); say(byId(INTERESTS, id).quip, { mood: "big" });
     }
-    matchView = null;
-    track("interest_toggle", { interest: id, on: i < 0 });
+    matchView = null; track("interest_toggle", { interest: id, on: i < 0 });
     save(); renderProfile(); refreshAll();
   });
   $("exp").addEventListener("click", function () {
     state.exp = !state.exp;
-    if (state.exp) say("Con experiencia puedes ir por la vía rápida: los programas <b>Accelerator</b>.", { mood: "big" });
+    if (state.exp) say(state.market === "us" ? "Con experiencia puedes ir por la vía rápida: los <b>Accelerator</b> (ojo: no incluyen garantía de empleo)." : "En México los programas son para empezar desde cero, así que todos te encajan.", { mood: "big" });
     track("experience_toggle", { on: state.exp });
     save(); renderProfile(); refreshAll();
   });
-
   function scores() {
     var j = byId(JOBS, state.job);
-    var out = PROGRAMS.map(function (p) {
-      var s = 0, locked = p.tag === "Accelerator" && !state.exp;
-      state.interests.forEach(function (id) { s += byId(INTERESTS, id).score[p.id] || 0; });
-      if (j) s += j.boost[p.id] || 0;
-      if (p.tag === "Accelerator" && state.exp) s += 2;
+    var out = M().programs.map(function (p) {
+      var s = 0, locked = !!p.needsExp && !state.exp;
+      state.interests.forEach(function (id) { s += byId(INTERESTS, id).score[p.fam] || 0; });
+      if (j) s += j.boost[p.fam] || 0;
+      if (p.needsExp && state.exp) s += 2;
       if (locked) s *= 0.35;
       return { p: p, s: s, locked: locked };
     });
@@ -1365,12 +1794,12 @@
   function topMatch() { if (!state.job || !state.interests.length) return null; return scores()[0].p; }
   function reasonsFor(p) {
     var r = [], j = byId(JOBS, state.job);
-    state.interests.forEach(function (id) { var it = byId(INTERESTS, id); if ((it.score[p.id] || 0) >= 3) r.push({ t: it.reason + ": justo lo que hace un " + p.role + "." }); });
-    if (j && (j.boost[p.id] || 0) >= 2) r.push({ t: "Vienes de " + j.from + ": " + j.skill + " ya es media profesión." });
+    state.interests.forEach(function (id) { var it = byId(INTERESTS, id); if ((it.score[p.fam] || 0) >= 3) r.push({ t: it.reason + ": justo lo que hace un " + p.role + "." }); });
+    if (j && (j.boost[p.fam] || 0) >= 2) r.push({ t: "Vienes de " + j.from + ": " + j.skill + " ya es media profesión." });
     else if (j && j.id !== "otro") r.push({ t: "De " + j.from + " te traes algo valioso: " + j.skill + "." });
-    if (p.tag === "Accelerator" && state.exp) r.push({ t: "Tienes experiencia: vía rápida de " + monthsNum(p.months) + " meses." });
-    if (p.tag === "Accelerator" && !state.exp) r.push({ t: "Pide 2 años de experiencia programando en producción.", warn: true });
-    if (p.price <= 6000) r.push({ t: "De los más rápidos y asequibles: " + monthsNum(p.months) + " meses por " + money(p.price) + "." });
+    if (p.needsExp && state.exp) r.push({ t: "Tienes experiencia: vía rápida de " + monthsNum(p.months) + " meses (sin garantía de empleo)." });
+    if (p.needsExp && !state.exp) r.push({ t: "Requiere " + p.needsExp + ".", warn: true });
+    if (p.guarantee) r.push({ t: "Con garantía de empleo de " + M().guaranteeMonths + " meses." });
     return r.slice(0, 4);
   }
   function renderProfile() {
@@ -1391,9 +1820,9 @@
     var ring = $("matchRing");
     requestAnimationFrame(function () { ring.style.strokeDashoffset = 213.6 * (1 - sel.pct / 100); ring.style.stroke = sel.locked ? "var(--warm)" : ""; });
     $("matchReasons").innerHTML = reasonsFor(p).map(function (x) { return '<li class="' + (x.warn ? "warn" : "") + '">' + icon(x.warn ? "warn" : "check") + '<span>' + esc(x.t) + '</span></li>'; }).join("");
-    $("matchSkills").innerHTML = p.skills.map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("");
-    var inUse = state.program && state.program.id === p.id;
-    $("useMatch").textContent = inUse ? "✓ Ya está en tus números" : "Usar " + p.name + " en mis números";
+    $("matchSkills").innerHTML = p.skills.map(function (s) { return "<span>" + esc(s) + "</span>"; }).join("") + '<a class="skill-link" href="' + withUtm(p.url, p.id) + '" target="_blank" rel="noopener">Ver temario ↗</a>';
+    var inUse = P() && P().id === p.id;
+    $("useMatch").textContent = inUse ? "✓ Ya está en tus números · ir a calcular" : "Usar " + p.name + " en mis números";
     $("useMatch").setAttribute("data-id", p.id);
     $("matchList").innerHTML = list.map(function (o) {
       return '<button type="button" class="mrow' + (o.locked ? " locked" : "") + '" aria-pressed="' + (o.p.id === p.id) + '" data-id="' + o.p.id + '"><b>' + o.p.name + '</b><em>' + (o.locked ? "requiere exp." : o.pct + "%") + '</em><span class="bar"><i data-w="' + o.pct + '"></i></span></button>';
@@ -1407,34 +1836,32 @@
   }
   $("matchList").addEventListener("click", function (e) {
     var b = e.target.closest(".mrow"); if (!b) return;
-    buzz(); matchView = b.getAttribute("data-id"); renderProfile();
+    buzz(); matchView = b.getAttribute("data-id"); renderProfile(); flash($("matchCard").querySelector(".match-top"));
     track("match_compare", { program: matchView });
   });
   $("useMatch").addEventListener("click", function () {
     var id = $("useMatch").getAttribute("data-id");
-    selectProgram(id);
-    track("match_use", { program: id });
-    say("Hecho. He puesto el precio y el salario de referencia de <b>" + state.program.name + "</b>. Añade tu sueldo actual y calcula.", { mood: "big" });
+    if (!(P() && P().id === id)) { selectProgram(id); track("match_use", { program: id }); }
+    say("He puesto el precio y el sueldo de referencia de <b>" + P().name + "</b>. " + (state.current === null ? "Añade tu sueldo actual y calcula." : "Pulsa el botón gigante."), { mood: "big" });
     renderProfile();
-    scrollToEl($("numeros"));
+    scrollToEl($("numeros")); setTimeout(function () { flash($("inputsCard")); }, 700);
   });
 
   // =================================================================
   // Paso 2: números
   // =================================================================
-  $("programs").innerHTML = PROGRAMS.map(function (p) {
-    return '<button type="button" class="prog" aria-pressed="false" data-id="' + p.id + '"><span class="pi">' + icon(p.icon) + '</span><span class="tag' + (p.tag === "Accelerator" ? " acc" : "") + '">' + (p.tag === "Accelerator" ? "Accel." : "Entry") + '</span><b>' + p.name + '</b><span class="meta"><span>' + monthsNum(p.months) + ' meses</span><strong>' + money(p.price) + '</strong></span></button>';
-  }).join("");
   $("programs").addEventListener("click", function (e) {
     var b = e.target.closest(".prog"); if (!b) return;
     buzz(); selectProgram(b.getAttribute("data-id"));
-    track("program_select", { program: state.program.id, price: state.program.price });
-    if (state.program.tag === "Accelerator" && !state.exp) say("Ojo: <b>" + state.program.name + "</b> pide 2 años programando en producción.", { mood: "think" });
+    track("program_select", { program: P().id, price: P().price });
+    if (P().needsExp && !state.exp) say("Ojo: <b>" + P().name + "</b> requiere " + P().needsExp + " y no incluye garantía de empleo.", { mood: "think" });
+    else say("<b>" + P().name + "</b>: " + money(P().price) + ", " + monthsNum(P().months) + " meses. Sueldo de referencia: " + money(P().salary) + perPeriod() + ".", { mood: "big" });
     renderProfile();
   });
   function selectProgram(id) {
-    state.program = byId(PROGRAMS, id);
-    if (state.program) { state.cost = state.program.price; state.expected = state.program.salary; }
+    var p = byId(M().programs, id);
+    if (!p) return;
+    state.program = p; state.cost = p.price; state.expected = p.salary;
     renderNumbers(); save(); onChange();
   }
   var fields = { current: $("current"), cost: $("cost"), expected: $("expected") };
@@ -1449,9 +1876,10 @@
     $("search").value = state.search; paintRange($("search"));
     $("searchOut").textContent = state.search + (state.search === 1 ? " mes" : " meses");
     $("install").setAttribute("aria-checked", String(state.installments));
-    $("installTxt").textContent = state.installments ? INSTALLMENTS + " pagos de " + money((state.cost || 0) / INSTALLMENTS) + " (mismo precio total)" : "Divide la matrícula en " + INSTALLMENTS + " pagos";
-    each($("programs").children, function (b) { b.setAttribute("aria-pressed", String(!!state.program && b.getAttribute("data-id") === state.program.id)); });
-    $("progHint").textContent = state.program ? state.program.role + " · " + monthsNum(state.program.months) + " meses" : "Opcional: rellena coste y salario";
+    $("installTxt").textContent = planText(P());
+    each($("programs").children, function (b) { b.setAttribute("aria-pressed", String(!!P() && b.getAttribute("data-id") === P().id)); });
+    $("progHint").textContent = P() ? P().role + " · " + monthsNum(P().months) + " meses" : "Elige uno o rellena coste y sueldo";
+    $("salaryNote").textContent = P() ? "Sueldo de referencia: " + P().salaryNote + "." : "";
   }
   var inputT;
   Object.keys(fields).forEach(function (key) {
@@ -1467,25 +1895,24 @@
       afterEdit(key);
     });
     el.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); el.blur(); calculate(true); } });
-    r.addEventListener("input", function () {
-      state[key] = Number(r.value); el.value = nf.format(state[key]);
-      el.parentNode.classList.remove("invalid"); afterEdit(key);
-    });
+    r.addEventListener("input", function () { state[key] = Number(r.value); el.value = nf.format(state[key]); el.parentNode.classList.remove("invalid"); afterEdit(key); });
   });
   function afterEdit(key) {
-    if (key !== "current" && state.program && (state.cost !== state.program.price || state.expected !== state.program.salary)) state.program = null;
+    if (key !== "current" && P() && (state.cost !== P().price || state.expected !== P().salary)) state.program = null;
     clearTimeout(inputT); inputT = setTimeout(function () { track("input_change", { field: key }); }, 700);
     renderNumbers(); save(); onChange();
   }
   $("search").addEventListener("input", function () {
     state.search = Number($("search").value);
-    if (state.search >= 8) say("Sin agobios: la garantía de TripleTen cubre hasta <b>10 meses</b> de búsqueda.", { mood: "think" });
+    if (state.search >= Math.min(8, M().guaranteeMonths)) say(P() && !P().guarantee ? "Ojo: este programa no incluye garantía de empleo." : "Sin agobios: la garantía de TripleTen cubre hasta <b>" + M().guaranteeMonths + " meses</b> de búsqueda.", { mood: "think" });
     renderNumbers(); save(); onChange();
   });
   $("install").addEventListener("click", function () {
     state.installments = !state.installments;
     track("installments_toggle", { on: state.installments });
-    renderNumbers(); save();
+    var p = P();
+    if (state.installments) say(p && p.plan && (p.plan.total || p.plan.n) ? "Calculo con el total a plazos: <b>" + money(effectiveCost()) + "</b>." : planText(p) + ". El cálculo usa el precio por adelantado.", { mood: "happy" });
+    renderNumbers(); save(); onChange();
   });
   function onChange() { $("error").textContent = ""; if (state.calculated) calculate(false); else refreshAll(); }
 
@@ -1498,32 +1925,33 @@
   ];
   function segmentFor(m) { for (var i = 0; i < MESSAGES.length; i++) if (m <= MESSAGES[i].max) return i; return MESSAGES.length - 1; }
   function exactLabel(m) { var w = Math.floor(m), d = Math.round((m - w) * DAYS_PER_MONTH); if (d >= 30) { w++; d = 0; } var p = []; if (w) p.push(w + (w === 1 ? " mes" : " meses")); if (d) p.push(d + (d === 1 ? " día" : " días")); return p.length ? "Exactamente " + p.join(" y ") : "Desde el primer día"; }
-  function ctaUrl() { var p = state.program ? state.program.id : "personalizado"; return CONFIG.ctaBase + "?utm_source=career_roi_lab&utm_medium=calculator&utm_campaign=cambia_tu_carrera&utm_content=" + p; }
-  function roleName() { return state.program ? state.program.role : (topMatch() ? topMatch().role : "Tech"); }
+  function withUtm(url, content) { return url + (url.indexOf("?") >= 0 ? "&" : "?") + "utm_source=career_roi_lab&utm_medium=calculator&utm_campaign=cambia_tu_carrera&utm_content=" + encodeURIComponent(content || "general"); }
+  function ctaUrl() { return P() ? withUtm(P().url, P().id) : withUtm(M().site, "personalizado"); }
+  function roleName() { return P() ? P().role : (topMatch() ? topMatch().role : "Tech"); }
   function fromName() { var j = byId(JOBS, state.job); return j ? j.from : null; }
   function nextMonday() { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + ((8 - d.getDay()) % 7 || 7)); return d; }
 
   function calculate(fromButton) {
-    var cur = state.current, cost = state.cost, exp = state.expected;
+    var cur = state.current, cost = effectiveCost(), exp = state.expected;
     each(document.querySelectorAll("#inputsCard .input"), function (x) { x.classList.remove("invalid"); });
-    var err = cur === null ? ["current", "Escribe tu salario anual actual (pon 0 si ahora no tienes ingresos)."] : !cost ? ["cost", "Indica el coste del bootcamp."] : !exp ? ["expected", "Indica el salario que esperas ganar en Tech."] : null;
+    var per = M().period === "year" ? "anual" : "mensual";
+    var err = cur === null ? ["current", "Escribe tu salario " + per + " actual (pon 0 si ahora no tienes ingresos)."] : !cost ? ["cost", "Indica el coste del bootcamp."] : !exp ? ["expected", "Indica el salario que esperas ganar en Tech."] : null;
     if (err) {
       fields[err[0]].parentNode.classList.add("invalid"); $("error").textContent = err[1];
-      if (fromButton) { fields[err[0]].focus(); track("calc_error", { field: err[0] }); say("Me falta un dato: " + err[1].charAt(0).toLowerCase() + err[1].slice(1), { mood: "think" }); }
+      if (fromButton) { scrollToEl(fields[err[0]]); setTimeout(function () { try { fields[err[0]].focus({ preventScroll: true }); } catch (e) {} }, 500); flash(fields[err[0]].parentNode); track("calc_error", { field: err[0] }); say("Me falta un dato: " + err[1].charAt(0).toLowerCase() + err[1].slice(1), { mood: "think" }); }
       result = null; refreshAll();
       return;
     }
     $("error").textContent = "";
     var first = !state.calculated || !result;
     state.calculated = true;
-    var study = state.program ? state.program.months : CUSTOM_STUDY_MONTHS;
-    var gain = (exp - cur) / 12;
+    var study = P() ? P().months : CUSTOM_STUDY_MONTHS, gain = gainMonthly(cur, exp);
     $("emptyRes").style.display = "none";
     var res = $("result");
     if (fromButton) { res.classList.remove("show"); void res.offsetWidth; }
     res.classList.add("show");
     $("riskAmt").textContent = money(cost);
-
+    renderGuarantee();
     if (gain <= 0) {
       result = null;
       $("kicker").textContent = state.name ? state.name + ", tu punto de partida ya es alto" : "Tu punto de partida ya es alto";
@@ -1531,23 +1959,22 @@
       $("exact").textContent = "Tu salario objetivo no supera al actual.";
       $("dateChip").style.display = "none";
       $("headline").innerHTML = "Aquí el salto no es de sueldo, es de <strong>propósito</strong>.";
-      $("subline").textContent = "Sube tu salario objetivo o mira los programas Accelerator: los perfiles de IA con experiencia son los que más crecen.";
+      $("subline").textContent = "Sube tu salario objetivo o prueba otro programa: cada uno tiene su sueldo de referencia.";
       $("kpis").style.display = "none"; $("chartCard").style.display = "none";
-      if (fromButton) { track("calc_complete", { segment: "no_gain" }); scrollToEl($("resultCol")); }
+      if (fromButton) { track("calc_complete", { segment: "no_gain" }); scrollToEl($("resultCol")); say("Con esos números no ganas más. Prueba otro programa o sube tu objetivo.", { mood: "think" }); }
       save(); refreshAll(); return;
     }
     $("kpis").style.display = ""; $("chartCard").style.display = ""; $("dateChip").style.display = "";
     var payback = cost / gain, decimals = payback < 10 ? 1 : 0, shown = Number(payback.toFixed(decimals));
     var seg = segmentFor(payback), total = study + state.search + payback, start = nextMonday();
-    result = { gain: gain, payback: payback, shown: shown, study: study, search: state.search, total: total, seg: seg, start: start,
+    result = { gain: gain, cost: cost, payback: payback, shown: shown, study: study, search: state.search, total: total, seg: seg, start: start,
       grad: addMonths(start, study), job: addMonths(start, study + state.search), back: addMonths(start, total), five: gain * 60 - cost };
-
     $("kicker").textContent = state.name ? state.name + ", recuperas tu inversión en" : "Recuperas tu inversión en";
     setBig(shown, decimals);
     $("bigUnit").textContent = shown === 1 ? "mes" : "meses";
     $("exact").textContent = exactLabel(payback) + " con tu primer sueldo Tech, cobrando " + money(gain) + " más al mes";
     $("dateTxt").innerHTML = "Todo recuperado en <b>" + fmtDate(result.back) + "</b>";
-    $("headline").innerHTML = MESSAGES[seg].title;
+    $("headline").innerHTML = MESSAGES[seg].title.replace("cada dólar", state.market === "mx" ? "cada peso" : "cada dólar");
     var from = fromName();
     $("subline").textContent = MESSAGES[seg].text + (from ? " De " + from + " a " + roleName() + " en " + monthsNum(study) + " meses de bootcamp." : "");
     tween($("kMonth"), gain, function (x) { return "+" + money(x); });
@@ -1559,7 +1986,7 @@
     drawChart(cost, gain, study + state.search, payback, fromButton || first);
     $("ctaLead").textContent = seg <= 1 ? "Con estos números, esperar también cuesta: " + money(gain) + " cada mes." : "Tu versión con mejor sueldo empieza con una decisión.";
     if (fromButton) {
-      track("calc_complete", { program: state.program ? state.program.id : "custom", payback_months: Number(payback.toFixed(1)), segment: ["<3m", "<6m", "<12m", "<24m", "24m+"][seg] });
+      track("calc_complete", { program: P() ? P().id : "custom", payback_months: Number(payback.toFixed(1)), segment: ["<3m", "<6m", "<12m", "<24m", "24m+"][seg] });
       scrollToEl($("resultCol"));
       if (first || seg <= 2) confetti();
       say((state.name ? "<b>" + esc(state.name) + "</b>, " : "") + "con " + money(gain) + " más al mes, en <b>" + monthsNum(shown) + " meses</b> lo tienes pagado. Baja y te enseño tu viaje.", { mood: "big", cheer: true, ms: 7000 });
@@ -1567,10 +1994,17 @@
     save(); refreshAll();
   }
   $("calcBtn").addEventListener("click", function () { calculate(true); });
+  function renderGuarantee() {
+    var p = P(), m = M(), el = $("guarText");
+    if (p && !p.guarantee) el.innerHTML = "Este programa <b>no incluye garantía de empleo</b>. Sí tienes reembolso completo si te das de baja en los primeros 14 días. <small>Según las condiciones de TripleTen.</small>";
+    else if (m.id === "us") el.innerHTML = "Si completas el programa y Career Services, buscas empleo de buena fe y no te contratan en 10 meses, te devuelven la matrícula. <small>Programas de nivel inicial, según las condiciones de TripleTen.</small>";
+    else el.innerHTML = "Si no consigues trabajo en tech 6 meses después de graduarte, participando activamente en el Acelerador de Carrera, te reembolsan el 100%. <small>Según las condiciones de TripleTen México.</small>";
+    $("guarTitle").firstChild.textContent = p && !p.guarantee ? "Sin garantía de empleo: " : "Riesgo cubierto: ";
+  }
 
   function scrollToEl(el) {
     setTimeout(function () {
-      var top = el.getBoundingClientRect().top + window.pageYOffset - 76;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - 84;
       window.scrollTo({ top: top, behavior: reduceMotion ? "auto" : "smooth" });
     }, 120);
   }
@@ -1613,7 +2047,7 @@
       '<linearGradient id="areaNeg" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#ff5c7a" stop-opacity=".32"/><stop offset="1" stop-color="#ff5c7a" stop-opacity="0"/></linearGradient>' +
       '<clipPath id="clipPos"><rect x="0" y="0" width="' + W + '" height="' + y(0) + '"/></clipPath><clipPath id="clipNeg"><rect x="0" y="' + y(0) + '" width="' + W + '" height="' + (H - y(0)) + '"/></clipPath>' +
       '<clipPath id="reveal"><rect id="revealRect" x="0" y="0" width="' + (still ? W : 0) + '" height="' + H + '"/></clipPath></defs><g class="axis">';
-    for (var v = lo; v <= hi + 1e-6; v += step) g += '<line class="gridline" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text x="' + (PL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + compact(v) + '</text>';
+    for (var v = lo; v <= hi + 1e-6; v += step) g += '<line class="gridline" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text x="' + (PL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + moneyShort(v) + '</text>';
     var xs = horizon <= 48 ? 12 : 24;
     for (var m = 0; m <= horizon; m += xs) g += '<text x="' + x(m) + '" y="' + (H - 10) + '" text-anchor="middle">' + (m === 0 ? "Hoy" : "Año " + (m / 12)) + '</text>';
     g += '</g><line class="zero" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y(0) + '" y2="' + y(0) + '"/>';
@@ -1661,16 +2095,17 @@
     var on = !!result;
     $("journeyLocked").hidden = on; $("journey").hidden = !on;
     if (!on) return;
-    var from = fromName(), prog = state.program ? state.program.name : "tu bootcamp", h = hours();
+    var from = fromName(), prog = P() ? P().name : "tu bootcamp", h = hours();
     $("journeyTitle").textContent = (state.name ? state.name + ", tu" : "Tu") + " viaje " + (from ? "de " + from + " a " + roleName() : "a " + roleName());
-    var M = [
-      { ico: "start", when: fmtDay(result.start), t: "Empiezas " + prog, d: "Sin dejar tu trabajo: unas 20 h a la semana" + (h ? " (tu horario: " + h + " h)." : ".") },
-      { ico: "cap", when: fmtDay(result.grad), t: "Te gradúas como " + roleName(), d: "Con proyectos reales en tu portfolio y tu coach al lado." },
-      { ico: "rocket", when: fmtDay(result.job), t: "Primer sueldo Tech", d: "Tras " + result.search + (result.search === 1 ? " mes" : " meses") + " de búsqueda: " + money(result.gain) + " más cada mes." },
+    var gtxt = P() && !P().guarantee ? "" : " Si no llega, tienes la garantía de " + M().guaranteeMonths + " meses.";
+    var Ms = [
+      { ico: "start", when: fmtDay(result.start), t: "Empiezas " + prog, d: "Sin dejar tu trabajo: " + M().hours + " a la semana" + (h ? " (tu horario: " + h + " h)." : ".") },
+      { ico: "cap", when: fmtDay(result.grad), t: "Te gradúas como " + roleName(), d: "Con proyectos reales en tu portafolio y apoyo en la búsqueda de empleo." },
+      { ico: "rocket", when: fmtDay(result.job), t: "Primer sueldo Tech", d: "Tras " + result.search + (result.search === 1 ? " mes" : " meses") + " de búsqueda: " + money(result.gain) + " más cada mes." + gtxt },
       { ico: "trophy", when: fmtDay(result.back), t: "Inversión recuperada", d: "A partir de aquí, cada mes es beneficio" + (dreamsText() ? ". Lo primero: " + dreamsText() + "." : ".") },
       { ico: "flag", when: "En 5 años", t: (result.five >= 0 ? "+" : "") + money(result.five) + " netos", d: "Lo que ganas de más, ya descontado el bootcamp." }
     ];
-    $("miles").innerHTML = M.map(function (m) { return '<div class="mile"><span class="ico">' + icon(m.ico) + '</span><small>' + m.when + '</small><h4>' + esc(m.t) + '</h4><p>' + esc(m.d) + '</p></div>'; }).join("");
+    $("miles").innerHTML = Ms.map(function (m) { return '<div class="mile"><span class="ico">' + icon(m.ico) + '</span><small>' + m.when + '</small><h4>' + esc(m.t) + '</h4><p>' + esc(m.d) + '</p></div>'; }).join("");
     if (!$("walker").firstChild) $("walker").innerHTML = nova.querySelector("svg").outerHTML.replace(/ id="[^"]*"/g, "").replace(/url\(#novaBody\)/g, "#39ff88").replace(/url\(#novaGlow\)/g, "#b6ff3b");
     onScroll();
   }
@@ -1678,10 +2113,10 @@
     var j = $("journey"); if (j.hidden) return;
     var r = j.getBoundingClientRect(), vh = window.innerHeight;
     var p = Math.max(0, Math.min(1, (vh * 0.62 - r.top) / Math.max(1, r.height - 40)));
-    var y = 4 + p * Math.max(0, r.height - 48);
+    var yy = 4 + p * Math.max(0, r.height - 48);
     $("railFill").style.height = (p * 100) + "%";
-    $("walker").style.top = y + "px";
-    each(j.querySelectorAll(".mile"), function (m) { m.classList.toggle("lit", m.getBoundingClientRect().top - r.top < y + 30); });
+    $("walker").style.top = yy + "px";
+    each(j.querySelectorAll(".mile"), function (m) { m.classList.toggle("lit", m.getBoundingClientRect().top - r.top < yy + 30); });
     if (p > 0.98 && !journeyDone) { journeyDone = true; track("journey_complete"); say("¡Final del viaje! Ahora organicemos tu semana para que sea real.", { mood: "big", cheer: true }); }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -1693,7 +2128,7 @@
     var h = '<span></span>' + DAYS.map(function (d) { return '<span class="h">' + d + '</span>'; }).join("");
     BLOCKS.forEach(function (b) {
       h += '<span class="rl">' + b.label + '<small>' + b.wk[0] + '</small></span>';
-      DAYS.forEach(function (d, i) { h += '<button type="button" class="slot" aria-pressed="false" data-k="' + i + b.id + '" aria-label="' + b.label + ', ' + ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"][i] + '">' + (i >= 5 ? "3h" : "2h") + '</button>'; });
+      DAYS.forEach(function (d, i) { h += '<button type="button" class="slot" aria-pressed="false" data-k="' + i + b.id + '" aria-label="' + b.label + ', ' + DAY_NAMES[i] + '">' + (i >= 5 ? "3h" : "2h") + '</button>'; });
     });
     $("week").innerHTML = h;
     $("presets").innerHTML = PRESETS.map(function (p, i) { return '<button type="button" class="chip" data-i="' + i + '">' + p.label + '</button>'; }).join("") + '<button type="button" class="chip" data-i="clear">Borrar</button>';
@@ -1713,7 +2148,8 @@
     buzz();
     var i = b.getAttribute("data-i");
     state.slots = i === "clear" ? [] : PRESETS[Number(i)].slots.slice();
-    weekFeedback(); track("week_preset", { preset: i });
+    if (i === "clear") { weekCelebrated = false; say("Semana borrada. Empieza de nuevo tocando tus huecos.", { mood: "think" }); } else weekFeedback();
+    track("week_preset", { preset: i });
     save(); refreshAll();
   });
   function weekFeedback() {
@@ -1726,11 +2162,11 @@
     var h = hours(), ring = $("hoursRing");
     $("hoursNum").textContent = h;
     ring.style.strokeDashoffset = 213.6 * (1 - Math.min(1, h / TARGET_HOURS));
-    ring.style.stroke = h >= TARGET_HOURS ? "var(--neon)" : h >= 12 ? "var(--neon-3)" : "var(--warm)";
+    ring.style.stroke = h >= TARGET_HOURS ? "var(--neon)" : h >= 15 ? "var(--neon-3)" : "var(--warm)";
     if (!h) { $("weekTitle").textContent = "Empieza tocando tus huecos"; $("weekText").textContent = "Mañana, tarde o noche: tú decides cuándo estudias. O prueba una semana tipo."; }
-    else if (h < TARGET_HOURS) { $("weekTitle").textContent = "Te faltan " + (TARGET_HOURS - h) + " h"; $("weekText").textContent = "Añade un par de bloques más. Los fines de semana cunden mucho."; }
+    else if (h < 15) { $("weekTitle").textContent = "Te faltan " + (TARGET_HOURS - h) + " h"; $("weekText").textContent = "TripleTen pide entre 15 y 20 h. Añade un par de bloques más."; }
+    else if (h < TARGET_HOURS) { $("weekTitle").textContent = "Vas justo: " + h + " h"; $("weekText").textContent = "Ya entras en el mínimo de 15 h. Con " + (TARGET_HOURS - h) + " h más irás con margen."; }
     else { $("weekTitle").textContent = (state.name ? state.name + ", tu" : "Tu") + " semana funciona"; $("weekText").textContent = h + " h a la semana sin dejar tu trabajo. Llévatelo al calendario y hazlo real."; }
-    $("icsWeek").disabled = !h;
   }
   function stamp(d, hhmm) { return d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()) + (hhmm ? "T" + hhmm.replace(":", "") + "00" : ""); }
   function ics(events) {
@@ -1747,15 +2183,16 @@
     return lines.join("\r\n");
   }
   $("icsWeek").addEventListener("click", function () {
-    var start = nextMonday(), until = addMonths(start, state.program ? state.program.months : CUSTOM_STUDY_MONTHS);
+    if (!hours()) { say("Primero toca tus huecos libres (o una semana tipo) y luego te preparo el calendario.", { mood: "think" }); flash($("week")); return; }
+    var start = nextMonday(), until = addMonths(start, P() ? P().months : CUSTOM_STUDY_MONTHS);
     var ev = state.slots.slice().sort().map(function (k) {
       var di = Number(k.charAt(0)), b = byId(BLOCKS, k.charAt(1)), t = di >= 5 ? b.we : b.wk, d = new Date(start.getTime());
       d.setDate(d.getDate() + di);
-      return { start: stamp(d, t[0]), end: stamp(d, t[1]), rrule: "FREQ=WEEKLY;UNTIL=" + stamp(until, "23:59"), title: "Estudio " + (state.program ? state.program.name : "bootcamp") + " (" + b.label.toLowerCase() + ")", desc: "Tu bloque de estudio para pasar a Tech. Plan creado con Career ROI Lab." };
+      return { start: stamp(d, t[0]), end: stamp(d, t[1]), rrule: "FREQ=WEEKLY;UNTIL=" + stamp(until, "23:59"), title: "Estudio " + (P() ? P().name : "bootcamp") + " (" + b.label.toLowerCase() + ")", desc: "Tu bloque de estudio para pasar a Tech. Plan creado con Career ROI Lab." };
     });
     if (download("mi-semana-de-estudio.ics", new Blob([ics(ev)], { type: "text/calendar" }))) {
       state.done.ics = true; track("ics_download", { type: "week", sessions: ev.length }); save(); refreshAll();
-      toast("Calendario descargado ✓ Ábrelo para añadir tus sesiones");
+      toast("Calendario descargado ✓ Ábrelo para añadir tus " + ev.length + " sesiones semanales");
     }
   });
 
@@ -1763,39 +2200,41 @@
   // Paso 4: recompensa
   // =================================================================
   function renderDreams() {
-    var g = result ? result.gain : 0;
-    var all = DREAMS.map(function (d) { return { id: d.id, label: d.label, icon: d.icon, price: d.price, on: state.dreams.indexOf(d.id) >= 0 }; })
+    var g = result ? result.gain : 0, prices = M().dreams;
+    var all = DREAMS.map(function (d, i) { return { id: d.id, label: d.label, icon: d.icon, price: prices[i], on: state.dreams.indexOf(d.id) >= 0 }; })
       .concat(state.custom.map(function (c, i) { return { id: "c" + i, label: c.name, icon: "spark", price: c.price, on: true }; }));
     $("dreams").innerHTML = all.map(function (d) {
       var m = g > 0 ? d.price / g : null;
-      return '<button type="button" class="dream" aria-pressed="' + d.on + '" data-id="' + d.id + '"><span class="di">' + icon(d.icon) + '</span><b>' + esc(d.label) + '</b><span>' + money(d.price) + '</span><em>' + (m === null ? "" : m < 1 ? "¡con 1 mes de subida!" : monthsNum(m) + " meses de subida") + '</em></button>';
+      return '<button type="button" class="dream" aria-pressed="' + d.on + '" data-id="' + d.id + '"><span class="di">' + icon(d.icon) + '</span><b>' + esc(d.label) + '</b><span>' + money(d.price) + '</span><em>' + (m === null ? "Calcula para ver meses" : m < 1 ? "¡con 1 mes de subida!" : monthsNum(m) + " meses de subida") + '</em></button>';
     }).join("");
     var sel = all.filter(function (d) { return d.on; }), sum = sel.reduce(function (s, d) { return s + d.price; }, 0);
     if (!sel.length) { $("dreamTotalNum").textContent = "Elige un sueño"; $("dreamTotalTxt").textContent = g > 0 ? "Con " + money(g) + " más al mes, antes de lo que crees." : "Calcula tus números y te digo cuánto tardas en cada uno."; }
     else if (g > 0) { var mm = sum / g; $("dreamTotalNum").textContent = monthsNum(mm) + (mm === 1 ? " mes" : " meses"); $("dreamTotalTxt").textContent = "de tu subida para " + (sel.length === 1 ? sel[0].label.toLowerCase() : "tus " + sel.length + " sueños") + " (" + money(sum) + "). Y eso, después de haber recuperado el bootcamp."; }
     else { $("dreamTotalNum").textContent = money(sum); $("dreamTotalTxt").textContent = "Calcula tus números y te digo en cuántos meses lo tienes."; }
+    $("dreamPrice").placeholder = state.market === "mx" ? "20,000" : "2,000";
   }
   $("dreams").addEventListener("click", function (e) {
     var b = e.target.closest(".dream"); if (!b) return;
     buzz();
     var id = b.getAttribute("data-id");
-    if (/^c\d+$/.test(id)) state.custom.splice(Number(id.slice(1)), 1);
+    if (/^c\d+$/.test(id)) { var c = state.custom.splice(Number(id.slice(1)), 1)[0]; if (c) toast("«" + c.name + "» quitado"); }
     else {
       var i = state.dreams.indexOf(id);
       if (i >= 0) state.dreams.splice(i, 1);
       else {
         state.dreams.push(id);
-        var d = byId(DREAMS, id);
-        if (result) { var mm = d.price / result.gain; say(d.label + ": <b>" + (mm < 1 ? "menos de un mes" : monthsNum(mm) + " meses") + "</b> de tu subida. " + (mm < 3 ? "Eso es un sí." : "Merece la pena."), { mood: "big" }); }
+        var d = byId(DREAMS, id), price = M().dreams[DREAMS.indexOf(d)];
+        if (result) { var mm = price / result.gain; say(d.label + ": <b>" + (mm < 1 ? "menos de un mes" : monthsNum(mm) + " meses") + "</b> de tu subida. " + (mm < 3 ? "Eso es un sí." : "Merece la pena."), { mood: "big" }); }
+        else say("Apuntado. Cuando calcules tus números te digo en cuántos meses lo tienes.", { mood: "happy" });
       }
     }
     track("dream_toggle", { dream: id });
     save(); refreshAll();
   });
-  $("dreamPrice").addEventListener("input", function () { var el = $("dreamPrice"), d = el.value.replace(/[^\d]/g, "").slice(0, 7); el.value = d ? nf.format(Number(d)) : ""; });
+  $("dreamPrice").addEventListener("input", function () { var el = $("dreamPrice"), d = el.value.replace(/[^\d]/g, "").slice(0, 8); el.value = d ? nf.format(Number(d)) : ""; });
   function addCustom() {
     var n = $("dreamName").value.trim(), p = Number($("dreamPrice").value.replace(/[^\d]/g, ""));
-    if (!n || !p) { toast("Ponle nombre y precio a tu sueño"); return; }
+    if (!n || !p) { toast("Ponle nombre y precio a tu sueño"); flash(n ? $("dreamPrice").parentNode : $("dreamName").parentNode); return; }
     if (state.custom.length >= 6) state.custom.shift();
     state.custom.push({ name: n.slice(0, 28), price: p }); $("dreamName").value = ""; $("dreamPrice").value = "";
     track("dream_custom", { price: p });
@@ -1822,83 +2261,97 @@
     c.strokeStyle = "rgba(255,255,255,.045)"; c.lineWidth = 2;
     for (var gx = 0; gx <= Wc; gx += 72) { c.beginPath(); c.moveTo(gx, 0); c.lineTo(gx, Hc); c.stroke(); }
     for (var gy = 0; gy <= Hc; gy += 72) { c.beginPath(); c.moveTo(0, gy); c.lineTo(Wc, gy); c.stroke(); }
-    var P = 84, top = story ? 150 : 90;
-    rr(c, P, top, 78, 78, 22); c.fillStyle = "#39ff88"; c.fill();
-    c.fillStyle = "#04060a"; c.beginPath(); c.arc(P + 29, top + 36, 7.5, 0, 7); c.fill(); c.beginPath(); c.arc(P + 49, top + 36, 7.5, 0, 7); c.fill();
-    c.strokeStyle = "#04060a"; c.lineWidth = 5; c.lineCap = "round"; c.beginPath(); c.moveTo(P + 27, top + 51); c.quadraticCurveTo(P + 39, top + 61, P + 51, top + 51); c.stroke();
-    c.textBaseline = "middle"; c.fillStyle = "#f1f5f2"; c.font = "700 38px " + F; c.fillText("Career ROI Lab", P + 100, top + 26);
-    c.fillStyle = "#8d9791"; c.font = "500 26px " + B; c.fillText(d.program ? "Mi plan con TripleTen" : "Mi plan Tech", P + 100, top + 60);
-    if (d.sample) { c.fillStyle = "rgba(255,255,255,.4)"; c.font = "600 24px " + B; c.textAlign = "right"; c.fillText("EJEMPLO", Wc - P, top + 40); c.textAlign = "left"; }
+    var Pd = 84, top = story ? 150 : 90;
+    rr(c, Pd, top, 78, 78, 22); c.fillStyle = "#39ff88"; c.fill();
+    c.fillStyle = "#04060a"; c.beginPath(); c.arc(Pd + 29, top + 36, 7.5, 0, 7); c.fill(); c.beginPath(); c.arc(Pd + 49, top + 36, 7.5, 0, 7); c.fill();
+    c.strokeStyle = "#04060a"; c.lineWidth = 5; c.lineCap = "round"; c.beginPath(); c.moveTo(Pd + 27, top + 51); c.quadraticCurveTo(Pd + 39, top + 61, Pd + 51, top + 51); c.stroke();
+    c.textBaseline = "middle"; c.fillStyle = "#f1f5f2"; c.font = "700 38px " + F; c.fillText("Career ROI Lab", Pd + 100, top + 26);
+    c.fillStyle = "#8d9791"; c.font = "500 26px " + B; c.fillText(d.program ? "Mi plan con TripleTen" : "Mi plan Tech", Pd + 100, top + 60);
+    if (d.sample) { c.fillStyle = "rgba(255,255,255,.4)"; c.font = "600 24px " + B; c.textAlign = "right"; c.fillText("EJEMPLO", Wc - Pd, top + 40); c.textAlign = "left"; }
     c.textBaseline = "alphabetic";
     var y = top + (story ? 260 : 200);
-    c.fillStyle = "#39ff88"; c.font = "600 30px " + B; c.fillText(((d.name ? d.name + " · " : "") + "de " + d.from).toUpperCase(), P, y);
-    var line = "a " + d.role, s = fitText(c, line, Wc - P * 2, 80, 700, F);
-    c.fillStyle = "#f1f5f2"; c.fillText(line, P, y + s + 10);
+    c.fillStyle = "#39ff88"; c.font = "600 30px " + B; c.fillText(((d.name ? d.name + " · " : "") + "de " + d.from).toUpperCase(), Pd, y);
+    var line = "a " + d.role, s = fitText(c, line, Wc - Pd * 2, 80, 700, F);
+    c.fillStyle = "#f1f5f2"; c.fillText(line, Pd, y + s + 10);
     y += s + 10 + (story ? 220 : 130);
-    c.fillStyle = "#8d9791"; c.font = "500 34px " + B; c.fillText("Recupero mi inversión en", P, y);
+    c.fillStyle = "#8d9791"; c.font = "500 34px " + B; c.fillText("Recupero mi inversión en", Pd, y);
     var ny = y + (story ? 300 : 260);
     c.save(); c.shadowColor = "rgba(57,255,136,.7)"; c.shadowBlur = 60; c.fillStyle = "#39ff88"; c.font = "700 " + (story ? 320 : 280) + "px " + F;
-    c.fillText(d.payback, P - 8, ny); var nw = c.measureText(d.payback).width; c.restore();
-    c.fillStyle = "#f1f5f2"; c.font = "700 64px " + F; c.fillText(d.unit, P + nw + 14, ny);
+    c.fillText(d.payback, Pd - 8, ny); var nw = c.measureText(d.payback).width; c.restore();
+    c.fillStyle = "#f1f5f2"; c.font = "700 64px " + F; c.fillText(d.unit, Pd + nw + 14, ny);
     y = ny + (story ? 110 : 70);
-    var bw = (Wc - P * 2 - 24) / 2;
+    var bw = (Wc - Pd * 2 - 24) / 2;
     [["+" + d.gain, "más cada mes"], [d.date, "todo recuperado"]].forEach(function (b, i) {
-      var bx = P + i * (bw + 24);
+      var bx = Pd + i * (bw + 24);
       rr(c, bx, y, bw, 150, 28); c.fillStyle = "rgba(255,255,255,.05)"; c.fill(); c.strokeStyle = "rgba(255,255,255,.12)"; c.lineWidth = 2; c.stroke();
       fitText(c, b[0], bw - 56, 52, 700, F); c.fillStyle = i ? "#f1f5f2" : "#39ff88"; c.fillText(b[0], bx + 28, y + 76);
       c.fillStyle = "#8d9791"; c.font = "500 26px " + B; c.fillText(b[1], bx + 28, y + 120);
     });
     y += 150 + (story ? 120 : 64);
-    var cw = Wc - P * 2, ch = story ? 280 : 140, flat = Math.max(.08, Math.min(.5, d.delayFrac)), zero = y + ch * .7;
-    var bex = P + cw * flat + (cw - cw * flat) * (.3 / 1);
-    c.strokeStyle = "rgba(255,255,255,.25)"; c.setLineDash([10, 14]); c.lineWidth = 3; c.beginPath(); c.moveTo(P, zero); c.lineTo(P + cw, zero); c.stroke(); c.setLineDash([]);
-    var lg = c.createLinearGradient(P, 0, P + cw, 0); lg.addColorStop(0, "#ff5c7a"); lg.addColorStop(Math.min(.95, (bex - P) / cw), "#b6ff3b"); lg.addColorStop(1, "#39ff88");
+    var cw = Wc - Pd * 2, ch = story ? 280 : 140, flat = Math.max(.08, Math.min(.5, d.delayFrac)), zero = y + ch * .7;
+    var bex = Pd + cw * flat + (cw - cw * flat) * .3;
+    c.strokeStyle = "rgba(255,255,255,.25)"; c.setLineDash([10, 14]); c.lineWidth = 3; c.beginPath(); c.moveTo(Pd, zero); c.lineTo(Pd + cw, zero); c.stroke(); c.setLineDash([]);
+    var lg = c.createLinearGradient(Pd, 0, Pd + cw, 0); lg.addColorStop(0, "#ff5c7a"); lg.addColorStop(Math.min(.95, (bex - Pd) / cw), "#b6ff3b"); lg.addColorStop(1, "#39ff88");
     c.save(); c.shadowColor = "rgba(57,255,136,.8)"; c.shadowBlur = 24; c.strokeStyle = lg; c.lineWidth = 9; c.lineCap = "round"; c.lineJoin = "round";
-    c.beginPath(); c.moveTo(P, y + ch); c.lineTo(P + cw * flat, y + ch); c.lineTo(P + cw, y); c.stroke(); c.restore();
+    c.beginPath(); c.moveTo(Pd, y + ch); c.lineTo(Pd + cw * flat, y + ch); c.lineTo(Pd + cw, y); c.stroke(); c.restore();
     c.fillStyle = "#39ff88"; c.beginPath(); c.arc(bex, zero, 13, 0, 7); c.fill();
     var fy = Hc - (story ? 170 : 84);
-    c.fillStyle = "#39ff88"; c.fillRect(P, fy - 46, 60, 5);
-    c.fillStyle = "#f1f5f2"; c.font = "600 30px " + B; c.fillText(d.footer, P, fy);
+    c.fillStyle = "#39ff88"; c.fillRect(Pd, fy - 46, 60, 5);
+    c.fillStyle = "#f1f5f2"; c.font = "600 30px " + B; c.fillText(d.footer, Pd, fy);
     return canvas;
   }
+  function sampleData() {
+    var m = M(), p = m.programs.filter(function (x) { return x.fam === "qa"; })[0];
+    var g = gainMonthly(m.sampleCurrent, p.salary), pb = p.price / g, back = addMonths(nextMonday(), p.months + 3 + pb);
+    return { name: "Alex", from: "hostelería", role: p.role, payback: monthsNum(Number(pb.toFixed(1))), unit: "meses", gain: money(g) + "/mes", date: new Intl.DateTimeFormat("es-ES", { month: "short", year: "numeric" }).format(back), program: true, delayFrac: .22, footer: "¿Y tú? Calcula el tuyo", sample: true, gainRaw: g, pb: pb };
+  }
   function cardData(sample) {
-    if (sample || !result) return { name: "Alex", from: "hostelería", role: "QA Engineer", payback: "2,3", unit: "meses", gain: "$3,166/mes", date: "sept. 2027", program: true, delayFrac: .22, footer: "¿Y tú? Calcula el tuyo", sample: true };
+    if (sample || !result) return sampleData();
     var local = !/^https?:/.test(location.protocol) || /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname);
     var host = local ? "Career ROI Lab" : (location.host + location.pathname.replace(/index\.html$/, "")).replace(/\/$/, "");
     var horizon = Math.max(36, result.total + 12);
-    return { name: state.name, from: fromName() || "mi trabajo", role: roleName(), payback: monthsNum(result.shown), unit: result.shown === 1 ? "mes" : "meses", gain: money(result.gain) + "/mes", date: new Intl.DateTimeFormat("es-ES", { month: "short", year: "numeric" }).format(result.back), program: !!state.program, delayFrac: (result.study + result.search) / horizon, footer: "Calcula el tuyo → " + host, sample: false };
+    return { name: state.name, from: fromName() || "mi trabajo", role: roleName(), payback: monthsNum(result.shown), unit: result.shown === 1 ? "mes" : "meses", gain: money(result.gain) + "/mes", date: new Intl.DateTimeFormat("es-ES", { month: "short", year: "numeric" }).format(result.back), program: !!P(), delayFrac: (result.study + result.search) / horizon, footer: "Calcula el tuyo → " + host, sample: false };
   }
   var cardKey = "";
   function renderCard() {
     var ready = !!result;
     $("cardPreview").classList.toggle("locked", !ready);
     $("cardPreview").classList.toggle("story", cardFmt === "story");
-    ["dlCard", "shareCard", "icsDates", "mailPlan"].forEach(function (id) { $(id).disabled = !ready; });
+    each(document.querySelectorAll(".needs-result"), function (b) { b.classList.toggle("soft", !ready); });
     var d = cardData(!ready), key = cardFmt + JSON.stringify(d);
     if (key === cardKey) return;
     cardKey = key;
     drawCard(cardCanvas, cardFmt, d);
     $("cardImg").src = cardCanvas.toDataURL("image/png");
   }
+  function needResult(what) {
+    if (result) return false;
+    say("Para " + what + " necesito tus números. Pon tu sueldo actual y pulsa <b>Calcular mi retorno</b>.", { mood: "think" });
+    scrollToEl($("numeros")); setTimeout(function () { flash($("inputsCard")); }, 700);
+    track("blocked_action", { need: "result", what: what });
+    return true;
+  }
   each(document.querySelectorAll(".seg button"), function (b) {
     b.addEventListener("click", function () {
       cardFmt = b.getAttribute("data-fmt");
       each(document.querySelectorAll(".seg button"), function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-      renderCard(); track("card_format", { format: cardFmt });
+      renderCard(); flash($("cardImg")); track("card_format", { format: cardFmt });
     });
   });
   function cardBlob(cb) { if (cardCanvas.toBlob) cardCanvas.toBlob(cb, "image/png"); else cb(null); }
   function cardName() { return "mi-plan-tech" + (state.name ? "-" + state.name.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "") : "") + "-" + cardFmt + ".png"; }
   function cardDone(method) { state.done.card = true; track(method === "download" ? "card_download" : "share", { method: method, format: cardFmt }); save(); refreshAll(); }
   $("dlCard").addEventListener("click", function () {
+    if (needResult("descargar tu tarjeta")) return;
     cardBlob(function (blob) {
       if (!(blob && download(cardName(), blob))) { var a = document.createElement("a"); a.href = cardCanvas.toDataURL("image/png"); a.download = cardName(); document.body.appendChild(a); a.click(); document.body.removeChild(a); }
       cardDone("download");
-      toast("Imagen descargada ✓");
+      toast("Imagen descargada ✓ (" + (cardFmt === "story" ? "story 9:16" : "post 4:5") + ")");
       say("¡Tarjeta lista! Súbela a tus stories o a LinkedIn: decirlo en público es el primer paso.", { mood: "big", cheer: true });
     });
   });
   $("shareCard").addEventListener("click", function () {
+    if (needResult("compartir tu tarjeta")) return;
     cardBlob(function (blob) {
       var text = shareText(), url = shareUrl();
       try {
@@ -1909,9 +2362,9 @@
       copy(text + (url ? " " + url : ""), function () { cardDone("copy"); });
     });
   });
-  $("icsDates").addEventListener("click", function () {
-    if (!result) return;
-    var prog = state.program ? state.program.name : "tu bootcamp";
+  function saveDates() {
+    if (needResult("guardar tus fechas")) return;
+    var prog = P() ? P().name : "tu bootcamp";
     var ev = [
       { allDay: true, date: result.start, title: "🚀 Empiezo " + prog, desc: "Día 1 de mi salto a Tech." },
       { allDay: true, date: result.grad, title: "🎓 Me gradúo como " + roleName(), desc: "Fin del bootcamp." },
@@ -1922,12 +2375,13 @@
       state.done.ics = true; track("ics_download", { type: "milestones" }); save(); refreshAll();
       toast("Fechas descargadas ✓ Ábrelas para añadirlas a tu calendario");
     }
-  });
+  }
+  $("icsDates").addEventListener("click", saveDates);
   $("mailPlan").addEventListener("click", function () {
-    if (!result) return;
+    if (needResult("enviarte tu plan")) return;
     var lines = [
       "Mi plan para pasar a Tech" + (state.name ? " (" + state.name + ")" : ""), "",
-      "Programa: " + (state.program ? state.program.name + " (" + monthsNum(state.program.months) + " meses, " + money(state.program.price) + ")" : "Personalizado"),
+      "Programa: " + (P() ? P().name + " (" + monthsNum(P().months) + " meses, " + money(P().price) + ")" : "Personalizado") + " · TripleTen " + M().name,
       "De " + (fromName() || "mi trabajo actual") + " a " + roleName(), "",
       "Recupero la inversión en " + monthsNum(result.shown) + " meses con mi primer sueldo Tech (+" + money(result.gain) + "/mes).",
       "Empiezo: " + fmtDay(result.start), "Me gradúo: " + fmtDay(result.grad), "Primer sueldo Tech: " + fmtDay(result.job), "Todo recuperado: " + fmtDay(result.back),
@@ -1937,6 +2391,7 @@
       "Empezar: " + ctaUrl(), shareUrl() ? "Mi plan: " + shareUrl() : ""
     ].filter(function (l, i, a) { return l !== "" || (i > 0 && a[i - 1] !== ""); });
     state.done.ics = true; track("plan_email"); save(); refreshAll();
+    toast("Abriendo tu app de correo…");
     location.href = "mailto:?subject=" + encodeURIComponent("Mi plan para pasar a Tech") + "&body=" + encodeURIComponent(lines.join("\n"));
   });
 
@@ -1945,12 +2400,12 @@
   // =================================================================
   function shareUrl() {
     if (!/^https?:/.test(location.protocol)) return "";
-    var q = "?e=" + (state.expected || 0) + "&c=" + (state.cost || 0) + "&s=" + (state.current || 0) + "&m=" + state.search + (state.program ? "&p=" + state.program.id : "") + (state.job ? "&j=" + state.job : "") + (state.name ? "&n=" + encodeURIComponent(state.name) : "");
+    var q = "?mk=" + state.market + "&e=" + (state.expected || 0) + "&c=" + (state.cost || 0) + "&s=" + (state.current || 0) + "&m=" + state.search + (P() ? "&p=" + P().id : "") + (state.job ? "&j=" + state.job : "") + (state.name ? "&n=" + encodeURIComponent(state.name) : "");
     return location.origin + location.pathname + q;
   }
   function shareText() { return result ? "Recupero mi inversión en " + monthsNum(result.shown) + " meses pasando a " + roleName() + " 🚀 Calcula el tuyo:" : "¿En cuántos meses se paga sola tu carrera en Tech? Calcúlalo:"; }
   var toastT;
-  function toast(msg) { var t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("show"); }, 2600); }
+  function toast(msg) { var t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("show"); }, 2800); }
   function copy(text, done) {
     function fallback() {
       var ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
@@ -1966,10 +2421,10 @@
     if (navigator.share && u) navigator.share({ title: "Career ROI Lab", text: shareText(), url: u }).catch(function () {});
     else copy(u ? shareText() + " " + u : shareText());
   });
-  $("cta").addEventListener("click", function () { track("cta_click", { program: state.program ? state.program.id : "custom", payback: result ? Number(result.payback.toFixed(1)) : null }); say("¡A por ello! 🚀", { mood: "big", cheer: true }); });
+  $("cta").addEventListener("click", function () { track("cta_click", { program: P() ? P().id : "custom", payback: result ? Number(result.payback.toFixed(1)) : null }); say("¡A por ello! 🚀 Te abro la web de " + (P() ? P().name : "TripleTen") + ".", { mood: "big", cheer: true }); });
 
   // =================================================================
-  // Progreso del plan
+  // Progreso, portada y refresco
   // =================================================================
   function stepDone(i) {
     if (i === 0) return !!(state.job && state.interests.length);
@@ -1981,6 +2436,7 @@
   }
   var STEP_IDS = ["perfil", "numeros", "semana", "recompensa", "tarjeta"];
   function planCount() { var n = 0; for (var i = 0; i < 5; i++) if (stepDone(i)) n++; return n; }
+  function nextStep() { for (var i = 0; i < 5; i++) if (!stepDone(i)) return i; return -1; }
   var lastCount = -1;
   function renderProgress() {
     var n = planCount();
@@ -1995,16 +2451,61 @@
     lastCount = n;
   }
   function nextStepHint() {
-    var hints = ["Empieza por contarme a qué te dedicas y qué te hace ilusión.", "Mete tu sueldo actual y pulsa <b>Calcular mi retorno</b>.", "Organiza tu semana: necesitas llegar a 20 h.", "Elige qué harás con tu subida.", "Descarga tu tarjeta o guarda tus fechas en el calendario."];
-    for (var i = 0; i < 5; i++) if (!stepDone(i)) return hints[i];
-    return null;
+    var hints = ["Empieza por contarme a qué te dedicas y qué te hace ilusión.", "Pon tu sueldo actual y pulsa <b>Calcular mi retorno</b>.", "Organiza tu semana: necesitas llegar a 20 h.", "Elige qué harás con tu subida.", "Descarga tu tarjeta o guarda tus fechas en el calendario."];
+    var i = nextStep(); return i >= 0 ? hints[i] : null;
   }
   $("planPill").addEventListener("click", function () {
-    for (var i = 0; i < 5; i++) if (!stepDone(i)) { scrollToEl($(STEP_IDS[i])); say(nextStepHint(), { mood: "happy" }); track("plan_pill", { next: STEP_IDS[i] }); return; }
-    scrollToEl($("numeros")); say("Tu plan está completo. ¿Le damos a <b>Cambia tu carrera hoy</b>?", { mood: "big" });
+    var i = nextStep();
+    if (i >= 0) { scrollToEl($(STEP_IDS[i])); say(nextStepHint(), { mood: "happy" }); track("plan_pill", { next: STEP_IDS[i] }); return; }
+    scrollToEl($("resultCol")); say("Tu plan está completo. ¿Le damos a <b>Cambia tu carrera hoy</b>?", { mood: "big" });
   });
+  $("startBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    var i = nextStep();
+    scrollToEl($(i >= 0 ? STEP_IDS[i] : "numeros"));
+    track("hero_start", { step: i });
+  });
+  $("askNova").addEventListener("click", function () { track("hero_ask"); openChat(); });
 
-  function refreshAll() { renderJourney(); renderWeek(); renderDreams(); renderCard(); renderProgress(); renderGrowth(); $("cta").href = ctaUrl(); }
+  // Portada viva: se adapta a tu mercado y a tu plan.
+  var rotator = (function () {
+    var token = 0, el = $("role");
+    function start() {
+      token++;
+      var my = token, from = fromName(), fixedRole = (P() || topMatch()) ? roleName() : null;
+      if (from && fixedRole) { $("rotFrom").textContent = "De " + from + " a"; el.textContent = fixedRole; return; }
+      $("rotFrom").textContent = "De tu trabajo actual a";
+      var roles = M().programs.map(function (p) { return p.role; }), i = 0;
+      el.textContent = roles[0];
+      if (reduceMotion) return;
+      function type(w, cb) { var n = 0; (function st() { if (my !== token) return; el.textContent = w.slice(0, ++n); if (n < w.length) setTimeout(st, 55); else setTimeout(cb, 1800); })(); }
+      function erase(cb) { (function st() { if (my !== token) return; el.textContent = el.textContent.slice(0, -1); if (el.textContent.length) setTimeout(st, 26); else cb(); })(); }
+      (function loop() { setTimeout(function () { if (my !== token) return; erase(function () { i = (i + 1) % roles.length; type(roles[i], loop); }); }, 1800); })();
+    }
+    return { start: start };
+  })();
+  var heroKey = "";
+  function renderHero() {
+    var n = planCount(), i = nextStep();
+    $("startTxt").textContent = n === 0 ? "Empezar mi plan" : i >= 0 ? "Seguir mi plan · paso " + (i + 1) : "Ver mi plan completo";
+    var tm = topMatch(), sc = tm ? scores()[0] : null;
+    if (result) {
+      $("heroChip1").innerHTML = "Recupero en <b>" + monthsNum(result.shown) + " m</b>";
+      $("heroChip2").innerHTML = "+<b>" + money(result.gain).replace(M().suffix, "") + "</b>/mes";
+      $("heroTag").textContent = state.name ? "La tarjeta de " + state.name : "Tu tarjeta";
+    } else {
+      var s = sampleData();
+      $("heroChip1").innerHTML = sc ? "Encaje <b>" + sc.pct + "%</b>" : "Encaje <b>97%</b>";
+      $("heroChip2").innerHTML = "+<b>" + money(s.gainRaw).replace(M().suffix, "") + "</b>/mes";
+      $("heroTag").textContent = "Así será tu tarjeta";
+    }
+    var d = cardData(!result), key = JSON.stringify(d);
+    if (key !== heroKey) { heroKey = key; drawCard(heroCanvas, "feed", d); $("heroCard").src = heroCanvas.toDataURL("image/png"); }
+    var rk = state.market + "|" + fromName() + "|" + roleName();
+    if (rk !== renderHero.rk) { renderHero.rk = rk; rotator.start(); }
+  }
+
+  function refreshAll() { renderJourney(); renderWeek(); renderDreams(); renderCard(); renderProgress(); renderHero(); renderGrowth(); $("cta").href = ctaUrl(); $("ctaTxt").textContent = "Cambia tu carrera hoy"; }
 
   // =================================================================
   // Vídeo
@@ -2016,16 +2517,21 @@
     { t: 41.5, title: "3 · Tu semana", text: "Toca tus huecos hasta llegar a 20 h" },
     { t: 51.6, title: "4 · Tu recompensa", text: "Qué harás con la diferencia" },
     { t: 58.6, title: "5 · Tu tarjeta", text: "Descárgala, guarda tus fechas y compártela" },
-    { t: 70.7, title: "Lo que te aporta TripleTen", text: "Coach, garantía de empleo y part-time" },
-    { t: 76.8, title: "Bonus · Growth mode", text: "Lo que ve el equipo de marketing" }
+    { t: 70.7, title: "Pregúntale a Nova", text: "Respuestas con datos reales de TripleTen" },
+    { t: 86.1, title: "Lo que te aporta TripleTen", text: "Horario flexible, coaching y garantía" },
+    { t: 91.9, title: "Bonus · Growth mode", text: "Lo que ve el equipo de marketing" },
+    { t: 97.6, title: "EE. UU. y México", text: "Precios, sueldos y garantía de cada país" }
   ];
-  var video = $("demo"), videoTracked = false;
-  $("chapters").innerHTML = CHAPTERS.map(function (c, i) { return '<button type="button" class="chapter" data-i="' + i + '"><time>' + Math.floor(c.t / 60) + ":" + pad2(Math.floor(c.t % 60)) + '</time><span><b>' + c.title + '</b><span>' + c.text + '</span></span></button>'; }).join("");
+  var video = $("demo"), videoTracked = false, videoOk = true;
+  function renderChapters() { $("chapters").innerHTML = CHAPTERS.map(function (c, i) { return '<button type="button" class="chapter" data-i="' + i + '"><time>' + Math.floor(c.t / 60) + ":" + pad2(Math.floor(c.t % 60)) + '</time><span><b>' + c.title + '</b><span>' + c.text + '</span></span></button>'; }).join(""); }
+  renderChapters();
   $("chapters").addEventListener("click", function (e) {
     var b = e.target.closest(".chapter"); if (!b) return;
     var c = CHAPTERS[Number(b.getAttribute("data-i"))];
-    try { video.currentTime = c.t; var p = video.play(); if (p && p.catch) p.catch(function () {}); } catch (err) {}
     track("video_chapter", { chapter: c.title });
+    if (!videoOk) { window.open("demo.mp4#t=" + c.t, "_blank", "noopener"); return; }
+    scrollToEl($("videoShell"));
+    try { video.currentTime = c.t; var p = video.play(); if (p && p.catch) p.catch(function () {}); } catch (err) {}
   });
   video.addEventListener("timeupdate", function () {
     var t = video.currentTime, cur = 0;
@@ -2033,30 +2539,34 @@
     each($("chapters").children, function (b, i) { b.classList.toggle("on", i === cur); });
   });
   video.addEventListener("play", function () { if (!videoTracked) { videoTracked = true; track("video_play"); } });
+  function videoFail() { videoOk = false; $("videoShell").classList.add("missing"); }
   var vsrc = video.querySelector("source");
-  if (vsrc) vsrc.addEventListener("error", function () { $("videoShell").classList.add("missing"); });
+  if (vsrc) vsrc.addEventListener("error", videoFail);
+  video.addEventListener("error", videoFail);
+  if (video.canPlayType && !video.canPlayType("video/mp4")) videoFail();
 
   // =================================================================
   // Tour guiado
   // =================================================================
   var TOUR = [
-    { el: "#name", title: "Empieza por tu nombre", text: "Lo uso para personalizar cada resultado. Es opcional y no sale de tu navegador." },
+    { el: "#market", title: "Elige tu país", text: "EE. UU. (USD, programas en inglés) o México (MXN, en español). Cambian precios, sueldos y garantía." },
+    { el: "#name", title: "Tu nombre", text: "Lo uso para personalizar cada resultado. Es opcional y no sale de tu navegador." },
     { el: "#jobs", title: "¿A qué te dedicas?", text: "Toca tu sector. Lo que ya sabes hacer cuenta, y mucho." },
     { el: "#interests", title: "¿Qué te hace ilusión?", text: "Elige hasta 3. Con esto calculo qué programa encaja contigo." },
-    { el: "#matchCard", title: "Tu programa ideal", text: "Aquí verás tu % de encaje y el porqué. Pulsa «Usar este programa» y relleno tus números." },
-    { el: "#current", title: "Tu sueldo actual", text: "Escríbelo o mueve la barra. El coste y el salario Tech vienen rellenos." },
+    { el: "#matchCard", title: "Tu programa ideal", text: "Tu % de encaje y el porqué. Pulsa «Usar este programa» y relleno precio y sueldo reales." },
+    { el: "#current", title: "Tu sueldo actual", text: "Escríbelo o mueve la barra." },
     { el: "#calcBtn", title: "El botón gigante", text: "Púlsalo y verás en cuántos meses exactos recuperas tu inversión." },
     { el: "#week", title: "Tu semana", text: "Toca tus huecos libres hasta llegar a 20 h. Luego lo pasas a tu calendario." },
     { el: "#dreams", title: "Tu recompensa", text: "Elige qué harás con la subida y te digo cuántos meses te cuesta." },
     { el: "#cardPreview", title: "Tu tarjeta", text: "Una imagen con tu plan para compartir, y tus fechas clave para el calendario." },
-    { el: "#nova", title: "Y yo, Nova", text: "Estoy aquí abajo todo el rato. Tócame si te pierdes y te digo el siguiente paso." }
+    { el: "#nova", title: "Y yo, Nova", text: "Tócame cuando quieras: te respondo sobre precios, garantía, horarios o tu plan, con fuentes." }
   ];
   var tourI = -1, tourT = null;
   function tourShow(i) {
     tourI = i;
     var s = TOUR[i], el = document.querySelector(s.el);
     ["tourBlock", "tourHole", "tourTip"].forEach(function (id) { $(id).style.display = "block"; });
-    bubble.classList.remove("show");
+    bubble.classList.remove("show"); closeChat();
     $("tourStep").textContent = "Paso " + (i + 1) + " de " + TOUR.length;
     $("tourTitle").textContent = s.title; $("tourText").textContent = s.text;
     $("tourPrev").disabled = i === 0;
@@ -2073,13 +2583,13 @@
     var el = document.querySelector(TOUR[tourI].el), r = el.getBoundingClientRect(), pad = 8;
     var h = Math.min(r.height, window.innerHeight * .5), hole = $("tourHole");
     hole.style.left = (r.left - pad) + "px"; hole.style.top = (r.top - pad) + "px"; hole.style.width = (r.width + pad * 2) + "px"; hole.style.height = (h + pad * 2) + "px";
-    var tip = $("tourTip"), th = tip.offsetHeight || 170, below = r.top + h + pad + 14, above = r.top - pad - 14 - th;
-    tip.style.top = (below + th < window.innerHeight - 8 ? below : Math.max(70, above)) + "px";
+    var tipEl = $("tourTip"), th = tipEl.offsetHeight || 170, below = r.top + h + pad + 14, above = r.top - pad - 14 - th;
+    tipEl.style.top = (below + th < window.innerHeight - 8 ? below : Math.max(70, above)) + "px";
   }
   function tourEnd() { tourI = -1; ["tourBlock", "tourHole", "tourTip"].forEach(function (id) { $(id).style.display = "none"; }); }
   $("tourBtn").addEventListener("click", function () { tourShow(0); });
   $("tourNext").addEventListener("click", function () {
-    if (tourI >= TOUR.length - 1) { tourEnd(); track("tour_complete"); say("¡Listo! Empieza por arriba. Yo te acompaño.", { mood: "big", cheer: true }); scrollToEl($("perfil")); }
+    if (tourI >= TOUR.length - 1) { tourEnd(); track("tour_complete"); openChat(); }
     else tourShow(tourI + 1);
   });
   $("tourPrev").addEventListener("click", function () { if (tourI > 0) tourShow(tourI - 1); });
@@ -2095,12 +2605,12 @@
     drawer.classList.toggle("open", open); scrim.classList.toggle("open", open);
     drawer.setAttribute("aria-hidden", String(!open)); gBtn.setAttribute("aria-pressed", String(open));
     $("novaDock").style.visibility = open ? "hidden" : "";
-    if (open) track("growth_panel_open");
+    if (open) { closeChat(); track("growth_panel_open"); }
   }
   gBtn.addEventListener("click", function () { openDrawer(!drawer.classList.contains("open")); });
   $("drawerClose").addEventListener("click", function () { openDrawer(false); });
   scrim.addEventListener("click", function () { openDrawer(false); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { openDrawer(false); tourEnd(); } });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { openDrawer(false); tourEnd(); closeChat(); } });
   each(document.querySelectorAll(".tab"), function (tab) {
     tab.addEventListener("click", function () {
       each(document.querySelectorAll(".tab"), function (t) { var on = t === tab; t.setAttribute("aria-selected", String(on)); $(t.getAttribute("data-pane")).hidden = !on; });
@@ -2111,7 +2621,7 @@
   // Sección para el equipo
   // =================================================================
   var PLAN90 = [
-    { h: "Aprender y medir", li: ["Entender el embudo actual por mercado, programa y canal.", "Lanzar esta calculadora en una landing con eventos en GA4 y una línea base de conversión.", "Entrevistar a 20 graduados: qué les hizo decidirse y qué casi les frena."] },
+    { h: "Aprender y medir", li: ["Entender el embudo actual por mercado (EE. UU. y LatAm), programa y canal.", "Lanzar esta calculadora en una landing con eventos en GA4 y una línea base de conversión.", "Entrevistar a 20 graduados: qué les hizo decidirse y qué casi les frena."] },
     { h: "Probar rápido", li: ["Tests A/B de mensajes por segmento: sector de origen, programa y plazo de retorno.", "Tarjetas compartibles y Reels verticales en paid social con UTMs por programa.", "Lead scoring conectado al CRM: admisiones llama primero a los leads calientes."] },
     { h: "Escalar lo que funciona", li: ["Nurturing personalizado con IA: cada lead recibe su plan, su programa y su fecha.", "Programa de embajadores: graduados que comparten su tarjeta real.", "Presupuesto al canal y al mensaje con mejor coste por alumno matriculado."] }
   ];
@@ -2120,20 +2630,26 @@
     var p = PLAN90[i];
     $("plan90").innerHTML = "<h4>" + p.h + "</h4><ul>" + p.li.map(function (l) { return "<li>" + l + "</li>"; }).join("") + "</ul>";
   }
-  $("tabs90").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; render90(Number(b.getAttribute("data-i"))); track("plan90_tab", { tab: b.getAttribute("data-i") }); });
+  $("tabs90").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; render90(Number(b.getAttribute("data-i"))); flash($("plan90")); track("plan90_tab", { tab: b.getAttribute("data-i") }); });
   render90(0);
   var CHECKS = [
+    ["#market", "Datos reales de TripleTen en EE. UU. y México, con fuentes", "mercado"],
     ["#perfil", "Recomendación de programa según tu sector e intereses", "perfil"],
-    ["#numeros", "Cálculo de retorno con gráfico interactivo", "números"],
+    ["#numeros", "Cálculo de retorno con gráfico interactivo y plan de pagos real", "números"],
+    ["#nova", "Nova: asistente que responde con datos verificados y actúa por ti", "nova"],
     ["#viaje", "Viaje con fechas reales y Nova avanzando al hacer scroll", "viaje"],
     ["#semana", "Planificador semanal que exporta tu horario al calendario", "semana"],
-    ["#recompensa", "Traductor de subida a sueños concretos", "recompensa"],
     ["#tarjeta", "Tarjeta PNG con tus datos, para post o story", "tarjeta"],
-    ["#video", "Vídeo vertical paso a paso, con capítulos", "vídeo"],
     ["#top", "Growth mode: eventos, embudo, lead score y test A/B en vivo", "growth"]
   ];
   $("checks").innerHTML = CHECKS.map(function (c) { return '<a href="' + c[0] + '" data-k="' + c[2] + '">' + icon("check") + '<span>' + c[1] + '</span><i>' + c[2] + '</i></a>'; }).join("");
-  $("checks").addEventListener("click", function (e) { var a = e.target.closest("a"); if (a && a.getAttribute("data-k") === "growth") { e.preventDefault(); openDrawer(true); } });
+  $("checks").addEventListener("click", function (e) {
+    var a = e.target.closest("a"); if (!a) return;
+    var k = a.getAttribute("data-k");
+    if (k === "growth") { e.preventDefault(); openDrawer(true); }
+    else if (k === "nova") { e.preventDefault(); openChat("¿Quién eres?"); }
+    else if (k === "mercado") { e.preventDefault(); scrollToEl($("top")); setTimeout(function () { flash($("market")); }, 600); }
+  });
   if (CONFIG.author) {
     $("sign").hidden = false;
     $("signAv").textContent = CONFIG.author.split(/\s+/).map(function (w) { return w.charAt(0); }).join("").slice(0, 2).toUpperCase();
@@ -2148,22 +2664,9 @@
   // =================================================================
   // Motion
   // =================================================================
-  (function rotator() {
-    var roles = PROGRAMS.map(function (p) { return p.role; }), el = $("role"), i = 2;
-    if (reduceMotion) return;
-    function type(w, cb) { var n = 0; (function st() { el.textContent = w.slice(0, ++n); if (n < w.length) setTimeout(st, 55); else setTimeout(cb, 1800); })(); }
-    function erase(cb) { (function st() { el.textContent = el.textContent.slice(0, -1); if (el.textContent.length) setTimeout(st, 26); else cb(); })(); }
-    (function loop() { setTimeout(function () { erase(function () { i = (i + 1) % roles.length; type(roles[i], loop); }); }, 1800); })();
-  })();
-  (function marquee() { var it = ["Python", "SQL", "JavaScript", "React", "Node.js", "LLMs", "Prompt engineering", "Machine Learning", "Tableau", "Selenium", "Git", "Docker", "APIs", "Agentes de IA", "Ciberseguridad", "RAG"]; var h = it.map(function (s) { return "<span>" + s + "</span>"; }).join(""); $("marquee").innerHTML = h + h; })();
+  (function marquee() { var it = ["Python", "SQL", "JavaScript", "React", "Node.js", "LLMs", "Prompt engineering", "Machine Learning", "Power BI", "Tableau", "Selenium", "Postman", "Figma", "n8n", "Git", "Docker", "Agentes de IA", "Ciberseguridad", "RAG"]; var h = it.map(function (s) { return "<span>" + s + "</span>"; }).join(""); $("marquee").innerHTML = h + h; })();
   var io = "IntersectionObserver" in window ? new IntersectionObserver(function (en) {
-    en.forEach(function (x) {
-      if (!x.isIntersecting) return;
-      x.target.classList.add("in");
-      var c = x.target.querySelector("[data-count]");
-      if (c) { var tgt = Number(c.getAttribute("data-count")), pre = c.getAttribute("data-prefix") || "", suf = c.getAttribute("data-suffix") || ""; c._v = 0; tween(c, tgt, function (v) { return pre + nf.format(Math.round(v)) + suf; }, 1600); }
-      io.unobserve(x.target);
-    });
+    en.forEach(function (x) { if (!x.isIntersecting) return; x.target.classList.add("in"); io.unobserve(x.target); });
   }, { threshold: .15 }) : null;
   each(document.querySelectorAll(".reveal"), function (el) { if (io) io.observe(el); else el.classList.add("in"); });
   document.addEventListener("pointermove", function (e) {
@@ -2174,6 +2677,7 @@
     var v = $("heroVisual"), s = $("cardStack");
     v.addEventListener("pointermove", function (e) { if (e.pointerType === "touch") return; var r = v.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; s.style.transform = "rotateY(" + (x * 18) + "deg) rotateX(" + (-y * 14) + "deg)"; });
     v.addEventListener("pointerleave", function () { s.style.transform = ""; });
+    v.addEventListener("click", function () { var i = nextStep(); if (result) { scrollToEl($("tarjeta")); } else { scrollToEl($(i >= 0 ? STEP_IDS[i] : "numeros")); } track("hero_card_click"); });
   })();
   (function particles() {
     var c = $("particles"); if (!c.getContext || reduceMotion) return;
@@ -2204,12 +2708,13 @@
   // =================================================================
   function loadState(o) {
     if (!o) return;
+    if (MARKETS[o.market]) state.market = o.market;
     state.name = o.name || ""; state.job = byId(JOBS, o.job) ? o.job : null;
     state.interests = (o.interests || []).filter(function (id) { return byId(INTERESTS, id); }).slice(0, 3);
-    state.exp = !!o.exp; state.program = byId(PROGRAMS, o.program);
+    state.exp = !!o.exp; state.program = byId(M().programs, o.program);
     state.current = typeof o.current === "number" ? o.current : null;
-    if (o.cost) state.cost = o.cost;
-    if (o.expected) state.expected = o.expected;
+    state.cost = o.cost || M().defaults.cost;
+    state.expected = o.expected || M().defaults.expected;
     if (typeof o.search === "number") state.search = Math.max(0, Math.min(10, o.search));
     state.installments = !!o.installments; state.calculated = !!o.calculated;
     state.slots = (o.slots || []).filter(function (k) { return /^[0-6][mtn]$/.test(k); });
@@ -2219,15 +2724,18 @@
   }
   function resetState() {
     state.name = ""; state.job = null; state.interests = []; state.exp = false; state.program = null;
-    state.current = null; state.cost = 9700; state.expected = 70000; state.search = 3; state.installments = false;
+    state.current = null; state.cost = M().defaults.cost; state.expected = M().defaults.expected; state.search = 3; state.installments = false;
     state.calculated = false; state.slots = []; state.dreams = []; state.custom = []; state.done = {};
   }
   var q = null; try { q = new URLSearchParams(location.search); } catch (e) {}
   var saved = store.get(STORE_KEY);
+  var lang = (navigator.language || "").toLowerCase();
+  state.market = /^es-(mx|co|cl|pe|ec|ar|419)/.test(lang) ? "mx" : "us";
+  state.cost = M().defaults.cost; state.expected = M().defaults.expected;
   if (q && q.has("e")) {
     state.shared = true;
     var num = function (k) { var n = Number(q.get(k)); return q.has(k) && isFinite(n) && n >= 0 ? Math.round(n) : null; };
-    loadState({ name: capWord((q.get("n") || "").slice(0, 24)), job: q.get("j"), program: q.get("p"), current: num("s"), cost: num("c"), expected: num("e"), search: num("m"), calculated: true });
+    loadState({ market: q.get("mk") || "us", name: capWord((q.get("n") || "").slice(0, 24)), job: q.get("j"), program: q.get("p"), current: num("s"), cost: num("c"), expected: num("e"), search: num("m"), calculated: true });
     $("sharedTxt").innerHTML = "Estás viendo el plan de <b>" + (state.name ? esc(state.name) : "alguien") + "</b>. ¿Y el tuyo?";
     $("sharedBanner").classList.add("show");
   } else loadState(saved);
@@ -2238,7 +2746,7 @@
     loadState(store.get(STORE_KEY));
     $("sharedBanner").classList.remove("show");
     $("result").classList.remove("show"); $("emptyRes").style.display = "";
-    renderProfile(); renderNumbers();
+    renderMarket(); renderProfile(); renderNumbers();
     if (state.calculated) calculate(false); else refreshAll();
     scrollToEl($("perfil")); say("¡Vamos con el tuyo! Empieza por aquí.", { mood: "big" });
   });
@@ -2246,22 +2754,21 @@
 
   applyVariant();
   profileTracked = stepDone(0);
-  renderProfile(); renderNumbers();
+  renderMarket(); renderProfile(); renderNumbers(); renderGuarantee();
   if (state.calculated) calculate(false); else refreshAll();
   lastCount = planCount();
   weekCelebrated = hours() >= TARGET_HOURS;
-  function drawHero() { drawCard(heroCanvas, "feed", cardData(true)); $("heroCard").src = heroCanvas.toDataURL("image/png"); }
-  drawHero();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { drawHero(); cardKey = ""; renderCard(); if (lastChart) drawChart(lastChart[0], lastChart[1], lastChart[2], lastChart[3], false); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { heroKey = ""; cardKey = ""; renderHero(); renderCard(); if (lastChart) drawChart(lastChart[0], lastChart[1], lastChart[2], lastChart[3], false); });
   track("page_view", { variant: variant, returning: !!(saved && !state.shared), shared: state.shared });
-  if (state.shared) track("shared_link_open", { program: state.program ? state.program.id : "custom" });
+  if (state.shared) track("shared_link_open", { program: P() ? P().id : "custom" });
 
   setTimeout(function () {
     if (state.shared) say("Esto es lo que ha calculado <b>" + (state.name ? esc(state.name) : "tu contacto") + "</b>. ¿Hacemos el tuyo?", { mood: "big", ms: 7000 });
     else if (saved && saved.name) say("¡Hola de nuevo, <b>" + esc(saved.name) + "</b>! He guardado tu plan: llevas " + planCount() + " de 5 pasos." + (nextStepHint() ? " " + nextStepHint() : ""), { mood: "big", cheer: true, ms: 7000 });
-    else say("¡Hola! Soy <b>Nova</b>. En 2 minutos te digo qué programa de TripleTen encaja contigo y cuándo recuperas cada dólar.", { mood: "big", cheer: true, ms: 7000 });
+    else say("¡Hola! Soy <b>Nova</b>. Te digo qué programa de TripleTen encaja contigo y cuándo recuperas cada " + (state.market === "mx" ? "peso" : "dólar") + ". <u>Tócame</u> si quieres preguntarme algo.", { mood: "big", cheer: true, ms: 8000 });
   }, 1200);
 })();
+
 </script>
 </body>
 </html>

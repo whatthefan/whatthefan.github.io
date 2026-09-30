@@ -23,7 +23,7 @@ const FRAMES = path.resolve(process.argv[2] || path.join(require("os").tmpdir(),
 const FFMPEG = process.env.FFMPEG || "ffmpeg";
 const FPS = Number(process.env.FPS) || 30;
 const VIEW = { width: 432, height: 768 }; // x2.5 = 1080x1920
-const MAX_FRAMES = Number(process.env.MAX_FRAMES) || FPS * 90;
+const MAX_FRAMES = Number(process.env.MAX_FRAMES) || FPS * 150;
 const START = new Date("2026-09-30T10:00:00");
 // Las fuentes de Google se descargan una vez con curl y se sirven desde caché:
 // así el vídeo siempre sale con la tipografía buena aunque la red falle.

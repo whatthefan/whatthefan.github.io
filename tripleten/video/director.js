@@ -78,7 +78,7 @@
   function placeFinger() { finger.style.left = fx + "px"; finger.style.top = fy + "px"; }
   placeFinger();
 
-  var TOTAL = 66000;
+  var TOTAL = 104000;
   function chapter(name) { rec.chapters.push({ name: name, t: Math.round((performance.now() - rec.t0) / 100) / 10 }); }
   async function caption(step, title, text) {
     if (cap.classList.contains("on")) { cap.classList.remove("on"); await sleep(260); }
@@ -242,6 +242,23 @@
     await tap("#icsDates");
     await sleep(1200);
 
+    // ---------- Nova responde ----------
+    chapter("nova");
+    await caption("PREGÚNTALE A NOVA", "Tu asistente, con datos reales", "Precios, garantía, horarios… y tu propio plan");
+    await tap("#nova");
+    await sleep(1400);
+    hideCaption();
+    await sleep(300);
+    var chips = document.querySelectorAll("#chatQuick button"), gBtn = null;
+    for (var ci = 0; ci < chips.length; ci++) if (/garant/i.test(chips[ci].textContent)) gBtn = chips[ci];
+    if (gBtn) { await tap(gBtn); }
+    await sleep(3400);
+    await type("#chatInput", "¿Cuánto cuesta QA?", 70);
+    await tap("#chatSend");
+    await sleep(3600);
+    await tap("#chatClose");
+    await sleep(400);
+
     // ---------- Lo que aporta TripleTen ----------
     chapter("tripleten");
     finger.classList.remove("on");
@@ -257,6 +274,17 @@
     await tap("#growthBtn");
     await sleep(3200);
     await tap("#drawerClose");
+    await sleep(300);
+
+    // ---------- EE. UU. y México ----------
+    chapter("mercados");
+    await caption("DATOS REALES", "EE. UU. y México", "Precios, sueldos y garantía de cada país");
+    await scrollY(0, 1200);
+    await scrollToEl("#market", 330, 600);
+    await tap('#market button[data-m="mx"]');
+    await sleep(700);
+    await scrollY(0, 700);
+    await sleep(2600);
     hideCaption();
     finger.classList.remove("on");
     await sleep(300);
