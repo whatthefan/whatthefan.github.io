@@ -3,557 +3,1099 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#05070a">
-<title>Calculadora ROI · Bootcamps TripleTen</title>
+<meta name="theme-color" content="#04060a">
+<meta name="color-scheme" content="dark">
+<title>Career ROI Lab · TripleTen</title>
 <meta name="description" content="Calcula en cuántos meses recuperas la inversión de tu bootcamp de TripleTen con tu nuevo sueldo en Tech.">
+<meta property="og:title" content="¿En cuántos meses se paga sola tu carrera en Tech?">
+<meta property="og:description" content="Calculadora de ROI para los bootcamps de TripleTen. Elige programa, mete tus números y mira cuándo recuperas cada dólar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
+  @property --angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+
   :root {
-    --bg: #05070a;
+    --bg: #04060a;
+    --bg-2: #080c12;
     --surface: rgba(255, 255, 255, 0.035);
-    --surface-strong: rgba(255, 255, 255, 0.06);
-    --border: rgba(255, 255, 255, 0.09);
-    --text: #f2f5f3;
-    --muted: #8b958f;
+    --surface-2: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-2: rgba(255, 255, 255, 0.14);
+    --text: #f1f5f2;
+    --muted: #8a948e;
+    --dim: #5b655f;
     --neon: #39ff88;
     --neon-2: #00e5a0;
-    --neon-soft: rgba(57, 255, 136, 0.14);
-    --neon-glow: 0 0 24px rgba(57, 255, 136, 0.45), 0 0 64px rgba(57, 255, 136, 0.18);
-    --danger: #ff6b6b;
-    --radius: 20px;
-    --font-display: "Space Grotesk", system-ui, sans-serif;
-    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --neon-3: #b6ff3b;
+    --neon-soft: rgba(57, 255, 136, 0.12);
+    --neg: #ff5c7a;
+    --neg-soft: rgba(255, 92, 122, 0.14);
+    --radius: 22px;
+    --display: "Space Grotesk", system-ui, sans-serif;
+    --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --nav-h: 64px;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
-
-  html { -webkit-text-size-adjust: 100%; }
-
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
     margin: 0;
     min-height: 100vh;
-    min-height: 100dvh;
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font-body);
+    font-family: var(--body);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+  button, input { font: inherit; color: inherit; }
+  a { color: inherit; }
+  sup { font-size: 0.6em; }
 
-  /* Fondo: halos verdes + rejilla sutil */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background:
-      radial-gradient(60vmax 60vmax at 85% -10%, rgba(57, 255, 136, 0.16), transparent 60%),
-      radial-gradient(50vmax 50vmax at -10% 110%, rgba(0, 229, 160, 0.10), transparent 60%),
-      var(--bg);
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
-  }
-
-  .wrap {
-    width: 100%;
-    max-width: 560px;
-    margin: 0 auto;
-    padding: calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));
-  }
-
-  /* ---------- Cabecera ---------- */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    border: 1px solid rgba(57, 255, 136, 0.35);
-    border-radius: 999px;
-    background: var(--neon-soft);
-    color: var(--neon);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .badge .dot {
-    width: 7px;
-    height: 7px;
+  /* ---------- Fondo animado ---------- */
+  .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .blob {
+    position: absolute;
+    width: 70vmax; height: 70vmax;
     border-radius: 50%;
-    background: var(--neon);
-    box-shadow: 0 0 10px var(--neon);
-    animation: pulse 1.8s ease-in-out infinite;
+    filter: blur(60px);
+    opacity: 0.55;
+    will-change: transform;
   }
+  .blob.b1 { top: -35vmax; right: -25vmax; background: radial-gradient(circle, rgba(57,255,136,0.30), transparent 62%); animation: drift1 22s ease-in-out infinite; }
+  .blob.b2 { bottom: -40vmax; left: -30vmax; background: radial-gradient(circle, rgba(0,229,160,0.22), transparent 62%); animation: drift2 28s ease-in-out infinite; }
+  .blob.b3 { top: 30%; left: 40%; width: 40vmax; height: 40vmax; background: radial-gradient(circle, rgba(182,255,59,0.10), transparent 65%); animation: drift1 34s ease-in-out infinite reverse; }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 30%, transparent 80%);
+    animation: gridMove 20s linear infinite;
+  }
+  #particles { position: absolute; inset: 0; width: 100%; height: 100%; }
 
+  /* ---------- Navegación ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 40;
+    height: calc(var(--nav-h) + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    background: rgba(4, 6, 10, 0.62);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-in {
+    max-width: 1180px; height: 100%; margin: 0 auto; padding: 0 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
+  .logo-mark {
+    flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 10px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--neon), var(--neon-2));
+    color: #03140a; font-family: var(--display); font-weight: 700; font-size: 15px;
+    box-shadow: 0 0 20px rgba(57,255,136,0.45);
+  }
+  .logo-txt { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+  .logo-txt b { font-family: var(--display); font-size: 16px; letter-spacing: -0.01em; white-space: nowrap; }
+  .logo-txt small { color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-actions { display: flex; align-items: center; gap: 8px; }
+  .pill-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 38px; padding: 0 14px;
+    border: 1px solid var(--border-2); border-radius: 999px;
+    background: var(--surface); cursor: pointer;
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+    transition: border-color .2s, background .2s, transform .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pill-btn:hover { border-color: rgba(57,255,136,0.6); background: var(--neon-soft); }
+  .pill-btn:active { transform: scale(0.97); }
+  .pill-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 10px var(--neon); animation: pulse 1.6s ease-in-out infinite; }
+  .pill-btn.primary { background: var(--neon); color: #03140a; border-color: var(--neon); }
+  .pill-btn.primary:hover { background: #6bffa6; }
+  .pill-btn[aria-pressed="true"] { border-color: var(--neon); background: var(--neon-soft); color: var(--neon); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-top: 44px; padding-bottom: 20px; text-align: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid rgba(57,255,136,0.35); border-radius: 999px;
+    background: var(--neon-soft); color: var(--neon);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 10px var(--neon); animation: pulse 1.8s ease-in-out infinite; }
   h1 {
-    margin: 18px 0 12px;
-    font-family: var(--font-display);
-    font-size: clamp(32px, 9vw, 46px);
-    font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
+    margin: 20px auto 14px; max-width: 900px;
+    font-family: var(--display);
+    font-size: clamp(36px, 8.4vw, 76px);
+    font-weight: 700; line-height: 1.02; letter-spacing: -0.035em;
   }
-  h1 .hl {
-    background: linear-gradient(92deg, var(--neon), var(--neon-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 40px rgba(57, 255, 136, 0.25);
+  .grad {
+    background: linear-gradient(92deg, var(--neon) 0%, var(--neon-3) 45%, var(--neon-2) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: sheen 6s linear infinite;
   }
-  .lead {
-    margin: 0 0 28px;
-    color: var(--muted);
-    font-size: 16px;
-  }
+  .rotator { margin: 0 auto; color: var(--muted); font-size: clamp(16px, 4.2vw, 20px); }
+  .rotator .from { color: var(--text); }
+  .rotator .role { font-family: var(--mono); color: var(--neon); font-weight: 600; }
+  .rotator .caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -3px; background: var(--neon); animation: blink 1s steps(1) infinite; }
 
-  /* ---------- Tarjeta / formulario ---------- */
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    max-width: 900px; margin: 30px auto 0;
+  }
+  .hstat {
+    padding: 16px 12px; text-align: left;
+    border: 1px solid var(--border); border-radius: 16px;
+    background: var(--surface);
+  }
+  .hstat b { display: block; font-family: var(--display); font-size: clamp(24px, 6.4vw, 32px); font-weight: 700; letter-spacing: -0.02em; color: var(--neon); }
+  .hstat span { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+
+  .marquee {
+    position: relative; overflow: hidden; margin: 28px -16px 0; padding: 14px 0;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-track { display: flex; gap: 36px; width: max-content; animation: marquee 38s linear infinite; }
+  .marquee-track span { font-family: var(--mono); font-size: 13px; color: var(--dim); white-space: nowrap; }
+  .marquee-track span::before { content: "▸ "; color: var(--neon); }
+
+  /* ---------- Secciones ---------- */
+  .section { padding-top: 44px; }
+  .section-head { margin-bottom: 18px; }
+  .eyebrow { color: var(--neon); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+  .section-head h2 { margin: 6px 0 0; font-family: var(--display); font-size: clamp(26px, 6vw, 38px); letter-spacing: -0.025em; line-height: 1.1; }
+
+  .calc-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .calc-grid > * { min-width: 0; }
+
   .card {
     position: relative;
-    padding: 22px 18px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, var(--surface-strong), var(--surface));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 30px 80px -40px rgba(0,0,0,0.9);
+  }
+  /* Foco de luz que sigue al dedo / ratón */
+  .spot::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -20%), rgba(57,255,136,0.09), transparent 45%);
+  }
+  .pad { padding: 20px 16px; }
+
+  .step-title { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: 14px; font-weight: 600; }
+  .step-num {
+    display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px;
+    background: var(--neon-soft); border: 1px solid rgba(57,255,136,0.35);
+    color: var(--neon); font-family: var(--mono); font-size: 12px;
   }
 
+  /* Programas */
+  .programs {
+    display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin: 0 -16px; padding: 2px 16px 12px;
+    scrollbar-width: none;
+  }
+  .programs::-webkit-scrollbar { display: none; }
+  .prog {
+    flex: 0 0 176px; scroll-snap-align: start;
+    position: relative; text-align: left; cursor: pointer;
+    padding: 14px 14px 12px;
+    border: 1px solid var(--border); border-radius: 16px;
+    background: rgba(0,0,0,0.3);
+    transition: border-color .2s, background .2s, transform .15s, box-shadow .2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .prog:hover { border-color: var(--border-2); transform: translateY(-2px); }
+  .prog[aria-pressed="true"] {
+    border-color: var(--neon);
+    background: linear-gradient(180deg, rgba(57,255,136,0.14), rgba(57,255,136,0.03));
+    box-shadow: 0 0 0 3px rgba(57,255,136,0.12), 0 0 30px -8px rgba(57,255,136,0.6);
+  }
+  .prog .tag { display: inline-block; margin-bottom: 8px; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+  .prog .tag.acc { background: rgba(182,255,59,0.12); color: var(--neon-3); }
+  .prog b { display: block; font-family: var(--display); font-size: 15.5px; line-height: 1.2; letter-spacing: -0.01em; }
+  .prog .meta { display: flex; justify-content: space-between; margin-top: 10px; color: var(--muted); font-size: 12px; }
+  .prog .meta strong { color: var(--text); font-weight: 600; }
+  .prog .check {
+    position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid var(--border-2); display: grid; place-items: center;
+    transition: all .2s;
+  }
+  .prog[aria-pressed="true"] .check { background: var(--neon); border-color: var(--neon); }
+  .prog[aria-pressed="true"] .check::after { content: ""; width: 5px; height: 9px; border: solid #03140a; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
+
+  .divider { height: 1px; margin: 18px 0; background: var(--border); }
+
+  /* Campos */
   .field + .field { margin-top: 18px; }
-
-  .field label {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-  }
-  .field label small {
-    color: var(--muted);
-    font-weight: 500;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-
+  .field label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+  .field label small { color: var(--muted); font-weight: 500; font-size: 12px; white-space: nowrap; }
   .input {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: rgba(0, 0, 0, 0.35);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center;
+    border: 1px solid var(--border); border-radius: 14px;
+    background: rgba(0,0,0,0.38);
+    transition: border-color .2s, box-shadow .2s;
   }
-  .input:focus-within {
-    border-color: rgba(57, 255, 136, 0.7);
-    box-shadow: 0 0 0 4px rgba(57, 255, 136, 0.12);
-  }
-  .input.invalid {
-    border-color: var(--danger);
-    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.12);
-  }
-  .input span {
-    padding-left: 16px;
-    color: var(--neon);
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 600;
-  }
+  .input:focus-within { border-color: rgba(57,255,136,0.7); box-shadow: 0 0 0 4px rgba(57,255,136,0.12); }
+  .input.invalid { border-color: var(--neg); box-shadow: 0 0 0 4px var(--neg-soft); }
+  .input .cur { padding-left: 16px; color: var(--neon); font-family: var(--display); font-size: 20px; font-weight: 600; }
   .input input {
-    flex: 1;
-    min-width: 0;
-    height: 56px;
-    padding: 0 16px 0 8px;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: var(--text);
-    font-family: var(--font-display);
-    font-size: 20px; /* >=16px evita el zoom en iOS */
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    flex: 1; min-width: 0; height: 54px; padding: 0 16px 0 8px;
+    border: 0; outline: 0; background: transparent;
+    font-family: var(--display); font-size: 20px; font-weight: 600; letter-spacing: -0.01em;
   }
-  .input input::placeholder { color: #4b544f; }
+  .input input::placeholder { color: #434b46; }
+  .input .suffix { padding-right: 14px; color: var(--dim); font-size: 12px; white-space: nowrap; }
 
-  .error {
-    min-height: 20px;
-    margin: 14px 0 0;
-    color: var(--danger);
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 28px; margin: 6px 0 0; background: transparent; cursor: pointer;
+    --p: 50%;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--neon-2), var(--neon) var(--p), rgba(255,255,255,0.08) var(--p));
+  }
+  input[type="range"]::-moz-range-track { height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); }
+  input[type="range"]::-moz-range-progress { height: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--neon-2), var(--neon)); }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 22px; height: 22px; margin-top: -8px; border-radius: 50%;
+    background: #fff; border: 4px solid var(--neon); box-shadow: 0 0 14px rgba(57,255,136,0.7);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; border: 4px solid var(--neon); box-shadow: 0 0 14px rgba(57,255,136,0.7);
+  }
+  input[type="range"]:focus-visible { outline: 2px solid var(--neon); outline-offset: 4px; border-radius: 8px; }
+
+  .row-2 { display: grid; gap: 18px; }
+  .row-2 > * { min-width: 0; }
+  .field label > span { min-width: 0; }
+
+  .switch-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 18px; padding: 12px 14px;
+    border: 1px dashed var(--border-2); border-radius: 14px;
     font-size: 14px;
-    font-weight: 500;
   }
-  .error:empty { min-height: 0; margin: 0; }
+  .switch-row span small { display: block; color: var(--muted); font-size: 12px; }
+  .switch {
+    flex-shrink: 0; position: relative; width: 50px; height: 30px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border-2); background: rgba(255,255,255,0.06);
+    transition: background .2s, border-color .2s;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+    background: #cfd6d2; transition: transform .25s cubic-bezier(.3,1.4,.5,1), background .2s;
+  }
+  .switch[aria-checked="true"] { background: var(--neon-soft); border-color: var(--neon); }
+  .switch[aria-checked="true"]::after { transform: translateX(20px); background: var(--neon); box-shadow: 0 0 12px var(--neon); }
 
-  /* ---------- Botón principal ---------- */
+  .error { margin: 14px 0 0; color: var(--neg); font-size: 14px; font-weight: 500; }
+  .error:empty { display: none; }
+
+  /* Botón principal */
   .btn-calc {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    min-height: 76px;
-    margin-top: 24px;
-    padding: 0 24px;
-    border: 0;
-    border-radius: 18px;
-    overflow: hidden;
-    background: linear-gradient(92deg, var(--neon), var(--neon-2));
-    color: #03140a;
-    font-family: var(--font-display);
-    font-size: clamp(19px, 5.8vw, 24px);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    cursor: pointer;
-    box-shadow: var(--neon-glow);
-    transition: transform 0.15s ease, box-shadow 0.25s ease;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; min-height: 76px; margin-top: 22px; padding: 0 22px;
+    border: 0; border-radius: 18px; cursor: pointer;
+    background: linear-gradient(92deg, var(--neon), var(--neon-3) 50%, var(--neon-2));
+    background-size: 200% auto;
+    color: #03140a; font-family: var(--display);
+    font-size: clamp(19px, 5.6vw, 24px); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap;
+    box-shadow: 0 0 26px rgba(57,255,136,0.45), 0 0 70px rgba(57,255,136,0.18);
+    transition: transform .15s, box-shadow .25s, background-position .6s;
     animation: breathe 2.6s ease-in-out infinite;
+    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
   .btn-calc::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -60%;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-    transform: skewX(-20deg);
-    animation: shine 3.2s ease-in-out infinite;
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform: skewX(-20deg); animation: shine 3.2s ease-in-out infinite;
   }
-  .btn-calc svg { flex-shrink: 0; width: 26px; height: 26px; transition: transform 0.2s; }
-  .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 0 32px rgba(57, 255, 136, 0.6), 0 0 90px rgba(57, 255, 136, 0.25); }
+  .btn-calc svg { flex-shrink: 0; width: 26px; height: 26px; transition: transform .2s; }
+  .btn-calc:hover { transform: translateY(-2px); background-position: right center; }
   .btn-calc:hover svg { transform: translateX(4px); }
   .btn-calc:active { transform: scale(0.98); }
   .btn-calc:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .btn-hint { margin: 10px 0 0; text-align: center; color: var(--dim); font-size: 12px; }
 
   /* ---------- Resultado ---------- */
-  .result {
-    display: none;
-    margin-top: 22px;
-    padding: 28px 20px 22px;
-    border: 1px solid rgba(57, 255, 136, 0.35);
-    border-radius: var(--radius);
-    background:
-      radial-gradient(120% 80% at 50% 0%, rgba(57, 255, 136, 0.16), transparent 70%),
-      linear-gradient(180deg, rgba(10, 22, 15, 0.95), rgba(6, 10, 8, 0.95));
-    box-shadow: 0 0 0 1px rgba(57, 255, 136, 0.05), 0 30px 90px -20px rgba(57, 255, 136, 0.25);
-    text-align: center;
-    scroll-margin-top: 16px;
+  .result-col { display: flex; flex-direction: column; gap: 14px; }
+  .empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    min-height: 260px; padding: 30px 20px; text-align: center; color: var(--muted);
   }
-  .result.show {
-    display: block;
-    animation: rise 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
-  }
-  .result.show > * { animation: fadeUp 0.6s ease both; }
-  .result.show > *:nth-child(2) { animation-delay: 0.08s; }
-  .result.show > *:nth-child(3) { animation-delay: 0.16s; }
-  .result.show > *:nth-child(4) { animation-delay: 0.24s; }
-  .result.show > *:nth-child(5) { animation-delay: 0.32s; }
-  .result.show > *:nth-child(6) { animation-delay: 0.40s; }
+  .empty svg { width: 100%; max-width: 360px; height: auto; opacity: 0.8; }
+  .empty svg path.l { stroke-dasharray: 8 10; animation: dash 1.4s linear infinite; }
+  .empty p { margin: 0; font-size: 14px; }
 
-  .result .kicker {
-    margin: 0;
-    color: var(--neon);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .result { display: none; }
+  .result.show { display: flex; flex-direction: column; gap: 14px; }
+  .result.show > * { animation: rise .7s cubic-bezier(.2,.9,.25,1.1) both; }
+  .result.show > *:nth-child(2) { animation-delay: .08s; }
+  .result.show > *:nth-child(3) { animation-delay: .16s; }
+  .result.show > *:nth-child(4) { animation-delay: .24s; }
+  .result.show > *:nth-child(5) { animation-delay: .32s; }
+  .result.show > *:nth-child(6) { animation-delay: .40s; }
+
+  .hero-result {
+    overflow: hidden; text-align: center; padding: 28px 18px 24px;
+    border-color: transparent;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(57,255,136,0.18), transparent 70%),
+      linear-gradient(180deg, rgba(10,24,16,0.96), rgba(5,9,7,0.96)) padding-box,
+      conic-gradient(from var(--angle), rgba(57,255,136,0.9), rgba(57,255,136,0.05) 25%, rgba(182,255,59,0.7) 50%, rgba(57,255,136,0.05) 75%, rgba(57,255,136,0.9)) border-box;
+    border: 1.5px solid transparent;
+    animation: spin 6s linear infinite;
   }
+  .result.show > .hero-result { animation: rise .7s cubic-bezier(.2,.9,.25,1.1) both, spin 6s linear infinite; }
+  .kicker { margin: 0; color: var(--neon); font-size: 12.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
   .big {
     margin: 6px 0 0;
-    font-family: var(--font-display);
-    font-size: clamp(88px, 30vw, 132px);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.05em;
-    color: var(--neon);
-    text-shadow: 0 0 30px rgba(57, 255, 136, 0.55), 0 0 80px rgba(57, 255, 136, 0.25);
+    font-family: var(--display); font-size: clamp(92px, 30vw, 150px); font-weight: 700;
+    line-height: 0.95; letter-spacing: -0.055em; color: var(--neon);
+    text-shadow: 0 0 30px rgba(57,255,136,0.55), 0 0 90px rgba(57,255,136,0.25);
     font-variant-numeric: tabular-nums;
   }
-  .big-unit {
-    margin: 4px 0 0;
-    font-family: var(--font-display);
-    font-size: 24px;
-    font-weight: 600;
+  .big-unit { margin: 6px 0 0; font-family: var(--display); font-size: 24px; font-weight: 600; }
+  .exact { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .date-chip {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 8px 14px;
+    border: 1px solid rgba(57,255,136,0.3); border-radius: 999px; background: var(--neon-soft);
+    font-size: 13.5px; font-weight: 500;
   }
-  .exact {
-    margin: 4px 0 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  .headline {
-    margin: 20px 0 0;
-    font-family: var(--font-display);
-    font-size: 21px;
-    font-weight: 600;
-    line-height: 1.3;
-  }
+  .date-chip b { color: var(--neon); }
+  .headline { margin: 18px 0 0; font-family: var(--display); font-size: 21px; font-weight: 600; line-height: 1.28; }
   .headline strong { color: var(--neon); }
-  .sub {
-    margin: 8px 0 0;
-    color: #b7c1bb;
-    font-size: 15px;
-  }
+  .sub { margin: 8px auto 0; max-width: 460px; color: #b3bdb7; font-size: 15px; }
 
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 24px 0 0;
-  }
-  .stat {
-    padding: 12px 6px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.03);
-  }
-  .stat b {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text);
-    white-space: nowrap;
-  }
-  .stat b.pos { color: var(--neon); }
-  .stat span {
-    display: block;
-    margin-top: 2px;
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.3;
-  }
+  .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .kpi { padding: 14px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+  .kpi span { display: block; color: var(--muted); font-size: 12px; }
+  .kpi b { display: block; margin-top: 4px; font-family: var(--display); font-size: clamp(20px, 5.6vw, 26px); font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi b.pos { color: var(--neon); }
+  .kpi b.neg { color: var(--neg); }
+  .kpi em { display: block; margin-top: 2px; color: var(--dim); font-size: 11px; font-style: normal; }
 
-  /* Barra de recuperación: 0 → 12 meses */
-  .timeline { margin: 24px 0 0; text-align: left; }
-  .timeline-head {
-    display: flex;
-    justify-content: space-between;
-    color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-  .bar {
-    position: relative;
-    height: 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.07);
-    overflow: hidden;
-  }
-  .bar i {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 0;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--neon-2), var(--neon));
-    box-shadow: 0 0 16px var(--neon);
-    transition: width 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
+  .card-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+  .card-h h3 { margin: 0; font-family: var(--display); font-size: 17px; letter-spacing: -0.01em; }
+  .card-h small { color: var(--muted); font-size: 12px; }
 
+  /* Gráfico */
+  .chart-wrap { position: relative; touch-action: pan-y; }
+  .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart-wrap .axis text { fill: var(--dim); font-family: var(--mono); font-size: 11px; }
+  .chart-wrap .gridline { stroke: rgba(255,255,255,0.06); }
+  .chart-wrap .zero { stroke: rgba(255,255,255,0.28); stroke-dasharray: 4 6; }
+  .chart-wrap .line { fill: none; stroke: url(#lineGrad); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 6px rgba(57,255,136,0.6)); }
+  .chart-wrap .area-pos { fill: url(#areaPos); }
+  .chart-wrap .area-neg { fill: url(#areaNeg); }
+  .chart-wrap .be-ring { fill: none; stroke: var(--neon); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: ring 1.8s ease-out infinite; }
+  .chart-wrap .be-dot { fill: var(--neon); filter: drop-shadow(0 0 8px var(--neon)); }
+  .chart-wrap .be-label { fill: var(--neon); font-family: var(--display); font-weight: 700; font-size: 13px; }
+  .chart-wrap .scrub { stroke: rgba(255,255,255,0.5); stroke-width: 1; }
+  .chart-wrap .scrub-dot { fill: #fff; stroke: var(--neon); stroke-width: 3; }
+  .tip {
+    position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0;
+    padding: 8px 10px; border-radius: 10px;
+    background: rgba(8,14,11,0.95); border: 1px solid var(--border-2);
+    font-size: 12px; white-space: nowrap; transform: translate(-50%, -110%);
+    transition: opacity .15s;
+  }
+  .tip b { display: block; font-family: var(--display); font-size: 15px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; color: var(--muted); font-size: 12px; }
+  .legend i { display: inline-block; width: 18px; height: 3px; margin-right: 6px; vertical-align: middle; border-radius: 2px; background: var(--neon); }
+  .legend i.base { background: none; border-top: 2px dashed rgba(255,255,255,0.4); height: 0; }
+
+  /* Línea temporal */
+  .tl { display: flex; gap: 4px; height: 44px; }
+  .tl-seg {
+    position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    min-width: 0; border-radius: 10px; flex-basis: 0;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+    transition: flex-grow 1.2s cubic-bezier(.2,.8,.2,1);
+  }
+  .tl-seg.study { background: rgba(255,255,255,0.08); color: var(--text); }
+  .tl-seg.search { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 8px, rgba(255,255,255,0.02) 8px 16px); color: var(--muted); border: 1px dashed var(--border-2); }
+  .tl-seg.pay { background: linear-gradient(90deg, var(--neon-2), var(--neon)); color: #03140a; box-shadow: 0 0 20px rgba(57,255,136,0.35); }
+  .tl-seg.pay::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.45), transparent 70%);
+    transform: translateX(-100%); animation: sweep 2.4s ease-in-out infinite;
+  }
+  .tl-legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .tl-legend div { font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .tl-legend b { display: block; color: var(--text); font-family: var(--display); font-size: 16px; }
+  .tl-legend .g b { color: var(--neon); }
+
+  /* Garantía */
+  .guarantee { display: flex; gap: 14px; align-items: flex-start; }
+  .shield {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center;
+    background: var(--neon-soft); border: 1px solid rgba(57,255,136,0.35); color: var(--neon);
+  }
+  .shield svg { width: 24px; height: 24px; }
+  .guarantee h3 { margin: 0; font-family: var(--display); font-size: 17px; }
+  .guarantee p { margin: 4px 0 0; color: #b3bdb7; font-size: 14px; }
+  .guarantee p small { color: var(--dim); font-size: 12px; }
+
+  /* CTA */
+  .cta-card { text-align: center; padding: 22px 16px; }
+  .cta-card p { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
   .btn-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    min-height: 64px;
-    margin-top: 26px;
-    padding: 0 14px;
-    border: 2px solid var(--neon);
-    border-radius: 16px;
-    background: #fff;
-    color: #03140a;
-    font-family: var(--font-display);
-    font-size: clamp(18px, 5.4vw, 21px);
-    font-weight: 700;
-    line-height: 1.15;
-    text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; min-height: 66px; padding: 0 16px;
+    border: 2px solid var(--neon); border-radius: 16px;
+    background: #fff; color: #03140a;
+    font-family: var(--display); font-size: clamp(18px, 5.4vw, 22px); font-weight: 700; line-height: 1.15;
     text-decoration: none;
-    box-shadow: 0 0 0 6px rgba(57, 255, 136, 0.12), var(--neon-glow);
-    transition: transform 0.15s ease, background 0.2s ease;
+    box-shadow: 0 0 0 6px rgba(57,255,136,0.12), 0 0 30px rgba(57,255,136,0.45);
+    transition: transform .15s, background .2s;
+    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
   .btn-cta:hover { transform: translateY(-2px); background: var(--neon); }
   .btn-cta:active { transform: scale(0.98); }
-  .btn-cta:focus-visible { outline: 3px solid var(--neon); outline-offset: 4px; }
   .btn-cta svg { flex-shrink: 0; width: 22px; height: 22px; }
+  .cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .ghost {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 48px; border: 1px solid var(--border-2); border-radius: 14px;
+    background: var(--surface); cursor: pointer; font-size: 14px; font-weight: 600;
+    transition: border-color .2s, background .2s;
+    touch-action: manipulation;
+  }
+  .ghost:hover { border-color: rgba(57,255,136,0.6); background: var(--neon-soft); }
+  .ghost svg { width: 18px; height: 18px; }
 
-  .fineprint {
-    margin: 14px 0 0;
-    color: #5f6a64;
-    font-size: 12px;
+  /* Por qué TripleTen */
+  .features { display: grid; gap: 12px; }
+  .feature { padding: 20px 18px; }
+  .feature .ic {
+    width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 12px;
+    background: var(--neon-soft); color: var(--neon); border: 1px solid rgba(57,255,136,0.3);
+  }
+  .feature .ic svg { width: 22px; height: 22px; }
+  .feature h3 { margin: 0; font-family: var(--display); font-size: 18px; letter-spacing: -0.01em; }
+  .feature p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+
+  footer { padding: 48px 0 calc(40px + env(safe-area-inset-bottom)); color: var(--dim); font-size: 12px; text-align: center; }
+  footer p { margin: 6px auto; max-width: 720px; }
+  footer a { color: var(--muted); }
+
+  /* ---------- Panel Growth ---------- */
+  .scrim { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,0.55); opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; z-index: 70; left: 0; right: 0; bottom: 0;
+    height: min(78vh, 680px);
+    display: flex; flex-direction: column;
+    border: 1px solid var(--border-2); border-bottom: 0; border-radius: 22px 22px 0 0;
+    background: rgba(7,11,9,0.97);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 -30px 80px rgba(0,0,0,0.6);
+    transform: translateY(105%); transition: transform .45s cubic-bezier(.2,.9,.25,1);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .drawer.open { transform: none; }
+  .drawer-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 16px 10px; }
+  .drawer-h h2 { margin: 0; font-family: var(--display); font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .drawer-h p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+  .icon-btn { width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--border-2); background: var(--surface); cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .tabs { display: flex; gap: 6px; padding: 0 16px 12px; }
+  .tab {
+    flex: 1; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: transparent; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+  }
+  .tab[aria-selected="true"] { background: var(--neon-soft); border-color: rgba(57,255,136,0.5); color: var(--neon); }
+  .panes { flex: 1; overflow-y: auto; padding: 0 16px 20px; -webkit-overflow-scrolling: touch; }
+  .pane[hidden] { display: none; }
+
+  .log { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 12px; }
+  .log li { padding: 10px 12px; margin-bottom: 6px; border: 1px solid var(--border); border-radius: 10px; background: rgba(0,0,0,0.3); animation: logIn .35s ease both; word-break: break-word; }
+  .log li .t { color: var(--dim); }
+  .log li .e { color: var(--neon); font-weight: 600; }
+  .log li .p { display: block; margin-top: 3px; color: var(--muted); }
+  .log-empty { color: var(--dim); font-size: 13px; }
+
+  .funnel { display: flex; flex-direction: column; gap: 10px; }
+  .fstep .fh { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .fstep .fh b { font-family: var(--mono); color: var(--neon); }
+  .fbar { height: 12px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .fbar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--neon-2), var(--neon)); transition: width .8s cubic-bezier(.2,.8,.2,1); }
+  .note { margin: 14px 0 0; padding: 12px; border-radius: 12px; background: var(--surface); color: var(--muted); font-size: 12.5px; }
+  .note code { font-family: var(--mono); color: var(--text); word-break: break-all; }
+
+  .play { display: flex; flex-direction: column; gap: 10px; }
+  .play article { padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: rgba(0,0,0,0.25); }
+  .play h4 { margin: 0; font-family: var(--display); font-size: 15px; display: flex; gap: 8px; align-items: center; }
+  .play h4 span { font-family: var(--mono); font-size: 11px; color: #03140a; background: var(--neon); padding: 1px 7px; border-radius: 6px; }
+  .play p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+  .play p b { color: var(--text); font-weight: 600; }
+
+  /* Toast */
+  .toast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 90;
+    padding: 12px 18px; border-radius: 12px;
+    background: #0d1511; border: 1px solid rgba(57,255,136,0.5); color: var(--text);
+    font-size: 14px; font-weight: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    transform: translate(-50%, 140%); opacity: 0; transition: transform .35s cubic-bezier(.2,.9,.25,1.2), opacity .25s;
+  }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+  #confetti { position: fixed; inset: 0; z-index: 80; pointer-events: none; width: 100%; height: 100%; }
+
+  .noscript {
+    margin: 16px; padding: 16px; border-radius: 14px; border: 1px solid var(--neg);
+    background: var(--neg-soft); color: var(--text); font-size: 15px; text-align: center;
   }
 
-  /* Estado "sin subida de sueldo" */
-  .result.neutral { border-color: rgba(255, 255, 255, 0.14); }
-  .result.neutral .big { font-size: clamp(64px, 22vw, 96px); }
-
-  footer {
-    margin-top: 28px;
-    color: #4f5953;
-    font-size: 12px;
-    text-align: center;
-  }
+  /* Aparición al hacer scroll (solo si hay JS) */
+  .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+  .js .reveal.in { opacity: 1; transform: none; }
 
   /* ---------- Animaciones ---------- */
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-  @keyframes shine { 0% { left: -60%; } 55%, 100% { left: 130%; } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes shine { 0% { left: -60%; } 55%,100% { left: 130%; } }
+  @keyframes sweep { 0% { transform: translateX(-100%); } 60%,100% { transform: translateX(100%); } }
+  @keyframes sheen { to { background-position: 200% center; } }
+  @keyframes spin { to { --angle: 360deg; } }
   @keyframes breathe {
-    0%, 100% { box-shadow: 0 0 22px rgba(57, 255, 136, 0.40), 0 0 60px rgba(57, 255, 136, 0.15); }
-    50% { box-shadow: 0 0 34px rgba(57, 255, 136, 0.65), 0 0 90px rgba(57, 255, 136, 0.28); }
+    0%,100% { box-shadow: 0 0 22px rgba(57,255,136,0.40), 0 0 60px rgba(57,255,136,0.15); }
+    50% { box-shadow: 0 0 36px rgba(57,255,136,0.70), 0 0 100px rgba(57,255,136,0.30); }
   }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); filter: blur(6px); }
-    to { opacity: 1; transform: none; filter: none; }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: none; }
-  }
+  @keyframes rise { from { opacity: 0; transform: translateY(26px) scale(.97); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  @keyframes logIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+  @keyframes ring { 0% { transform: scale(.6); opacity: 1; } 100% { transform: scale(2.6); opacity: 0; } }
+  @keyframes dash { to { stroke-dashoffset: -36; } }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes gridMove { to { background-position: 0 48px, 48px 0; } }
+  @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-8vmax, 6vmax) scale(1.1); } }
+  @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(10vmax, -6vmax) scale(1.15); } }
 
-  @media (min-width: 600px) {
-    .wrap { padding-top: 64px; }
-    .card { padding: 30px 28px; }
-    .result { padding: 36px 32px 28px; }
-    .stat b { font-size: 19px; }
-    .stat span { font-size: 12px; }
+  /* ---------- Responsive ---------- */
+  @media (min-width: 640px) {
+    .hero-stats { grid-template-columns: repeat(4, 1fr); }
+    .pad { padding: 26px 24px; }
+    .row-2 { grid-template-columns: 1fr 1fr; }
+    .kpis { grid-template-columns: repeat(4, 1fr); }
+    .features { grid-template-columns: repeat(2, 1fr); }
+    .programs { flex-wrap: wrap; overflow: visible; margin: 0; padding: 2px 0 4px; }
+    .prog { flex: 1 1 calc(33.333% - 10px); }
   }
-
-  @media (max-width: 360px) {
-    .stats { grid-template-columns: 1fr; }
-    .btn-calc { font-size: 20px; }
+  @media (min-width: 1000px) {
+    .hero { padding-top: 72px; }
+    .calc-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); align-items: start; gap: 22px; }
+    .result-col { position: sticky; top: calc(var(--nav-h) + 16px); }
+    .features { grid-template-columns: repeat(4, 1fr); }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .drawer { left: auto; top: 0; bottom: 0; width: 420px; height: auto; border-radius: 0; border: 0; border-left: 1px solid var(--border-2); transform: translateX(105%); padding-top: 12px; }
+    .drawer.open { transform: none; }
   }
-
+  @media (max-width: 520px) {
+    .nav .pill-btn.primary { display: none; }
+  }
+  @media (max-width: 380px) {
+    .nav .pill-btn .lbl { display: none; }
+    .tl-legend { grid-template-columns: 1fr; }
+  }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   }
 </style>
 </head>
 <body>
-<main class="wrap">
-  <span class="badge"><span class="dot"></span>Calculadora de ROI · TripleTen</span>
-  <h1>¿En cuántos meses se <span class="hl">paga sola</span> tu carrera en Tech?</h1>
-  <p class="lead">Mete tus números y descubre cuándo tu nuevo sueldo te devuelve cada dólar invertido en el bootcamp.</p>
+<script>document.documentElement.classList.add("js");</script>
 
-  <div class="card">
-    <div class="field">
-      <label for="current">Tu salario anual actual <small>USD / año</small></label>
-      <div class="input">
-        <span aria-hidden="true">$</span>
-        <input id="current" name="current" type="text" inputmode="numeric" autocomplete="off" placeholder="30,000">
-      </div>
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="grid"></div>
+  <canvas id="particles"></canvas>
+</div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="#top" aria-label="Career ROI Lab, inicio">
+      <span class="logo-mark">R</span>
+      <span class="logo-txt"><b>Career ROI Lab</b><small>Concepto para TripleTen</small></span>
+    </a>
+    <div class="nav-actions">
+      <button class="pill-btn" id="growthBtn" type="button" aria-pressed="false" aria-controls="drawer"><span class="dot"></span><span class="lbl">Growth mode</span></button>
+      <a class="pill-btn primary" href="#calc">Calcular</a>
     </div>
-
-    <div class="field">
-      <label for="cost">Coste del Bootcamp de TripleTen <small>Pago único</small></label>
-      <div class="input">
-        <span aria-hidden="true">$</span>
-        <input id="cost" name="cost" type="text" inputmode="numeric" autocomplete="off" value="9,700">
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="expected">Salario esperado en Tech <small>USD / año</small></label>
-      <div class="input">
-        <span aria-hidden="true">$</span>
-        <input id="expected" name="expected" type="text" inputmode="numeric" autocomplete="off" value="70,000">
-      </div>
-    </div>
-
-    <p class="error" id="error" role="alert"></p>
-
-    <button class="btn-calc" id="calc" type="button">
-      Calcular mi retorno
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-    </button>
   </div>
+</nav>
 
-  <section class="result" id="result" aria-live="polite"></section>
+<noscript><div class="noscript">Esta calculadora necesita JavaScript. Ábrela en Chrome o Safari (no en la vista previa de archivos del móvil).</div></noscript>
 
-  <footer>Estimación orientativa antes de impuestos. Tu resultado real depende de tu mercado y tu esfuerzo.</footer>
+<main id="top">
+  <header class="hero wrap">
+    <span class="badge"><span class="dot"></span>Calculadora de ROI · Bootcamps TripleTen</span>
+    <h1>¿En cuántos meses se <span class="grad">paga sola</span> tu carrera en Tech?</h1>
+    <p class="rotator"><span class="from">De tu trabajo actual</span> a <span class="role" id="role">AI Software Engineer</span><span class="caret" aria-hidden="true"></span></p>
+
+    <div class="hero-stats">
+      <div class="hstat reveal"><b data-count="16300" data-prefix="+$">+$16,300</b><span>aumento medio de sueldo de los graduados</span></div>
+      <div class="hstat reveal"><b data-count="88" data-suffix="%">88%</b><span>sigue trabajando en Tech un año después</span></div>
+      <div class="hstat reveal"><b data-count="10" data-suffix=" meses">10 meses</b><span>de garantía de empleo o te devuelven la matrícula</span></div>
+      <div class="hstat reveal"><b data-count="20" data-suffix=" h">20 h</b><span>a la semana: compatible con tu trabajo actual</span></div>
+    </div>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee"></div>
+    </div>
+  </header>
+
+  <section class="section wrap" id="calc">
+    <div class="section-head reveal">
+      <span class="eyebrow">Simulador</span>
+      <h2>Tu salto a Tech, en números</h2>
+    </div>
+
+    <div class="calc-grid">
+      <!-- Entradas -->
+      <div class="card pad spot reveal" id="inputsCard">
+        <p class="step-title"><span class="step-num">01</span>Elige tu programa</p>
+        <div class="programs" id="programs" role="group" aria-label="Programas de TripleTen"></div>
+
+        <div class="divider"></div>
+
+        <p class="step-title"><span class="step-num">02</span>Tus números</p>
+
+        <div class="field">
+          <label for="current">Tu salario anual actual <small>USD / año</small></label>
+          <div class="input"><span class="cur" aria-hidden="true">$</span><input id="current" type="text" inputmode="numeric" autocomplete="off" placeholder="30,000"></div>
+          <input type="range" id="currentR" min="0" max="150000" step="500" value="0" aria-label="Ajustar salario actual">
+        </div>
+
+        <div class="row-2" style="margin-top:18px">
+          <div class="field" style="margin:0">
+            <label for="cost">Coste del Bootcamp <small>Pago único</small></label>
+            <div class="input"><span class="cur" aria-hidden="true">$</span><input id="cost" type="text" inputmode="numeric" autocomplete="off" value="9,700"></div>
+            <input type="range" id="costR" min="1000" max="20000" step="50" value="9700" aria-label="Ajustar coste del bootcamp">
+          </div>
+          <div class="field" style="margin:0">
+            <label for="expected">Salario en Tech <small>USD / año</small></label>
+            <div class="input"><span class="cur" aria-hidden="true">$</span><input id="expected" type="text" inputmode="numeric" autocomplete="off" value="70,000"></div>
+            <input type="range" id="expectedR" min="20000" max="200000" step="500" value="70000" aria-label="Ajustar salario esperado">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:18px">
+          <label for="search">Meses buscando tu primer empleo Tech <small id="searchOut">3 meses</small></label>
+          <input type="range" id="search" min="0" max="10" step="1" value="3">
+        </div>
+
+        <div class="switch-row">
+          <span>Pagar en cuotas<small id="installTxt">Divide la matrícula en 4 pagos</small></span>
+          <button class="switch" id="install" type="button" role="switch" aria-checked="false" aria-label="Pagar en cuotas"></button>
+        </div>
+
+        <p class="error" id="error" role="alert"></p>
+
+        <button class="btn-calc" id="calcBtn" type="button">
+          Calcular mi retorno
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <p class="btn-hint">Después del primer cálculo, todo se actualiza en directo.</p>
+      </div>
+
+      <!-- Resultados -->
+      <div class="result-col" id="resultCol">
+        <div class="card empty" id="empty">
+          <svg viewBox="0 0 360 140" fill="none" aria-hidden="true">
+            <path d="M10 110 H130" stroke="rgba(255,255,255,.18)" stroke-width="3" stroke-linecap="round"/>
+            <path class="l" d="M130 110 L350 20" stroke="rgba(57,255,136,.7)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M10 70 H350" stroke="rgba(255,255,255,.12)" stroke-dasharray="4 6"/>
+            <circle cx="227" cy="70" r="6" fill="#39ff88"/>
+          </svg>
+          <p>Elige un programa, ajusta tus números y pulsa <b style="color:var(--neon)">Calcular mi retorno</b>.</p>
+        </div>
+
+        <div class="result" id="result" aria-live="polite">
+          <div class="card hero-result">
+            <p class="kicker" id="kicker">Recuperas tu inversión en</p>
+            <p class="big" id="big">0</p>
+            <p class="big-unit" id="bigUnit">meses</p>
+            <p class="exact" id="exact"></p>
+            <div class="date-chip" id="dateChip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="dateTxt"></span></div>
+            <p class="headline" id="headline"></p>
+            <p class="sub" id="subline"></p>
+          </div>
+
+          <div class="kpis" id="kpis">
+            <div class="kpi"><span>Más cada mes</span><b class="pos" id="kMonth">$0</b><em>vs. tu sueldo actual</em></div>
+            <div class="kpi"><span>ROI a 12 meses</span><b class="pos" id="kRoi">0%</b><em>desde tu primer sueldo Tech</em></div>
+            <div class="kpi"><span>Ganancia neta en 5 años</span><b class="pos" id="k5y">$0</b><em>ya descontado el bootcamp</em></div>
+            <div class="kpi"><span>Cada día laborable</span><b class="pos" id="kDay">$0</b><em>de sueldo extra</em></div>
+          </div>
+
+          <div class="card pad" id="chartCard">
+            <div class="card-h"><h3>Tu dinero, mes a mes</h3><small>Desliza para explorar</small></div>
+            <div class="chart-wrap" id="chartWrap">
+              <svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Evolución de tu balance frente a no cambiar de carrera"></svg>
+              <div class="tip" id="tip"></div>
+            </div>
+            <div class="legend"><span><i></i>Con TripleTen (balance acumulado)</span><span><i class="base"></i>Sin cambiar de carrera</span></div>
+          </div>
+
+          <div class="card pad" id="tlCard">
+            <div class="card-h"><h3>Tu hoja de ruta</h3><small id="tlTotal"></small></div>
+            <div class="tl">
+              <div class="tl-seg study" id="segStudy">Estudias</div>
+              <div class="tl-seg search" id="segSearch">Buscas</div>
+              <div class="tl-seg pay" id="segPay">Recuperas</div>
+            </div>
+            <div class="tl-legend">
+              <div><b id="tlStudy">7 m</b>Bootcamp part-time, sin dejar tu trabajo</div>
+              <div><b id="tlSearch">3 m</b>Búsqueda con tu career coach</div>
+              <div class="g"><b id="tlPay">0 m</b>Hasta recuperar cada dólar</div>
+            </div>
+          </div>
+
+          <div class="card pad">
+            <div class="guarantee">
+              <div class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <div>
+                <h3>Riesgo cubierto: <span id="riskAmt" style="color:var(--neon)">$9,700</span></h3>
+                <p>Si completas el programa, sigues el plan de búsqueda con tu coach y no te contratan en 10 meses, te devuelven la matrícula. <small>Según las condiciones de la garantía de TripleTen.</small></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card cta-card">
+            <p id="ctaLead">Tu versión con mejor sueldo empieza con una decisión.</p>
+            <a class="btn-cta" id="cta" href="https://tripleten.com/" target="_blank" rel="noopener"><span>Cambia tu carrera hoy</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <div class="cta-row">
+              <button class="ghost" id="shareBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Compartir</button>
+              <button class="ghost" id="copyBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copiar enlace</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Por qué TripleTen</span>
+      <h2>Diseñado para que el salto salga bien</h2>
+    </div>
+    <div class="features">
+      <div class="card feature spot reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <h3>Part-time de verdad</h3>
+        <p>Unas 20 horas a la semana, online. Sigues cobrando tu sueldo mientras aprendes.</p>
+      </div>
+      <div class="card feature spot reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <h3>IA en cada programa</h3>
+        <p>Proyectos listos para producción y herramientas de IA integradas en todo el temario.</p>
+      </div>
+      <div class="card feature spot reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></div>
+        <h3>Career coaching</h3>
+        <p>Un coach te acompaña en la búsqueda de empleo, con acceso a una bolsa de ofertas diaria.</p>
+      </div>
+      <div class="card feature spot reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Garantía de empleo</h3>
+        <p>Si cumples el plan y no te contratan en 10 meses, recuperas lo que pagaste.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    <p id="byline"></p>
+    <p>Proyecto conceptual independiente. No es una página oficial de TripleTen. Precios, duraciones y cifras de resultados tomados de la información pública de tripleten.com (2026); los salarios por programa son referencias editables. Estimación orientativa antes de impuestos.</p>
+  </footer>
 </main>
+
+<!-- Panel de Growth -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawerTitle">
+  <div class="drawer-h">
+    <div>
+      <h2 id="drawerTitle"><span class="pill-btn" style="height:auto;padding:2px 8px;font-size:11px;pointer-events:none"><span class="dot"></span>LIVE</span>Growth mode</h2>
+      <p>Lo que vería el equipo de marketing detrás de esta calculadora.</p>
+    </div>
+    <button class="icon-btn" id="drawerClose" type="button" aria-label="Cerrar panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-pane="pEvents" type="button">Eventos</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="pFunnel" type="button">Embudo</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="pPlay" type="button">Playbook</button>
+  </div>
+  <div class="panes">
+    <div class="pane" id="pEvents" role="tabpanel">
+      <ul class="log" id="log"></ul>
+      <p class="log-empty" id="logEmpty">Interactúa con la calculadora y verás los eventos llegar en directo (formato <code>dataLayer</code>, listos para GA4 o Segment).</p>
+    </div>
+    <div class="pane" id="pFunnel" role="tabpanel" hidden>
+      <div class="funnel" id="funnel"></div>
+      <div class="note">Enlace del CTA con UTMs por programa:<br><code id="utmOut"></code></div>
+    </div>
+    <div class="pane" id="pPlay" role="tabpanel" hidden>
+      <div class="play">
+        <article><h4><span>01</span>Bucle viral</h4><p>Cada resultado se comparte como un enlace <b>pre-rellenado</b> con los números del usuario. Quien lo abre ve el cálculo de su amigo y hace el suyo: cada usuario es una landing nueva.</p></article>
+        <article><h4><span>02</span>Personalización por segmento</h4><p>El mensaje cambia según <b>plazo de retorno</b> (5 segmentos) y <b>programa</b>. Siguiente paso: generar variantes de copy con un LLM por segmento y validarlas con test.</p></article>
+        <article><h4><span>03</span>A/B test propuesto</h4><p>CTA <b>“Cambia tu carrera hoy”</b> vs. <b>“Reserva tu plaza en [programa]”</b>. Métrica principal: CTR a tripleten.com medido por UTM. Guardarraíl: tasa de cálculo completado.</p></article>
+        <article><h4><span>04</span>IA en el funnel</h4><p>Con el email opcional tras el cálculo, un agente de IA prepara un <b>plan de carrera personalizado</b> (programa, ritmo, salario objetivo) y alimenta una secuencia de nurturing.</p></article>
+        <article><h4><span>05</span>Medición</h4><p>Eventos: <b>calc_view</b>, <b>program_select</b>, <b>calc_complete</b>, <b>cta_click</b>, <b>share</b>. Embudo por fuente/UTM y cohorte de programa para priorizar presupuesto.</p></article>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 (function () {
   "use strict";
 
-  var CTA_URL = "https://tripleten.com/?utm_source=roi_calculator&utm_medium=web&utm_campaign=cambia_tu_carrera";
-  var DAYS_PER_MONTH = 30.44;
-
-  var calcBtn = document.getElementById("calc");
-  var errorEl = document.getElementById("error");
-  var resultEl = document.getElementById("result");
-  var fields = {
-    current: document.getElementById("current"),
-    cost: document.getElementById("cost"),
-    expected: document.getElementById("expected")
+  // ---------------------------------------------------------------
+  // Configuración: pon aquí tu nombre y tu LinkedIn para firmar la pieza.
+  // ---------------------------------------------------------------
+  var CONFIG = {
+    author: "",
+    linkedin: "",
+    ctaBase: "https://tripleten.com/"
   };
 
+  // Programas publicados en tripleten.com (2026). Precio = pago por adelantado.
+  // Salario: referencia por programa cuando TripleTen la publica; si no, la media
+  // de salario inicial de sus graduados ($68,300). Todo es editable en la página.
+  var PROGRAMS = [
+    { id: "ai-se",   name: "AI Software Engineering", tag: "Entry-level", months: 7,   price: 9800,  salary: 65000 },
+    { id: "da",      name: "Data Analytics",          tag: "Entry-level", months: 4,   price: 5950,  salary: 62000 },
+    { id: "qa",      name: "Quality Assurance",       tag: "Entry-level", months: 5,   price: 4935,  salary: 62000 },
+    { id: "cyber",   name: "Cybersecurity",           tag: "Entry-level", months: 7,   price: 9800,  salary: 68300 },
+    { id: "ai-auto", name: "AI Automation",           tag: "Entry-level", months: 4,   price: 5950,  salary: 68300 },
+    { id: "ai-ml",   name: "AI & Machine Learning",   tag: "Accelerator", months: 4.5, price: 12600, salary: 85000 },
+    { id: "ai-sys",  name: "AI Systems Engineering",  tag: "Accelerator", months: 5,   price: 12600, salary: 68300 }
+  ];
+  var CUSTOM_STUDY_MONTHS = 7;
+  var DAYS_PER_MONTH = 30.44;
+  var WORKDAYS_PER_MONTH = 21.7;
+  var INSTALLMENTS = 4;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   var nf = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 0 });
   var money = function (n) { return (n < 0 ? "-$" : "$") + nf.format(Math.abs(Math.round(n))); };
   var compact = function (n) {
-    var abs = Math.abs(n);
-    var s = abs >= 1e6 ? (abs / 1e6).toFixed(1).replace(/\.0$/, "") + "M"
-          : abs >= 1e4 ? Math.round(abs / 1e3) + "k"
-          : nf.format(Math.round(abs));
+    var a = Math.abs(n), s;
+    if (a >= 1e6) s = (a / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
+    else if (a >= 1e4) s = Math.round(a / 1e3) + "k";
+    else s = nf.format(Math.round(a));
     return (n < 0 ? "-$" : "$") + s;
   };
-  var parse = function (el) {
-    var digits = el.value.replace(/[^\d]/g, "");
-    return digits === "" ? null : Number(digits);
+  var monthsTxt = function (m) {
+    var r = Math.round(m * 10) / 10;
+    return (r % 1 === 0 ? r.toFixed(0) : r.toLocaleString("es-MX")) + " m";
   };
 
-  // Separador de miles mientras se escribe, sin que el cursor salte al final.
+  var state = { program: null, calculated: false, installments: false };
+
+  // ---------------------------------------------------------------
+  // Tracking (dataLayer + panel Growth)
+  // ---------------------------------------------------------------
+  window.dataLayer = window.dataLayer || [];
+  var funnel = { calc_view: 0, engaged: 0, calc_complete: 0, cta_click: 0 };
+  var logEl = $("log"), logEmpty = $("logEmpty");
+  function track(event, props) {
+    props = props || {};
+    var payload = { event: event };
+    for (var k in props) payload[k] = props[k];
+    try { window.dataLayer.push(payload); } catch (e) {}
+    if (event === "calc_view") funnel.calc_view++;
+    if (event === "calc_complete") funnel.calc_complete++;
+    if (event === "cta_click") funnel.cta_click++;
+    if ((event === "input_change" || event === "program_select") && !funnel.engaged) funnel.engaged = 1;
+    var li = document.createElement("li");
+    var t = new Date().toLocaleTimeString("es-ES", { hour12: false });
+    li.innerHTML = '<span class="t">' + t + '</span> <span class="e">' + event + '</span>' +
+      (Object.keys(props).length ? '<span class="p">' + escapeHtml(JSON.stringify(props)) + '</span>' : "");
+    logEl.insertBefore(li, logEl.firstChild);
+    while (logEl.children.length > 40) logEl.removeChild(logEl.lastChild);
+    logEmpty.style.display = "none";
+    renderFunnel();
+  }
+  function escapeHtml(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function renderFunnel() {
+    var steps = [
+      ["Visita a la calculadora", funnel.calc_view],
+      ["Interactúa con los datos", funnel.engaged],
+      ["Completa el cálculo", funnel.calc_complete],
+      ["Clic en el CTA", funnel.cta_click]
+    ];
+    var max = Math.max(1, steps[0][1]);
+    $("funnel").innerHTML = steps.map(function (s) {
+      var pct = Math.min(100, (Math.min(s[1], max) / max) * 100);
+      return '<div class="fstep"><div class="fh"><span>' + s[0] + '</span><b>' + s[1] + '</b></div><div class="fbar"><i style="width:' + pct + '%"></i></div></div>';
+    }).join("") + '<p class="note" style="margin-top:4px">Contadores de esta sesión. En producción: GA4 / Segment, segmentados por fuente y programa.</p>';
+  }
+
+  // ---------------------------------------------------------------
+  // Programas
+  // ---------------------------------------------------------------
+  var progWrap = $("programs");
+  progWrap.innerHTML = PROGRAMS.map(function (p) {
+    return '<button type="button" class="prog" aria-pressed="false" data-id="' + p.id + '">' +
+      '<span class="check" aria-hidden="true"></span>' +
+      '<span class="tag' + (p.tag === "Accelerator" ? " acc" : "") + '">' + p.tag + '</span>' +
+      '<b>' + p.name + '</b>' +
+      '<span class="meta"><span>' + (p.months % 1 ? p.months.toLocaleString("es-MX") : p.months) + ' meses</span><strong>' + money(p.price) + '</strong></span>' +
+      '</button>';
+  }).join("");
+
+  function selectProgram(id, silent) {
+    state.program = null;
+    PROGRAMS.forEach(function (p) { if (p.id === id) state.program = p; });
+    Array.prototype.forEach.call(progWrap.children, function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-id") === id));
+    });
+    if (state.program) {
+      setValue("cost", state.program.price);
+      setValue("expected", state.program.salary);
+      if (!silent) track("program_select", { program: state.program.id, price: state.program.price });
+    }
+  }
+  progWrap.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".prog") : null;
+    if (!b) return;
+    selectProgram(b.getAttribute("data-id"));
+    onChange();
+  });
+
+  // ---------------------------------------------------------------
+  // Campos numéricos + sliders sincronizados
+  // ---------------------------------------------------------------
+  var fields = { current: $("current"), cost: $("cost"), expected: $("expected") };
+  var ranges = { current: $("currentR"), cost: $("costR"), expected: $("expectedR") };
+  var searchR = $("search");
+
+  function parse(el) {
+    var d = el.value.replace(/[^\d]/g, "");
+    return d === "" ? null : Number(d);
+  }
+  function paintRange(r) {
+    var p = ((Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min))) * 100;
+    r.style.setProperty("--p", Math.max(0, Math.min(100, p)) + "%");
+  }
+  function setValue(key, n) {
+    fields[key].value = nf.format(n);
+    ranges[key].value = n;
+    paintRange(ranges[key]);
+    fields[key].parentNode.classList.remove("invalid");
+  }
+
+  var inputTimer;
+  function inputTracked(field) {
+    clearTimeout(inputTimer);
+    inputTimer = setTimeout(function () { track("input_change", { field: field }); }, 700);
+  }
+
   Object.keys(fields).forEach(function (key) {
-    var el = fields[key];
+    var el = fields[key], r = ranges[key];
     el.addEventListener("input", function () {
       var pos = el.selectionStart || 0;
-      var digitsBefore = el.value.slice(0, pos).replace(/[^\d]/g, "").length;
+      var before = el.value.slice(0, pos).replace(/[^\d]/g, "").length;
       var digits = el.value.replace(/[^\d]/g, "").replace(/^0+(?=\d)/, "").slice(0, 9);
       el.value = digits ? nf.format(Number(digits)) : "";
       var i = 0, seen = 0;
-      while (i < el.value.length && seen < digitsBefore) {
-        if (/\d/.test(el.value[i])) seen++;
-        i++;
-      }
-      try { el.setSelectionRange(i, i); } catch (e) { /* algunos navegadores no lo permiten */ }
+      while (i < el.value.length && seen < before) { if (/\d/.test(el.value[i])) seen++; i++; }
+      try { el.setSelectionRange(i, i); } catch (e) {}
+      if (digits) { r.value = Number(digits); paintRange(r); }
       el.parentNode.classList.remove("invalid");
-      errorEl.textContent = "";
+      if (key !== "current") clearProgramIfEdited();
+      inputTracked(key);
+      onChange();
     });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); el.blur(); calculate(true); }
+    });
+    r.addEventListener("input", function () {
+      el.value = nf.format(Number(r.value));
+      paintRange(r);
+      el.parentNode.classList.remove("invalid");
+      if (key !== "current") clearProgramIfEdited();
+      inputTracked(key);
+      onChange();
+    });
+    paintRange(r);
   });
 
-  function fail(el, msg) {
-    el.parentNode.classList.add("invalid");
-    errorEl.textContent = msg;
-    el.focus();
+  function clearProgramIfEdited() {
+    if (!state.program) return;
+    var c = parse(fields.cost), s = parse(fields.expected);
+    if (c !== state.program.price || s !== state.program.salary) {
+      state.program = null;
+      Array.prototype.forEach.call(progWrap.children, function (b) { b.setAttribute("aria-pressed", "false"); });
+    }
   }
 
-  function motivation(months) {
-    if (months <= 3) return { title: "Es prácticamente <strong>dinero gratis</strong>.", text: "En menos de un trimestre ya estás ganando más de lo que invertiste. Todo lo que venga después es beneficio puro." };
-    if (months <= 6) return { title: "Antes de medio año, <strong>la inversión está pagada</strong>.", text: "Pocas decisiones financieras se amortizan tan rápido. Tu yo del futuro te lo va a agradecer." };
-    if (months <= 12) return { title: "En menos de un año <strong>recuperas cada dólar</strong>.", text: "Y a partir de ahí, la diferencia de sueldo es tuya para siempre, año tras año." };
-    if (months <= 24) return { title: "Una inversión que <strong>trabaja para ti</strong>.", text: "En unos meses la has recuperado y tu carrera crece sin techo durante décadas." };
-    return { title: "El camino largo también <strong>merece la pena</strong>.", text: "Cada ascenso en Tech acorta este plazo. Lo difícil es empezar; lo demás es crecer." };
+  searchR.addEventListener("input", function () {
+    paintRange(searchR);
+    $("searchOut").textContent = searchR.value + (searchR.value === "1" ? " mes" : " meses");
+    inputTracked("search_months");
+    onChange();
+  });
+  paintRange(searchR);
+
+  var installBtn = $("install");
+  installBtn.addEventListener("click", function () {
+    state.installments = !state.installments;
+    installBtn.setAttribute("aria-checked", String(state.installments));
+    updateInstallText();
+    track("installments_toggle", { on: state.installments });
+  });
+  function updateInstallText() {
+    var cost = parse(fields.cost) || 0;
+    $("installTxt").textContent = state.installments
+      ? INSTALLMENTS + " pagos de " + money(cost / INSTALLMENTS) + " (mismo precio total)"
+      : "Divide la matrícula en " + INSTALLMENTS + " pagos";
+  }
+
+  function onChange() {
+    updateInstallText();
+    $("error").textContent = "";
+    if (state.calculated) calculate(false);
+  }
+
+  // ---------------------------------------------------------------
+  // Cálculo
+  // ---------------------------------------------------------------
+  var MESSAGES = [
+    { max: 3,  title: "Es prácticamente <strong>dinero gratis</strong>.", text: "En menos de un trimestre con tu nuevo sueldo ya has recuperado la matrícula. Todo lo que viene después es beneficio." },
+    { max: 6,  title: "Antes de medio año, <strong>la inversión está pagada</strong>.", text: "Pocas decisiones financieras se amortizan tan rápido. Tu yo del futuro te lo va a agradecer." },
+    { max: 12, title: "En menos de un año <strong>recuperas cada dólar</strong>.", text: "Y a partir de ahí, la diferencia de sueldo es tuya para siempre, año tras año." },
+    { max: 24, title: "Una inversión que <strong>trabaja para ti</strong>.", text: "La recuperas y tu carrera sigue creciendo durante décadas. Cada ascenso en Tech acorta este plazo." },
+    { max: Infinity, title: "El camino largo también <strong>merece la pena</strong>.", text: "Prueba un programa con más salida salarial o ajusta tu objetivo: lo difícil es empezar." }
+  ];
+  function segmentFor(months) {
+    for (var i = 0; i < MESSAGES.length; i++) if (months <= MESSAGES[i].max) return i;
+    return MESSAGES.length - 1;
   }
 
   function exactLabel(months) {
@@ -566,106 +1108,531 @@
     return parts.length ? "Exactamente " + parts.join(" y ") : "Desde el primer día";
   }
 
-  function countUp(el, target, decimals, duration) {
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var fmt = function (v) { return v.toLocaleString("es-MX", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }); };
-    if (reduce) { el.textContent = fmt(target); return; }
-    var start = null;
-    function frame(t) {
-      if (start === null) start = t;
-      var p = Math.min((t - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - p, 4);
-      el.textContent = fmt(target * eased);
-      if (p < 1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+  function ctaUrl() {
+    var p = state.program ? state.program.id : "personalizado";
+    return CONFIG.ctaBase + "?utm_source=career_roi_lab&utm_medium=calculator&utm_campaign=cambia_tu_carrera&utm_content=" + p;
   }
 
-  function arrow() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
-  }
-
-  function render(html, neutral) {
-    resultEl.classList.remove("show", "neutral");
-    void resultEl.offsetWidth; // reinicia la animación en cada cálculo
-    resultEl.innerHTML = html;
-    if (neutral) resultEl.classList.add("neutral");
-    resultEl.classList.add("show");
-    setTimeout(function () {
-      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 120);
-  }
-
-  // Sin <form>: en vistas previas y webviews con sandbox el navegador bloquea
-  // el envío de formularios y el botón no haría nada.
-  function calculate() {
+  function validate() {
+    var current = parse(fields.current), cost = parse(fields.cost), expected = parse(fields.expected);
     Object.keys(fields).forEach(function (k) { fields[k].parentNode.classList.remove("invalid"); });
+    if (current === null) return { error: "current", msg: "Escribe tu salario anual actual (pon 0 si ahora no tienes ingresos)." };
+    if (!cost) return { error: "cost", msg: "Indica el coste del bootcamp." };
+    if (!expected) return { error: "expected", msg: "Indica el salario que esperas ganar en Tech." };
+    return { current: current, cost: cost, expected: expected };
+  }
 
-    var current = parse(fields.current);
-    var cost = parse(fields.cost);
-    var expected = parse(fields.expected);
+  function calculate(fromButton) {
+    var v = validate();
+    if (v.error) {
+      fields[v.error].parentNode.classList.add("invalid");
+      $("error").textContent = v.msg;
+      if (fromButton) {
+        fields[v.error].focus();
+        track("calc_error", { field: v.error });
+      }
+      return;
+    }
+    $("error").textContent = "";
 
-    if (current === null) return fail(fields.current, "Escribe tu salario anual actual (pon 0 si ahora no tienes ingresos).");
-    if (!cost) return fail(fields.cost, "Indica el coste del bootcamp.");
-    if (!expected) return fail(fields.expected, "Indica el salario que esperas ganar en Tech.");
+    var study = state.program ? state.program.months : CUSTOM_STUDY_MONTHS;
+    var search = Number(searchR.value);
+    var gain = (v.expected - v.current) / 12;
+    var first = !state.calculated;
+    state.calculated = true;
 
-    var monthlyGain = (expected - current) / 12;
+    $("empty").style.display = "none";
+    var res = $("result");
+    if (fromButton) {
+      res.classList.remove("show");
+      void res.offsetWidth; // reinicia las animaciones de entrada
+    }
+    res.classList.add("show");
 
-    if (monthlyGain <= 0) {
-      render(
-        '<p class="kicker">Tu punto de partida ya es alto</p>' +
-        '<p class="big">¡Top!</p>' +
-        '<p class="headline">Con estos números el salto no es de sueldo, es de <strong>propósito</strong>.</p>' +
-        '<p class="sub">Prueba con un salario objetivo más ambicioso: los perfiles Tech con experiencia crecen muy rápido.</p>' +
-        '<a class="btn-cta" href="' + CTA_URL + '" target="_blank" rel="noopener"><span>Cambia tu carrera hoy</span>' + arrow() + '</a>',
-        true
-      );
+    var ctaEl = $("cta");
+    ctaEl.href = ctaUrl();
+    $("utmOut").textContent = ctaUrl();
+    $("riskAmt").textContent = money(v.cost);
+
+    if (gain <= 0) {
+      $("kicker").textContent = "Tu punto de partida ya es alto";
+      setBig("¡Top!", null);
+      $("bigUnit").textContent = "";
+      $("exact").textContent = "Tu salario objetivo no supera al actual.";
+      $("dateChip").style.display = "none";
+      $("headline").innerHTML = "Aquí el salto no es de sueldo, es de <strong>propósito</strong>.";
+      $("subline").textContent = "Sube tu salario objetivo o elige un programa Accelerator: los perfiles de IA con experiencia son los que más crecen.";
+      $("kpis").style.display = "none";
+      $("chartCard").style.display = "none";
+      $("tlCard").style.display = "none";
+      lastResult = null;
+      if (fromButton) track("calc_complete", { segment: "no_gain", program: state.program ? state.program.id : "custom" });
+      if (fromButton) scrollToResult();
       return;
     }
 
-    var months = cost / monthlyGain;
-    var yearOne = monthlyGain * 12 - cost;
-    var fiveYears = monthlyGain * 60 - cost;
-    var roi = (yearOne / cost) * 100;
-    var decimals = months < 10 ? 1 : 0;
-    var shown = Number(months.toFixed(decimals));
-    var msg = motivation(months);
-    var barPct = Math.min(months / 12, 1) * 100;
+    $("kpis").style.display = "";
+    $("chartCard").style.display = "";
+    $("tlCard").style.display = "";
+    $("dateChip").style.display = "";
 
-    render(
-      '<p class="kicker">Recuperas tu inversión en</p>' +
-      '<p class="big" id="months">0</p>' +
-      '<p class="big-unit">' + (shown === 1 ? "mes" : "meses") + '</p>' +
-      '<p class="exact">' + exactLabel(months) + '<br>cobrando +' + money(monthlyGain) + ' más al mes</p>' +
-      '<p class="headline">' + msg.title + '</p>' +
-      '<p class="sub">' + msg.text + '</p>' +
-      '<div class="stats">' +
-        '<div class="stat"><b class="pos">+' + compact(monthlyGain) + '</b><span>más cada mes</span></div>' +
-        '<div class="stat"><b class="' + (yearOne >= 0 ? "pos" : "") + '">' + compact(yearOne) + '</b><span>neto el 1<sup>er</sup> año</span></div>' +
-        '<div class="stat"><b class="pos">' + compact(fiveYears) + '</b><span>neto en 5 años</span></div>' +
-      '</div>' +
-      '<div class="timeline">' +
-        '<div class="timeline-head"><span>Hoy</span><span>' + (roi >= 0 ? "ROI el 1er año: +" + nf.format(Math.round(roi)) + "%" : "Recuperación en tu 1er año") + '</span><span>12 meses</span></div>' +
-        '<div class="bar"><i id="bar"></i></div>' +
-      '</div>' +
-      '<a class="btn-cta" href="' + CTA_URL + '" target="_blank" rel="noopener"><span>Cambia tu carrera hoy</span>' + arrow() + '</a>' +
-      '<p class="fineprint">Cálculo: coste ÷ (diferencia de salario anual ÷ 12).</p>'
-    );
+    var payback = v.cost / gain;
+    var decimals = payback < 10 ? 1 : 0;
+    var shown = Number(payback.toFixed(decimals));
+    var seg = segmentFor(payback);
+    var totalFromToday = study + search + payback;
 
-    countUp(document.getElementById("months"), shown, decimals, 1400);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        document.getElementById("bar").style.width = barPct + "%";
+    $("kicker").textContent = "Recuperas tu inversión en";
+    setBig(shown, decimals);
+    $("bigUnit").textContent = shown === 1 ? "mes" : "meses";
+    $("exact").textContent = exactLabel(payback) + " con tu primer sueldo Tech, cobrando " + money(gain) + " más al mes";
+
+    var d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() + Math.ceil(totalFromToday));
+    var when = new Intl.DateTimeFormat("es-ES", { month: "long", year: "numeric" }).format(d);
+    $("dateTxt").innerHTML = "Todo recuperado en <b>" + when + "</b>";
+
+    var progLine = state.program ? " Con " + state.program.name + ", en unos " + (state.program.months % 1 ? state.program.months.toLocaleString("es-MX") : state.program.months) + " meses ya tienes el perfil." : "";
+    $("headline").innerHTML = MESSAGES[seg].title;
+    $("subline").textContent = MESSAGES[seg].text + progLine;
+
+    tween($("kMonth"), gain, function (x) { return "+" + money(x); });
+    var roi = ((gain * 12 - v.cost) / v.cost) * 100;
+    var kRoi = $("kRoi");
+    kRoi.className = roi >= 0 ? "pos" : "neg";
+    tween(kRoi, roi, function (x) { return (x >= 0 ? "+" : "") + nf.format(Math.round(x)) + "%"; });
+    var fiveY = gain * 60 - v.cost;
+    var k5 = $("k5y");
+    k5.className = fiveY >= 0 ? "pos" : "neg";
+    tween(k5, fiveY, function (x) { return (x >= 0 ? "+" : "") + compact(x); });
+    tween($("kDay"), gain / WORKDAYS_PER_MONTH, function (x) { return "+" + money(x); });
+
+    drawChart(v.cost, gain, study + search, payback, fromButton || first);
+    drawTimeline(study, search, payback);
+
+    $("ctaLead").textContent = seg <= 1
+      ? "Con estos números, esperar también tiene un coste: " + money(gain) + " cada mes."
+      : "Tu versión con mejor sueldo empieza con una decisión.";
+
+    lastResult = { payback: shown, program: state.program ? state.program.name : null };
+
+    if (fromButton) {
+      track("calc_complete", {
+        program: state.program ? state.program.id : "custom",
+        payback_months: Number(payback.toFixed(1)),
+        segment: ["<3m", "<6m", "<12m", "<24m", "24m+"][seg]
       });
-    });
+      scrollToResult();
+      if (first || seg <= 2) confetti();
+    }
   }
 
-  calcBtn.addEventListener("click", calculate);
-  Object.keys(fields).forEach(function (k) {
-    fields[k].addEventListener("keydown", function (e) {
-      if (e.key === "Enter") { e.preventDefault(); fields[k].blur(); calculate(); }
+  var lastResult = null;
+
+  function scrollToResult() {
+    if (window.innerWidth >= 1000) return; // en escritorio el resultado ya está a la vista
+    setTimeout(function () {
+      var top = $("resultCol").getBoundingClientRect().top + window.pageYOffset - 76;
+      window.scrollTo({ top: top, behavior: reduceMotion ? "auto" : "smooth" });
+    }, 120);
+  }
+
+  // Número grande con conteo
+  function setBig(value, decimals) {
+    var el = $("big");
+    if (decimals === null) { if (el._raf) cancelAnimationFrame(el._raf); el.textContent = value; el._v = 0; return; }
+    tween(el, value, function (x) {
+      return x.toLocaleString("es-MX", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    }, 1300);
+  }
+
+  function tween(el, to, fmt, dur) {
+    dur = dur || 900;
+    var from = typeof el._v === "number" ? el._v : 0;
+    el._v = to;
+    if (el._raf) cancelAnimationFrame(el._raf);
+    if (reduceMotion) { el.textContent = fmt(to); return; }
+    var start = null;
+    function frame(t) {
+      if (start === null) start = t;
+      var p = Math.min((t - start) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(from + (to - from) * e);
+      if (p < 1) el._raf = requestAnimationFrame(frame);
+    }
+    el._raf = requestAnimationFrame(frame);
+  }
+
+  // ---------------------------------------------------------------
+  // Gráfico SVG animado
+  // ---------------------------------------------------------------
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var chart = $("chart"), tip = $("tip"), chartModel = null;
+  var W = 640, H = 300, PL = 58, PR = 18, PT = 22, PB = 36, lastChart = null;
+
+  function niceStep(range) {
+    var raw = range / 4, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), n = raw / mag;
+    return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * mag;
+  }
+
+  function drawChart(cost, gain, delay, payback, animate) {
+    lastChart = [cost, gain, delay, payback];
+    var still = reduceMotion || !animate;
+    W = Math.max(300, Math.round($("chartWrap").clientWidth || 640));
+    H = W < 520 ? 250 : 300;
+    PL = W < 520 ? 50 : 58;
+    chart.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var be = delay + payback;
+    var horizon = Math.min(120, Math.max(36, Math.ceil((be + 12) / 6) * 6));
+    var yMin = -cost, yMax = Math.max(gain * (horizon - delay) - cost, cost * 0.5);
+    var step = niceStep(yMax - yMin);
+    var lo = Math.floor(yMin / step) * step, hi = Math.ceil(yMax / step) * step;
+    var x = function (m) { return PL + (m / horizon) * (W - PL - PR); };
+    var y = function (v) { return PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB); };
+    var val = function (m) { return m <= delay ? -cost : -cost + (m - delay) * gain; };
+    chartModel = { x: x, y: y, val: val, horizon: horizon, delay: delay };
+
+    var g = "";
+    g += '<defs>' +
+      '<linearGradient id="lineGrad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#ff5c7a"/><stop offset="' + Math.min(0.98, be / horizon) + '" stop-color="#b6ff3b"/><stop offset="1" stop-color="#39ff88"/></linearGradient>' +
+      '<linearGradient id="areaPos" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#39ff88" stop-opacity=".38"/><stop offset="1" stop-color="#39ff88" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="areaNeg" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#ff5c7a" stop-opacity=".32"/><stop offset="1" stop-color="#ff5c7a" stop-opacity="0"/></linearGradient>' +
+      '<clipPath id="clipPos"><rect x="0" y="0" width="' + W + '" height="' + y(0) + '"/></clipPath>' +
+      '<clipPath id="clipNeg"><rect x="0" y="' + y(0) + '" width="' + W + '" height="' + (H - y(0)) + '"/></clipPath>' +
+      '<clipPath id="reveal"><rect id="revealRect" x="0" y="0" width="' + (still ? W : 0) + '" height="' + H + '"/></clipPath>' +
+      '</defs>';
+
+    g += '<g class="axis">';
+    for (var v = lo; v <= hi + 1e-6; v += step) {
+      g += '<line class="gridline" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>';
+      g += '<text x="' + (PL - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + compact(v) + '</text>';
+    }
+    var xs = horizon <= 48 ? 12 : 24;
+    for (var m = 0; m <= horizon; m += xs) {
+      g += '<text x="' + x(m) + '" y="' + (H - 10) + '" text-anchor="middle">' + (m === 0 ? "Hoy" : "Año " + (m / 12)) + '</text>';
+    }
+    g += '</g>';
+
+    g += '<line class="zero" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y(0) + '" y2="' + y(0) + '"/>';
+
+    var pts = [[0, -cost], [delay, -cost], [horizon, val(horizon)]];
+    var linePath = pts.map(function (p, i) { return (i ? "L" : "M") + x(p[0]).toFixed(1) + " " + y(p[1]).toFixed(1); }).join(" ");
+    var areaPath = linePath + " L" + x(horizon) + " " + y(0) + " L" + x(0) + " " + y(0) + " Z";
+
+    g += '<g clip-path="url(#reveal)">' +
+      '<path class="area-neg" clip-path="url(#clipNeg)" d="' + areaPath + '"/>' +
+      '<path class="area-pos" clip-path="url(#clipPos)" d="' + areaPath + '"/>' +
+      '<path class="line" d="' + linePath + '"/>' +
+      '</g>';
+
+    var bx = x(be), by = y(0);
+    var labelLeft = bx > W - 170;
+    g += '<g id="beMark" style="opacity:' + (still ? 1 : 0) + ';transition:opacity .5s">' +
+      '<circle class="be-ring" cx="' + bx + '" cy="' + by + '" r="7"/>' +
+      '<circle class="be-dot" cx="' + bx + '" cy="' + by + '" r="6"/>' +
+      '<text class="be-label" x="' + (labelLeft ? bx - 12 : bx + 12) + '" y="' + (by + 22) + '" text-anchor="' + (labelLeft ? "end" : "start") + '">Break-even · ' + monthsTxt(be).replace(" m", " meses") + '</text>' +
+      '</g>';
+
+    g += '<g id="scrubG" style="opacity:0"><line class="scrub" id="scrubL" x1="0" x2="0" y1="' + PT + '" y2="' + (H - PB) + '"/><circle class="scrub-dot" id="scrubD" r="6" cx="0" cy="0"/></g>';
+    g += '<rect id="hit" x="' + PL + '" y="0" width="' + (W - PL - PR) + '" height="' + H + '" fill="transparent"/>';
+
+    chart.innerHTML = g;
+
+    if (!still) {
+      var rect = $("revealRect"), t0 = null, dur = 1400;
+      (function anim(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+        rect.setAttribute("width", (W * e).toFixed(1));
+        if (x(be) <= W * e) $("beMark").style.opacity = 1;
+        if (p < 1) requestAnimationFrame(anim);
+      })(performance.now());
+    }
+    bindScrub();
+  }
+
+  function bindScrub() {
+    var hit = $("hit");
+    function move(ev) {
+      if (!chartModel) return;
+      var r = chart.getBoundingClientRect();
+      var cx = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+      var sx = cx * (W / r.width);
+      var m = Math.max(0, Math.min(chartModel.horizon, ((sx - PL) / (W - PL - PR)) * chartModel.horizon));
+      m = Math.round(m);
+      var v = chartModel.val(m), px = chartModel.x(m), py = chartModel.y(v);
+      $("scrubL").setAttribute("x1", px); $("scrubL").setAttribute("x2", px);
+      $("scrubD").setAttribute("cx", px); $("scrubD").setAttribute("cy", py);
+      $("scrubG").style.opacity = 1;
+      var phase = m < chartModel.delay ? "Formándote y buscando" : v < 0 ? "Recuperando la inversión" : "Ganando más que antes";
+      tip.innerHTML = '<span style="color:var(--muted)">Mes ' + m + ' · ' + phase + '</span><b style="color:' + (v < 0 ? "var(--neg)" : "var(--neon)") + '">' + (v >= 0 ? "+" : "") + money(v) + '</b>';
+      tip.style.left = Math.max(70, Math.min(r.width - 70, px * (r.width / W))) + "px";
+      tip.style.top = (py * (r.height / H)) + "px";
+      tip.style.opacity = 1;
+    }
+    function leave() { $("scrubG").style.opacity = 0; tip.style.opacity = 0; }
+    hit.addEventListener("pointermove", move);
+    hit.addEventListener("pointerdown", move);
+    hit.addEventListener("pointerleave", leave);
+    hit.addEventListener("touchmove", move, { passive: true });
+    hit.addEventListener("touchend", leave);
+  }
+
+  // ---------------------------------------------------------------
+  // Línea temporal
+  // ---------------------------------------------------------------
+  function drawTimeline(study, search, payback) {
+    var total = study + search + payback;
+    var set = function (id, v) {
+      var el = $(id);
+      el.style.display = v > 0 ? "" : "none";
+      if (reduceMotion) { el.style.flexGrow = v; return; }
+      if (!el.style.flexGrow) el.style.flexGrow = 0;
+      requestAnimationFrame(function () { requestAnimationFrame(function () { el.style.flexGrow = v; }); });
+    };
+    set("segStudy", study); set("segSearch", search); set("segPay", payback);
+    $("tlStudy").textContent = monthsTxt(study);
+    $("tlSearch").textContent = monthsTxt(search);
+    $("tlPay").textContent = monthsTxt(payback);
+    $("tlTotal").textContent = "≈ " + monthsTxt(total).replace(" m", " meses") + " desde hoy";
+  }
+
+  // ---------------------------------------------------------------
+  // Compartir (bucle viral con enlace pre-rellenado)
+  // ---------------------------------------------------------------
+  function shareUrl() {
+    var base = /^https?:/.test(location.protocol) ? location.origin + location.pathname : "";
+    var q = "?s=" + (parse(fields.current) || 0) + "&c=" + (parse(fields.cost) || 0) + "&e=" + (parse(fields.expected) || 0) +
+      "&j=" + searchR.value + (state.program ? "&p=" + state.program.id : "");
+    return base ? base + q : "";
+  }
+  function shareText() {
+    return lastResult
+      ? "Con TripleTen recupero mi inversión en " + String(lastResult.payback).replace(".", ",") + " meses 🚀 Calcula la tuya:"
+      : "¿En cuántos meses se paga sola tu carrera en Tech? Calcúlalo:";
+  }
+  var toastT;
+  function toast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { t.classList.remove("show"); }, 2400);
+  }
+  function copy(text) {
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      toast(ok ? "Enlace copiado ✓" : "No se pudo copiar: publica la página para compartirla");
+    }
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { toast("Enlace copiado ✓"); }, fallback);
+        return;
+      }
+    } catch (e) {}
+    fallback();
+  }
+  $("copyBtn").addEventListener("click", function () {
+    var url = shareUrl();
+    track("share", { method: "copy" });
+    copy(url ? shareText() + " " + url : shareText());
+  });
+  $("shareBtn").addEventListener("click", function () {
+    var url = shareUrl();
+    track("share", { method: "native" });
+    if (navigator.share && url) {
+      navigator.share({ title: "Career ROI Lab", text: shareText(), url: url }).catch(function () {});
+    } else {
+      copy(url ? shareText() + " " + url : shareText());
+    }
+  });
+  $("cta").addEventListener("click", function () {
+    track("cta_click", { program: state.program ? state.program.id : "custom", payback: lastResult ? lastResult.payback : null });
+  });
+
+  // ---------------------------------------------------------------
+  // Panel Growth
+  // ---------------------------------------------------------------
+  var drawer = $("drawer"), scrim = $("scrim"), gBtn = $("growthBtn");
+  function openDrawer(open) {
+    drawer.classList.toggle("open", open);
+    scrim.classList.toggle("open", open);
+    drawer.setAttribute("aria-hidden", String(!open));
+    gBtn.setAttribute("aria-pressed", String(open));
+    if (open) track("growth_panel_open");
+  }
+  gBtn.addEventListener("click", function () { openDrawer(!drawer.classList.contains("open")); });
+  $("drawerClose").addEventListener("click", function () { openDrawer(false); });
+  scrim.addEventListener("click", function () { openDrawer(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") openDrawer(false); });
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (tab) {
+    tab.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
+        var on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        $(t.getAttribute("data-pane")).hidden = !on;
+      });
     });
   });
+
+  // ---------------------------------------------------------------
+  // Motion: rotador de roles, marquee, contadores, reveal, foco, partículas, confeti
+  // ---------------------------------------------------------------
+  (function rotator() {
+    var roles = ["AI Software Engineer", "Data Analyst", "QA Engineer", "AI Automation Specialist", "ML Engineer", "Cybersecurity Analyst"];
+    var el = $("role"), i = 0;
+    if (reduceMotion) return;
+    function type(word, cb) {
+      var n = 0;
+      (function step() {
+        el.textContent = word.slice(0, ++n);
+        if (n < word.length) setTimeout(step, 55); else setTimeout(cb, 1800);
+      })();
+    }
+    function erase(cb) {
+      (function step() {
+        el.textContent = el.textContent.slice(0, -1);
+        if (el.textContent.length) setTimeout(step, 28); else cb();
+      })();
+    }
+    (function loop() { setTimeout(function () { erase(function () { i = (i + 1) % roles.length; type(roles[i], loop); }); }, 1800); })();
+  })();
+
+  (function marquee() {
+    var items = ["Python", "SQL", "JavaScript", "React", "Node.js", "LLMs", "Prompt engineering", "Machine Learning", "Tableau", "Power BI", "Selenium", "Git", "Docker", "APIs", "Automatización con IA", "Ciberseguridad"];
+    var html = items.map(function (s) { return "<span>" + s + "</span>"; }).join("");
+    $("marquee").innerHTML = html + html;
+  })();
+
+  function countIn(el) {
+    var target = Number(el.getAttribute("data-count"));
+    var pre = el.getAttribute("data-prefix") || "", suf = el.getAttribute("data-suffix") || "";
+    el._v = 0;
+    tween(el, target, function (x) { return pre + nf.format(Math.round(x)) + suf; }, 1600);
+  }
+
+  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      en.target.classList.add("in");
+      var c = en.target.querySelector("[data-count]");
+      if (c) countIn(c);
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.15 }) : null;
+  Array.prototype.forEach.call(document.querySelectorAll(".reveal"), function (el) {
+    if (io) io.observe(el); else el.classList.add("in");
+  });
+
+  document.addEventListener("pointermove", function (e) {
+    var t = e.target.closest ? e.target.closest(".spot") : null;
+    if (!t) return;
+    var r = t.getBoundingClientRect();
+    t.style.setProperty("--mx", (e.clientX - r.left) + "px");
+    t.style.setProperty("--my", (e.clientY - r.top) + "px");
+  }, { passive: true });
+
+  (function particles() {
+    var c = $("particles");
+    if (!c.getContext || reduceMotion) return;
+    var ctx = c.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 2), pts = [], w, h;
+    function size() {
+      w = c.clientWidth; h = c.clientHeight;
+      c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = Math.round(Math.min(70, (w * h) / 22000));
+      pts = [];
+      for (var i = 0; i < n; i++) pts.push({ x: Math.random() * w, y: Math.random() * h, vy: 0.15 + Math.random() * 0.45, r: 0.6 + Math.random() * 1.6, a: 0.2 + Math.random() * 0.6 });
+    }
+    size();
+    window.addEventListener("resize", size);
+    (function frame() {
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        p.y -= p.vy;
+        if (p.y < -5) { p.y = h + 5; p.x = Math.random() * w; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(57,255,136," + p.a + ")";
+        ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    })();
+  })();
+
+  function confetti() {
+    var c = $("confetti");
+    if (!c.getContext || reduceMotion) return;
+    var ctx = c.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = c.clientWidth, h = c.clientHeight;
+    c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var colors = ["#39ff88", "#00e5a0", "#b6ff3b", "#ffffff"], parts = [];
+    for (var i = 0; i < 140; i++) {
+      var ang = -Math.PI / 2 + (Math.random() - 0.5) * 1.6, sp = 7 + Math.random() * 9;
+      parts.push({ x: w / 2, y: h * 0.62, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, s: 4 + Math.random() * 6, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3, c: colors[i % 4], life: 0 });
+    }
+    var start = performance.now();
+    (function frame(t) {
+      var el = t - start;
+      ctx.clearRect(0, 0, w, h);
+      parts.forEach(function (p) {
+        p.vy += 0.28; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - el / 2200);
+        ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+        ctx.restore();
+      });
+      if (el < 2200) requestAnimationFrame(frame); else ctx.clearRect(0, 0, w, h);
+    })(start);
+  }
+
+  // ---------------------------------------------------------------
+  // Arranque
+  // ---------------------------------------------------------------
+  $("calcBtn").addEventListener("click", function () { calculate(true); });
+
+  var resizeT, lastW = window.innerWidth;
+  window.addEventListener("resize", function () {
+    if (window.innerWidth === lastW) return; // la barra del navegador móvil también dispara resize
+    lastW = window.innerWidth;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(function () { if (lastChart) drawChart(lastChart[0], lastChart[1], lastChart[2], lastChart[3], false); }, 150);
+  });
+
+  if (CONFIG.author) {
+    $("byline").innerHTML = "Concepto de growth y producto por <b style=\"color:var(--text)\">" + escapeHtml(CONFIG.author) + "</b>" +
+      (CONFIG.linkedin ? ' · <a href="' + encodeURI(CONFIG.linkedin) + '" target="_blank" rel="noopener">LinkedIn</a>' : "");
+  }
+
+  $("cta").href = ctaUrl();
+  $("utmOut").textContent = ctaUrl();
+  renderFunnel();
+  updateInstallText();
+  track("calc_view", { referrer: document.referrer ? "external" : "direct" });
+
+  // Enlace compartido: ?s=salario&c=coste&e=esperado&j=meses&p=programa
+  (function fromUrl() {
+    var q;
+    try { q = new URLSearchParams(location.search); } catch (e) { return; }
+    if (!q.has("e")) return;
+    if (q.get("p")) selectProgram(q.get("p"), true);
+    [["s", "current"], ["c", "cost"], ["e", "expected"]].forEach(function (pair) {
+      var n = Number(q.get(pair[0]));
+      if (q.has(pair[0]) && isFinite(n)) setValue(pair[1], Math.round(n));
+    });
+    var j = Number(q.get("j"));
+    if (isFinite(j) && j >= 0 && j <= 10) { searchR.value = j; searchR.dispatchEvent(new Event("input")); }
+    clearProgramIfEdited();
+    track("shared_link_open", { program: q.get("p") || "custom" });
+    calculate(false);
+  })();
 })();
 </script>
 </body>
