@@ -60,12 +60,23 @@ function syncAnimations() {
 (async () => {
   await new Promise((r) => server.listen(0, r));
   const url = "http://localhost:" + server.address().port + "/?lang=" + LANG;
-  fs.rmSync(FRAMES, { recursive: true, force: true });
+  // RESUME=1 continúa una grabación cortada: repite el guion sin capturar
+  // hasta el último fotograma guardado (el reloj y el azar son deterministas).
+  let resumeFrom = 0;
+  if (process.env.RESUME && fs.existsSync(FRAMES)) {
+    while (fs.existsSync(path.join(FRAMES, "f" + String(resumeFrom).padStart(5, "0") + ".jpg"))) resumeFrom++;
+    resumeFrom = Math.max(0, resumeFrom - 2); // el último pudo quedar a medias
+    console.log("continuando desde el fotograma", resumeFrom);
+  } else fs.rmSync(FRAMES, { recursive: true, force: true });
   fs.mkdirSync(FRAMES, { recursive: true });
 
   const browser = await playwright.chromium.launch();
   const ctx = await browser.newContext({ viewport: VIEW, deviceScaleFactor: 2.5, isMobile: true, hasTouch: true, ignoreHTTPSErrors: true, acceptDownloads: true, locale: LANG === "en" ? "en-US" : "es-ES" });
-  await ctx.addInitScript(() => { try { localStorage.setItem("croi_ab", '"A"'); } catch (e) {} });
+  await ctx.addInitScript(() => {
+    try { localStorage.setItem("croi_ab", '"A"'); } catch (e) {}
+    let seed = 20260930;
+    Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+  });
   fs.mkdirSync(FONT_CACHE, { recursive: true });
   await ctx.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, async (route) => {
     const u = route.request().url();
@@ -88,6 +99,7 @@ function syncAnimations() {
   while (i < MAX_FRAMES) {
     await page.clock.runFor(dt);
     done = await page.evaluate(syncAnimations);
+    if (i < resumeFrom) { i++; continue; }
     await page.screenshot({ path: path.join(FRAMES, "f" + String(i).padStart(5, "0") + ".jpg"), type: "jpeg", quality: 92 });
     i++;
     if (i % 150 === 0) console.log("fotograma", i, "(" + (i / FPS).toFixed(1) + " s)");
