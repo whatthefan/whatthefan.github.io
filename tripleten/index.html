@@ -2713,11 +2713,26 @@
     { t: 97.6, title: "EE. UU. y México", text: "Precios, sueldos y garantía de cada país" }
   ];
   var video = $("demo"), videoTracked = false, videoOk = true, VIDEO_SRC = EN ? "demo-en.mp4" : "demo.mp4";
-  (function setVideo() {
-    video.setAttribute("poster", EN ? "demo-poster-en.jpg" : "demo-poster.jpg");
-    var s = video.querySelector("source"); if (s) s.setAttribute("src", VIDEO_SRC);
+  function setVideo() {
+    // Versión de un solo archivo (video/empaquetar.py): el vídeo y su portada
+    // van al final de la página y se reproducen desde memoria.
+    var packed = document.getElementById("pack-video-" + LANG), packedPoster = document.getElementById("pack-poster-" + LANG);
+    if (packed) {
+      try {
+        var bin = atob(packed.textContent.replace(/\s+/g, "")), bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        VIDEO_SRC = URL.createObjectURL(new Blob([bytes], { type: "video/mp4" }));
+        var fb = document.querySelector(".video-fallback a"); if (fb) fb.href = VIDEO_SRC;
+      } catch (e) {}
+    }
+    video.setAttribute("poster", packedPoster ? packedPoster.textContent.trim() : (EN ? "demo-poster-en.jpg" : "demo-poster.jpg"));
+    var s = video.querySelector("source"); if (s) s.setAttribute("src", VIDEO_SRC); else video.src = VIDEO_SRC;
     try { video.load(); } catch (e) {}
-  })();
+  }
+  // En la versión de un solo archivo los vídeos llegan después de este script:
+  // la calculadora ya funciona mientras se terminan de descargar.
+  if (document.querySelector('meta[name="croi-packed"]') && document.readyState === "loading") document.addEventListener("DOMContentLoaded", setVideo);
+  else setVideo();
   function renderChapters() { $("chapters").innerHTML = CHAPTERS.map(function (c, i) { return '<button type="button" class="chapter" data-i="' + i + '"><time>' + Math.floor(c.t / 60) + ":" + pad2(Math.floor(c.t % 60)) + '</time><span><b>' + c.title + '</b><span>' + c.text + '</span></span></button>'; }).join(""); }
   renderChapters();
   $("chapters").addEventListener("click", function (e) {
