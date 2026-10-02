@@ -15,12 +15,31 @@ sys.path.insert(0, 'marketing/guia-resenas')
 from comun import *  # noqa
 
 G = 'marketing/guia-resenas/'
-TOTAL = 18
+TOTAL = 19
 P = []
 
 
-def cab(n, seccion):
-    return (f'<div class="cab"><img src="{LOGO_CLARO}" class="cab-logo"><span>{seccion}</span></div>'
+import segno
+VIDEOS = {1: ('Así funciona', 35), 2: ('Cuándo pedirla', 31), 3: ('Qué decir', 28), 4: ('Dónde ponerla', 26), 5: ('Cómo contestar', 30), 6: ('Las normas', 26)}
+
+
+def qr(url, mm):
+    svg = segno.make(url, error='m').svg_inline(scale=4, border=0, dark='#06080E')
+    return svg.replace('<svg ', f'<svg style="width:{mm}mm;height:{mm}mm;display:block" ', 1)
+
+
+def video(n):
+    """Tarjeta con el QR del vídeo de la sección: se escanea en papel y se pulsa en el PDF."""
+    t, seg = VIDEOS[n]
+    url = f'https://plea5e.es/guia#v{n}'
+    return (f'<a href="{url}" style="position:absolute;top:19mm;right:18mm;width:31mm;text-decoration:none;color:inherit;z-index:5;'
+            f'background:#fff;border:.6mm solid var(--oro);border-radius:3.5mm;padding:2.6mm;box-shadow:0 1.5mm 4mm rgba(0,0,0,.12);text-align:center">'
+            f'{qr(url, 24.5)}<div style="font-family:Anton;font-size:10.5pt;letter-spacing:.02em;margin-top:1.8mm;color:#06080E">▶ VÍDEO {n}</div>'
+            f'<div style="font-size:6.6pt;color:#5f6368;font-weight:600">{t} · {seg} s</div></a>')
+
+
+def cab(n, seccion, vid=None):
+    return ((video(vid) if vid else '') + f'<div class="cab"><img src="{LOGO_CLARO}" class="cab-logo"><span>{seccion}</span></div>'
             f'<div class="pie"><span>Cómo conseguir más reseñas en Google · plea5e.es</span><b>{n:02d}</b><i>/ {TOTAL:02d}</i></div>')
 
 
@@ -61,21 +80,20 @@ indice = [('Por qué importa tu ficha', 3), ('El problema: los contentos no escr
           ('Así funciona la placa, paso a paso', 6), ('Paso 1 · Cuándo pedir la reseña', 7), ('Paso 1 · Qué decir', 8),
           ('Paso 1 · La conversación, en viñetas', 9), ('Paso 2 · Dónde poner cada cosa', 10), ('Paso 2 · Bien colocada, mal colocada', 11),
           ('Paso 2 · Tu equipo en 5 minutos', 12), ('Las normas de Google', 13), ('Paso 3 · Cómo contestar, paso a paso', 14),
-          ('Paso 3 · Respuestas listas y reseñas falsas', 15), ('Tu plan de 30 días', 16), ('Preguntas frecuentes', 17)]
+          ('Paso 3 · Respuestas listas y reseñas falsas', 15), ('Tu plan de 30 días', 16), ('Preguntas frecuentes', 17), ('Más preguntas', 18)]
 P.append(f'''<section class="pag">{cab(2, 'Antes de empezar')}
-<div style="position:relative;height:60mm">
-  {bicho('saluda', 'left:-2mm;top:0;width:52mm;height:60mm')}
+<div style="position:relative;height:50mm">
+  {bicho('saluda', 'left:-2mm;top:0;width:44mm;height:50mm')}
   <div class="bocadillo pico-izq" style="left:56mm;top:2mm;width:116mm;font-size:16pt;line-height:1.2;padding:4mm 6mm">¡Hola! Soy <span style="color:var(--oro-os)">Estrellita</span>, la de PLEA5E. En diez minutos te cuento cómo hacen los locales con buena ficha para que sus clientes les escriban. Sin trucos y sin pagar por reseñas.</div>
 </div>
-<div class="etq" style="margin-top:4mm">Qué hay dentro</div>
+<div class="etq" style="margin-top:2mm">Qué hay dentro</div>
 <div class="caja" style="padding:4mm 6mm">
-  {''.join(f'<div style="display:flex;align-items:baseline;gap:3mm;padding:1.5mm 0;border-bottom:.3mm dashed var(--linea);font-size:9.8pt"><span style="flex:none;font-weight:{800 if not t.startswith("Paso") else 600}">{t}</span><span style="flex:1;border-bottom:.3mm dotted #CFC3AB;transform:translateY(-1mm)"></span><b style="font-family:Anton;color:var(--oro-os);font-weight:400;font-size:12pt">{p:02d}</b></div>' for t, p in indice)}
+  {''.join(f'<div style="display:flex;align-items:baseline;gap:3mm;padding:1.05mm 0;border-bottom:.3mm dashed var(--linea);font-size:9.5pt"><span style="flex:none;font-weight:{800 if not t.startswith("Paso") else 600}">{t}</span><span style="flex:1;border-bottom:.3mm dotted #CFC3AB;transform:translateY(-1mm)"></span><b style="font-family:Anton;color:var(--oro-os);font-weight:400;font-size:12pt">{p:02d}</b></div>' for t, p in indice)}
 </div>
-<div class="fila" style="grid-template-columns:repeat(3,1fr);gap:4mm;margin-top:5mm">
-  <div class="caja" style="padding:3.5mm 5mm"><b>10 minutos</b><p class="nota">para leerla entera</p></div>
-  <div class="caja" style="padding:4mm 5mm"><b>5 minutos</b><p class="nota">para explicársela al equipo (pág. 12)</p></div>
-  <div class="caja" style="padding:4mm 5mm"><b>30 días</b><p class="nota">para que salga solo (pág. 16)</p></div>
-</div>
+<a href="https://plea5e.es/guia" class="caja-os" style="display:flex;gap:6mm;align-items:center;margin-top:5mm;padding:4mm 6mm;text-decoration:none">
+  <div style="background:#fff;border-radius:2.5mm;padding:2mm">{qr('https://plea5e.es/guia', 20)}</div>
+  <div><h3 style="font-size:15pt;color:#fff">▶ 10 minutos de lectura y 6 vídeos de 30 segundos</h3><p style="margin-top:1mm">Busca el código <b style="color:var(--oro)">VÍDEO</b> en cada sección y escanéalo con la cámara. O míralos todos en <b style="color:#fff">plea5e.es/guia</b>.</p></div>
+</a>
 </section>''')
 
 # 3 · POR QUE IMPORTA -------------------------------------------------------
@@ -134,7 +152,7 @@ moviles = [(bloqueo, 'Acerca el móvil', 'A la placa, por la parte de arriba del
            (pantalla_resena(0), 'Se abre sola', 'Aparece directamente la ventana para escribir la reseña de tu negocio. Sin buscarte y sin apps.'),
            (pantalla_resena(5), 'Pone las estrellas', 'Las que quiera: la reseña es suya. Tú solo le has ahorrado buscarte.'),
            (pantalla_resena(5, 'Todo buenísimo, el salmorejo de 10 y el trato de lujo. ¡Volveremos!', True), 'Escribe y publica', 'Unas palabras y «Publicar». En diez segundos ha terminado.')]
-P.append(f'''<section class="pag">{cab(6, 'Así funciona')}
+P.append(f'''<section class="pag">{cab(6, 'Así funciona', 1)}
 {titulo('Así funciona la placa', 'Toca. Escribe.', 'Ya está.', 'Esto es lo que ve tu cliente. Enséñaselo a tu equipo: si lo entienden ellos, lo explican mejor.', 6)}
 <div style="position:relative;height:150mm">
   {''.join(f'<div style="position:absolute;left:{i * 44}mm;top:{(i % 2) * 10}mm;width:40mm">{movil(pant, "position:relative;width:40mm;height:82mm;border-radius:6mm;padding:1.6mm")}<div style="display:flex;gap:2mm;align-items:center;margin-top:4mm"><span class="paso-n" style="width:7.5mm;height:7.5mm;font-size:11pt">{i + 1}</span><b style="font-size:10pt;line-height:1.15">{t}</b></div><p style="font-size:8.6pt;margin-top:1.5mm;color:#383D49">{d}</p></div>' for i, (pant, t, d) in enumerate(moviles))}
@@ -154,7 +172,7 @@ mal = ['<b>Con el local a tope</b> y el cliente esperando para pagar.',
        '<b>Si algo ha salido mal</b> y todavía no se ha arreglado.',
        '<b>Nada más sentarse</b>, antes de que haya probado nada.',
        '<b>Insistiendo.</b> Se pide una vez, con una sonrisa, y ya.']
-P.append(f'''<section class="pag">{cab(7, 'Paso 1 · Pedir')}
+P.append(f'''<section class="pag">{cab(7, 'Paso 1 · Pedir', 2)}
 {titulo('Paso 1 · Pedir', 'El cuándo importa', 'más que el cómo', 'La misma frase funciona o no según el momento. Pídela cuando el cliente está contento <b>y</b> tiene un segundo.')}
 <div class="fila" style="grid-template-columns:1fr 1fr">
   <div class="caja"><span class="chip verde">Momentos buenos</span><ul class="lista" style="margin-top:2mm">{''.join(f'<li>{SI}<span>{t}</span></li>' for t in bien)}</ul></div>
@@ -178,7 +196,7 @@ frases = [('Bar', '¿Todo bien? Si os ha gustado, nos ayuda un montón una rese�
           ('Peluquería y estética', '¿Te gusta cómo ha quedado? Si nos dejas una reseña, nos ayudas muchísimo. Aquí mismo, con el móvil.'),
           ('Tienda', 'Si te hemos atendido bien, nos ayuda mucho que lo cuentes en Google. Acercas el móvil y ya.'),
           ('Alojamiento', 'Ha sido un placer teneros. Si os ha gustado la estancia, nos ayuda mucho una reseña. Os dejo la tarjeta.')]
-P.append(f'''<section class="pag">{cab(8, 'Paso 1 · Pedir')}
+P.append(f'''<section class="pag">{cab(8, 'Paso 1 · Pedir', 3)}
 {titulo('Paso 1 · Pedir', 'Qué decir:', 'frases que funcionan', 'Corta, con una sonrisa <b>y señalando dónde</b>. Coge la de tu negocio y dila con tus palabras: suena mejor la tuya que una aprendida.', 6)}
 <div class="fila" style="grid-template-columns:1fr 1fr;gap:4mm">
   {''.join(f'<div class="caja" style="padding:4.5mm 5.5mm"><span class="chip">{t}</span><p class="cita" style="font-size:15pt">{f}</p></div>' for t, f in frases)}
@@ -213,7 +231,7 @@ P.append(f'''<section class="pag">{cab(9, 'Paso 1 · Pedir')}
 </section>''')
 
 # 10 · DONDE PONER CADA COSA -------------------------------------------------
-P.append(f'''<section class="pag">{cab(10, 'Paso 2 · Facilitar')}
+P.append(f'''<section class="pag">{cab(10, 'Paso 2 · Facilitar', 4)}
 {titulo('Paso 2 · Facilitar', 'Dónde poner', 'cada cosa', 'Si para dejar la reseña hay que buscarte en Google, abrir la ficha y encontrar el botón, se pierde por el camino. Con NFC y QR <b>se abre directamente la ventana de escribir</b>.', 6)}
 <div class="fila" style="grid-template-columns:1fr 1fr;gap:6mm">
   <div class="foto" style="height:88mm"><img src="{jpg(G + 'img/placa-mano.jpg')}" style="object-position:50% 45%"></div>
@@ -276,7 +294,7 @@ si = ['Pedir reseña a <b>todos</b> tus clientes, les haya ido como les haya ido
       'Recordarlo con educación, una vez.', 'Contestar a todas las reseñas, buenas y malas.']
 no = ['Dar algo a cambio: descuentos, un chupito, sorteos, puntos…', 'Pedirla solo a los contentos, o pedir que sea de 5 estrellas.',
       'Escribir reseñas tú, tu familia o tu equipo.', 'Comprar reseñas o pedírselas a quien no ha venido.', 'Poner una tablet o un móvil del local para que escriban ahí.']
-P.append(f'''<section class="pag">{cab(13, 'Las normas')}
+P.append(f'''<section class="pag">{cab(13, 'Las normas', 6)}
 {titulo('Lo que dice Google', 'Las normas:', 'lo que sí y lo que no', 'Google quiere reseñas de clientes de verdad, escritas libremente. Si detecta trampas puede <b>borrar reseñas</b> e incluso limitar tu ficha. Estas son las reglas básicas:')}
 <div class="fila" style="grid-template-columns:1fr 1fr">
   <div class="caja" style="border-top:1.4mm solid var(--verde)"><h3 style="color:#1F6B42">Sí se puede</h3><ul class="lista" style="margin-top:3mm">{''.join(f'<li>{SI}<span>{t}</span></li>' for t in si)}</ul></div>
@@ -302,7 +320,7 @@ pasos_resp = [('Entra en tu ficha', 'Busca el nombre de tu negocio en Google con
               ('Abre «Reseñas»', 'En el panel, toca «Reseñas» (o «Leer reseñas»). Verás las nuevas arriba.'),
               ('Toca «Responder»', 'Debajo de cada reseña. Escribe tu respuesta (ideas en la página siguiente).'),
               ('Publicar', 'Tu respuesta sale debajo de la reseña, a la vista de todos, y al cliente le llega un aviso.')]
-P.append(f'''<section class="pag">{cab(14, 'Paso 3 · Contestar')}
+P.append(f'''<section class="pag">{cab(14, 'Paso 3 · Contestar', 5)}
 {titulo('Paso 3 · Contestar', 'Contesta todas.', 'También las malas.', 'Quien lee tu ficha no solo lee las reseñas: <b>lee cómo contestas</b>. Hazlo en uno o dos días. Así se hace:', 6)}
 <div style="display:grid;grid-template-columns:1fr 58mm;gap:8mm;align-items:start">
   <div class="lista" style="gap:4.5mm">
@@ -383,6 +401,26 @@ P.append(f'''<section class="pag">{cab(17, 'Preguntas frecuentes')}
   <h3 style="font-size:16pt">¿Otra duda?</h3><p>Escríbenos por WhatsApp al <b style="color:#fff">661 40 32 19</b> o a <b style="color:#fff">hola@plea5e.es</b>. Respondemos en minutos, de lunes a sábado.</p>
   {bicho('apunta-izq', 'right:4mm;bottom:-3mm;width:40mm;height:46mm')}
 </div>
+</section>''')
+
+# 18 · MAS PREGUNTAS ---------------------------------------------------------
+faq2 = [('¿Y si el cliente no tiene cuenta de Google?', 'Para publicar, Google pide iniciar sesión. Casi todos los Android ya la tienen; en iPhone se entra en unos segundos. Si no quiere, dale la tarjeta para hacerlo luego.'),
+        ('¿Funciona con iPhone?', 'Sí. Desde el iPhone XS (2018) leen la placa con solo acercarlo. Los más antiguos, con el QR y la cámara.'),
+        ('¿La reseña sale al momento?', 'Casi siempre sí. A veces Google la revisa y tarda un poco en aparecer; no depende de la placa.'),
+        ('¿Puedo borrar una mala reseña?', 'No. Lo que sí puedes es contestarla (vídeo 5) y, si incumple las normas —insultos, spam o alguien que no ha venido—, denunciarla desde tu perfil de Google.'),
+        ('¿Sé quién ha tocado la placa?', 'No. Con el seguimiento ves cuántas veces se ha acercado un móvil, no quién ni si ha escrito. Google no lo dice.'),
+        ('¿Cuántas placas necesito?', 'Lo ideal: una por mesa y un expositor donde se cobra. Si empiezas con poco, el expositor de la caja es la que más se usa.'),
+        ('¿Y si un chip deja de leer?', 'Te lo reponemos. Escríbenos con una foto y lo arreglamos.'),
+        ('¿Puedo cambiar el diseño más adelante?', 'Sí. Te hacemos uno nuevo cuando quieras; con el seguimiento, a mitad de precio.')]
+P.append(f'''<section class="pag">{cab(18, 'Preguntas frecuentes')}
+{titulo('Más dudas', 'Y estas', 'también', None)}
+<div class="fila" style="grid-template-columns:1fr 1fr;gap:4mm">
+  {''.join(f'<div class="caja" style="padding:4.5mm 5.5mm"><p style="font-weight:800;font-size:10.3pt">{q}</p><p style="font-size:9.4pt;margin-top:1.2mm;color:#383D49">{r}</p></div>' for q, r in faq2)}
+</div>
+<a href="https://plea5e.es/guia" class="caja-os" style="display:flex;gap:6mm;align-items:center;margin-top:7mm;padding:5mm 6mm;text-decoration:none">
+  <div style="background:#fff;border-radius:2.5mm;padding:2mm">{qr('https://plea5e.es/guia', 24)}</div>
+  <div><h3 style="font-size:16pt;color:#fff">Todos los vídeos, en un sitio</h3><p style="margin-top:1mm">Escanéalo y enséñaselos a tu equipo: en 3 minutos lo tienen. <b style="color:#fff">plea5e.es/guia</b></p></div>
+</a>
 </section>''')
 
 # 18 · CONTRAPORTADA ---------------------------------------------------------
