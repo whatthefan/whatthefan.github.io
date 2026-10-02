@@ -78,9 +78,6 @@ ESC.forEach((e, k) => {
     <div class="bocadillo" style="right:330px;bottom:690px;transform:rotate(-3deg)" data-pop=".85">${e.dice}</div>`;
   if (e.tipo === 'movil') h = `<div class="a" style="left:70px;right:70px;top:250px"><div class="etq" data-in="0">${e.paso}</div><div style="font:600 64px/1.18 M;margin-top:26px" data-in=".1">${e.txt.replace(/<b>/g, '<b style="color:var(--oro);font-weight:800">')}</div></div>`;
   if (e.tipo === 'lista') h = `<div class="a" style="left:70px;right:70px;top:300px"><div class="etq" data-in="0">${e.titulo}</div><div style="margin-top:44px">${(e.si || []).map((x, i) => `<div class="item si" data-it>${'<i>✓</i>'}${x}</div>`).join('')}${(e.no || []).map(x => `<div class="item no" data-it><i>✕</i>${x}</div>`).join('')}</div></div>`;
-    if (['lista', 'pasos', 'frases'].includes(e.tipo)) { const nIt = e.items ? e.items.length : (e.si || []).length + (e.no || []).length, w = nIt <= 3 ? 470 : 380;
-      const pose = e.pose || (e.tipo === 'pasos' ? 'senala' : e.tipo === 'frases' ? 'megafono' : e.si && e.no ? 'pulgar' : e.si ? 'tachan' : 'gota');
-      h += `<img class="a" src="e/${pose}.svg" style="left:50%;margin-left:${-w / 2}px;bottom:170px;width:${w}px" data-pop="${(.5 + nIt * .45).toFixed(2)}">`; }
   if (e.tipo === 'pasos') h = `<div class="a" style="left:70px;right:70px;top:300px"><div class="etq" data-in="0">${e.titulo}</div><div style="margin-top:44px">${e.items.map(([a, b], i) => `<div class="paso" data-it><b>${i + 1}</b><div><h4>${a}</h4><p>${b}</p></div></div>`).join('')}</div></div>`;
   if (e.tipo === 'frases') h = `<div class="a" style="left:70px;right:70px;top:300px"><div class="etq" data-in="0">${e.titulo}</div><div style="margin-top:44px">${e.items.map(x => `<div class="frase" data-it><span>${x.tag}</span><p data-tecla="${encodeURIComponent(x.txt)}"></p></div>`).join('')}</div></div>`;
   if (e.tipo === 'dato') h = `<div class="a" style="left:70px;right:70px;top:420px"><div class="etq" data-in="0">Recuerda</div><div class="h" style="margin-top:30px;font-size:120px" data-in=".12">${e.grande}</div><div style="font:500 50px/1.35 M;color:#C9CEDA;margin-top:36px;max-width:900px" data-in=".3">${e.txt}</div></div>
@@ -88,6 +85,9 @@ ESC.forEach((e, k) => {
   if (e.tipo === 'cierre') h = `<div class="a" style="left:0;right:0;top:560px;text-align:center"><img src="sello-plea5e.svg" style="width:220px;border-radius:50px" data-pop="0">
     <div class="h" style="margin-top:50px;font-size:118px" data-in=".2">¿Te ha quedado<br><em>alguna duda?</em></div>
     <div style="font:600 46px/1.5 M;color:#C9CEDA;margin-top:40px" data-in=".4">Más vídeos en <b style="color:var(--oro)">plea5e.es/guia</b><br>WhatsApp <b style="color:#fff">661 40 32 19</b></div></div>`;
+    if (['lista', 'pasos', 'frases'].includes(e.tipo)) { const nIt = e.items ? e.items.length : (e.si || []).length + (e.no || []).length, w = nIt <= 3 ? 470 : 380;
+      const pose = e.pose || (e.tipo === 'pasos' ? 'senala' : e.tipo === 'frases' ? 'megafono' : e.si && e.no ? 'pulgar' : e.si ? 'tachan' : 'gota');
+      h += `<img class="a" src="e/${pose}.svg" style="left:50%;margin-left:${-w / 2}px;bottom:170px;width:${w}px" data-pop="${(.5 + nIt * .45).toFixed(2)}">`; }
   d.innerHTML = h; cont.appendChild(d);
 });
 
