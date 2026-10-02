@@ -1,0 +1,23 @@
+@import url(kit2.css);
+@font-face{font-family:BG;src:url(fuentes/bricolage-grotesque-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:BG;src:url(fuentes/bricolage-grotesque-latin-800-normal.woff2);font-weight:800}
+@font-face{font-family:IS;src:url(fuentes/instrument-serif-latin-400-italic.woff2);font-style:italic}
+/* tipografía: línea pequeña Bricolage, palabra grande Instrument Serif cursiva */
+.tb .s{font-family:BG;font-weight:600;font-size:56px;letter-spacing:-1.4px;line-height:1.1}
+.tb .b{font-family:IS;font-style:italic;font-weight:400;font-size:150px;letter-spacing:-3.5px;line-height:.9;padding:0 .08em}
+.tb .b .l{padding-right:.02em}
+.pill,.bocadillo,.coment,.card,.marcaTop,.fila h4,.fila small{font-family:BG!important}
+.pill{font-weight:600}
+.marcaTop{font-weight:800}
+/* capas de la cara */
+#detras,#delante{position:absolute;inset:0;pointer-events:none}
+#persona{position:absolute;left:30px;top:780px;width:1020px;height:1147px;transform-origin:50% 100%}
+#persona img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.28))}
+#detras .tb .b{font-size:250px;letter-spacing:-5px;line-height:.86}
+.pegatina{position:absolute;padding:14px 34px 18px;border-radius:18px;background:#111;color:#fff;font:italic 400 110px IS;letter-spacing:-2px;line-height:1;
+  box-shadow:0 20px 40px rgba(0,0,0,.35);white-space:nowrap}
+.pegatina.roja{background:#E5484D}.pegatina.oro{background:#E9BC46;color:#111}
+.trazo{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.demo{position:absolute;padding:8px 18px;border-radius:12px;background:rgba(17,17,17,.78);color:#fff;font:600 26px BG;letter-spacing:.5px}
+.letra{font-family:BG!important;font-weight:800!important}
+#persona img{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}

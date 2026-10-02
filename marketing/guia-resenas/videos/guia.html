@@ -1,0 +1,148 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><script src="videos.js"></script><style>
+@font-face{font-family:A;src:url(f/anton-latin.woff2)}
+@font-face{font-family:M;src:url(f/montserrat-latin.woff2);font-weight:100 900}
+@font-face{font-family:C;src:url(f/caveat-latin.woff2)}
+:root{--noche:#06080E;--oro:#E9BC46;--oro2:#F6D77A;--tinta:#EDE9DF;--gris:#8C93A5;--ok:#3DDC84;--ko:#FF5A5F}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--noche);color:var(--tinta);font-family:M}
+.a{position:absolute}
+#fondo{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,rgba(233,188,70,.13),transparent 52%),radial-gradient(circle at 80% 95%,rgba(60,90,180,.10),transparent 45%)}
+#grano{position:absolute;inset:0;z-index:50;opacity:.04;mix-blend-mode:screen;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+#cab{position:absolute;left:70px;right:70px;top:80px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+#cab img{height:56px}
+#cab span{font:700 24px M;letter-spacing:.18em;text-transform:uppercase;color:var(--oro)}
+#barra{position:absolute;left:70px;right:70px;bottom:90px;height:8px;border-radius:4px;background:rgba(255,255,255,.08);z-index:5}
+#barraIn{height:100%;border-radius:4px;background:linear-gradient(90deg,#C99A2E,#F6D77A);width:0}
+.esc{position:absolute;inset:0;display:none}
+.etq{font:800 26px M;letter-spacing:.22em;text-transform:uppercase;color:var(--oro);display:flex;align-items:center;gap:18px}
+.etq:before{content:'';width:60px;height:4px;background:var(--oro);border-radius:2px}
+.h{font:400 132px/1.02 A;letter-spacing:.005em;text-transform:uppercase}
+.h em{font-style:normal;color:var(--oro)}
+.bocadillo{position:absolute;background:#fff;color:#0A0E16;font:700 46px/1.15 C;padding:22px 34px;border-radius:34px;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.bocadillo:after{content:'';position:absolute;bottom:-22px;right:90px;border:22px solid transparent;border-top-color:#fff;border-bottom:0}
+.item{display:flex;align-items:center;gap:30px;padding:30px 36px;border-radius:30px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.08);font:600 44px/1.25 M;margin-bottom:22px}
+.item i{flex:none;width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 44px M;font-style:normal}
+.item.si i{background:rgba(61,220,132,.16);color:var(--ok)}
+.item.no i{background:rgba(255,90,95,.16);color:var(--ko)}
+.paso{display:flex;gap:34px;padding:36px;border-radius:32px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.08);margin-bottom:26px}
+.paso b{flex:none;width:96px;height:96px;border-radius:50%;background:var(--oro);color:#06080E;font:400 58px/96px A;text-align:center}
+.paso h4{font:800 48px M;margin-bottom:10px}
+.paso p{font:500 36px/1.35 M;color:#C2C7D3}
+.frase{border-radius:36px;background:#fff;color:#0A0E16;padding:34px 40px;margin-bottom:28px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.frase span{display:inline-block;font:800 22px M;letter-spacing:.16em;text-transform:uppercase;background:var(--oro);color:#06080E;padding:8px 16px;border-radius:12px;margin-bottom:14px}
+.frase p{font:700 50px/1.2 C;min-height:120px}
+.car{display:inline-block;width:4px;height:44px;background:#0A0E16;vertical-align:-6px;margin-left:3px}
+/* móvil */
+#movil{position:absolute;left:290px;top:760px;width:500px;height:1000px;border-radius:72px;background:#151923;box-shadow:0 60px 140px rgba(0,0,0,.7),inset 0 0 0 4px #2f3544;display:none;z-index:3}
+#pant{position:absolute;inset:16px;border-radius:58px;overflow:hidden;background:#fff;color:#202124}
+#isla{position:absolute;left:50%;top:22px;width:130px;height:36px;margin-left:-65px;border-radius:20px;background:#000;z-index:9}
+.pv{position:absolute;inset:0}
+#placa{position:absolute;left:120px;top:1150px;width:330px;height:420px;border-radius:34px;background:#fff;box-shadow:0 40px 90px rgba(0,0,0,.6);display:none;z-index:2;color:#0A0E16;text-align:center;overflow:hidden}
+.ondas{position:absolute;border:6px solid var(--oro);border-radius:50%;z-index:4;display:none}
+</style></head><body>
+<div id="fondo"></div>
+<div id="cab"><img src="marca-plea5e.svg"><span id="capTxt"></span></div>
+<div id="escenas"></div>
+<div id="placa">
+  <div style="background:#06080E;padding:26px 0 18px"><img src="sello-plea5e.svg" style="width:96px;border-radius:22px"></div>
+  <div style="font:400 40px/1.05 A;margin-top:18px;text-transform:uppercase">¿Te ha gustado?</div>
+  <div style="font:700 20px M;letter-spacing:.14em;color:#8a6a18;margin-top:8px">ACERCA EL MÓVIL</div>
+  <img src="qr-plea5e-es-plano.svg" style="width:120px;margin-top:16px">
+</div>
+<div id="movil"><div id="isla"></div><div id="pant"></div></div>
+<div class="ondas" id="o1"></div><div class="ondas" id="o2"></div><div class="ondas" id="o3"></div>
+<div id="barra"><div id="barraIn"></div></div>
+<div id="grano"></div>
+<script>
+const $ = id => document.getElementById(id);
+const { p, muelle } = E;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), lerp = (a, b, k) => a + (b - a) * k;
+const oE = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x)), io = x => (x = cl(x)) < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const oB = x => { x = cl(x); const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const ID = (location.hash.slice(1) || 'v1'), V = VIDEOS[ID] || VIDEOS.v1;
+$('capTxt').textContent = V.cap;
+let t0 = 0; const ESC = V.escenas.map(e => { const o = Object.assign({ t0 }, e); t0 += e.d; return o; });
+const TOTAL = t0; window.TOTAL = TOTAL;
+const G = '<svg viewBox="0 0 48 48" style="width:54px;height:54px"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.8-.4-4.1H24v7.4h12.1c-.2 1.8-1.6 4.6-4.5 6.5l6.9 5.3c4.1-3.8 6.6-9.4 6.6-15.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-6.9-5.3c-1.8 1.3-4.3 2.2-7.6 2.2-5.8 0-10.7-3.8-12.5-9.1l-7.1 5.5C8 41 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.5 28.5c-.5-1.4-.8-2.9-.8-4.5s.3-3.1.7-4.5l-7.1-5.5C2.8 17 2 20.4 2 24s.8 7 2.3 10z"/><path fill="#EA4335" d="M24 10.2c4.1 0 6.9 1.8 8.5 3.3l6.2-6C34.9 4 29.9 2 24 2 15.4 2 8 7 4.3 14l7.1 5.5c1.8-5.3 6.8-9.3 12.6-9.3z"/></svg>';
+const EST = (c, s = 58) => `<svg viewBox="0 0 24 24" style="width:${s}px;height:${s}px"><path fill="${c}" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg>`;
+const NFCI = '<svg viewBox="0 0 40 40" style="width:70px" fill="none" stroke="#06080E" stroke-width="4" stroke-linecap="round"><path d="M14 12a12 12 0 0 1 0 16M20 8a18 18 0 0 1 0 24M26 4a24 24 0 0 1 0 32"/></svg>';
+
+/* ---------- construir escenas ---------- */
+const cont = $('escenas');
+ESC.forEach((e, k) => {
+  const d = document.createElement('div'); d.className = 'esc'; e.el = d; let h = '';
+  if (e.tipo === 'titulo') h = `<div class="a" style="left:70px;top:360px;font:400 420px/1 A;color:transparent;-webkit-text-stroke:4px rgba(233,188,70,.35)" data-in="0">${e.n}</div>
+    <div class="a" style="left:70px;top:760px;right:70px"><div class="etq" data-in=".1">Guía PLEA5E</div><div class="h" style="margin-top:26px" data-in=".18">${e.t1}<br><em>${e.t2}</em></div></div>
+    <img class="a" src="e/${e.pose}.svg" style="right:30px;bottom:170px;width:600px" data-pop=".55">
+    <div class="bocadillo" style="right:330px;bottom:690px;transform:rotate(-3deg)" data-pop=".85">${e.dice}</div>`;
+  if (e.tipo === 'movil') h = `<div class="a" style="left:70px;right:70px;top:250px"><div class="etq" data-in="0">${e.paso}</div><div style="font:600 64px/1.18 M;margin-top:26px" data-in=".1">${e.txt.replace(/<b>/g, '<b style="color:var(--oro);font-weight:800">')}</div></div>`;
+  if (e.tipo === 'lista') h = `<div class="a" style="left:70px;right:70px;top:300px"><div class="etq" data-in="0">${e.titulo}</div><div style="margin-top:44px">${(e.si || []).map((x, i) => `<div class="item si" data-it>${'<i>✓</i>'}${x}</div>`).join('')}${(e.no || []).map(x => `<div class="item no" data-it><i>✕</i>${x}</div>`).join('')}</div></div>`;
+  if (e.tipo === 'pasos') h = `<div class="a" style="left:70px;right:70px;top:300px"><div class="etq" data-in="0">${e.titulo}</div><div style="margin-top:44px">${e.items.map(([a, b], i) => `<div class="paso" data-it><b>${i + 1}</b><div><h4>${a}</h4><p>${b}</p></div></div>`).join('')}</div></div>`;
+  if (e.tipo === 'frases') h = `<div class="a" style="left:70px;right:70px;top:300px"><div class="etq" data-in="0">${e.titulo}</div><div style="margin-top:44px">${e.items.map(x => `<div class="frase" data-it><span>${x.tag}</span><p data-tecla="${encodeURIComponent(x.txt)}"></p></div>`).join('')}</div></div>`;
+  if (e.tipo === 'dato') h = `<div class="a" style="left:70px;right:70px;top:420px"><div class="etq" data-in="0">Recuerda</div><div class="h" style="margin-top:30px;font-size:120px" data-in=".12">${e.grande}</div><div style="font:500 50px/1.35 M;color:#C9CEDA;margin-top:36px;max-width:900px" data-in=".3">${e.txt}</div></div>
+    <img class="a" src="e/${e.pose}.svg" style="left:50%;margin-left:-230px;bottom:190px;width:460px" data-pop=".5">`;
+  if (e.tipo === 'cierre') h = `<div class="a" style="left:0;right:0;top:560px;text-align:center"><img src="sello-plea5e.svg" style="width:220px;border-radius:50px" data-pop="0">
+    <div class="h" style="margin-top:50px;font-size:118px" data-in=".2">¿Te ha quedado<br><em>alguna duda?</em></div>
+    <div style="font:600 46px/1.5 M;color:#C9CEDA;margin-top:40px" data-in=".4">Más vídeos en <b style="color:var(--oro)">plea5e.es/guia</b><br>WhatsApp <b style="color:#fff">661 40 32 19</b></div></div>`;
+    if (['lista', 'pasos', 'frases'].includes(e.tipo)) { const nIt = e.items ? e.items.length : (e.si || []).length + (e.no || []).length, w = nIt <= 3 ? 470 : 380;
+      const pose = e.pose || (e.tipo === 'pasos' ? 'senala' : e.tipo === 'frases' ? 'megafono' : e.si && e.no ? 'pulgar' : e.si ? 'tachan' : 'gota');
+      h += `<img class="a" src="e/${pose}.svg" style="left:50%;margin-left:${-w / 2}px;bottom:170px;width:${w}px" data-pop="${(.5 + nIt * .45).toFixed(2)}">`; }
+  d.innerHTML = h; cont.appendChild(d);
+});
+
+/* ---------- pantallas del móvil ---------- */
+function pantalla(tipo, u) {
+  const est = n => [0, 1, 2, 3, 4].map(i => EST(i < n ? '#FBBC04' : '#DADCE0', 64)).join('');
+  if (tipo === 'nfc' || tipo === 'qr') {
+    if (tipo === 'qr') return `<div class="pv" style="background:#111"><div style="position:absolute;left:70px;top:250px;width:328px;height:328px;border-radius:30px;border:6px solid rgba(255,255,255,.85)"></div><img src="qr-plea5e-es-plano.svg" style="position:absolute;left:104px;top:284px;width:260px;opacity:.9"><div style="position:absolute;left:0;right:0;top:${300 + 220 * Math.abs(Math.sin(u * 3))}px;height:4px;background:var(--oro);box-shadow:0 0 20px var(--oro);margin:0 76px"></div>
+      <div style="position:absolute;left:40px;right:40px;bottom:120px;border-radius:24px;background:rgba(255,255,255,.92);padding:20px 24px;font:600 24px M;opacity:${cl((u - 1.6) * 4)}">${G.replace('54px', '34px').replace('54px', '34px')} &nbsp;Abrir en Google</div></div>`;
+    const ap = cl((u - 1.6) * 3);
+    return `<div class="pv" style="background:linear-gradient(160deg,#2a3150,#0f1320);color:#fff"><div style="text-align:center;margin-top:150px;font:300 120px M">20:41</div><div style="text-align:center;font:500 28px M;opacity:.8">martes, 14 de octubre</div>
+      <div style="position:absolute;left:30px;right:30px;top:420px;border-radius:30px;background:rgba(255,255,255,.88);color:#202124;padding:24px;display:flex;gap:18px;align-items:center;opacity:${ap};transform:translateY(${(1 - oE(ap)) * -40}px)">${G}<div><div style="font:700 24px M">NFC · Google</div><div style="font:500 22px M;color:#5f6368">Toca para abrir: escribe una reseña a Tu negocio</div></div></div></div>`;
+  }
+  const n = tipo === 'ficha' ? 0 : tipo === 'estrellas' ? Math.min(5, Math.floor(cl((u - .9) / 1.6) * 5 + (u > .9 ? 1 : 0))) : 5;
+  const txt = 'Todo buenísimo y el servicio de 10. ¡Volveremos!', nt = tipo === 'publicar' ? Math.floor(cl((u - .6) * 22, 0, txt.length)) : 0;
+  const hecho = tipo === 'publicar' && u > 3.5;
+  if (hecho) { const k = oB(p(u, 3.5, .5)); return `<div class="pv" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff"><div style="width:170px;height:170px;border-radius:50%;background:#1e8e3e;display:flex;align-items:center;justify-content:center;transform:scale(${k})"><svg viewBox="0 0 24 24" style="width:100px" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div style="font:700 36px M;margin-top:36px;opacity:${cl((u - 3.7) * 4)}">¡Reseña publicada!</div><div style="font:500 24px M;color:#5f6368;margin-top:10px;opacity:${cl((u - 3.8) * 4)}">Gracias por tu opinión</div></div>`; }
+  const btn = tipo === 'publicar' && u > 2.9 && u < 3.5;
+  return `<div class="pv" style="padding:110px 34px 0"><div style="display:flex;gap:18px;align-items:center">${G}<div><div style="font:700 30px M">Tu negocio</div><div style="font:500 22px M;color:#5f6368">Escribe una reseña</div></div></div>
+    <div style="font:700 34px M;margin-top:60px">¿Qué te ha parecido?</div><div style="font:500 22px M;color:#5f6368;margin-top:8px">Tu opinión ayuda a otras personas</div>
+    <div style="display:flex;gap:10px;margin-top:40px">${est(n)}</div>
+    <div style="margin-top:44px;height:240px;border-radius:20px;border:2px solid #dadce0;padding:20px;font:500 26px/1.4 M;color:#202124">${txt.slice(0, nt)}${tipo === 'publicar' && u < 2.9 ? '<span style="display:inline-block;width:3px;height:30px;background:#1a73e8;vertical-align:-5px"></span>' : ''}</div>
+    <div style="margin-top:40px;height:84px;border-radius:42px;background:${n === 5 ? '#1a73e8' : '#c6dafc'};color:#fff;font:700 30px/84px M;text-align:center;transform:scale(${btn ? .94 : 1})">Publicar</div></div>`;
+}
+
+/* ---------- render ---------- */
+window.render = t => {
+  $('barraIn').style.width = (100 * cl(t / TOTAL)) + '%';
+  const cur = ESC.find(e => t >= e.t0 && t < e.t0 + e.d) || ESC[ESC.length - 1];
+  let movilVis = false;
+  ESC.forEach(e => {
+    const u = t - e.t0, on = e === cur; e.el.style.display = on ? 'block' : 'none'; if (!on) return;
+    const sal = p(u, e.d - .32, .32);
+    e.el.style.opacity = 1 - sal; e.el.style.transform = `translateY(${-50 * io(sal)}px)`; e.el.style.filter = sal > 0 ? `blur(${sal * 10}px)` : 'none';
+    e.el.querySelectorAll('[data-in]').forEach(x => { const k = oE(p(u, +x.dataset.in, .6)); x.style.opacity = k; x.style.transform = `translateY(${(1 - k) * 70}px)`; x.style.filter = k < 1 ? `blur(${(1 - k) * 12}px)` : 'none'; });
+    e.el.querySelectorAll('[data-pop]').forEach(x => { const k = muelle(u, +x.dataset.pop, 2.4, .45); x.style.opacity = u > +x.dataset.pop ? 1 : 0; x.style.transform = (x.style.transform.match(/rotate\([^)]*\)/) || [''])[0] + ` scale(${cl(k, 0, 1.3)})`; x.style.transformOrigin = '50% 100%'; });
+    const its = [...e.el.querySelectorAll('[data-it]')], paso = e.tipo === 'frases' ? (e.d - 1.2) / its.length : e.tipo === 'pasos' ? .55 : .42;
+    its.forEach((x, i) => { const ti = .5 + i * paso, k = oE(p(u, ti, .5)); x.style.opacity = k; x.style.transform = `translateX(${(1 - k) * 90}px)`; x.style.filter = k < 1 ? `blur(${(1 - k) * 10}px)` : 'none';
+      const ic = x.querySelector('i'); if (ic) ic.style.transform = `scale(${cl(muelle(u, ti + .15, 3, .45), 0, 1.4)})`;
+      const pt = x.querySelector('[data-tecla]'); if (pt) { const s = decodeURIComponent(pt.dataset.tecla), n = Math.floor(cl((u - ti - .2) * 34, 0, s.length)); pt.innerHTML = s.slice(0, n) + (n < s.length && u > ti ? '<span class="car"></span>' : ''); } });
+    if (e.tipo === 'movil') { movilVis = true; $('pant').innerHTML = pantalla(e.pant, u); }
+  });
+  /* el móvil y la placa son comunes a las escenas «movil» seguidas: entran con la primera */
+  const mv = $('movil'), pl = $('placa'), prim = ESC.find(e => e.tipo === 'movil');
+  mv.style.display = movilVis ? 'block' : 'none';
+  if (movilVis && prim) {
+    const u0 = t - prim.t0, k = oE(p(u0, .15, .8)), ult = ESC.filter(e => e.tipo === 'movil').pop(), sal = p(t, ult.t0 + ult.d - .32, .32);
+    const e = cur, u = t - e.t0; let x = 290, y = lerp(1900, 760, k), r = (1 - k) * 8, s = 1;
+    if (e.pant === 'nfc') { const a = io(p(u, .5, .9)); x = lerp(290, 470, a); y = lerp(760, 690, a); r = lerp(0, -14, a); s = lerp(1, .82, a); }
+    mv.style.transform = `translate(${x - 290}px,${y - 760}px) rotate(${r}deg) scale(${s})`; mv.style.opacity = 1 - sal;
+    const pv = e.pant === 'nfc' || e.pant === 'qr'; pl.style.display = pv ? 'block' : 'none';
+    if (pv) { const kp = oE(p(u, .1, .6)); pl.style.opacity = kp * (1 - sal); pl.style.transform = `translateY(${(1 - kp) * 120}px) rotate(-4deg)` + (e.pant === 'qr' ? ` translate(${lerp(0, 160, io(p(u, .2, .8)))}px,${lerp(0, -380, io(p(u, .2, .8)))}px) scale(${lerp(1, .5, io(p(u, .2, .8)))})` : ''); }
+    ['o1', 'o2', 'o3'].forEach((id, i) => { const o = $(id), ko = p(u, 1.2 + i * .18, 1.0); const vis = e.pant === 'nfc' && u > 1.2 + i * .18 && ko < 1; o.style.display = vis ? 'block' : 'none';
+      if (vis) { const R = 60 + 360 * oE(ko); Object.assign(o.style, { left: (285 - R) + 'px', top: (1300 - R) + 'px', width: 2 * R + 'px', height: 2 * R + 'px', opacity: 1 - ko }); } });
+  } else { pl.style.display = 'none'; ['o1', 'o2', 'o3'].forEach(id => $(id).style.display = 'none'); }
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

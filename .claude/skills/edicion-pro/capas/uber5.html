@@ -1,0 +1,180 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><link rel="stylesheet" href="kit5.css"><style>
+.ui{position:absolute;inset:0;background:#fff;color:#111;font-family:ID}
+.ui .mapa{position:absolute;left:0;right:0;top:0;height:420px;background:#eceef0}
+.ui h3{position:absolute;left:0;right:0;top:500px;text-align:center;font-weight:700;font-size:40px;letter-spacing:-1px}
+.ui p{position:absolute;left:0;right:0;top:560px;text-align:center;font-weight:500;font-size:25px;color:#6b6f76}
+.ui .estrellas{position:absolute;left:0;right:0;top:630px;justify-content:center}
+.ui .estrellas span{font-size:62px;display:inline-block}
+.ui .btn{position:absolute;left:36px;right:36px;bottom:44px;height:88px;border-radius:44px;background:#111;color:#fff;font-weight:600;font-size:30px;display:flex;align-items:center;justify-content:center}
+.fila{display:flex;align-items:center;gap:30px;width:760px;padding:34px 38px;font-family:ID}
+.fila .ic{width:120px;height:120px;flex:none}.fila .ic img{width:100%;height:100%;object-fit:contain;filter:grayscale(1) contrast(1.05)}
+.fila h4{font-weight:700;font-size:44px;letter-spacing:-1.3px;margin-bottom:10px}
+.fila small{display:block;font-weight:500;font-size:25px;color:#8a8d93;margin-bottom:6px}
+.fila .estrellas span{font-size:54px;display:inline-block}
+.medidor{position:absolute;left:190px;top:1400px;width:700px;height:30px;border-radius:15px;background:#c9c9c8;overflow:hidden}
+.medidor b{position:absolute;left:0;top:0;bottom:0;background:#232323;border-radius:15px}
+.dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:rgba(20,20,20,.28);border:4px solid rgba(255,255,255,.9)}
+.opc{position:absolute;left:0;right:0;text-align:center;font:600 64px ID;letter-spacing:-.03em;color:#3a3a3a}
+</style></head><body>
+<div id="caraF"><img></div>
+
+<div id="sVal" class="esc gris"><div class="cam"><div class="papelt"></div><div class="p3">
+  <div id="movil1" class="telefono" style="left:330px;top:640px;width:420px;height:910px"><div class="pant"><div class="isla"></div>
+    <div class="ui"><div class="mapa"><svg width="390" height="420" viewBox="0 0 470 470" fill="none" stroke="#d3d6da" stroke-width="16" stroke-linecap="round" preserveAspectRatio="none">
+      <path d="M-10 130 H480 M-10 330 H480 M120 -10 V480 M340 -10 V480"/><path id="ruta" d="M60 400 C 120 330, 120 230, 230 230 S 340 130, 400 70" stroke="#111" stroke-width="10"/></svg></div>
+      <h3>¿Qué tal tu viaje?</h3><p>Has llegado a tu destino</p>
+      <div id="st1" class="estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="btn">Enviar</div></div></div></div></div>
+  <div id="coche" class="obj" style="left:60px;top:1250px;width:300px;height:300px"><img src="obj/automobile.png"></div>
+  <div id="dedo" class="dedo"></div>
+  <div id="chipJusto" class="pill" style="left:370px;top:1620px"><i></i>justo al acabar</div>
+</div></div>
+
+<div id="sApps" class="esc gris"><div class="cam"><div class="papelt"></div><div class="p3">
+  <div id="c1" class="card fila" style="left:160px;top:720px"><div class="ic"><img src="obj/shopping_bags.png"></div><div><small>Pedido entregado</small><h4>Valora tu pedido</h4><div id="st2" class="estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>
+  <div id="c2" class="card fila" style="left:160px;top:1130px"><div class="ic"><img src="obj/house.png"></div><div><small>Hoy terminó tu estancia</small><h4>Valora tu estancia</h4><div id="st3" class="estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>
+</div></div></div>
+
+<div id="sSem" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="siete" class="cinetico" style="top:660px;font-size:460px">+<span id="num">1</span></div>
+  <div id="dias" class="opc" style="top:1170px">días</div>
+  <div id="tacheCal" class="tache" style="left:180px;width:720px;top:960px;height:22px;border-radius:11px;background:#D6453F;rotate:-12deg"></div>
+</div></div>
+
+<div id="sPQ" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="pq" class="cinetico" style="top:720px;font-size:210px">¿Por qué?</div>
+  <div id="reloj" class="obj" style="left:320px;top:900px;width:440px;height:440px"><img src="obj/stopwatch.png"></div>
+</div></div>
+
+<div id="sFresco" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="hielo" class="obj" style="left:330px;top:760px;width:420px;height:420px"><img src="obj/ice.png"></div>
+  <div id="cero" class="cinetico" style="top:700px;font-size:560px">0</div>
+  <div id="lblEsf" class="abs" style="left:190px;top:1330px;font:600 38px ID;color:#555">Esfuerzo</div>
+  <div id="med" class="medidor"><b id="barra"></b></div>
+</div></div>
+
+<div id="sCalle" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="puerta" class="obj" style="left:560px;top:900px;width:480px;height:480px"><img src="obj/door.png"></div>
+  <div id="andando" class="obj" style="left:150px;top:960px;width:420px;height:420px"><img src="obj/person_walking.png"></div>
+  <div id="bTarde" class="bocadillo" style="left:70px;top:720px;transform-origin:0 100%">¿Nos dejas una reseña?</div>
+</div></div>
+
+<div id="sPlaca" class="esc gris"><div class="cam"><div class="papelt"></div><div id="zP" class="p3" style="transform-origin:540px 1050px">
+  <div id="expo" class="obj color" style="left:580px;top:760px;width:360px;height:545px"><img src="obj/expositor-real.png"></div>
+  <div id="placa" class="obj color" style="left:110px;top:780px;width:500px;height:517px"><img src="obj/placa-real.png"></div>
+  <div id="anillo" class="anillo" style="border-color:#fff;border-width:5px"></div>
+  <div id="chipAc" class="opc" style="top:1420px">acordarse<div id="tacheAc" class="tache" style="left:390px;width:310px;top:40px;background:#D6453F"></div></div>
+  <div id="movil" class="telefono" style="left:320px;top:600px;width:440px;height:950px"><div class="pant"><div class="isla"></div><img id="pant" src="pan/pantalla-0.png">
+    <div class="demo" style="left:50%;top:80px;transform:translateX(-50%);z-index:4">Demostración</div></div></div></div>
+</div></div>
+
+<div id="delante"></div>
+<svg class="trazo" width="1080" height="1920" style="z-index:6"><path id="flecha" d="M250 1080 C 330 1220, 470 1320, 610 1360 M570 1318 L614 1362 L556 1392" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))"/></svg>
+<div id="lblPlaca" class="abs" style="left:90px;top:990px;z-index:6;font:700 64px ID;color:#fff;letter-spacing:-.03em;text-shadow:0 3px 14px rgba(0,0,0,.5)">la placa</div>
+<div id="coment" class="coment" style="top:180px"><div class="av">J</div><div class="txt" id="cTxt"></div><div class="env" id="cEnv"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M3 11 L21 3 L14 21 L11 13 Z" fill="#111"/></svg></div></div>
+<div id="vineta"></div><div id="fuga"></div><div id="estrobo"></div><div class="grano" style="z-index:9;opacity:.08"></div>
+
+<script src="kit.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit5.js"></script>
+<script>
+K.filtros();
+const TOTAL = 30.58; window.TOTAL = TOTAL;
+K.caraReal('cuf2', 917);
+const ESC = [['sVal', 1.2, 4.5, { ent: 'tinta', d: .5 }], ['sApps', 4.5, 9.6, { ent: 'latigo', d: .32 }], ['sSem', 9.6, 11.9, { ent: 'latigo', d: .32, golpes: [10.55] }],
+  ['sPQ', 11.9, 14.6, { ent: 'zoom', d: .35 }], ['sFresco', 14.6, 17.2, { ent: 'latigo', d: .32, golpes: [16.35] }],
+  ['sCalle', 19.9, 21.9, { ent: 'tinta', d: .5 }], ['sPlaca', 21.9, 27.5, { ent: 'iris', d: .4, golpes: [22.3, 26.15] }]];
+const EV = [[11.9, 'estrobo'], [17.2, 'fuga'], [21.9, 'estrobo'], [21.95, 'fuga'], [27.5, 'fuga']];
+const CARA = [[0, 1.2, [[.4, 1.08]], '50% 38%'], [17.2, 19.9, [[17.5, 1.08], [19.28, 1.12]], '50% 38%'], [27.5, 31, [[27.9, 1.05]], '78% 45%']];
+const fAco = K.W('sin que nadie tenga que acordarse', 24.29, 25.5);
+const TX = [
+  { t0: 0, t1: 1.2, y: 1150, c: 'sub', s: K.W('¿Te has', .1, .35), b: K.W('*fijado?', .4, .6), bs: 110 },
+  { t0: 1.25, t1: 2.9, y: 330, s: K.W('en que Uber te pide', 1.25, 2.0), b: K.W('la valoración', 2.05, 2.5), bs: 118 },
+  { t0: 2.97, t1: 4.5, y: 330, s: K.W('justo al', 2.97, 3.3), b: K.W('bajarte del coche', 3.35, 4.1), bs: 112 },
+  { t0: 4.6, t1: 7.1, y: 330, s: K.W('y Glovo, cuando llega', 4.62, 5.9), b: K.W('la comida', 6.0, 6.4) },
+  { t0: 7.17, t1: 9.6, y: 330, s: K.W('y Airbnb,', 7.19, 7.7), b: K.W('el día que te vas', 8.31, 9.1), bs: 118 },
+  { t0: 9.65, t1: 11.9, y: 330, s: K.W('nunca a la', 9.73, 10.3), b: K.W('semana siguiente', 10.4, 11.3), bs: 104 },
+  { t0: 12.75, t1: 14.6, y: 330, s: K.W('porque en ese momento', 12.77, 13.7), b: K.W('todavía', 13.75, 14.1) },
+  { t0: 14.62, t1: 15.9, y: 330, s: K.W('lo tienes', 14.61, 15.0), b: K.W('fresco', 15.05, 15.5) },
+  { t0: 15.92, t1: 17.2, y: 330, s: K.W('y te cuesta', 15.95, 16.4), b: [] },
+  { t0: 17.25, t1: 17.98, y: 1150, c: 'sub', s: K.W('¿Y tu', 17.3, 17.45), b: K.W('*bar?', 17.5, 17.66) },
+  { t0: 18.0, t1: 19.26, y: 1180, c: 'sub', s: K.W('¿cuándo pide la reseña?', 18.01, 19.0), b: [] },
+  { t0: 19.27, t1: 19.9, y: 1140, c: 'sub', s: [], b: [['Nunca.', 19.28, 'rojo']], bs: 140 },
+  { t0: 19.95, t1: 21.9, y: 330, s: K.W('o cuando el cliente', 20.17, 20.8), b: K.W('está en la calle', 20.85, 21.4), bs: 118 },
+  { t0: 21.95, t1: 24.2, y: 330, s: K.W('con esto la pides en el', 22.01, 23.0), b: K.W('momento exacto', 23.05, 23.9), bs: 118 },
+  { t0: 24.29, t1: 25.85, y: 330, s: fAco, b: [] },
+  { t0: 25.88, t1: 27.5, y: 330, s: K.W('acercan el móvil', 25.9, 26.6), b: K.W('y listo', 26.7, 27.0) },
+  { t0: 27.55, t1: 28.55, y: 260, c: 'sub', s: K.W('esto es', 27.63, 27.85), b: [['PLEA5E', 27.9]], bs: 110 },
+  { t0: 28.6, t1: TOTAL + 1, y: 260, c: 'sub', s: K.W('y si te interesa,', 28.67, 29.3), b: K.W('comenta *PLACA', 29.35, 29.9), bs: 100 },
+];
+K.textos2(TX); TX.forEach(B => $('delante').appendChild(B.el));
+TX.forEach(B => B.el.querySelectorAll('.b .w').forEach(w => { if (w.textContent === 'PLEA5E') w.querySelectorAll('.l')[4].style.color = '#F4CE57'; }));
+const estrellas = (el, t, t0, d = .5) => el.querySelectorAll('span').forEach((s, i) => { const u = t0 + i * d / 5; s.classList.toggle('on', t >= u); s.style.transform = `scale(${t >= u ? 1 + .5 * (1 - muelle(t, u, 3, .4)) : 1})`; });
+
+window.render = async t => {
+  K.escenas5(ESC, t); K.efectos(t, EV);
+  TX.forEach(B => K.texto(B, t));
+  const cs = CARA.find(([a, b]) => t >= a && t < b + .6);
+  const tapada = ESC.some(([, a, b, o = {}]) => t >= a + (o.d || .4) && t < b);
+  $('caraF').style.display = cs && !tapada ? 'block' : 'none';
+  if (cs) K.caraZoom(t, cs[0], cs[1], cs[2], cs[3]);
+  if ($('caraF').style.display === 'block') await K.caraRealFrame(t);
+  const cm = $('coment'), conC = false;
+
+  if (t >= 1.2 && t < 4.9) {
+    const k = muelle(t, 1.25, 1.5, .62), m1 = $('movil1');
+    m1.style.opacity = 1; m1.style.transform = `translateY(${(1 - k) * 300}px) rotateY(${(1 - k) * 32 - 6}deg) rotateX(${(1 - k) * 14 + 5}deg)` + flota(t, 0, 5);
+    traza($('ruta'), t, 1.3, 1.0);
+    entra($('coche'), t, 1.45, { x: -300, y: 0, s: 1, blur: 20 });
+    E.cursor($('dedo'), t, [[1.95, 980, 1700], [2.35, 690, 1245]], [2.4]); $('dedo').style.opacity = t < 1.95 ? 0 : 1 - p(t, 2.7, .2);
+    estrellas($('st1'), t, 2.45, .45); K.pop($('chipJusto'), t, 3.35);
+  }
+  if (t >= 4.5 && t < 9.95) {
+    const flip = (el, t0) => { const k = muelle(t, t0, 1.8, .55); el.style.opacity = t < t0 ? 0 : Math.min(1, p(t, t0, .15) * 1.5); return `rotateX(${(1 - k) * -80 + 8}deg) rotateY(-8deg) translateY(${(1 - k) * 60}px)`; };
+    const ret = ease.inOut(p(t, 7.1, .4));
+    $('c1').style.transform = flip($('c1'), 4.62) + ` translateY(${-ret * 40}px) scale(${1 - ret * .05})`; $('c2').style.transform = flip($('c2'), 7.19);
+    estrellas($('st2'), t, 5.9, .5); estrellas($('st3'), t, 8.5, .5);
+  }
+  if (t >= 9.6 && t < 12.3) {
+    K.gira($('siete'), t, 9.7, { ry: -24, rx: 8, desde: 70 });
+    const d = Math.max(1, Math.min(7, 1 + Math.floor((t - 9.8) / .09))); $('num').textContent = d;
+    entra($('dias'), t, 9.9, { y: 30 }); K.tache($('tacheCal'), t, 10.55);
+  }
+  if (t >= 11.9 && t < 15) {
+    K.gira($('pq'), t, 11.96, { ry: -20, rx: 6, desde: 60 });
+    const f = ease.inCubic(p(t, 12.6, .22)); $('pq').style.transform += ` translateY(${-f * 500}px)`; $('pq').style.opacity *= 1 - f;
+    entra($('reloj'), t, 12.8, { y: 80, s: .85, tipo: 'muelle', f: 1.8, z: .6 }); $('reloj').style.transform += ` rotate(${Math.sin(t * 2) * 3}deg)`;
+  }
+  if (t >= 14.6 && t < 17.6) {
+    entra($('hielo'), t, 14.7, { y: 80, s: .85, tipo: 'muelle', f: 1.8, z: .6 }); $('hielo').style.opacity = t < 14.7 ? 0 : 1 - p(t, 16.0, .15);
+    entra($('lblEsf'), t, 14.8, { y: 20 }); entra($('med'), t, 14.85, { y: 20, s: 1 });
+    $('barra').style.width = (86 * (1 - ease.outExpo(p(t, 16.0, .45)))) + '%';
+    K.gira($('cero'), t, 16.2, { ry: -30, rx: 10, desde: 80 });
+  }
+  if (t >= 19.9 && t < 22.3) {
+    entra($('puerta'), t, 20.0, { y: 60, s: .9 });
+    const k = ease.inOut(p(t, 20.3, .95)); entra($('andando'), t, 20.05, { x: -200, y: 0, s: 1 });
+    $('andando').style.transform += ` translateX(${k * 560}px) translateY(${-Math.abs(Math.sin(k * Math.PI * 5)) * 14}px)`; if (t > 21.2) $('andando').style.opacity = 0;
+    K.pop($('bTarde'), t, 21.2, { x: -120, y: 0, s: .7 });
+    const def = p(t, 21.45, .3); $('bTarde').style.transform += ` scale(${1 - .18 * def})`; $('bTarde').style.opacity = t < 21.2 ? 0 : 1 - .55 * def;
+  }
+  if (t >= 21.9 && t < 27.9) {
+    const baja = ease.inOut(p(t, 26.4, .45));
+    [['placa', 22.3, -50], ['expo', 22.6, 40]].forEach(([id, t0, ry]) => { const k = muelle(t, t0, 1.5, .6), el = $(id); el.style.opacity = t < t0 ? 0 : 1;
+      el.style.transform = `perspective(1600px) translateY(${(1 - Math.min(k, 1.05)) * -260}px) rotateY(${(1 - k) * ry + Math.sin(t * .8 + t0) * 3}deg) rotateX(${(1 - k) * 20 + 5}deg)`; });
+    $('placa').style.transform += ` translate(${-baja * 40}px,${baja * 460}px) scale(${1 - baja * .5})`; $('expo').style.opacity *= 1 - baja;
+    entra($('chipAc'), t, 24.9, { y: 30 }); K.tache($('tacheAc'), t, 25.3); $('chipAc').style.opacity = t < 24.9 ? 0 : 1 - p(t, 25.8, .2);
+    const zk = ease.outCubic(p(t, 26.05, .2)) * (1 - ease.inOut(p(t, 26.4, .4))); $('zP').style.transform = `scale(${1 + .1 * zk})`;
+    const mpos = u => { const k1 = ease.inOut(p(u, 25.88, .5)), k2 = ease.inOut(p(u, 26.4, .4)); return [760 + (-40 - 760) * k1 + 40 * k2, 560 + (-10 - 560) * k1 + 10 * k2]; };
+    const k1 = ease.inOut(p(t, 25.88, .5)), k2 = ease.inOut(p(t, 26.4, .4));
+    $('movil').style.opacity = t >= 25.88 ? 1 : 0;
+    K.mueve($('movil'), t, mpos, ` perspective(1600px) rotateY(${(1 - k2) * -18}deg) scale(${(.6 + .4 * k2) * golpe(t, 26.15, .05)}) rotate(${-10 * k1 * (1 - k2) + 14 * (1 - k1)}deg)`);
+    K.anillo($('anillo'), t, 26.15, 300, 1080); K.pantalla($('pant'), t, 26.7, .6);
+  }
+  K.garabato($('flecha'), t, 28.0, 29.2, .35); $('lblPlaca').style.opacity = t >= 28.1 && t < 29.2 ? 1 : 0;
+  if (t >= 28.1 && t < 29.2) entra($('lblPlaca'), t, 28.1, { y: 20, s: .8 });
+  if (conC) { K.pop(cm, t, 29.2, { y: -60, s: .85 });
+    const tx = teclea('PLACA', t, 29.4, 11); $('cTxt').innerHTML = tx ? tx + (t < 30.0 && (t * 3 | 0) % 2 ? '' : '<span class="cur"></span>') : '<i>Añade un comentario…</i>';
+    $('cEnv').style.transform = `scale(${golpe(t, 30.05, .25)})`; $('cEnv').style.background = t >= 30.05 ? '#E9BC46' : '#d6d6d6';
+  } else cm.style.opacity = 0;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

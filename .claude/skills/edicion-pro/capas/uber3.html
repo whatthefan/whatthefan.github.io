@@ -1,0 +1,228 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><link rel="stylesheet" href="kit3.css"><style>
+.suelo{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#dedcd6,#cfccc5)}
+.ui{position:absolute;inset:0;background:#fff;font-family:Inter;color:#111}
+.ui .mapa{position:absolute;left:0;right:0;top:0;height:470px;background:#eceef0}
+.ui h3{position:absolute;left:0;right:0;top:560px;text-align:center;font-weight:800;font-size:46px;letter-spacing:-1.4px}
+.ui p{position:absolute;left:0;right:0;top:630px;text-align:center;font-weight:500;font-size:28px;color:#6b6f76}
+.ui .estrellas{position:absolute;left:0;right:0;top:710px;justify-content:center}
+.ui .estrellas span{font-size:70px;display:inline-block}
+.ui .btn{position:absolute;left:40px;right:40px;bottom:50px;height:96px;border-radius:48px;background:#111;color:#fff;font-weight:700;font-size:34px;display:flex;align-items:center;justify-content:center}
+.fila{display:flex;align-items:center;gap:32px;width:780px;padding:36px 40px;transform-origin:50% 0}
+.ico{flex:none;width:120px;height:120px;border-radius:30px;background:#efefed;display:flex;align-items:center;justify-content:center}
+.fila h4{font-weight:800;font-size:46px;letter-spacing:-1.4px;margin-bottom:12px}
+.fila .estrellas span{font-size:56px;display:inline-block}
+.fila small{display:block;font-weight:600;font-size:26px;color:#8a8d93;margin-bottom:6px}
+.grande{height:110px;border-radius:56px;font-size:50px;padding:0 44px}
+.medidor{position:absolute;left:190px;top:1280px;width:700px;height:34px;border-radius:17px;background:#d4d3cf;overflow:hidden}
+.medidor b{position:absolute;left:0;top:0;bottom:0;background:#111;border-radius:17px}
+.dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:rgba(20,20,20,.28);border:4px solid rgba(255,255,255,.9);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.persp{perspective:1600px}
+</style></head><body>
+<div id="fondo" class="papel"><div class="grano"></div></div>
+<div class="marcaTop" id="marcaTop">PLEA<b>5</b>E.es</div>
+<div id="detras"></div>
+<div id="persona"><img></div>
+
+<!-- 1 · valoración justo al bajarte -->
+<div id="sVal" class="esc papel"><div class="cam persp">
+  <div id="movil1" class="telefono" style="left:290px;top:560px;width:500px;height:1080px"><div class="pant"><div class="isla"></div>
+    <div class="ui"><div class="mapa"><svg width="470" height="470" viewBox="0 0 470 470" fill="none" stroke="#d3d6da" stroke-width="16" stroke-linecap="round">
+      <path d="M-10 130 H480 M-10 330 H480 M120 -10 V480 M340 -10 V480"/><path id="ruta" d="M60 400 C 120 330, 120 230, 230 230 S 340 130, 400 70" stroke="#111" stroke-width="10"/></svg>
+      <svg id="coche" class="abs" viewBox="0 0 100 60" style="left:0;top:0;width:80px;height:48px"><rect x="6" y="18" width="88" height="28" rx="10" fill="#111"/><path d="M22 18 L32 4 H68 L78 18Z" fill="#111"/><circle cx="26" cy="48" r="9" fill="#E9BC46"/><circle cx="74" cy="48" r="9" fill="#E9BC46"/></svg></div>
+      <h3>¿Qué tal tu viaje?</h3><p>Has llegado a tu destino</p>
+      <div id="st1" class="estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div class="btn">Enviar</div></div></div></div>
+  <div id="dedo" class="dedo"></div><div id="ch1"></div>
+  <div id="chipJusto" class="pill" style="left:330px;top:1690px"><i></i>justo al acabar</div>
+</div><div class="grano"></div></div>
+
+<!-- 2 · apps -->
+<div id="sApps" class="esc papel"><div class="cam persp">
+  <div id="c1" class="card fila" style="left:150px;top:720px"><div class="ico"><svg viewBox="0 0 60 60" width="70" height="70" fill="none" stroke="#111" stroke-width="4.5" stroke-linejoin="round"><path d="M12 20 H48 L45 52 H15 Z"/><path d="M22 20 V15 A8 8 0 0 1 38 15 V20"/></svg></div>
+    <div><small>Pedido entregado</small><h4>Valora tu pedido</h4><div id="st2" class="estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>
+  <div id="c2" class="card fila" style="left:150px;top:1120px"><div class="ico"><svg viewBox="0 0 60 60" width="70" height="70" fill="none" stroke="#111" stroke-width="4.5" stroke-linejoin="round"><path d="M10 28 L30 11 L50 28 V51 H10 Z"/><path d="M25 51 V37 H35 V51" stroke="#D39B16"/></svg></div>
+    <div><small>Hoy terminó tu estancia</small><h4>Valora tu estancia</h4><div id="st3" class="estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div></div></div>
+  <div id="ch2"></div>
+</div><div class="grano"></div></div>
+
+<!-- 3 · semana -->
+<div id="sSem" class="esc oscuro"><div class="cam">
+  <div id="cal" class="card os" style="left:290px;top:760px;width:500px;height:520px;padding:0;overflow:hidden;text-align:center">
+    <div style="height:120px;background:#E9BC46;color:#1a1204;font-weight:800;font-size:40px;letter-spacing:-1px;line-height:120px">Una semana después</div>
+    <div id="num" style="font-weight:800;font-size:190px;letter-spacing:-9px;line-height:1;margin-top:60px">+1</div>
+    <div id="dias" style="font-weight:700;font-size:40px;color:rgba(255,255,255,.6);margin-top:18px">día</div>
+    <div id="tacheCal" class="tache" style="left:-40px;width:580px;top:250px;height:16px;border-radius:8px;rotate:-14deg"></div></div>
+</div><div class="grano"></div></div>
+
+<!-- 4 · fresco -->
+<div id="sFresco" class="esc papel"><div class="cam">
+  <div id="cero" class="abs" style="left:0;right:0;top:640px;text-align:center;font-weight:800;font-size:520px;letter-spacing:-20px;line-height:1;color:#D39B16">0</div>
+  <div id="lblEsf" class="abs" style="left:190px;top:1200px;font-weight:700;font-size:38px;color:#555;letter-spacing:-.6px">Esfuerzo</div>
+  <div id="med" class="medidor"><b id="barra"></b></div><div id="ch4"></div>
+</div><div class="grano"></div></div>
+
+<!-- 5 · calle -->
+<div id="sCalle" class="esc papel"><div class="cam">
+  <div class="suelo" style="top:1560px"></div>
+  <svg class="abs" style="left:0;top:0" width="1080" height="1920" fill="none" stroke="#141414" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="puerta" d="M770 1560 V720 H1000 V1560"/><path id="suelo2" d="M40 1560 H1040"/></svg>
+  <div id="hoja" class="abs" style="left:774px;top:724px;width:222px;height:832px;background:#dcdad4;border:6px solid #141414;border-radius:4px;transform-origin:100% 50%"></div>
+  <div id="pjCli" class="pj" style="left:260px;top:840px;width:370px;height:733px"><img src="cast/cliente-pie-Calm.svg"></div>
+  <div id="bTarde" class="bocadillo" style="left:60px;top:760px;transform-origin:0 100%">¿Nos dejas una reseña?</div>
+</div><div class="grano"></div></div>
+
+<!-- 6 · placa -->
+<div id="sPlaca" class="esc papel"><div class="cam"><div id="zP" class="abs" style="inset:0;transform-origin:520px 1110px">
+  <div class="suelo" style="top:1340px"></div>
+  <svg class="abs" style="left:0;top:0" width="1080" height="1920"><path id="mesa" d="M60 1340 H1020" stroke="#141414" stroke-width="7" stroke-linecap="round" fill="none"/></svg>
+  <div id="placa" class="abs sombra" style="left:310px;top:880px;width:460px;height:460px;transform-origin:50% 100%"><img src="w-placa.png" style="width:100%;height:100%"></div>
+  <div id="polvo"></div>
+  <div id="chipAc" class="pill claro grande" style="left:335px;top:1470px">Acordarse<div id="tacheAc" class="tache" style="left:26px;right:26px;top:50px"></div></div>
+  <div id="anillo" class="anillo"></div>
+  <div id="movil" class="telefono" style="left:290px;top:560px;width:500px;height:1080px"><div class="pant"><div class="isla"></div><img id="pant" src="pan/pantalla-0.png"><div class="demo" style="left:50%;top:84px;transform:translateX(-50%);z-index:4">Demostración</div></div></div>
+  <div id="ch6"></div>
+</div></div><div class="grano"></div></div>
+
+<div id="delante"></div>
+<div id="pegPQ" class="pegatina oro" style="left:250px;top:1330px">¿Por qué?</div>
+<div id="pegNunca" class="pegatina roja" style="left:300px;top:1360px;font-size:150px">Nunca.</div>
+<svg class="trazo" width="1080" height="1920"><path id="flecha" d="M170 1130 C 260 1300, 420 1400, 560 1440 M520 1395 L566 1442 L505 1468" fill="none" stroke="#E9BC46" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div id="lblPlaca" class="abs" style="left:24px;top:1030px;z-index:6;font:italic 400 76px IS;color:#D39B16;transform:rotate(-8deg)">la placa</div>
+<div id="coment" class="coment" style="top:150px"><div class="av">J</div><div class="txt" id="cTxt"></div><div class="env" id="cEnv"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M3 11 L21 3 L14 21 L11 13 Z" fill="#111"/></svg></div></div>
+<div id="flash"></div>
+
+<script src="kit.js"></script><script src="kit2.js"></script><script src="kit3.js"></script>
+<script>
+K.filtros();
+const TOTAL = 30.58; window.TOTAL = TOTAL;
+K.persona('pu', 917);
+const ESC = [['sVal', 1.2, 4.5, {}], ['sApps', 4.5, 9.6, {}], ['sSem', 9.6, 11.9, { golpes: [10.55] }], ['sFresco', 14.6, 17.2, { golpes: [16.35] }], ['sCalle', 19.9, 21.9, { golpes: [21.25] }],
+  ['sPlaca', 21.9, 27.5, { golpes: [22.3, 26.15] }]];
+const FLASH = [1.2, 21.9];
+const GOLPES_CARA = [[11.96, .06], [17.5, .04], [19.28, .09], [27.9, .04]];
+const fAco = K.W('sin que nadie tenga que acordarse', 24.29, 25.5);
+const TX = [
+  { t0: 0, t1: 1.2, y: 480, s: K.W('¿Te has', .1, .35), b: [] },
+  { t0: 0, t1: 1.2, y: 590, capa: 'detras', s: [], b: K.W('*fijado?', .4, .6), bs: 330 },
+  { t0: 1.22, t1: 2.9, y: 250, s: K.W('en que Uber te pide', 1.2, 2.0), b: K.W('la *valoración', 2.05, 2.5) },
+  { t0: 2.97, t1: 4.5, y: 250, s: K.W('justo al', 2.97, 3.3), b: K.W('*bajarte del coche', 3.35, 4.1) },
+  { t0: 4.6, t1: 7.1, y: 250, s: K.W('y Glovo, cuando llega', 4.62, 5.9), b: K.W('la *comida', 6.0, 6.4) },
+  { t0: 7.17, t1: 9.6, y: 250, s: K.W('y Airbnb,', 7.19, 7.7), b: K.W('el día que te *vas', 8.31, 9.1) },
+  { t0: 9.65, t1: 11.9, y: 330, c: 'claro', s: K.W('nunca a la', 9.73, 10.3), b: K.W('semana siguiente', 10.4, 11.3) },
+  
+  { t0: 12.75, t1: 14.6, y: 500, s: K.W('porque en ese momento', 12.77, 13.7), b: [] },
+  { t0: 12.75, t1: 14.6, y: 610, capa: 'detras', s: [], b: K.W('*todavía', 13.75, 14.1), bs: 280 },
+  { t0: 14.62, t1: 15.9, y: 300, s: K.W('lo tienes', 14.61, 15.0), b: K.W('*fresco', 15.05, 15.5) },
+  { t0: 15.92, t1: 17.2, y: 300, s: K.W('y te cuesta', 15.95, 16.4), b: K.W('*cero', 16.45, 16.8) },
+  { t0: 17.25, t1: 17.98, y: 470, s: K.W('¿Y tu', 17.3, 17.45), b: [] },
+  { t0: 17.25, t1: 17.98, y: 580, capa: 'detras', s: [], b: K.W('*bar?', 17.5, 17.66), bs: 380 },
+  { t0: 18.0, t1: 19.9, y: 480, s: K.W('¿cuándo pide', 18.01, 18.4), b: [] },
+  { t0: 18.0, t1: 19.9, y: 590, capa: 'detras', s: [], b: K.W('la *reseña?', 18.45, 19.0), bs: 260 },
+  { t0: 19.95, t1: 21.9, y: 250, s: K.W('o cuando el cliente', 20.17, 20.8), b: K.W('está en la *calle', 20.85, 21.4) },
+  { t0: 21.95, t1: 24.2, y: 250, s: K.W('con esto la pides en el', 22.01, 23.0), b: K.W('momento *exacto', 23.05, 23.9) },
+  { t0: 24.29, t1: 25.85, y: 250, s: fAco.slice(0, 5), b: fAco.slice(5) },
+  { t0: 25.88, t1: 27.5, y: 250, s: K.W('acercan el móvil', 25.9, 26.6), b: K.W('y *listo', 26.7, 27.0) },
+  { t0: 27.55, t1: 28.55, y: 490, s: K.W('esto es', 27.63, 27.85), b: [] },
+  { t0: 27.55, t1: 28.55, y: 600, capa: 'detras', s: [], b: [['PLEA5E', 27.9]], bs: 300 },
+  { t0: 28.6, t1: TOTAL + 1, y: 330, s: K.W('y si te interesa,', 28.67, 29.3), b: [] },
+  { t0: 28.6, t1: TOTAL + 1, y: 420, capa: 'detras', s: [], b: K.W('comenta *PLACA', 29.35, 29.9), bs: 240 },
+];
+K.textos2(TX); K.capas(TX);
+// «5» en oro dentro de PLEA5E
+TX.forEach(B => B.el.querySelectorAll('.b .w').forEach(w => { if (w.textContent === 'PLEA5E') w.querySelectorAll('.l')[4].style.color = '#D39B16'; }));
+const estrellas = (el, t, t0, d = .5) => el.querySelectorAll('span').forEach((s, i) => { const u = t0 + i * d / 5; s.classList.toggle('on', t >= u); s.style.transform = `scale(${t >= u ? 1 + .5 * (1 - muelle(t, u, 3, .4)) : 1})`; });
+
+window.render = async t => {
+  K.escenas2(ESC, t);
+  TX.forEach(B => K.texto2(B, t));
+  $('flash').style.opacity = Math.max(...FLASH.map(f => K.destello(t, f)));
+  const cara = K.caraPinta(t, ESC, TOTAL, GOLPES_CARA);
+  if (cara) await K.caraFrame(t);
+  K.pegatina($('pegPQ'), t, 11.96, 12.75, -7); K.pegatina($('pegNunca'), t, 19.28, 19.9, 5);
+  K.garabato($('flecha'), t, 28.0, 29.2, .35); $('lblPlaca').style.opacity = t >= 28.1 && t < 29.2 ? 1 : 0;
+  if (t >= 28.1 && t < 29.2) entra($('lblPlaca'), t, 28.1, { y: 20, s: .8 }), $('lblPlaca').style.transform += ' rotate(-8deg)';
+  const cm = $('coment'), conC = t >= 29.2;
+  $('marcaTop').style.opacity = cara && !conC ? 1 : 0;
+
+  // 1 · valoración — el móvil gira hacia ti en 3D, el coche llega, el dedo toca la 5.ª estrella
+  if (t >= 1.2 && t < 4.5) {
+    const k = muelle(t, 1.22, 1.6, .62); const m1 = $('movil1');
+    m1.style.opacity = Math.min(1, p(t, 1.2, .2) * 1.5);
+    m1.style.transform = `translateY(${(1 - k) * 380}px) rotateY(${(1 - k) * 34}deg) rotateX(${(1 - k) * 14}deg)` + flota(t, 0, 5);
+    const r = $('ruta'), L = r.getTotalLength(), kk = ease.inOut(p(t, 1.3, 1.0)), a = r.getPointAtLength(L * kk), b = r.getPointAtLength(Math.min(L, L * kk + 3));
+    traza(r, t, 1.3, 1.0);
+    $('coche').style.transform = `translate(${a.x - 40}px,${a.y - 24}px) rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI}deg)`;
+    E.cursor($('dedo'), t, [[1.95, 980, 1700], [2.35, 708, 1300]], [2.4]);
+    $('dedo').style.opacity = t < 1.95 ? 0 : 1 - p(t, 2.7, .2);
+    estrellas($('st1'), t, 2.45, .45);
+    K.chispas($('ch1'), t, 2.95, { x: 540, y: 1300, n: 14, v: 560 });
+    K.pop($('chipJusto'), t, 3.35);
+  }
+  // 2 · apps — tarjetas que se abaten en 3D; la primera se retira al llegar la segunda
+  if (t >= 4.5 && t < 9.6) {
+    const flip = (el, t0) => { const k = muelle(t, t0, 1.8, .55); el.style.opacity = t < t0 ? 0 : Math.min(1, p(t, t0, .15) * 1.5); return `rotateX(${(1 - k) * -85}deg) translateY(${(1 - k) * 60}px)`; };
+    const ret = ease.inOut(p(t, 7.1, .4));
+    $('c1').style.transform = flip($('c1'), 4.62) + ` translateY(${-ret * 60}px) scale(${1 - ret * .06})`; $('c1').style.filter = `brightness(${1 - ret * .08})`;
+    $('c2').style.transform = flip($('c2'), 7.19);
+    estrellas($('st2'), t, 5.9, .5); estrellas($('st3'), t, 8.5, .5);
+    K.chispas($('ch2'), t, 6.4, { x: 700, y: 880, n: 10, v: 420 }); K.chispas($('ch2'), t, 9.0, { x: 700, y: 1280, n: 10, v: 420 });
+  }
+  // 3 · semana — el contador sube día a día, se tacha, tiembla y se cae
+  if (t >= 9.6 && t < 11.9) {
+    K.pop($('cal'), t, 9.65, { y: 60, s: .88 });
+    const d = Math.max(1, Math.min(7, 1 + Math.floor((t - 9.8) / .09)));
+    $('num').textContent = '+' + d; $('dias').textContent = d > 1 ? 'días' : 'día';
+    $('num').style.transform = `scale(${golpe(t, 9.8 + (d - 1) * .09, .08)})`;
+    K.tache($('tacheCal'), t, 10.55);
+    const cae = ease.inCubic(p(t, 11.25, .5));
+    $('cal').style.transform += ` rotate(${-3 + cae * 40}deg) translateY(${cae * 1200}px)` + flota(t, 1, 5);
+    $('cal').style.opacity = t < 9.65 ? 0 : 1 - .3 * p(t, 10.65, .2);
+  }
+  // 4 · fresco — el esfuerzo se vacía y el 0 cae con golpe
+  if (t >= 14.6 && t < 17.2) {
+    entra($('lblEsf'), t, 14.7, { y: 20 }); entra($('med'), t, 14.75, { y: 20, s: 1 });
+    const cae = ease.outExpo(p(t, 16.0, .45)); $('barra').style.width = (86 * (1 - cae)) + '%';
+    const k0 = ease.inCubic(p(t, 16.1, .25)); $('cero').style.opacity = t < 16.1 ? 0 : Math.min(1, k0 * 2);
+    $('cero').style.transform = t < 16.35 ? `scale(${3 - 2 * k0})` : `scale(${golpe(t, 16.35, .08)})`;
+    $('cero').style.filter = t < 16.35 ? `blur(${(1 - k0) * 20}px)` : '';
+    K.chispas($('ch4'), t, 16.35, { x: 540, y: 900, n: 18, v: 800 });
+  }
+  // 5 · calle — el cliente sale, la puerta se cierra, la petición llega tarde y se desinfla
+  if (t >= 19.9 && t < 21.9) {
+    traza($('suelo2'), t, 19.92, .3); traza($('puerta'), t, 20.0, .45);
+    const k = ease.inOut(p(t, 20.3, 1.0));
+    $('pjCli').style.opacity = t < 21.25 ? 1 : 0;
+    $('pjCli').style.transform = `translateX(${k * 620}px) translateY(${-Math.abs(Math.sin(k * Math.PI * 5)) * 16}px) rotate(${Math.sin(k * Math.PI * 5) * 2}deg)`;
+    const ci = t < 21.1 ? .12 : .12 + .88 * ease.outExpo(p(t, 21.1, .15)); $('hoja').style.transform = `scaleX(${ci})`; $('hoja').style.opacity = t >= 20.3 ? 1 : 0;
+    K.pop($('bTarde'), t, 21.2, { x: -120, y: 0, s: .7 });
+    const def = p(t, 21.45, .3); $('bTarde').style.transform += ` scale(${1 - .18 * def}) rotate(${def * -4}deg)`; $('bTarde').style.opacity = t < 21.2 ? 0 : 1 - .55 * def;
+  }
+  // 6 · placa — cae con estela y polvo; «Acordarse» dice que no, se tacha y sale volando; el móvil toca y se abre la reseña
+  if (t >= 21.9 && t < 27.5) {
+    traza($('mesa'), t, 21.92, .35);
+    const sq = t >= 22.3 ? 1 - muelle(t, 22.3, 3, .4) : 0, baja = ease.inCubic(p(t, 26.4, .35));
+    $('placa').style.opacity = t < 22.0 ? 0 : 1 - .75 * baja;
+    K.mueve($('placa'), t, u => [0, -(1 - p(u, 22.0, .3) ** 2) * 700 + ease.inCubic(p(u, 26.4, .35)) * 80], ` scale(${1 + .06 * sq},${1 - .12 * sq})`);
+    K.chispas($('polvo'), t, 22.3, { x: 540, y: 1335, n: 12, v: 420, clase: 'polvo', g: -300, d: .55 });
+    K.pop($('chipAc'), t, 24.5);
+    const no = t > 24.95 && t < 25.3 ? Math.sin((t - 24.95) * 45) * 14 : 0, vu = ease.inCubic(p(t, 25.6, .35));
+    $('chipAc').style.transform += ` translate(${no - vu * 700}px,${-vu * 900}px) rotate(${-vu * 50}deg)`;
+    K.tache($('tacheAc'), t, 25.3); $('chipAc').style.opacity = t < 24.5 ? 0 : 1 - vu;
+    const zk = ease.outCubic(p(t, 26.05, .2)) * (1 - ease.inOut(p(t, 26.4, .4))); $('zP').style.transform = `scale(${1 + .13 * zk})`;
+    const mpos = u => { const k1 = ease.inOut(p(u, 25.88, .5)), k2 = ease.inOut(p(u, 26.4, .4)); return [760 + (60 - 760) * k1 + (0 - 60) * k2, 520 + (-40 - 520) * k1 + 60 * k2]; };
+    const k1 = ease.inOut(p(t, 25.88, .5)), k2 = ease.inOut(p(t, 26.4, .4));
+    $('movil').style.opacity = t >= 25.88 ? 1 : 0;
+    K.mueve($('movil'), t, mpos, ` scale(${(.62 + .38 * k2) * golpe(t, 26.15, .05)}) rotate(${-10 * k1 * (1 - k2) + 14 * (1 - k1)}deg)`);
+    K.anillo($('anillo'), t, 26.15, 520, 1110);
+    K.pantalla($('pant'), t, 26.7, .6);
+    K.chispas($('ch6'), t, 27.3, { x: 540, y: 760, n: 18, v: 620 });
+  }
+  // cierre — comentario «PLACA» arriba (la placa real queda libre en la tarjeta)
+  if (conC) { K.pop(cm, t, 29.2, { y: -60, s: .85 });
+    const tx = teclea('PLACA', t, 29.4, 11); $('cTxt').innerHTML = tx ? tx + (t < 30.0 && (t * 3 | 0) % 2 ? '' : '<span class="cur"></span>') : '<i>Añade un comentario…</i>';
+    $('cEnv').style.transform = `scale(${golpe(t, 30.05, .25)})`; $('cEnv').style.background = t >= 30.05 ? '#E9BC46' : '#d6d6d6';
+  } else cm.style.opacity = 0;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

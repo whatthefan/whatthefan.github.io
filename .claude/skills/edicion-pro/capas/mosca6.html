@@ -1,0 +1,139 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><link rel="stylesheet" href="kit6.css"></head><body>
+<!-- cara real con texto detrás -->
+<div id="cara"><div class="zoom" id="caraZoom"><img id="caraBlur" class="cover"><img id="caraFondo"><div id="detras"></div><img id="caraPersona"></div></div>
+
+<!-- S1 título: URINARIOS (línea blanca: urinario + mosca) -->
+<div id="sTit" class="capa"><div class="negro"></div>
+  <svg class="linea" width="1080" height="1920" style="opacity:.9"><g transform="translate(270 820) scale(.95)">
+    <path id="u1" d="M270 0 H430 Q480 0 480 60 V390 Q480 610 305 660 H235 Q60 610 60 390 V60 Q60 0 110 0 Z"/>
+    <path id="u2" d="M125 120 Q270 80 415 120 V380 Q415 560 270 590 Q125 560 125 380 Z" style="stroke-width:5;opacity:.6"/></g></svg>
+  <svg id="mosca1" class="abs" viewBox="-50 -50 100 100" style="left:0;top:0;width:90px;height:90px"><g fill="#fff"><ellipse rx="11" ry="17" cy="6"/><circle cy="-14" r="8"/></g>
+    <g fill="none" stroke="#fff" stroke-width="3"><ellipse cx="-17" cy="-4" rx="17" ry="8" transform="rotate(-25)"/><ellipse cx="17" cy="-4" rx="17" ry="8" transform="rotate(25)"/></g></svg>
+</div>
+
+<!-- S2 limpios: azulejos en línea, manchas que se borran con un barrido de luz -->
+<div id="sLimpio" class="capa"><div class="negro"></div>
+  <div id="azulejos" class="abs" style="left:140px;top:720px;width:800px;height:760px;border-radius:30px;border:6px solid rgba(255,255,255,.85);
+    background-image:linear-gradient(rgba(255,255,255,.35) 3px,transparent 3px),linear-gradient(90deg,rgba(255,255,255,.35) 3px,transparent 3px);background-size:133px 127px"></div>
+  <div id="manchas"></div><div id="barrido" class="abs" style="top:600px;width:220px;height:1000px;background:linear-gradient(90deg,transparent,rgba(255,240,200,.9),transparent);filter:blur(10px)"></div>
+</div>
+
+<!-- S3 diana en PiP -->
+<div id="sDiana" class="capa"><div class="negro"></div>
+  <div class="pip" style="background:#141414"><svg class="linea" width="940" height="1120"><g transform="translate(470 620)">
+    <circle id="d1" r="330"/><circle id="d2" r="220"/><circle id="d3" r="110" style="stroke:#F2C230;stroke-width:10"/><circle id="onda" r="110" style="stroke:#F2C230;stroke-width:6"/></g></svg>
+    <svg id="mosca2" class="abs" viewBox="-50 -50 100 100" style="left:0;top:0;width:110px;height:110px"><g fill="#fff"><ellipse rx="11" ry="17" cy="6"/><circle cy="-14" r="8"/></g>
+      <g fill="none" stroke="#fff" stroke-width="3"><ellipse cx="-17" cy="-4" rx="17" ry="8" transform="rotate(-25)"/><ellipse cx="17" cy="-4" rx="17" ry="8" transform="rotate(25)"/></g></svg></div>
+</div>
+
+<!-- S4 título NUDGE -->
+<div id="sNudge" class="capa"><div class="negro"></div></div>
+
+<!-- S5 insistir: burbujas tachadas -->
+<div id="sIns" class="capa"><div class="negro"></div>
+  <div id="b1" class="burbuja" style="left:120px;top:820px">¿Me dejas una reseña?<div id="t1" class="tache" style="left:24px;right:24px;top:48%"></div></div>
+  <div id="b2" class="burbuja" style="left:420px;top:1020px">¿Porfa?<div id="t2" class="tache" style="left:24px;right:24px;top:48%"></div></div>
+  <div id="b3" class="burbuja" style="left:300px;top:1200px">¿Porfaaa?<div id="t3" class="tache" style="left:24px;right:24px;top:48%"></div></div>
+</div>
+
+<!-- S6 ¡pum! foto real: placa en la mesa (cenital) -->
+<div id="sFoto" class="capa"><img id="foto1" class="cover" src="foto-placa-marmol.jpg" style="transform-origin:50% 45%;filter:contrast(1.08) saturate(1.05) brightness(.72)"></div>
+
+<!-- S7 pantalla de reseña sobre el fondo de marca -->
+<div id="sRes" class="capa"><div id="pat" class="marcaFondo"></div>
+  <div id="movil" class="telefono" style="left:300px;top:520px;width:480px;height:1040px"><div class="pant"><div class="isla"></div><img id="pant" src="pan/pantalla-0.png">
+    <div class="demo" style="left:50%;top:84px;transform:translateX(-50%);z-index:4">Demostración</div></div></div>
+</div>
+
+<!-- S8 marca -->
+<div id="sMarca" class="capa"><div class="negro"></div></div>
+
+<div id="delante"></div>
+<div id="vineta"></div><div id="fuga"></div><div id="flash"></div><div id="grano"></div>
+
+<script src="kit6.js"></script>
+<script>
+const TOTAL = 30.57; window.TOTAL = TOTAL;
+K6.cara('cmf', 'pm', 918); K6.fugaInit();
+const W = (txt, a, b) => { const ws = txt.split(' '), n = ws.reduce((s, w) => s + w.length + 1, 0); let c = 0; return ws.map(w => { const r = [w, +(a + (b - a) * c / n).toFixed(3)]; c += w.length + 1; return r; }); };
+const ESC = [['sTit', 3.0, 4.9, { ent: 'zoom' }], ['sLimpio', 4.9, 8.8, { ent: 'latigo' }], ['sDiana', 10.3, 13.1, { ent: 'abajo', d: .35 }],
+  ['sNudge', 13.1, 17.9, {}], ['sIns', 19.5, 21.5, { ent: 'latigo' }], ['sFoto', 21.5, 23.9, { empuje: .12 }], ['sRes', 25.3, 27.0, { ent: 'zoom' }], ['sMarca', 27.0, 28.3, {}]];
+const FUGA = [[2.95, .55], [8.75, .5], [13.05, .6], [17.85, .5], [21.45, .7], [25.25, .5], [26.95, .5], [28.25, .5]];
+const FLASH = [21.5];
+// punch-ins de la cara [t, escala]
+const PUNCH = [[1.3, 1.1], [9.62, 1.12], [18.8, 1.08], [28.85, 1.06]];
+// ---- textos ----
+K6.sub(W('En un aeropuerto', .1, .95), 0, 1.3, 1560);
+K6.sub(W('de Ámsterdam', 1.0, 1.25), .95, 1.3, 1640);
+K6.sub(W('dibujaron una', 1.67, 2.2), 1.35, 3.0, 1560);
+K6.grande('script', 'mosca', 2.3, 3.0, 600, { size: 340, capa: 'detras', rot: -8 });
+K6.sub(W('dentro de los', 3.26, 3.9), 3.05, 4.9, 380);
+K6.grande('cond', 'URINARIOS', 3.99, 4.9, 450, { size: 165 });
+K6.grande('script fina', 'de un aeropuerto', 4.3, 4.9, 640, { size: 110, rot: -6, x: 60 });
+K6.sub(W('y los baños empezaron a estar', 4.95, 7.0), 4.95, 8.8, 360);
+K6.grande('cond', 'MUCHO MÁS', 7.2, 8.8, 440, { size: 150 });
+K6.grande('script', 'limpios', 7.75, 8.8, 580, { size: 210, rot: -7 });
+K6.sub(W('nadie les pidió', 8.89, 9.55), 8.85, 10.3, 1560);
+K6.grande('cond', 'NADA', 9.62, 10.3, 560, { size: 360, capa: 'detras' });
+K6.sub(W('solo les pusieron algo', 10.36, 11.47), 10.36, 13.1, 200);
+K6.sub(W('a lo que', 11.98, 12.3), 11.98, 13.1, 1560);
+K6.grande('script', 'apuntar', 12.3, 13.1, 1610, { size: 190, rot: -6 });
+K6.sub(W('esto se llama', 13.19, 13.7), 13.19, 14.62, 560);
+K6.grande('cond', 'NUDGE', 13.72, 14.62, 660, { size: 270 });
+K6.grande('script fina', 'el empujoncito', 14.05, 14.62, 990, { size: 120, rot: -5, x: 80 });
+K6.sub(W('no', 14.66, 14.7).concat([['<span style="position:relative">obligas<span id="tob" class="tache" style="left:-6px;right:-6px;top:52%"></span></span>', 14.8]], W('a nadie', 15.2, 15.5)), 14.66, 17.9, 560);
+K6.sub(W('solo se lo pones', 15.9, 16.6), 15.9, 17.9, 760);
+K6.grande('script', 'más fácil', 16.75, 17.9, 830, { size: 230, rot: -7 });
+K6.sub(W('con tus clientes', 18.07, 18.75), 17.95, 19.5, 1560);
+K6.grande('cond', 'IGUAL', 18.8, 19.5, 580, { size: 330, capa: 'detras' });
+K6.sub(W('no hace falta', 19.58, 20.2), 19.55, 21.5, 400);
+K6.grande('script fina', 'insistirles', 20.25, 21.5, 480, { size: 190, rot: -6 });
+K6.sub(W('hace falta ponerles', 21.6, 22.5), 21.6, 23.9, 1300);
+K6.grande('script', 'algo delante', 22.55, 23.9, 1380, { size: 190, rot: -6 });
+K6.sub(W('acercan el', 23.93, 24.35), 23.93, 25.28, 1560);
+K6.grande('script', 'móvil', 24.4, 25.28, 600, { size: 300, capa: 'detras', rot: -7 });
+K6.sub(W('y ya están escribiendo', 25.31, 26.1), 25.31, 27.0, 250);
+K6.grande('script', 'tu reseña', 26.2, 27.0, 1580, { size: 200, rot: -6 });
+K6.sub(W('esto es', 27.13, 27.4), 27.1, 28.3, 700);
+K6.grande('cond', 'PLEA<span style="color:#fff">5</span>E', 27.45, 28.3, 800, { size: 240 });
+K6.grande('script fina', 'placas para reseñas', 27.75, 28.3, 1080, { size: 100, rot: -5, x: 60 });
+K6.sub(W('comenta', 28.38, 28.8), 28.35, TOTAL + 1, 1560);
+K6.grande('cond', 'PLACA', 28.85, TOTAL + 1, 570, { size: 340, capa: 'detras' });
+K6.sub(W('y te mando la tuya', 29.4, 30.2), 29.35, TOTAL + 1, 1650, { size: 44 });
+// manchas
+[[330, 900, 60], [620, 1010, 80], [460, 1230, 55], [770, 1300, 70], [280, 1160, 45], [700, 820, 50]].forEach(([x, y, r]) => { const m = document.createElement('div'); m.className = 'abs';
+  Object.assign(m.style, { left: x - r + 'px', top: y - r + 'px', width: 2 * r + 'px', height: 2 * r + 'px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(160,150,120,.9),rgba(160,150,120,.5) 55%,transparent 72%)' }); m._x = x; $('manchas').appendChild(m); });
+
+window.render = async t => {
+  K6.escenas(ESC, t); K6.pintaTextos(t); K6.fuga(t, FUGA); K6.flash(t, FLASH);
+  const tapada = ESC.some(([, a, b, o = {}]) => t >= a + (o.d || .3) && t < b);
+  $('cara').style.display = tapada ? 'none' : 'block';
+  if (!tapada) { let s = 1 + .03 * Math.sin(t * .4); PUNCH.forEach(([tp, e]) => { if (t >= tp && t < tp + 1.6) s *= e; }); $('caraZoom').style.transform = `scale(${s})`; $('caraZoom').style.transformOrigin = '50% 62%'; await K6.caraFrame(t); }
+  // S1: el urinario se dibuja y la mosca aterriza dentro
+  if (t >= 2.55 && t < 4.9) { traza($('u1'), t, 2.7, .8); traza($('u2'), t, 3.1, .6);
+    const k = ease.outCubic(p(t, 3.3, .6)); const x = 900 - 400 * k + Math.sin(k * 10) * 60 * (1 - k), y = 500 + 780 * k + Math.cos(k * 8) * 60 * (1 - k);
+    $('mosca1').style.transform = `translate(${x}px,${y}px) rotate(${(1 - k) * 200}deg) scale(${golpe(t, 3.9, .2)})`; $('mosca1').style.opacity = t >= 3.3 ? 1 : 0; }
+  // S2: manchas que aparecen y un barrido de luz que las limpia
+  if (t >= 4.9 && t < 8.8) { const bx = -300 + 1600 * ease.inOut(p(t, 7.1, .7)); $('barrido').style.left = bx + 'px'; $('barrido').style.opacity = t > 7.1 && t < 7.8 ? 1 : 0;
+    [...$('manchas').children].forEach((m, i) => { const a = 5.2 + i * .15; m.style.opacity = t < a ? 0 : (bx + 110 > m._x ? 0 : 1); m.style.transform = `scale(${muelle(t, a, 2.6, .5)})`; });
+    entra($('azulejos'), t, 4.95, { y: 60, s: .95 }); }
+  // S3: diana y mosca que clava el centro
+  if (t >= 10.3 && t < 13.1) { ['d1', 'd2', 'd3'].forEach((d, i) => traza($(d), t, 10.45 + i * .12, .45));
+    const k = ease.inOut(p(t, 11.3, .8)); const x = 900 - 485 * k + Math.sin(k * 7) * 120 * (1 - k), y = 150 + 415 * k;
+    $('mosca2').style.transform = `translate(${x}px,${y}px) rotate(${(1 - k) * -120}deg) scale(${golpe(t, 12.1, .25)})`; $('mosca2').style.opacity = t >= 11.3 ? 1 : 0;
+    const o = p(t, 12.1, .5); $('onda').setAttribute('r', 110 + o * 300); $('onda').style.opacity = t >= 12.1 ? 1 - o : 0;
+    $('sDiana').style.transform += ' ' + K6.sacude(t, [[12.1, 16]]); }
+  // S4: tachar «obligas»
+  if ($('tob')) { $('tob').style.transform = `scaleX(${ease.outExpo(p(t, 15.55, .25))})`; }
+  // S5: burbujas y tachones
+  if (t >= 19.5 && t < 21.5) { [['b1', 19.65], ['b2', 20.0], ['b3', 20.3]].forEach(([id, a]) => entra($(id), t, a, { y: 40, s: .7, tipo: 'muelle', f: 3, z: .55 }));
+    [['t1', 20.85], ['t2', 20.93], ['t3', 21.0]].forEach(([id, a]) => $(id).style.transform = `scaleX(${ease.outExpo(p(t, a, .22))})`); }
+  // S6: foto real con empuje y giro lento
+  if (t >= 21.5 && t < 23.9) $('foto1').style.transform = `scale(${1.15 + .12 * p(t, 21.5, 2.4)}) rotate(${-2 + 3 * p(t, 21.5, 2.4)}deg)`;
+  // S7: móvil que llega y se rellena la reseña
+  if (t >= 25.3 && t < 27.0) { entra($('movil'), t, 25.32, { y: 500, s: .9, tipo: 'muelle', f: 1.8, z: .7 }); $('pat').style.transform = `translate(${-(t - 25.3) * 60}px,${-(t - 25.3) * 40}px)`;
+    const PS = ['0', '0.5', '0.7', '0.9', '1.1'], u = p(t, 25.6, 1.0); $('pant').src = 'pan/pantalla-' + PS[Math.min(4, Math.floor(u * 5))] + '.png'; }
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

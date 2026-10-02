@@ -1,0 +1,231 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><link rel="stylesheet" href="kit3.css"><style>
+.suelo{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#dedcd6,#cfccc5)}
+.gota{position:absolute;border-radius:50%;background:#9c9a93}
+.brillo{position:absolute;width:90px;height:90px}
+.grande{height:110px;border-radius:56px;font-size:50px;padding:0 44px}
+.letras{position:absolute;left:0;right:0;top:720px;display:flex;justify-content:center}
+.letra{display:inline-block;font-weight:900;font-size:230px;letter-spacing:-8px;color:#fff;line-height:1}
+.est{position:absolute;top:1010px;font-size:70px;color:#E9BC46}
+</style></head><body>
+<div id="fondo" class="papel"><div class="grano"></div></div>
+<div class="marcaTop" id="marcaTop">PLEA<b>5</b>E.es</div>
+<div id="detras"></div>
+<svg class="trazo" width="1080" height="1920"><path id="vueloCara" d="M140 700 C 300 520, 520 600, 700 520 S 1000 700, 820 860 S 420 980, 300 800 S 520 560, 860 640" fill="none" stroke="none"/></svg>
+<svg id="moscaCara" class="abs" viewBox="0 0 100 100" style="left:0;top:0;width:70px;height:70px;z-index:3">
+  <ellipse cx="33" cy="42" rx="22" ry="12" fill="#cfd3d8" stroke="#141414" stroke-width="3" transform="rotate(-28 33 42)"/><ellipse cx="67" cy="42" rx="22" ry="12" fill="#cfd3d8" stroke="#141414" stroke-width="3" transform="rotate(28 67 42)"/>
+  <ellipse cx="50" cy="58" rx="13" ry="20" fill="#141414"/><circle cx="50" cy="34" r="10" fill="#141414"/><circle cx="45" cy="31" r="3.2" fill="#E9BC46"/><circle cx="55" cy="31" r="3.2" fill="#E9BC46"/></svg>
+<div id="persona"><img></div>
+
+<!-- 1 · urinario -->
+<div id="sUri" class="esc papel"><div class="cam"><div id="zUri" class="abs" style="inset:0;transform-origin:540px 1080px">
+  <div class="suelo" style="top:1420px"></div>
+  <svg class="abs" style="left:0;top:0" width="1080" height="1920" fill="none" stroke="#141414" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path id="uri1" d="M540 640 H700 Q750 640 750 700 V1030 Q750 1250 575 1300 H505 Q330 1250 330 1030 V700 Q330 640 380 640 Z"/>
+    <path id="uri2" d="M395 760 Q540 720 685 760 V1020 Q685 1200 540 1230 Q395 1200 395 1020 Z" stroke-width="5" stroke="#555"/>
+    <path id="uri3" d="M540 1300 V1420"/><path id="suelo" d="M60 1420 H1020"/>
+  </svg>
+  <div id="gotas"></div>
+  <div id="barra" class="brilloBarra" style="left:0;opacity:0"></div>
+  <svg id="mosca" class="abs" viewBox="0 0 100 100" style="left:0;top:0;width:100px;height:100px">
+    <ellipse class="ala" cx="33" cy="42" rx="22" ry="12" fill="#cfd3d8" stroke="#141414" stroke-width="3" transform="rotate(-28 33 42)"/>
+    <ellipse class="ala" cx="67" cy="42" rx="22" ry="12" fill="#cfd3d8" stroke="#141414" stroke-width="3" transform="rotate(28 67 42)"/>
+    <ellipse cx="50" cy="58" rx="13" ry="20" fill="#141414"/><circle cx="50" cy="34" r="10" fill="#141414"/>
+    <circle cx="45" cy="31" r="3.2" fill="#E9BC46"/><circle cx="55" cy="31" r="3.2" fill="#E9BC46"/></svg>
+  <div id="brillos"></div><div id="ch1"></div>
+</div>
+  <div id="pillLimpio" class="pill" style="left:330px;top:1560px"><i></i>más limpios</div>
+</div><div class="grano"></div></div>
+
+<!-- 2 · diana -->
+<div id="sDiana" class="esc papel"><div class="cam">
+  <svg class="abs" style="left:0;top:0" width="1080" height="1920" fill="none" stroke-linecap="round">
+    <g id="g1" style="transform-origin:540px 1050px"><circle id="d1" cx="540" cy="1050" r="330" stroke="#141414" stroke-width="7" transform="rotate(-90 540 1050)"/></g>
+    <g id="g2" style="transform-origin:540px 1050px"><circle id="d2" cx="540" cy="1050" r="220" stroke="#141414" stroke-width="7" transform="rotate(-90 540 1050)"/></g>
+    <g id="g3" style="transform-origin:540px 1050px"><circle id="d3" cx="540" cy="1050" r="110" stroke="#D39B16" stroke-width="10" transform="rotate(-90 540 1050)"/></g>
+    <circle id="onda" cx="540" cy="1050" r="110" stroke="#E9BC46" stroke-width="8"/>
+    <path id="vuelo" d="M1150 520 C 900 560, 760 760, 880 860 S 700 1100, 540 1050" stroke="#141414" stroke-width="4" stroke-dasharray="3 16" opacity=".45"/>
+  </svg>
+  <svg id="mosca2" class="abs" viewBox="0 0 100 100" style="left:0;top:0;width:110px;height:110px">
+    <ellipse cx="33" cy="42" rx="22" ry="12" fill="#cfd3d8" stroke="#141414" stroke-width="3" transform="rotate(-28 33 42)"/>
+    <ellipse cx="67" cy="42" rx="22" ry="12" fill="#cfd3d8" stroke="#141414" stroke-width="3" transform="rotate(28 67 42)"/>
+    <ellipse cx="50" cy="58" rx="13" ry="20" fill="#141414"/><circle cx="50" cy="34" r="10" fill="#141414"/>
+    <circle cx="45" cy="31" r="3.2" fill="#E9BC46"/><circle cx="55" cy="31" r="3.2" fill="#E9BC46"/></svg>
+  <div id="ch2"></div>
+</div><div class="grano"></div></div>
+
+<!-- 3 · nudge -->
+<div id="sNudge" class="esc oscuro"><div class="cam">
+  <div id="foco" class="abs" style="left:-300px;top:500px;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(closest-side,rgba(233,188,70,.16),transparent)"></div>
+  <div id="chipOb" class="pill claro grande" style="left:340px;top:1000px">Obligar<div id="tacheOb" class="tache" style="left:26px;right:26px;top:50px"></div></div>
+  <div id="chipFa" class="pill claro grande" style="left:230px;top:1180px"><i></i>Ponérselo fácil</div>
+  <div id="ch3"></div>
+</div><div class="grano"></div></div>
+
+<!-- 4 · insistir -->
+<div id="sIns" class="esc papel"><div class="cam">
+  <div id="pjCam" class="pj" style="left:-80px;top:1180px;width:640px;height:770px;transform-origin:50% 100%"><img src="cast/camarero-Explaining.svg"></div>
+  <div id="bocas">
+  <div id="b1" class="bocadillo" style="left:420px;top:760px">¿Me dejas una reseña?<div id="t1" class="tache" style="left:20px;right:20px;top:50%"></div></div>
+  <div id="b2" class="bocadillo" style="left:560px;top:960px;font-size:52px">¿Porfa?<div id="t2" class="tache" style="left:20px;right:20px;top:50%"></div></div>
+  <div id="b3" class="bocadillo" style="left:590px;top:1150px;font-size:60px">¿Porfaaa?<div id="t3" class="tache" style="left:20px;right:20px;top:50%"></div></div></div>
+</div><div class="grano"></div></div>
+
+<!-- 5 · ¡pum! la placa -->
+<div id="sPlaca" class="esc papel"><div class="cam"><div id="zP" class="abs" style="inset:0;transform-origin:520px 1110px">
+  <div class="suelo" style="top:1340px"></div>
+  <svg class="abs" style="left:0;top:0" width="1080" height="1920"><path id="mesa" d="M60 1340 H1020" stroke="#141414" stroke-width="7" stroke-linecap="round" fill="none"/></svg>
+  <div id="placa" class="abs sombra" style="left:310px;top:880px;width:460px;height:460px;transform-origin:50% 100%"><img src="w-placa.png" style="width:100%;height:100%"></div>
+  <div id="polvo"></div>
+  <div id="anillo" class="anillo"></div>
+  <div id="movil" class="telefono" style="left:290px;top:520px;width:500px;height:1080px"><div class="pant"><div class="isla"></div><img id="pant" src="pan/pantalla-0.png"><div class="demo" style="left:50%;top:84px;transform:translateX(-50%);z-index:4">Demostración</div></div></div>
+  <div id="ch5"></div>
+</div>
+  <div id="pillRes" class="pill" style="left:290px;top:1650px"><i></i>Directo a tu reseña</div>
+</div><div class="grano"></div></div>
+
+<!-- 6 · marca (solo letras) -->
+<div id="sMarca" class="esc oscuro"><div class="cam">
+  <div id="halo" class="abs" style="left:40px;top:460px;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(closest-side,rgba(233,188,70,.22),transparent)"></div>
+  <div id="letras" class="letras"></div><div id="estrellas"></div><div id="ch6"></div>
+</div><div class="grano"></div></div>
+
+<div id="delante"></div>
+<div id="coment" class="coment" style="top:1480px"><div class="av">J</div><div class="txt" id="cTxt"></div><div class="env" id="cEnv"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M3 11 L21 3 L14 21 L11 13 Z" fill="#111"/></svg></div></div>
+<div id="flash"></div>
+
+<script src="kit.js"></script><script src="kit2.js"></script><script src="kit3.js"></script>
+<script>
+K.filtros();
+const TOTAL = 30.57; window.TOTAL = TOTAL;
+K.persona('pm', 918);
+const ESC = [['sUri', 2.55, 8.8, {}], ['sDiana', 10.3, 13.1, { golpes: [12.1] }], ['sNudge', 13.1, 17.9, { golpes: [13.72] }], ['sIns', 19.5, 21.5, {}],
+  ['sPlaca', 21.5, 27.0, { golpes: [22.75, 24.6] }], ['sMarca', 27.0, 28.3, {}]];
+const FLASH = [2.55, 21.5];
+const GOLPES_CARA = [[9.62, .05], [18.8, .05], [28.85, .05]];
+const f1 = K.W('En un aeropuerto de Ámsterdam dibujaron una *mosca', .1, 2.77);
+const f14 = K.W('No obligas a nadie, solo se lo pones más *fácil', 14.66, 17.64);
+const f25 = K.W('y ya están escribiendo tu *reseña', 25.31, 26.79);
+const TX = [
+  { t0: 0, t1: 2.55, y: 440, s: f1.slice(0, 5), b: [] },
+  { t0: 0, t1: 2.55, y: 560, capa: 'detras', s: [], b: f1.slice(5), bs: 230 },
+  { t0: 2.6, t1: 4.8, y: 250, s: K.W('dentro de los', 3.26, 3.9), b: K.W('urinarios', 3.99, 4.3) },
+  { t0: 4.95, t1: 8.8, y: 250, s: K.W('y los baños empezaron a estar', 4.95, 7.0), b: K.W('mucho más *limpios', 7.2, 8.2) },
+  { t0: 8.85, t1: 10.3, y: 480, s: K.W('nadie les pidió', 8.89, 9.6), b: [] },
+  { t0: 8.85, t1: 10.3, y: 600, capa: 'detras', s: [], b: K.W('*nada', 9.62, 9.9), bs: 380 },
+  { t0: 10.34, t1: 13.1, y: 250, s: K.W('solo les pusieron algo', 10.34, 11.47), b: K.W('a lo que *apuntar', 11.98, 12.84) },
+  { t0: 13.19, t1: 14.64, y: 700, c: 'claro', bs: 230, s: K.W('esto se llama', 13.19, 13.7), b: [['nudge', 13.72, 'oro']] },
+  { t0: 14.66, t1: 17.9, y: 330, c: 'claro', s: f14.slice(0, 4), b: f14.slice(4) },
+  { t0: 17.95, t1: 19.5, y: 500, s: K.W('con tus clientes', 18.07, 18.75), b: [] },
+  { t0: 17.95, t1: 19.5, y: 620, capa: 'detras', s: [], b: K.W('pasa *igual', 18.8, 19.3) },
+  { t0: 19.55, t1: 21.5, y: 250, s: K.W('no hace falta', 19.58, 20.2), b: K.W('insistirles', 20.25, 20.8) },
+  { t0: 21.55, t1: 23.9, y: 250, s: K.W('hace falta ponerles', 21.6, 22.5), b: K.W('algo *delante', 22.55, 23.2) },
+  { t0: 23.93, t1: 25.28, y: 250, s: K.W('acercan el', 23.93, 24.35), b: K.W('*móvil', 24.4, 24.8) },
+  { t0: 25.31, t1: 27.0, y: 230, bs: 104, s: f25.slice(0, 3), b: f25.slice(3) },
+  { t0: 27.13, t1: 28.3, y: 560, c: 'claro', s: K.W('esto es', 27.13, 27.4), b: [] },
+  { t0: 28.35, t1: TOTAL + 1, y: 490, s: K.W('comenta', 28.38, 28.8), b: [] },
+  { t0: 28.35, t1: TOTAL + 1, y: 610, capa: 'detras', s: [], b: [['PLACA', 28.85, 'oro']], bs: 330 },
+];
+K.textos2(TX); K.capas(TX);
+// escena 1: manchas y brillos
+const GOTAS = [[300, 1440, 26], [420, 1470, 18], [690, 1450, 30], [790, 1480, 16], [600, 1500, 22], [250, 1500, 14], [860, 1440, 20]];
+GOTAS.forEach(([x, y, r]) => { const g = document.createElement('div'); g.className = 'gota'; Object.assign(g.style, { left: x - r + 'px', top: y - r * .45 + 'px', width: 2 * r + 'px', height: r * .9 + 'px' }); $('gotas').appendChild(g); });
+[[300, 780, 1.1], [760, 900, .8], [700, 1330, 1], [330, 1250, .7]].forEach(([x, y, s]) => { const d = document.createElement('div'); d.className = 'brillo';
+  d.innerHTML = '<svg viewBox="-50 -50 100 100" width="100%" height="100%"><path d="M0 -48 Q6 -6 48 0 Q6 6 0 48 Q-6 6 -48 0 Q-6 -6 0 -48Z" fill="#E9BC46"/></svg>';
+  Object.assign(d.style, { left: x - 45 + 'px', top: y - 45 + 'px' }); d._s = s; $('brillos').appendChild(d); });
+// marca: letras
+const LET = 'PLEA5E', LX = [118, 262, 392, 520, 670, 806];
+[...LET].forEach((c, i) => { const d = document.createElement('div'); d.className = 'letra'; d.textContent = c; if (c === '5') d.style.color = '#E9BC46'; $('letras').appendChild(d); });
+for (let i = 0; i < 5; i++) { const d = document.createElement('div'); d.className = 'est'; d.textContent = '★'; d.style.left = 330 + i * 90 + 'px'; $('estrellas').appendChild(d); }
+// vuelo de entrada de la mosca (escena 1)
+const vueloIn = t => { const k = ease.outCubic(p(t, 2.55, .45)); return [-160 + (490 + 160) * k + Math.sin(k * 9) * 60 * (1 - k), 300 + (1030 - 300) * k + Math.cos(k * 7) * 80 * (1 - k)]; };
+
+window.render = async t => {
+  K.escenas2(ESC, t);
+  TX.forEach(B => K.texto2(B, t));
+  $('flash').style.opacity = Math.max(...FLASH.map(f => K.destello(t, f)));
+  const cara = K.caraPinta(t, ESC, TOTAL, GOLPES_CARA);
+  $('marcaTop').style.opacity = cara ? 1 : 0;
+  if (cara) await K.caraFrame(t);
+  { const v = $('vueloCara'), L = v.getTotalLength(), on = t < 2.5; $('moscaCara').style.opacity = on ? 1 : 0;
+    if (on) { const pos = u => { const k = (u / 2.5) % 1, a = v.getPointAtLength(L * k); return [a.x - 35, a.y - 35]; };
+      const a = pos(t), b = pos(t + .02); K.mueve($('moscaCara'), t, pos, ` rotate(${Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI + 90}deg)`); } }
+
+  // 1 · urinario — la mosca entra volando, la cámara se aleja y el urinario se dibuja alrededor; manchas → barrido de brillo → limpio
+  if (t >= 2.55 && t < 8.8) {
+    const z = 2.3 - 1.3 * ease.inOut(p(t, 3.15, .9)); $('zUri').style.transform = `scale(${z})`;
+    K.mueve($('mosca'), t, vueloIn, ` rotate(${Math.sin(t * 40) * 4 * (t > 3 ? .4 : 1)}deg) scale(${golpe(t, 3.0, .15)})`);
+    $('mosca').style.opacity = 1;
+    $('mosca').querySelectorAll('.ala').forEach((a, i) => a.style.opacity = t < 3.0 ? .5 + .5 * Math.abs(Math.sin(t * 90 + i)) : 1);
+    traza($('uri1'), t, 3.26, .7); traza($('uri2'), t, 3.6, .5); traza($('uri3'), t, 4.0, .25); traza($('suelo'), t, 3.9, .4);
+    [...$('gotas').children].forEach((g, i) => { const a = 5.0 + i * .12, k = muelle(t, a, 3.2, .45), fuera = ease.inCubic(p(t, 7.1 + i * .05, .18));
+      g.style.opacity = t >= a ? 1 - fuera : 0; g.style.transform = `scale(${k * (1 + .4 * (1 - k))},${k * (1 - .3 * (1 - k))}) scale(${1 - fuera})`; });
+    const kb = p(t, 7.05, .45); $('barra').style.opacity = kb > 0 && kb < 1 ? .9 : 0; $('barra').style.transform = `translateX(${-300 + kb * 1600}px) rotate(18deg)`;
+    [...$('brillos').children].forEach((d, i) => { const a = 7.3 + i * .08, k = muelle(t, a, 2.6, .5); d.style.opacity = t >= a ? 1 : 0; d.style.transform = `scale(${k * d._s}) rotate(${(t - a) * 60}deg)`; });
+    K.chispas($('ch1'), t, 7.35, { x: 540, y: 980, n: 18, v: 650 });
+    K.pop($('pillLimpio'), t, 7.6);
+  }
+  // 2 · diana — anillos con muelle, la mosca vuela con estela y clava el centro en «apuntar»
+  if (t >= 10.3 && t < 13.1) {
+    [['g1', 'd1', 10.34], ['g2', 'd2', 10.46], ['g3', 'd3', 10.58]].forEach(([g, d, a]) => { traza($(d), t, a, .45); $(g).style.transform = `scale(${.6 + .4 * muelle(t, a, 2.4, .5)})`; });
+    const v = $('vuelo'); traza(v, t, 11.2, .9); const L = v.getTotalLength();
+    const pos = u => { const k = ease.inOut(p(u, 11.2, .9)), pt = v.getPointAtLength(L * k); return [pt.x - 55, pt.y - 55]; };
+    const k = ease.inOut(p(t, 11.2, .9)), a = v.getPointAtLength(L * k), b2 = v.getPointAtLength(Math.min(L, L * k + 4));
+    const ang = k < 1 ? Math.atan2(b2.y - a.y, b2.x - a.x) * 180 / Math.PI + 90 : 0;
+    $('mosca2').style.opacity = t >= 11.2 ? 1 : 0; K.mueve($('mosca2'), t, pos, ` rotate(${ang}deg) scale(${golpe(t, 12.1, .25)})`);
+    const o = p(t, 12.1, .5); $('onda').setAttribute('r', 110 + o * 330); $('onda').style.opacity = t >= 12.1 ? 1 - o : 0;
+    $('g3').style.transform = `scale(${golpe(t, 12.1, .12)})`;
+    K.chispas($('ch2'), t, 12.1, { x: 540, y: 1050, n: 16, v: 700 });
+  }
+  // 3 · nudge — foco que barre; «Obligar» dice que no, se tacha y cae; «Ponérselo fácil» llega con chispas
+  if (t >= 13.1 && t < 17.9) {
+    $('foco').style.transform = `translateX(${Math.sin((t - 13.1) * .8) * 180 + 120}px)`;
+    K.pop($('chipOb'), t, 14.95); K.tache($('tacheOb'), t, 15.6);
+    const no = t > 15.15 && t < 15.55 ? Math.sin((t - 15.15) * 45) * 14 * (1 - p(t, 15.15, .4)) : 0;
+    const cae = ease.inCubic(p(t, 16.25, .5));
+    $('chipOb').style.transform += ` translate(${no}px,${cae * 900}px) rotate(${cae * 35}deg)`;
+    $('chipOb').style.opacity = t < 14.95 ? 0 : 1 - .45 * p(t, 15.7, .2);
+    K.pop($('chipFa'), t, 16.85, { y: 60, s: .6 });
+    K.chispas($('ch3'), t, 16.9, { x: 540, y: 1235, n: 14, v: 560 });
+  }
+  // 4 · insistir — el camarero habla, los bocadillos crecen, se tachan y se caen
+  if (t >= 19.5 && t < 21.5) {
+    entra($('pjCam'), t, 19.52, { x: -200, y: 60, s: 1, tipo: 'muelle', f: 1.6, z: .7 });
+    $('pjCam').style.transform += ` rotate(${Math.sin(t * 14) * 1.6}deg)`;
+    [['b1', 19.65], ['b2', 20.0], ['b3', 20.3]].forEach(([id, a], i) => { K.pop($(id), t, a, { s: .5, f: 3 });
+      const c = ease.inCubic(p(t, 21.12 + i * .05, .38)); $(id).style.transform += ` translateY(${c * 1100}px) rotate(${c * (i % 2 ? -30 : 25)}deg)`; });
+    [['t1', 20.85], ['t2', 20.93], ['t3', 21.01]].forEach(([id, a]) => K.tache($(id), t, a));
+  }
+  // 5 · placa — cae con estela y polvo; el móvil entra rápido, toca (cámara al toque) y se abre la reseña
+  if (t >= 21.5 && t < 27.0) {
+    traza($('mesa'), t, 21.52, .35);
+    const kp = p(t, 22.45, .3) ** 2, sq = t >= 22.75 ? 1 - muelle(t, 22.75, 3, .4) : 0, baja = ease.inCubic(p(t, 24.9, .35));
+    $('placa').style.opacity = t < 22.45 ? 0 : 1 - .75 * baja;
+    K.mueve($('placa'), t, u => [0, -(1 - p(u, 22.45, .3) ** 2) * 700 + ease.inCubic(p(u, 24.9, .35)) * 80], ` scale(${1 + .06 * sq},${1 - .12 * sq})`);
+    K.chispas($('polvo'), t, 22.75, { x: 540, y: 1335, n: 12, v: 420, clase: 'polvo', g: -300, d: .55 });
+    const zk = ease.outCubic(p(t, 24.5, .2)) * (1 - ease.inOut(p(t, 24.85, .4))); $('zP').style.transform = `scale(${1 + .13 * zk})`;
+    const mpos = u => { const k1 = ease.inOut(p(u, 23.93, .55)), k2 = ease.inOut(p(u, 24.9, .45)); return [760 + (60 - 760) * k1 + (0 - 60) * k2, 520 + (-40 - 520) * k1 + 60 * k2]; };
+    const k1 = ease.inOut(p(t, 23.93, .55)), k2 = ease.inOut(p(t, 24.9, .45));
+    $('movil').style.opacity = t >= 23.93 ? 1 : 0;
+    K.mueve($('movil'), t, mpos, ` scale(${(.62 + .38 * k2) * golpe(t, 24.6, .05)}) rotate(${-10 * k1 * (1 - k2) + 14 * (1 - k1)}deg)`);
+    K.anillo($('anillo'), t, 24.6, 520, 1110);
+    K.pantalla($('pant'), t, 25.35, 1.1);
+    K.chispas($('ch5'), t, 26.25, { x: 540, y: 760, n: 18, v: 620 });
+    K.pop($('pillRes'), t, 26.35);
+  }
+  // 6 · marca — letras que caen una a una, el 5 en oro, estrellas debajo
+  if (t >= 27.0 && t < 28.3) {
+    [...$('letras').children].forEach((l, i) => { const a = 27.08 + i * .06; entra(l, t, a, { y: -260, s: 1.3, blur: 18, tipo: 'muelle', f: 2.4, z: .55 }); });
+    [...$('estrellas').children].forEach((s, i) => K.pop(s, t, 27.55 + i * .06, { y: 0, s: .2, f: 3 }));
+    $('halo').style.transform = `scale(${.8 + .2 * muelle(t, 27.1, 1.5, .6)})`;
+    K.chispas($('ch6'), t, 27.45, { x: 540, y: 830, n: 16, v: 700 });
+  }
+  // cierre — comentario «PLACA» que se escribe y se envía
+  const cm = $('coment');
+  if (t >= 28.9) { K.pop(cm, t, 28.9, { y: 60, s: .85 });
+    const tx = teclea('PLACA', t, 29.3, 11); $('cTxt').innerHTML = tx ? tx + (t < 29.95 && (t * 3 | 0) % 2 ? '' : '<span class="cur"></span>') : '<i>Añade un comentario…</i>';
+    $('cEnv').style.transform = `scale(${golpe(t, 30.0, .25)})`; $('cEnv').style.background = t >= 30.0 ? '#E9BC46' : '#d6d6d6';
+  } else cm.style.opacity = 0;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

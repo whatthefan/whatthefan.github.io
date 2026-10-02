@@ -1,0 +1,132 @@
+---
+name: motion-reels
+description: Editar Reels, TikTok o Shorts en el estilo que Juan aprobó (PLEA5E y su canal de emprendimiento). Es motion graphics fotograma a fotograma en HTML, con la cara recortada y la palabra gigante detrás de la cabeza, texto que entra de lado, forma que se transforma y muestra metraje real, y un sistema en el que cada SFX va unido a su transición (flash, whip, glitch, riser+impacto, zoom digital, teclas). Úsala SIEMPRE que Juan pida editar un vídeo, "con la edición chula", "como el de la mosca", motion, transiciones, SFX, o un vídeo para PLEA5E o para su canal. Sustituye como estilo por defecto a edicion-pro.
+---
+
+# motion-reels: la edición de la mosca y Uber (v16, aprobada)
+
+Resultado de unas 16 rondas de feedback de Juan. **Primero lee "Reglas de Juan"**: cada una salió de algo que rechazó.
+Ejemplos completos que funcionan: `ejemplos/mosca.html` y `ejemplos/uber.html`. Para abrirlos, ponlos junto a `motor/escena.js`, `fx.js` y `fuentes/`; necesitan sus assets en /tmp (cara, `br/`), que no están en el repo. Base limpia: `motor/plantilla.html`.
+
+## Reglas de Juan (no negociables)
+1. **Sin música. Solo SFX**, y solo de `marketing/instagram/sonidos/packs/` y `packs2/` (catálogo abajo). Nada de Mixkit SFX ni sonidos sintetizados.
+2. **Un sonido por evento con significado.** No se pone sonido de relleno, ni en cada letra o chip, **ni en las estrellas**.
+3. **Cada sonido va con su efecto visual** (sistema FX): si suena un whoosh, la imagen hace un whip.
+4. **Los sonidos no se cortan nunca.** Solo `teclas` y `contador` llevan `dur`, y siempre con fundido.
+5. **Vetados:** booms graves (`braam`, `synth-hit`, `cinematic-impact`, `riser-impacto`), `packs/glitch` y `punch-stop-riser`. Le suenan "raros, de bomb box".
+6. **El vídeo empieza con sonido**: `flash` + `camera-shutter` en t=0. En los primeros 3 s, cada cambio de escena lleva su whoosh o swish.
+7. **Texto que se escribe = teclado**: `maq: true` + `teclas` con `dur = letras × st + 0,15`.
+8. **El `woah-drop` es su favorito**: revelación del producto, nudge y palabra final (PLACA). Máximo 3 por vídeo.
+9. **Movimiento de lado a lado** (referencia Marz): el texto entra desde la derecha y sale a la izquierda; la forma M entra por la derecha y sale por la izquierda.
+10. **Nada de escenas vacías.** Siempre hay metraje real, un objeto real (placa en 3D, móvil con croma) o una animación explicativa (el urinario con el hombre).
+11. **Nada que parezca IA:** sin emojis, sin bocadillos de comentario al final, sin fotos generadas con IA (el producto va en 3D real) y sin el "logo raro de la estrella".
+12. **Tipografía:** Figtree 700/800 grande y legible. La palabra clave en color de marca con `*palabra*`.
+13. **Cara:** solo en el gancho, a mitad y en el CTA, con la palabra GIGANTE detrás de la cabeza ("lo de la cámara mola"). La cara del vídeo en espejo.
+14. **PLEA5E:** sin claims inventados y nunca prometer reseñas. "Las placas: pago único". Colores noche #06080E y oro #E9BC46. El 5 nunca en espejo. "Demostración" en las pantallas simuladas.
+15. **Privacidad:** la cara y los vídeos de Juan **nunca van al repo público**. Se quedan en /tmp o en el scratchpad.
+
+## Flujo completo
+1. **Voz**: corta los silencios y las tomas malas (`scripts/base2.py`, con los tramos de `scripts/palabras.py`, que usa Whisper local con sherpa-onnx). Limpia con la cadena de `scripts/cadena-voz.txt` (RNNoise, puerta, EQ, de-esser, compresor, loudnorm -14). La duración de la voz = `TOTAL`.
+2. **Tiempos por palabra**: con `palabras.py` se sabe en qué segundo cae cada palabra. Los textos y los FX se clavan a esas palabras.
+3. **Cara recortada**: pasa la matte de RVM por `scripts/persona.py`, que da el fondo en jpg y la persona en webp con alfa del mismo fotograma. **Preescala a 1080×1215 con lanczos + nitidez** (ver "Calidad").
+4. **B-roll**: usa Mixkit (gratis y comercial). `https://assets.mixkit.co/videos/<id>/<id>-720.mp4`; el 1080 da 403. Para buscar, `curl https://mixkit.co/free-stock-video/<tema>/ | grep -o 'videos/[0-9]*/[0-9]*-360.mp4'` y haz una hoja de miniaturas para elegir. Pexels y Pixabay dan 403. Extrae con `ffmpeg -ss 1 -i clip.mp4 -frames:v 90 -vf "fps=30,scale=1920:1080:flags=lanczos,unsharp=5:5:0.6" -q:v 3 br/nombre/%04d.jpg`. Elige clips **que peguen con la frase** (un bar real para hostelería, no una tienda de ropa).
+5. **Producto en 3D**: `scripts/placa3d.html` + `graba3d.js` (three.js, RoundedBox, NeutralToneMapping; ACES agrisa los colores). Da 80 PNG. Chromium: `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader`.
+6. **Móvil con pantalla**: `scripts/movil_key2.py` hace el croma del clip Mixkit 28300 y pinta la pantalla fotograma a fotograma (estrellas que se rellenan una a una con rebote). En la página, zoom hacia la pantalla mientras se rellenan.
+7. **Página**: copia `motor/plantilla.html` (junto a `escena.js`, `fx.js` y `fuentes/`) y escribe el guion (API abajo).
+8. **Prueba** fotogramas sueltos antes de grabar: `node motor/grabar.js pagina.html prueba a 1.0 2.5 9.6` y monta una hoja.
+9. **Exporta**: `scripts/exporta.sh pagina.html voz.wav salida.mp4`. Graba, mezcla en HQ, borra el .mov (unos 1,8 GB) y, si pasa de 29 MB, saca `-chat.mp4` a dos pasadas para mandarlo por el chat.
+
+## API de la página
+- `texto(html, 'h'|'p'|'gig', y, t0, t1, {size, center, capa, st, maq})`: letras que entran de lado con desenfoque y muelle, y salen a la izquierda. `*x*` pone la palabra en color de marca. `maq:true` es a máquina con cursor.
+- `sub(txt, t0, t1, tFinal, y)`: subtítulo sobre la cara, palabra a palabra.
+- `gigante(txt, t0, t1, y, size)`: palabra enorme **detrás** de la persona (capa `detras`).
+- `MK.push([t, x, y, w, h, radio], ...)`: la forma M (punto → píldora → marco) con easeInOutExpo. `IMG = [[t0, t1, 'br/dir/', nFotogramas, 'jpg']]` muestra metraje dentro. El bucle final hace que entre por la derecha y salga por la izquierda.
+- `CARA = [[t0, t1], ...]`: la cara se abre desde una píldora y se cierra en píldora.
+- `fx(t, efecto, sonido, db, {d, a, dir, dur})`: **la única lista de verdad** (si se rellena al cargar, `mezcla4` la saca con `scripts/fx-de-pagina.js`). `mezcla4.py` lee de ella el audio, así que el sonido y la imagen nunca se desincronizan. `mezcla2` alinea el **pico** de cada sonido con `t`.
+- Capas, de fondo a frente: `fondo` (3 resplandores que respiran) → `ui` → `M` → `p3d` → `ui2` (chips y tarjetas encima del metraje) → `cara` (`detras` + persona) → `subs` → `grano` (.025).
+
+## Efectos FX (motor/fx.js) y su sonido
+| efecto | qué hace | sonido | cuándo |
+|---|---|---|---|
+| `flash` | flash blanco 0,03 s + punch 8 % | `packs2/obturador-flash`, `packs/camera-shutter` (t=0) | a y desde la cara; arranque |
+| `whip` | barrido lateral 240 px con desenfoque de movimiento y zoom; `dir` alterna | `packs2/whoosh-b`, `swoosh-a`, `swish-c`, `whoosh-dramatico` | cambio entre escenas de metraje |
+| `glitch` | RGB separado + franjas desplazadas | `packs2/glitch` | corte raro, algo que "falla" (NUNCA) |
+| `riser` (`d`) | zoom lento, temblor creciente, viñeta oscura | `packs2/riser-metal` (su pico cae al final) | antes de una revelación |
+| `impacto` (`a`) | sacudida amortiguada + punch + mini flash | `packs/woah-drop` (revelación), `packs2/whoosh-dramatico` (palabra gigante), `packs2/pop-imagen` (aterriza algo) | justo en el golpe |
+| `barras` | 3 barras diagonales (azul, blanco, negro) barren la pantalla y tapan el corte | `packs2/whoosh-b`, `whoosh-dramatico`, `swoosh-a` | cambio de bloque, con personalidad de marca |
+| `iris` | diafragma: círculo que se cierra en el corte y se abre | `packs2/obturador-flash` | pasar a algo de "cámara" o a una escena de motion |
+| `obturador` | 6 láminas de obturador que se cierran en hexágono y se abren | `packs/camera-shutter` | la transición "de cámara" favorita de Juan |
+| `anillos` | anillos azules que crecen desde el centro hasta blanco | `packs2/swoosh-a` | salir de una escena llena (abanico) a la cara |
+| `zoomdig` | zoom a 3 saltos | `packs2/zoom-digital` | marca o logo |
+| `null` | solo sonido | ver catálogo | UI, tachar, acierto, teclas |
+
+## Catálogo de sonidos (`marketing/instagram/sonidos/`)
+- **Transición**: `packs2/whoosh-b` (-4 dB), `packs2/swoosh-a`, `packs2/swish-c`, `packs2/whoosh-dramatico`, `packs/arrow-swoosh`, `packs/arrow2-swoosh`
+- **Revelación**: `packs/woah-drop` (-2 dB; el favorito), precedido de `packs2/riser-metal`
+- **Palabra gigante**: `packs2/whoosh-dramatico` (-3 dB) con `riser` visual corto (0,8 s)
+- **Acierto / error**: `packs/right` (campanita aguda), `packs/wrong` (zumbido grave). Los nombres ya están corregidos; estaban cambiados.
+- **UI**: `packs2/pop-imagen` (aparece algo), `packs/mouse-click`, `packs/iphone-charging` (el móvil toca la placa por NFC), `packs/ding` (llega la reseña o queda limpio)
+- **Texto y números**: `packs2/teclas` (con `dur`), `packs2/contador` (chips o días que avanzan, con `dur`), `packs2/carga`
+- **Movimiento**: `packs2/whoosh-mov` (alguien entra andando), `packs2/zoom-digital`
+- **Vetados**: `packs2/braam`, `packs2/synth-hit`, `packs/cinematic-impact`, `packs2/riser-impacto`, `packs/glitch`, `packs/punch-stop-riser`
+- **UI de apps y notch** (`packs4/`, ver su LEEME): `notch-abre`, `bot-saluda`, `notch-clic`, `tarea-hecha`, `pago-llega`, `respuesta`, `suelta-archivo`, `subida-ok`, `toque-bot`, `toque-bot2`, `mareo`
+- **Sonidos de un vídeo con música de fondo**: `python3 -m demucs -n htdemucs` (4 pistas); los SFX de interfaz caen en `other`. Solo valen los golpes que sacan 20 dB o más al fondo (mediana 0,6 s antes). Después, puerta de ruido (umbral 3,2 × fondo), fundido de 4 ms / 30 ms y normalizar a 0,89. Así se hizo `packs4/`.
+- **Sonidos nuevos de un vídeo de referencia**: `scripts/extraer-sfx.py video.mp4 destino nombre:inicio:dur --sin-voz`. Separa la voz con Demucs, alarga el final hasta que el sonido se apaga y añade cola de reverb si la fuente corta. Comprueba siempre la cola: `20·log10(rms_final/pico) < -30 dB`.
+
+## Calidad (Instagram)
+- `HQ=1` en mezcla4/mezcla2: x264 crf 15, preset slow, tune film, maxrate 20M, GOP 60 y AAC 256k (unos 9 Mbps). Con crf 19 salía a 4 Mbps y quedaba borroso.
+- El grano va a .025, porque el ruido es lo primero que se estropea al recomprimir.
+- La cara se preescala en Python (lanczos + unsharp 1,45/-0,45), no la amplía el navegador.
+- Para Juan: subir por Wi‑Fi desde el archivo original y activar "Subir con la calidad más alta" en Instagram.
+
+## Operativa (errores que ya pasaron)
+- Cada .mov pesa unos 1,8 GB. Mira `df` antes de grabar dos a la vez y borra el .mov después de mezclar.
+- **Nunca uses `pkill -f` o `pgrep -f` con un patrón que también esté en tu propio comando**: mata tu propia shell. Busca por `ps -eo pid,args | grep "^ *[0-9]* node .*pagina.html"` y haz `kill PID`.
+- Para trabajos en segundo plano usa marcadores (`echo MOSCA_OK`) en el log.
+- Solo para cambiar el audio no hace falta volver a grabar: `mezcla3.py video.mp4 voz.wav salida.mp4 sfx.json` copia el vídeo tal cual.
+- Si el vídeo lo pide, mira la plantilla de la escena explicativa: el urinario (`ejemplos/mosca.html`: la mosca, el hombre Open Peeps que entra, el chorro con dasharray, se va, brillos + `ding`).
+
+## Formato 4:5 y recreaciones de interfaz (aprendido en el vídeo del notch)
+- **4:5 (1080×1350)**: `TAM=1080x1350 bash scripts/exporta.sh …` (grabar.js lee `TAM`; fx.js ajusta el obturador y los anillos al alto de la ventana). En el CSS, `html,body{height:1350px}`. Sin voz, pasa un WAV de silencio que dure TOTAL + 0,3 s.
+- **Recrear un vídeo de UI** (ejemplo: `ejemplos/plea5e-notch.html`): primero la hoja de contactos a 1 fps (`crop` de la zona que importa) para sacar las escenas. Después, un panel negro con **muelle** (`spr(x) = 1 - e^(-7x)·cos(10x)`, rebasa un 10 %) que cambia de tamaño en cada escena. El contenido entra con desenfoque y subida y sale igual. El cursor va por fotogramas clave y se encoge en cada clic.
+- **Nuestra versión**: el bot es la **Estrellita** (`public/marca/estrellita/*.svg`, 20 poses, ya parpadea sola); cambia de pose con `src`. Todo lo que dice sale de la web (precios, "pago único", "propuesta en 48 h", "no se imprime nada hasta que apruebas el diseño") y lleva la etiqueta "Demostración". Encima, textos grandes de retención en la tapa del portátil, y entre escenas, transiciones de cámara (ladeo, whip, barras, giro, obturador, caída).
+
+## Canal de emprendimiento (no PLEA5E)
+Usa el mismo motor y las mismas reglas de sonido, pero **cambia la marca** en `:root` de la plantilla (`--oro`, `--fondo`, `--glow1..3`). Así el canal tiene identidad propia y no se confunde con PLEA5E. Las reglas 14 y los colores de PLEA5E no aplican ahí.
+
+## Tomas grabadas cerca de la cámara (aprendido en el vídeo EGO)
+- `scripts/base-tomas.py`: une los tramos buenos de varias tomas en una sola línea de tiempo (voz limpia + fotogramas en espejo). Las tomas en HDR del iPhone (HLG, 10 bits) se pasan a SDR con `zscale + tonemap=hable`.
+- `scripts/seguir-cara.py`: calcula el recorte (RVM) y **sigue la cabeza**. Recorta 960 px alrededor del centro de la persona, suavizado con una media de 21 fotogramas. Si Juan está cerca de la webcam, el recorte central lo deja fuera. Las tomas verticales van a pantalla completa (clase `vert`).
+- Si la cabeza sale cortada por arriba, la zona superior va con el **fondo de marca** (sin el desenfoque de la cara; `#caraBlur` oculto y máscara de 380 px), y el texto va encima. En vertical a pantalla completa, la palabra gigante va **delante**, a la altura del pecho.
+- Para textos encima de la cara usa la capa `sobre`. **Nunca hagas `innerHTML =` en una capa donde `texto()` ya ha metido elementos**: los borra. Usa `insertAdjacentHTML`.
+- Los gestos a cámara (mano que tapa → `whip`, puñetazo → `flash`) son las transiciones: corta justo en el fotograma tapado.
+- Escenas nuevas en `ejemplos/ego-intro.html`: anuncio falso con barra y cursor que pulsa "Saltar anuncio" (mouse-click + glitch), carrusel lateral de trabajos en tarjetas verticales, y palabras por niveles (UGC / MARKETING / STYLE).
+- (feedback de Juan) **Si la cara falla** (muy cerca de la cámara, cabeza cortada, tomas con otra luz): a pantalla completa **solo el gancho**. El resto va **dentro de la tarjeta** (forma M: punto → píldora → tarjeta redondeada con sombra, con los fotogramas de la cara por índice absoluto; ver `TARJ` en `ejemplos/ego-intro.html`). Alrededor se pone motion: palabras por niveles, chips, y palabra gigante **detrás de la tarjeta** (capa `ui`) para dar profundidad. La toma vertical del cierre también va en una tarjeta vertical, no a pantalla completa.
+- (feedback de Juan, v3) Lo que más le gusta de su cámara es el formato antiguo: **cara grande abajo, arriba suave y sin que se vea su habitación**. Solución: **persona recortada (RVM) sobre un fondo inventado**. En EGO es una "pared de pantallas" con sus propios trabajos en bucle (desenfoque 10 px, brillo .42, tinte azul) que se desplaza despacio. Además, halo azul alrededor de la persona y máscara suave arriba. La palabra gigante vuelve a ir detrás de la cabeza.
+- Motion "de oficio" para un creador: barra de reproducción al 100 % en "hasta el final", chip con icono de ubicación, visor de cámara con REC en "pongo la cara", guion en pasos unidos por línea (gancho → historia → producto), timeline de edición con cabezal en "lo edito así", y botón de DM + flecha al perfil en el CTA.
+- Nunca dejes el último plano congelado: TOTAL = final real del clip, no más.
+- (feedback de Juan, v4) La pared de pantallas **no le gustó**. El fondo de la persona es un **estudio oscuro limpio**: halo azul detrás de la cabeza y rejilla azul en perspectiva que se mueve despacio (`#muro` + `#suelo` en `ejemplos/ego-intro.html`).
+- **Menos cara, más motion.** La cara solo va en el gancho, en la presentación, en una frase clave y en el CTA. El resto de la voz va sobre **escenas a pantalla completa**: chip de ubicación, producto en 3D grande, palabras tachadas, tarjetas de habilidades con iconos, pasos numerados unidos por línea, palabras por niveles y timeline con miniaturas reales. Cada cambio cara ↔ motion lleva `whip` o swish suave (-8/-10 dB).
+- Comprueba el espejo **por clip**: cada toma puede venir ya invertida por la cámara (el clip "me llamo Juan" no había que voltearlo).
+- **`CARA_N` es el índice del ÚLTIMO fotograma, no el número de archivos.** Los tramos de solo voz no tienen fotogramas pero sí ocupan índices. Si se pone mal, el final se queda congelado ("se queda glitch").
+- Gancho mejorado (EGO v5): cuando se nombra tu vídeo anterior, `whip` a un **reel de Instagram a pantalla completa** que lo reproduce, con corazón que se rellena y explota (mouse-click + pop), y `whip` de vuelta a la cara.
+
+- (feedback de Juan, v6) **Personalidad para que las marcas escriban**: marco de creador fijo en todo el vídeo (logo EGO arriba a la izquierda, "● REC 00:ss" con el tiempo real arriba a la derecha, esquinas de visor y "UGC · MARKETING · STYLE" abajo), bandas diagonales de texto en movimiento, y **clips reales de creación de contenido** (Mixkit: 20810 libreta, 44056 cámara, 44054 edición, 44049 micro, 2374 diafragma) dentro de las tarjetas. Hay que **variar las transiciones**: whip, barras, iris, flash y glitch, sin repetir la misma dos veces seguidas.
+
+- (feedback de Juan, v7) **Como máximo UN sonido por transición o evento.** No se pone clic + glitch, ni clic + pop, ni whoosh + pop juntos. Si una transición visual va pegada a otro sonido, esa va en silencio (`fx(t, 'whip')` sin sonido).
+- Ideas sacadas del vídeo de referencia de OpenAI (motion "de producto"): **caja de prompt** con botón de enviar que al pulsarse hace **explotar un abanico de tarjetas** con vídeo; **onda que se ramifica** en nodos que acaban en tarjetas (formatos UGC: unboxing, reseña, rutina, detrás de cámaras, POV); y **anillos** que crecen hasta blanco.
+- Clips UGC típicos (Mixkit): 31218 unboxing, 34478 reseña a cámara, 50406 rutina en móvil con aro de luz, 42315 aro de luz, 41181 selfie POV.
+- (feedback de Juan, v8: "se me ve mal, hablo mal, no retiene") **Jump cuts**: se quitan las pausas de más de 0,28 s (dejando 0,12 s a cada lado), **salvo** ±0,32 s alrededor de cada transición visual, el arranque, el final y las escenas que necesitan tiempo. Además se acelera la voz ×1,06 (`atempo`). La página sigue escrita en el tiempo original: un envoltorio `render(tn) → render(tViejo(tn))` y `window.FX_MEZCLA` con los sonidos ya movidos al tiempo nuevo (lo lee `fx-de-pagina.js`). En cada corte que cae sobre la cara, zoom alterno ×1,07 (jump cut clásico). Ver el final de `ejemplos/ego-intro.html`.
+- **La cara, retocada**: bilateral suave, curva en S, +10 % de saturación, un punto cálido y claridad (unsharp 1,35/-0,35) en los webp de la persona.
+- **Subtítulos de retención**: Figtree 800 a 78 px con sombra dura, y la palabra clave en **bloque azul** (no solo el color).
+- **Gancho**: algo se mueve en el primer fotograma. En EGO, una mosca que revolotea alrededor de la cabeza hasta que entra el reel.
+- En el "me gusta" del reel, `pop-imagen` (no `mouse-click`, que suena mal).
+- (feedback de Juan, v9) **Transiciones "de cámara" dentro de la escena** (le encantan):
+  - **Zoom a la tarjeta en la que habla**: en el abanico hay una tarjeta 9:16 (`#fn5`) que reproduce su propio plano con el mismo encuadre (un 1080×1920 escalado ×0,2778). La cámara gira y se acerca hasta que la tarjeta llena la pantalla (escala 3,6) y la cara sigue sin corte. Ese tramo de cara no lleva la entrada de píldora.
+  - **Agruparse en uno**: las tarjetas se apilan en el centro, ligeramente giradas, antes del siguiente `whip`.
+- **Final sin "cara rara"**: la cara se encoge en un círculo hasta la **foto de perfil** (se elige un fotograma sonriente) y se monta una **tarjeta de perfil/contacto** (nombre, bio, "Escríbeme para colaborar", botones Seguir y Mensaje). Un cursor pulsa Seguir, que pasa a Siguiendo con un pop, y la palabra de marca va detrás con el woah-drop. No se inventan seguidores ni cifras.
+- En escenas seguidas, **no repitas el mismo sonido**: alterna swish, riser, whoosh y pop.
+- (feedback de Juan, v10) **Ningún sonido más de 2 veces por vídeo** (woah-drop, máximo 3). Hay 45 SFX buenos repartidos en `packs/`, `packs2/` y `packs3/` (ver sus LEEME). Hay que variar: swoosh-suave, swoosh-corto, swoosh-aire, arrow-swoosh, arrow2-swoosh, whoosh-b, whoosh-mov y swish-c para transiciones; obturador-real, obturador-seco, rafaga-fotos y camera-shutter para cámara; tap, click y pop-limpio para UI. Comprueba el recuento con `fx-de-pagina.js | Counter` antes de grabar.
+- **Transiciones de cambio de ángulo** (`motor/fx.js`): `giro` (el plano rota 75° con zoom y el siguiente llega girando del otro lado), `caida` (cae hacia abajo con inclinación 3D y el siguiente baja desde arriba) y `ladeo` (ladeo de 14° con desplazamiento lateral). Hacen que todo parezca un único plano continuo.
+- Las escenas de motion van **centradas** (ej.: la historia baja desde arriba al centro y se ramifica en 2 filas de tarjetas grandes); nada pegado a un lado dejando medio encuadre vacío.
+- (v11) Tras un sonido que funciona (riser-metal en HISTORIA), **no pongas otro riser ni un woah justo después**: suena repetido. Usa carga-parpadeo u obturador-swoosh. La foto de perfil es la que elija Juan (avatar.jpg, fuera del repo).

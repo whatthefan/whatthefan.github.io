@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="kit4.css"><style>
+body{margin:0;width:1080px;height:1920px;position:relative;overflow:hidden}
+.h{position:absolute;left:70px;font:700 30px MS;letter-spacing:.2em;text-transform:uppercase;color:#8a857b}
+.sw{position:absolute;width:150px;height:150px;border-radius:26px;box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.sw b{position:absolute;left:0;right:0;bottom:-44px;text-align:center;font:700 24px MS;color:#555}
+.zona{position:absolute;left:680px;width:300px;height:470px;border-radius:30px;background:#fff;box-shadow:0 20px 40px rgba(0,0,0,.14);overflow:hidden}
+.zona i{position:absolute;left:18px;right:18px;border:3px dashed;border-radius:12px;font:700 20px MS;font-style:normal;padding:6px 10px}
+.regla{font:700 30px MS;letter-spacing:-.02em;color:#141414;line-height:1.35}
+.regla b{font-weight:900;color:#D39B16;font-style:italic}
+</style></head><body>
+<div class="papel" style="position:absolute;inset:0"><div class="fibra"></div><div class="grano"></div></div>
+<svg width="0" height="0" style="position:absolute"><defs id="filtros"><filter id="troquel" x="-25%" y="-25%" width="150%" height="150%"><feMorphology in="SourceAlpha" operator="dilate" radius="7" result="d"/><feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>
+
+<div style="position:absolute;left:70px;top:90px;font:900 96px MS;letter-spacing:-.05em;color:#141414">PLEA<span style="color:#D39B16;font-style:italic">5</span>E <span style="font-weight:700;font-size:44px;letter-spacing:-.02em;color:#8a857b">formato de vídeo</span></div>
+
+<div class="h" style="top:250px">Tipografía · Montserrat</div>
+<div style="position:absolute;left:70px;top:300px">
+  <div style="font:700 50px MS;letter-spacing:-.03em;color:#141414">frase pequeña · 700</div>
+  <div style="font:900 120px MS;letter-spacing:-.05em;line-height:.9;color:#141414">palabra <span style="font-style:italic;color:#D39B16">clave</span></div>
+  <div style="font:700 28px MS;color:#8a857b;margin-top:14px">grande 900 · clave 900 cursiva en oro · interletra −5 % · a la izquierda, margen 90</div>
+</div>
+
+<div class="h" style="top:640px">Color</div>
+<div class="sw" style="left:70px;top:690px;background:#ECEAE5"><b>papel</b></div>
+<div class="sw" style="left:240px;top:690px;background:#141414"><b>tinta</b></div>
+<div class="sw" style="left:410px;top:690px;background:#D39B16"><b>oro</b></div>
+<div class="sw" style="left:70px;top:900px;background:#06080E"><b>noche</b></div>
+<div class="sw" style="left:240px;top:900px;background:#E5484D"><b style="left:-20px;right:-40px">rojo · tachar</b></div>
+
+<div class="zona" style="top:650px"><div class="papel" style="position:absolute;inset:0"></div>
+  <i style="top:24px;height:56px;color:#8a857b;border-color:#8a857b">arriba libre (interfaz)</i>
+  <i style="top:92px;height:80px;color:#141414;border-color:#141414">titular</i>
+  <i style="top:184px;height:170px;color:#D39B16;border-color:#D39B16">1 idea · máx. 3 elementos</i>
+  <i style="top:366px;height:80px;color:#8a857b;border-color:#8a857b">abajo libre (texto IG)</i></div>
+
+<div class="h" style="top:1140px">Collage</div>
+<div class="peg" style="left:70px;top:1190px;width:230px;height:230px;transform:rotate(-6deg)"><img src="obj/cafe-real.png"></div>
+<div class="peg" style="left:300px;top:1180px;width:250px;height:258px;transform:rotate(4deg)"><img src="obj/placa-real.png"></div>
+<div class="cinta" style="left:330px;top:1180px;transform:rotate(-20deg);width:150px"></div>
+<div class="peg" style="left:560px;top:1200px;width:200px;height:200px;transform:rotate(-4deg)"><img src="obj/fly.png"></div>
+<div class="rasgado" style="left:760px;top:1230px;font-size:34px;transform:rotate(3deg)">papel rasgado</div>
+<div class="sello" style="left:770px;top:1330px;font-size:54px;border-width:6px;padding:2px 16px 6px;transform:rotate(-8deg)">NUNCA.</div>
+<div style="position:absolute;left:70px;top:1460px;font:700 26px MS;color:#8a857b">foto real recortada o objeto 3D · borde blanco troquelado · sombra · cinta</div>
+
+<div class="h" style="top:1530px">Ritmo y sonido</div>
+<div class="regla" style="position:absolute;left:70px;top:1580px;width:950px">
+  Cara solo en el <b>gancho</b> y en el <b>«comenta»</b>, recortada como pegatina con las letras detrás.<br>
+  Cada cosa entra en 0,4 s y se queda <b>1 s quieta</b> antes de irse.<br>
+  Pegar = <b>pega</b> · cinta = <b>cinta</b> · tachar = <b>rotulador</b> · ¡pum! = <b>woah drop</b>.</div>
+<script>window.render=()=>{}</script>
+</body></html>

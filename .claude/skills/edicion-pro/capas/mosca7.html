@@ -1,0 +1,216 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-800-normal.woff2);font-weight:800}
+:root{--oro:#E9BC46;--verde:#1C5A40}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#06080E;font-family:FT;color:#fff}
+.abs{position:absolute}
+#mundo{position:absolute;inset:0;transform-origin:50% 50%}
+#fondo{position:absolute;inset:0;background:#06080E;overflow:hidden}
+.glow{position:absolute;border-radius:50%;filter:blur(120px);opacity:.55}
+/* texto */
+.t{position:absolute;left:80px;right:80px;white-space:nowrap}
+.t .l{display:inline-block;will-change:transform}.t .wd{display:inline-block;white-space:nowrap}
+.h{font-weight:700;font-size:128px;letter-spacing:-.04em;line-height:.98;white-space:normal;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+.p{font-weight:600;font-size:58px;letter-spacing:-.02em;color:rgba(255,255,255,.78);line-height:1.3;white-space:normal}
+.k{color:var(--oro)}
+.gig{font-weight:800;font-size:300px;letter-spacing:-.06em;line-height:.85;text-align:center;left:0;right:0}
+.sub{position:absolute;left:40px;right:40px;text-align:center;font-weight:700;font-size:66px;letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+/* forma que se transforma */
+#M{position:absolute;overflow:hidden;background:#fff;will-change:transform}
+#M img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.chip{position:absolute;height:104px;padding:0 46px;border-radius:52px;display:flex;align-items:center;gap:16px;font-weight:600;font-size:46px;letter-spacing:-.01em;
+  background:rgba(12,14,20,.72);border:1.5px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;backdrop-filter:blur(14px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.chip.on{background:var(--oro);color:#111;border-color:transparent}
+.card{position:absolute;border-radius:40px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);backdrop-filter:blur(20px)}
+.fila{position:absolute;left:28px;right:28px;height:128px;border-radius:26px;display:flex;align-items:center;gap:24px;padding:0 26px;background:rgba(255,255,255,.05)}
+.fila .av{width:74px;height:74px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:34px;color:#111}
+.fila b{display:block;font-weight:600;font-size:34px}.fila small{display:block;font-weight:500;font-size:26px;color:rgba(255,255,255,.55)}
+.fila .est{margin-left:auto;font-size:30px;letter-spacing:2px;color:var(--oro)}
+.linea{position:absolute;left:0;top:0;overflow:visible}
+.linea *{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+/* cara */
+#cara{position:absolute;inset:0;overflow:hidden}
+#caraZ{position:absolute;inset:0;transform-origin:50% 62%}
+#caraBlur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(38px) brightness(.5) saturate(1.05);transform:scale(1.15)}
+#caraFondo,#caraPersona{position:absolute;left:0;top:705px;width:1080px;height:1215px;object-fit:cover}
+#caraFondo{-webkit-mask-image:linear-gradient(transparent 0,#000 200px);mask-image:linear-gradient(transparent 0,#000 200px)}
+#detras{position:absolute;inset:0}
+#grano{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.demo{position:absolute;padding:8px 18px;border-radius:12px;background:rgba(17,17,17,.8);color:#fff;font:600 26px FT}
+.tache{position:absolute;height:6px;border-radius:3px;background:#E0463B;transform-origin:0 50%}
+</style></head><body>
+<div id="mundo">
+  <div id="fondo"><i class="glow" id="g1" style="width:900px;height:900px;background:#1C5A40"></i><i class="glow" id="g2" style="width:700px;height:700px;background:#8a6a14"></i><i class="glow" id="g3" style="width:600px;height:600px;background:#123d2d"></i></div>
+  <div id="ui"></div>
+  <div id="M"><img id="Mimg"></div>
+  <img id="p3d" class="abs" style="left:90px;top:580px;width:900px;height:1100px;display:none;filter:drop-shadow(0 50px 60px rgba(0,0,0,.55))">
+  <div id="ui2"></div>
+</div>
+<div id="cara"><div id="caraZ"><img id="caraBlur"><img id="caraFondo"><div id="detras"></div><img id="caraPersona"></div></div>
+<div id="subs"></div>
+<div id="grano"></div>
+<script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle } = E;
+const TOTAL = 30.57; window.TOTAL = TOTAL;
+const pad = i => String(i).padStart(4, '0');
+const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
+const lerp = (a, b, k) => a + (b - a) * k;
+/* ===== textos con letras que entran (blur + subida + escala), como el ref ===== */
+const T = [];
+function texto(html, cls, y, t0, t1, o = {}) { const el = document.createElement('div'); el.className = 't ' + cls; el.style.top = y + 'px'; if (o.center) { el.style.textAlign = 'center'; }
+  if (o.size) el.style.fontSize = o.size + 'px';
+  // html con *palabra* en oro
+  const parts = html.split(/(\*[^*]+\*)/); let s = '', n = 0;
+  parts.forEach(q => { const k = q.startsWith('*'); const txt = k ? q.slice(1, -1) : q; s += (k ? '<span class="k">' : '') + txt.split(' ').map(w => w ? '<span class="wd">' + [...w].map(c => `<span class="l" data-i="${n++}">${c}</span>`).join('') + '</span>' : '').join(' ') + (k ? '</span>' : ''); });
+  el.innerHTML = s; $(o.capa || 'ui2').appendChild(el); T.push({ el, t0, t1, st: o.st || .022, cls }); return el; }
+function pintaTextos(t) { T.forEach(o => { const vis = t >= o.t0 - .01 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  const sal = p(t, o.t1 - .22, .22), se = ease.inCubic(sal);
+  o.el.querySelectorAll('.l').forEach(l => { const i = +l.dataset.i, a = o.t0 + i * o.st, k = exp(p(t, a, .55)), m = muelle(t, a, 2.2, .72);
+    const ks = p(t, o.t1 - .22 + i * .006, .18), s2 = ease.inCubic(ks);
+    l.style.opacity = Math.min(k * 1.3, 1) * (1 - s2); l.style.filter = `blur(${(1 - k) * 10 + s2 * 10}px)`;
+    l.style.transform = `translateY(${(1 - Math.min(m, 1.04)) * 46 - s2 * 30}px) scale(${.86 + .14 * Math.min(k, 1)})`; }); }); }
+/* ===== subtítulos (cara) palabra a palabra ===== */
+const S = [];
+function sub(txt, t0, t1, tt, y = 1590) { const el = document.createElement('div'); el.className = 'sub'; el.style.top = y + 'px'; const ws = txt.split(' '), L = ws.reduce((a, w) => a + w.length + 1, 0); let c = 0;
+  el.innerHTML = ws.map(w => { const t = t0 + (tt - t0) * c / L; c += w.length + 1; return `<span class="l" data-t="${t.toFixed(3)}" style="display:inline-block">${w.replace(/\*(.+)\*/, '<span class="k">$1</span>')}</span>`; }).join(' ');
+  $('subs').appendChild(el); S.push({ el, t0, t1 }); }
+function pintaSubs(t) { S.forEach(o => { const vis = t >= o.t0 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return; const s = ease.inCubic(p(t, o.t1 - .12, .12));
+  o.el.querySelectorAll('.l').forEach(l => { const a = +l.dataset.t, k = exp(p(t, a, .3)), m = muelle(t, a, 3, .6); l.style.opacity = k * (1 - s); l.style.transform = `translateY(${(1 - Math.min(m, 1.05)) * 20}px) scale(${.9 + .1 * Math.min(m, 1.05)})`; l.style.filter = `blur(${(1 - k) * 6 + s * 8}px)`; }); }); }
+/* ===== la forma M: keyframes [t, x, y, w, h, radio, color, imagen] con easeInOutExpo ===== */
+const MK = [];
+function M(t) { let a = MK[0], b = MK[0]; for (let i = 0; i < MK.length - 1; i++) if (t >= MK[i][0]) { a = MK[i]; b = MK[i + 1]; }
+  const d = b[0] - a[0], k = d > 0 ? ioX(Math.min(1, Math.max(0, (t - a[0]) / (d)))) : 1; const r = []; for (let j = 1; j <= 5; j++) r.push(lerp(a[j], b[j], k)); return { v: r, a, b, k }; }
+/* ===== cara ===== */
+async function cara(t) { const i = Math.max(1, Math.min(918, Math.round(t * 30) + 1)), F = $('caraFondo');
+  if (F._i !== i) { F.src = $('caraBlur').src = `cmf/${pad(i)}.jpg`; $('caraPersona').src = `pm/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
+const CARA = [[0, 1.05], [8.8, 10.3], [17.9, 19.5], [28.3, 31]];
+const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
+/* ===== construcción ===== */
+// cara 1
+sub('En un aeropuerto', .1, 1.05, .75);
+// S1 aeropuerto (b-roll en la forma)
+texto('de *Ámsterdam*', 'h', 300, 1.15, 2.5);
+sub('dibujaron una *mosca*', 1.67, 2.55, 2.4, 1730);
+// S2 urinario (dibujo + mosca)
+texto('dentro de los *urinarios*', 'h', 300, 3.26, 4.85);
+// S3 baño real + limpio
+texto('y los baños empezaron a estar', 'p', 230, 4.95, 8.75);
+texto('mucho más *limpios*', 'h', 310, 7.2, 8.75);
+// cara 2
+sub('nadie les pidió', 8.89, 10.3, 9.5); gigante('NADA', 9.62, 10.3);
+// S4 diana
+texto('solo les pusieron algo', 'p', 300, 10.36, 13.05);
+texto('a lo que *apuntar*', 'h', 390, 11.98, 13.05);
+// S5 nudge
+texto('esto se llama', 'p', 620, 13.19, 14.6, { center: true });
+const nud = texto('*nudge*', 'gig', 700, 13.72, 14.6); nud.style.fontSize = '260px';
+texto('no obligas a nadie', 'p', 300, 14.66, 17.85);
+texto('se lo pones más *fácil*', 'h', 390, 15.9, 17.85);
+// cara 3
+sub('con tus clientes', 18.07, 19.5, 18.7); gigante('IGUAL', 18.8, 19.5);
+// S6 camarero
+texto('no hace falta', 'p', 300, 19.58, 21.45);
+texto('*insistirles*', 'h', 390, 20.25, 21.45);
+// S7 placa real
+texto('hace falta ponerles', 'p', 300, 21.6, 23.85);
+texto('algo *delante*', 'h', 390, 22.55, 23.85);
+// S8 móvil (croma)
+texto('acercan el *móvil*', 'h', 300, 23.93, 25.25);
+// S9 lista de reseñas
+texto('y ya están escribiendo', 'p', 300, 25.31, 26.95);
+texto('*tu reseña*', 'h', 390, 26.2, 26.95);
+// S10 marca
+const marca = texto('PLEA*5*E', 'gig', 830, 27.35, 28.25); marca.style.fontSize = '200px';
+texto('esto es', 'p', 760, 27.13, 28.25, { center: true });
+// cara 4
+sub('comenta', 28.38, 31, 28.6, 1540); gigante('PLACA', 28.85, 31); sub('y te mando la tuya', 29.4, 31, 30.1, 1630);
+// UI fija: chips del nudge, líneas del urinario y diana, lista de reseñas
+$('ui').innerHTML = `
+ <svg class="linea" id="svgU" width="1080" height="1920"><path id="u1" d="M540 700 H690 Q740 700 740 760 V1090 Q740 1300 575 1350 H505 Q340 1300 340 1090 V760 Q340 700 390 700 Z"/>
+   <path id="u2" d="M400 820 Q540 780 680 820 V1080 Q680 1260 540 1290 Q400 1260 400 1080 Z" style="stroke-width:4;opacity:.5"/></svg>
+ <svg class="linea" id="svgD" width="1080" height="1920"><g transform="translate(540 1080)"><circle id="d1" r="330" style="opacity:.35"/><circle id="d2" r="220" style="opacity:.6"/><circle id="d3" r="110" style="stroke:#E9BC46;stroke-width:8"/><circle id="onda" r="110" style="stroke:#E9BC46;stroke-width:5"/></g></svg>
+ <svg id="mosca" class="abs" viewBox="-50 -50 100 100" style="left:0;top:0;width:92px;height:92px"><g fill="#fff"><ellipse rx="11" ry="17" cy="6"/><circle cy="-14" r="8"/></g>
+   <g fill="none" stroke="#fff" stroke-width="3.5"><ellipse cx="-17" cy="-4" rx="17" ry="8" transform="rotate(-25)"/><ellipse cx="17" cy="-4" rx="17" ry="8" transform="rotate(25)"/></g></svg>
+ <div id="ch1" class="chip" style="left:130px;top:1470px">Obligar<div id="tch" class="tache" style="left:34px;right:34px;top:44px"></div></div>
+ <div id="ch2" class="chip" style="left:460px;top:1470px">Ponérselo fácil</div>
+ <div id="lista" class="card" style="left:90px;top:620px;width:900px;height:760px;overflow:hidden"><div id="listaIn" class="abs" style="left:0;right:0;top:0"></div>
+   <div class="demo" style="right:24px;top:22px">Demostración</div></div>`;
+['ch1', 'ch2'].forEach(id => $('ui2').appendChild($(id)));
+const RES = [['L', 'Lucía M.', 'Hace un momento', '#F4C95D'], ['A', 'Antonio R.', 'Hace 2 días', '#8FD3B6'], ['M', 'Marta G.', 'Hace 1 semana', '#F2A07B'], ['J', 'Javi P.', 'Hace 2 semanas', '#9DB8F2'], ['C', 'Carmen S.', 'Hace 3 semanas', '#E6B8F2']];
+$('listaIn').innerHTML = RES.map(([a, n, d, c], i) => `<div class="fila" style="top:${110 + i * 150}px"><div class="av" style="background:${c}">${a}</div><div><b>${n}</b><small>${d}</small></div><div class="est">★★★★★</div></div>`).join('');
+// ===== keyframes de la forma M (x,y,w,h,r) =====
+// punto dorado → píldora → marco con metraje; vuelve a píldora entre escenas; nunca «corta»
+MK.push(
+ [1.0, 540, 1180, 0, 0, 0], [1.12, 540, 1180, 60, 60, 30], [1.35, 540, 1100, 300, 92, 46], [1.7, 540, 1100, 900, 1100, 56],          // aeropuerto
+ [2.5, 540, 1100, 900, 1100, 56], [2.8, 540, 1060, 120, 120, 60], [3.0, 540, 1060, 0, 0, 0],                                          // se cierra en la mosca
+ [4.8, 540, 1060, 0, 0, 0], [4.95, 540, 1060, 120, 120, 60], [5.3, 540, 1210, 900, 1060, 56],                                         // baño real
+ [8.6, 540, 1210, 900, 1060, 56], [8.85, 540, 960, 1080, 1920, 0],                                                                   // se abre a la cara
+ [10.2, 540, 1130, 1080, 1920, 0], [10.2, 540, 1080, 0, 0, 0],
+ [14.55, 540, 1250, 0, 0, 0], [14.7, 540, 1250, 120, 120, 60], [15.05, 540, 1250, 900, 820, 48], [17.6, 540, 1250, 900, 820, 48], [17.85, 540, 1250, 0, 0, 0],
+ [19.4, 540, 1080, 0, 0, 0], [19.5, 540, 1100, 120, 120, 60], [19.85, 540, 1130, 900, 1180, 56],                                     // camarero
+ [21.3, 540, 1130, 900, 1180, 56], [21.55, 540, 1150, 120, 120, 60], [21.7, 540, 1150, 0, 0, 0], [23.8, 540, 1150, 0, 0, 0],                                // placa real
+ [23.9, 540, 1150, 120, 120, 60], [24.2, 540, 1130, 900, 1180, 56], [25.2, 540, 1130, 900, 1180, 56], [25.4, 540, 1000, 900, 760, 40], [25.5, 540, 1000, 0, 0, 0],     // móvil → lista
+ [27.0, 540, 1000, 0, 0, 0], [27.12, 540, 960, 70, 70, 35], [27.35, 540, 960, 70, 70, 35], [27.55, 540, 960, 0, 0, 0], [99, 540, 960, 0, 0, 0]);
+const IMG = [[1.35, 2.8, 'br/aero/', 90, 'jpg', 0], [4.95, 8.85, 'br/bano/', 135, 'jpg', 0], [14.7, 17.85, 'br/cafe/', 90, 'jpg', 0], [19.5, 21.45, 'br/cama/', 76, 'jpg', 0], [23.93, 25.45, 'br/movil/', 75, 'webp', 0]];
+
+window.render = async t => {
+  // fondo: resplandores que respiran
+  [['g1', 200, 1300, .3], ['g2', 820, 520, .23], ['g3', 540, 1700, .17]].forEach(([id, x, y, v], j) => { const g = $(id); g.style.left = (x - 450 + Math.sin(t * v + j) * 200) + 'px'; g.style.top = (y - 450 + Math.cos(t * v * 1.3 + j * 2) * 160) + 'px'; });
+  // cámara global: deriva lenta + empujón en cada golpe
+  const golpes = [3.12, 7.2, 12.1, 13.72, 16.85, 22.55, 26.2, 27.35];
+  let s = 1 + .025 * Math.sin(t * .35); golpes.forEach(g => { const u = t - g; if (u > 0 && u < .6) s += .03 * Math.exp(-u * 7) * Math.sin(u * 18 + 1.2); });
+  $('mundo').style.transform = `scale(${s}) rotate(${Math.sin(t * .23) * .6}deg)`;
+  pintaTextos(t); pintaSubs(t);
+  // forma M
+  const m = M(t), [x, y, w, h, r] = m.v, el = $('M'); el.style.display = w > 1 ? 'block' : 'none';
+  Object.assign(el.style, { left: x - w / 2 + 'px', top: y - h / 2 + 'px', width: w + 'px', height: h + 'px', borderRadius: r + 'px' });
+  const im = IMG.find(q => t >= q[0] && t < q[1]); const mi = $('Mimg');
+  el.style.background = im ? '#000' : '#E9BC46';
+  if (im && w > 200) { mi.style.display = 'block'; let src;
+    if (im[2] === 'foto') { src = 'foto-placa-marmol.jpg'; mi.style.transform = `scale(${1.08 + .1 * p(t, im[0], 2.5)})`; }
+    else { const i = Math.min(im[3], 1 + Math.floor((t - im[0]) * 30)); src = im[2] + pad(i) + '.' + im[4]; mi.style.transform = `scale(${1.04 + .05 * p(t, im[0], im[1] - im[0])})`; }
+    if (mi._s !== src) { mi.src = src; await mi.decode().catch(() => {}); mi._s = src; }
+    mi.style.objectFit = im[2] === 'br/movil/' ? 'cover' : 'cover'; el.style.background = im[2] === 'br/movil/' ? '#0b0f16' : '#000';
+  } else mi.style.display = 'none';
+  // placa 3D (S7)
+  const p3 = $('p3d'), on7 = t >= 21.62 && t < 23.95; p3.style.display = on7 ? 'block' : 'none';
+  if (on7) { const i = Math.min(80, 1 + Math.floor((t - 21.62) * 30)), src = 'br/placa3d/' + pad(i) + '.png'; if (p3._s !== src) { p3.src = src; await p3.decode().catch(() => {}); p3._s = src; }
+    p3.style.opacity = 1 - p(t, 23.75, .2); p3.style.transform = `scale(${1 - .3 * ioX(p(t, 23.75, .2))})`; }
+  // urinario + mosca (S2)
+  const on2 = t >= 2.75 && t < 4.95; $('svgU').style.display = on2 ? 'block' : 'none';
+  if (on2) { E.traza($('u1'), t, 3.0, .8); E.traza($('u2'), t, 3.4, .6); $('svgU').style.opacity = 1 - p(t, 4.75, .2); }
+  const mo = $('mosca'); let mv = false;
+  if (t >= 2.62 && t < 4.95) { mv = true; const k = exp(p(t, 2.62, .5)); const px = 540 + (1 - k) * 0, py = 1060 + (1 - k) * 0 + Math.sin(t * 2) * 4; mo.style.transform = `translate(${px - 46}px,${py - 46}px) rotate(${Math.sin(t * 3) * 6}deg) scale(${.2 + .8 * Math.min(muelle(t, 2.62, 2.4, .5), 1.1)})`; mo.style.opacity = 1 - p(t, 4.75, .2); }
+  if (t >= 10.3 && t < 13.1) { mv = true; const k = ioX(p(t, 11.2, .9)); const px = lerp(1000, 540, k) + Math.sin(k * 8) * 90 * (1 - k), py = lerp(400, 1080, k); mo.style.transform = `translate(${px - 46}px,${py - 46}px) rotate(${(1 - k) * -140}deg) scale(${t > 12.1 ? 1 + .25 * (1 - muelle(t, 12.1, 3, .45)) : 1})`; mo.style.opacity = t >= 11.2 ? 1 : 0; }
+  mo.style.display = mv ? 'block' : 'none';
+  // diana
+  const on4 = t >= 10.3 && t < 13.1; $('svgD').style.display = on4 ? 'block' : 'none';
+  if (on4) { ['d1', 'd2', 'd3'].forEach((d, i) => { E.traza($(d), t, 10.4 + i * .12, .55); }); const o = p(t, 12.1, .6); $('onda').setAttribute('r', 110 + o * 320); $('onda').style.opacity = t >= 12.1 ? 1 - o : 0; $('svgD').style.opacity = 1 - p(t, 12.9, .2); }
+  // chips nudge: el indicador pasa de Obligar a Ponérselo fácil
+  const onc = t >= 14.66 && t < 17.9; ['ch1', 'ch2'].forEach(c => $(c).style.display = onc ? 'flex' : 'none');
+  if (onc) { [['ch1', 14.9], ['ch2', 15.15]].forEach(([c, a]) => { const k = muelle(t, a, 2.4, .6), e = exp(p(t, a, .3)); $(c).style.opacity = e * (1 - p(t, 17.65, .2)); $(c).style.transform = `translateY(${(1 - Math.min(k, 1.05)) * 60}px) scale(${.8 + .2 * Math.min(k, 1.05)})`; });
+    $('tch').style.transform = `scaleX(${exp(p(t, 15.55, .35))})`; $('ch1').style.opacity *= 1 - .5 * p(t, 15.7, .3);
+    $('ch2').classList.toggle('on', t >= 16.85); $('ch2').style.transform += ` scale(${t >= 16.85 ? 1 + .12 * (1 - muelle(t, 16.85, 3, .5)) : 1})`; }
+  // lista de reseñas (S9): la píldora se abre en tarjeta y las filas suben con muelle; la primera se rellena
+  const onl = t >= 25.4 && t < 27.1; $('lista').style.display = onl ? 'block' : 'none';
+  if (onl) { const k = exp(p(t, 25.4, .4)); $('lista').style.opacity = k * (1 - p(t, 26.9, .2)); $('lista').style.transform = `scale(${.94 + .06 * k})`;
+    [...$('listaIn').children].forEach((f, i) => { const a = 25.5 + i * .07, m2 = muelle(t, a, 2.2, .7); f.style.opacity = exp(p(t, a, .3)); f.style.transform = `translateY(${(1 - Math.min(m2, 1.04)) * 120}px)`; });
+    $('listaIn').style.transform = `translateY(${-ioX(p(t, 26.3, .6)) * 160}px)`; }
+  // cara
+  const c = CARA.find(([a, b]) => t >= a && t < b), cf = $('cara');
+  if (c) { cf.style.display = 'block'; const [a, b] = c;
+    // entrada: se abre desde la forma (círculo que crece); salida: se cierra en píldora
+    const ei = a > 0 ? ioX(p(t, a, .35)) : 1, eo = b < TOTAL ? ioX(p(t, b - .3, .3)) : 0;
+    const R = 60 + (1 - ei) * 0, ins = Math.max((1 - ei), eo);
+    cf.style.clipPath = ins > 0 ? `inset(${ins * 42}% ${ins * 30}% ${ins * 42}% ${ins * 30}% round ${60 + ins * 200}px)` : 'none';
+    let zs = 1 + .04 * p(t, a, b - a); [[9.62, 1.1], [18.8, 1.08], [28.85, 1.06], [.6, 1.06]].forEach(([g, e]) => { if (t >= g && g >= a && g < b) zs *= e; });
+    $('caraZ').style.transform = `scale(${zs})`; await cara(t);
+  } else cf.style.display = 'none';
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

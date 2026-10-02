@@ -1,0 +1,10 @@
+[
+ {"id":"cliente","tipo":"busto","cuerpo":"Paper","pelo":"MediumBangs","caras":["Calm","Smile","Awe"],"acento":"paper"},
+ {"id":"duena","tipo":"busto","cuerpo":"Coffee","pelo":"Bun","caras":["Calm","BigSmile","Suspicious"],"acento":"cup"},
+ {"id":"camarero","tipo":"busto","cuerpo":"ButtonShirt","pelo":"ShortOne","caras":["Smile","Explaining"],"acento":null},
+ {"id":"camarera","tipo":"busto","cuerpo":"Explaining","pelo":"LongHair","caras":["Explaining","Smile"],"acento":"top"},
+ {"id":"cocinero","tipo":"busto","cuerpo":"TeeArmsCrossed","pelo":"Pomp","caras":["Smile","Calm"],"acento":null},
+ {"id":"cliente-pie","tipo":"pie","cuerpo":"WalkingColorTee","pelo":"MediumBangs","caras":["Calm"],"acento":null},
+ {"id":"senala-pie","tipo":"pie","cuerpo":"PointingFingerColorPants","pelo":"ShortOne","caras":["Smile"],"acento":null},
+ {"id":"sentado","tipo":"sentado","cuerpo":"CrossedLegs","pelo":"GrayShort","caras":["Calm"],"acento":null}
+]

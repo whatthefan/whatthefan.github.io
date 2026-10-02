@@ -1,0 +1,22 @@
+<!-- MINIATURA estilo REFERENCIAS (aprobada): foto real SIN recortar a pantalla completa arriba, fundido a negro, texto limpio Inter. Necesita traje-1080.png (foto 1080x1080 ampliada con LANCZOS + nitidez suave) e inter-latin.woff2. node grabar.js miniatura.html prueba x 0 -->
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;src:url(inter-latin.woff2);font-weight:100 900}
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;font-family:Inter;background:#0a0a0c}
+.foto{position:absolute;left:0;top:160px;width:1080px;height:1080px;background:url(traje-1080.png) center/cover;
+  -webkit-mask:linear-gradient(transparent 0,#000 14%,#000 70%,transparent 98%)}
+.vin{position:absolute;inset:0;background:radial-gradient(1000px 1300px at 50% 40%,transparent 50%,rgba(0,0,0,.6))}
+.grano{position:absolute;inset:0;opacity:.14;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.txt{position:absolute;left:0;right:0;top:1230px;text-align:center;color:#fff}
+.l1{font-weight:600;font-size:60px;letter-spacing:-1.5px;color:rgba(255,255,255,.75)}
+.l2{font-weight:800;font-size:176px;letter-spacing:-8px;line-height:1;white-space:nowrap}
+.l2 b{color:#E9BC46;font-weight:800}
+.l3{margin-top:28px;font-weight:500;font-size:40px;letter-spacing:-.5px;color:rgba(255,255,255,.55)}
+.marca{position:absolute;left:0;right:0;top:110px;text-align:center;font-weight:700;font-size:34px;letter-spacing:10px;color:rgba(255,255,255,.9)}
+.marca b{color:#E9BC46}
+</style></head><body>
+<div class="foto"></div><div class="vin"></div>
+<div class="marca">PLEA<b>5</b>E</div>
+<div class="txt"><div class="l1">reseñas en Google en</div><div class="l2"><b>10</b> segundos</div><div class="l3">sin apps · solo acercar el móvil</div></div>
+<div class="grano"></div>
+<script>window.TOTAL=0;window.render=()=>{};</script></body></html>

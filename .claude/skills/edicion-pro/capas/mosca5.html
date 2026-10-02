@@ -1,0 +1,164 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><link rel="stylesheet" href="kit5.css"><style>
+.azulejo{position:absolute;left:150px;top:640px;width:780px;height:860px;border-radius:26px;background:#f4f4f3;
+  background-image:linear-gradient(#d9d9d8 3px,transparent 3px),linear-gradient(90deg,#d9d9d8 3px,transparent 3px);background-size:130px 130px;background-position:-2px -2px;
+  box-shadow:0 40px 70px rgba(0,0,0,.16),0 4px 8px rgba(0,0,0,.08)}
+.mancha{position:absolute;border-radius:50%;background:radial-gradient(circle,#8d8a82 0%,#a9a69e 60%,transparent 72%)}
+.opc{position:absolute;left:0;right:0;text-align:center;font:600 64px ID;letter-spacing:-.03em;color:#3a3a3a}
+.opc b{font-weight:800;color:#1f1f1f}
+</style></head><body>
+<div id="caraF"><img></div>
+
+<!-- S1 urinario -->
+<div id="sUri" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <svg class="abs" style="left:0;top:140px" width="1080" height="1920" fill="none" stroke="#2a2a2a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path id="uri1" d="M540 640 H700 Q750 640 750 700 V1030 Q750 1250 575 1300 H505 Q330 1250 330 1030 V700 Q330 640 380 640 Z"/>
+    <path id="uri2" d="M395 760 Q540 720 685 760 V1020 Q685 1200 540 1230 Q395 1200 395 1020 Z" stroke-width="4" stroke="#777"/>
+    <path id="uri3" d="M540 1300 V1420"/></svg>
+  <div id="m1" class="obj" style="left:0;top:0;width:150px;height:150px"><img src="obj/fly.png"></div>
+</div></div>
+
+<!-- S2 limpios -->
+<div id="sLimpio" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div class="azulejo"></div><div id="manchas"></div>
+  <div id="esponja" class="obj" style="left:0;top:0;width:330px;height:330px"><img src="obj/sponge.png"></div>
+</div></div>
+
+<!-- S3 diana -->
+<div id="sDiana" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="diana" class="obj" style="left:250px;top:760px;width:580px;height:580px"><img src="obj/direct_hit.png"></div>
+  <div id="m2" class="obj" style="left:0;top:0;width:150px;height:150px"><img src="obj/fly.png"></div>
+</div></div>
+
+<!-- S4 nudge -->
+<div id="sNudge" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="nudge" class="cinetico" style="top:640px;font-size:330px">nudge</div>
+  <div id="o1" class="opc" style="top:1120px">obligar<div id="tx" class="tache" style="left:390px;width:300px;top:40px;background:#D6453F"></div></div>
+  <div id="o2" class="opc" style="top:1260px">ponérselo <b>fácil</b></div>
+</div></div>
+
+<!-- S5 clientes -->
+<div id="sCli" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="cafe" class="obj" style="left:300px;top:760px;width:480px;height:500px"><img src="obj/cafe-real.png"></div>
+</div></div>
+
+<!-- S6 insistir -->
+<div id="sIns" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="pjCam" class="pj" style="left:-60px;top:1100px;width:640px;height:770px;transform-origin:50% 100%;filter:grayscale(1)"><img src="cast/camarero-Explaining.svg"></div>
+  <div id="b1" class="bocadillo" style="left:400px;top:800px">¿Me dejas una reseña?<div id="t1" class="tache" style="left:20px;right:20px;top:50%;background:#D6453F"></div></div>
+  <div id="b2" class="bocadillo" style="left:560px;top:1010px;font-size:58px">¿Porfa?<div id="t2" class="tache" style="left:20px;right:20px;top:50%;background:#D6453F"></div></div>
+</div></div>
+
+<!-- S7 la placa real (lo único en color) -->
+<div id="sPlaca" class="esc gris"><div class="cam"><div class="papelt"></div><div id="zP" class="p3" style="transform-origin:540px 1050px">
+  <div id="placa" class="obj color" style="left:230px;top:720px;width:620px;height:640px"><img src="obj/placa-real.png"></div>
+  <div id="anillo" class="anillo" style="border-color:#fff;border-width:5px"></div>
+  <div id="movil" class="telefono" style="left:320px;top:600px;width:440px;height:950px"><div class="pant"><div class="isla"></div><img id="pant" src="pan/pantalla-0.png">
+    <div class="demo" style="left:50%;top:80px;transform:translateX(-50%);z-index:4">Demostración</div></div></div></div>
+  <div id="pillRes" class="pill" style="left:330px;top:1610px"><i></i>directo a tu reseña</div>
+</div></div>
+
+<!-- S8 marca -->
+<div id="sMarca" class="esc gris"><div class="cam"><div class="papelt"></div>
+  <div id="marca5" class="cinetico" style="top:760px;font-size:250px">PLEA<span style="color:#D39B16">5</span>E</div>
+</div></div>
+
+<div id="delante"></div>
+<div id="coment" class="coment" style="top:1470px"><div class="av">J</div><div class="txt" id="cTxt"></div><div class="env" id="cEnv"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M3 11 L21 3 L14 21 L11 13 Z" fill="#111"/></svg></div></div>
+<div id="vineta"></div><div id="fuga"></div><div id="estrobo"></div><div class="grano" style="z-index:9;opacity:.08"></div>
+
+<script src="kit.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit5.js"></script>
+<script>
+K.filtros();
+const TOTAL = 30.57; window.TOTAL = TOTAL;
+K.caraReal('cmf', 918);
+const ESC = [['sUri', 2.55, 4.9, { ent: 'tinta', d: .5 }], ['sLimpio', 4.9, 8.8, { ent: 'latigo', d: .32 }], ['sDiana', 10.3, 13.1, { ent: 'zoom', d: .4, golpes: [12.1] }],
+  ['sNudge', 13.1, 17.9, { ent: 'iris', d: .45 }], ['sCli', 17.9, 19.5, { ent: 'latigo', d: .32 }], ['sIns', 19.5, 21.5, { ent: 'corte' }],
+  ['sPlaca', 21.5, 27.0, { ent: 'iris', d: .4, golpes: [22.62, 24.6] }], ['sMarca', 27.0, 28.3, { ent: 'latigo', d: .3 }]];
+const EV = [[8.8, 'fuga'], [13.1, 'estrobo'], [19.5, 'fuga'], [21.5, 'estrobo'], [21.55, 'fuga'], [28.3, 'fuga']];
+const CARA = [[0, 2.55, [[2.42, 1.1]]], [8.8, 10.3, [[9.62, 1.13]]], [28.3, 31, [[28.85, 1.08]]]];
+const f1 = K.W('En un aeropuerto de Ámsterdam dibujaron una *mosca', .1, 2.77);
+const f14 = K.W('No obligas a nadie, solo se lo pones más fácil', 14.66, 17.64);
+const f25 = K.W('y ya están escribiendo tu reseña', 25.31, 26.79);
+const TX = [
+  { t0: 0, t1: 1.62, y: 1180, c: 'sub', s: f1.slice(0, 5), b: [] },
+  { t0: 1.64, t1: 2.55, y: 1150, c: 'sub', s: f1.slice(5, 7), b: f1.slice(7) },
+  { t0: 2.62, t1: 4.9, y: 330, s: K.W('dentro de los', 3.26, 3.9), b: K.W('urinarios', 3.99, 4.3) },
+  { t0: 4.95, t1: 8.8, y: 300, s: K.W('y los baños empezaron a estar', 4.95, 7.0), b: K.W('mucho más limpios', 7.2, 8.2), bs: 118 },
+  { t0: 8.85, t1: 9.6, y: 1180, c: 'sub', s: K.W('nadie les pidió', 8.89, 9.5), b: [] },
+  { t0: 9.6, t1: 10.3, y: 1150, c: 'sub', s: [], b: K.W('*nada', 9.62, 9.9), bs: 130 },
+  { t0: 10.36, t1: 13.1, y: 330, s: K.W('solo les pusieron algo', 10.36, 11.47), b: K.W('a lo que apuntar', 11.98, 12.84) },
+  { t0: 13.19, t1: 14.64, y: 520, s: K.W('esto se llama', 13.19, 13.7), b: [] },
+  { t0: 14.66, t1: 17.9, y: 330, s: f14.slice(0, 4), b: f14.slice(4), bs: 112 },
+  { t0: 17.95, t1: 19.5, y: 330, s: K.W('con tus clientes', 18.07, 18.75), b: K.W('pasa igual', 18.8, 19.3) },
+  { t0: 19.55, t1: 21.5, y: 330, s: K.W('no hace falta', 19.58, 20.2), b: K.W('insistirles', 20.25, 20.8) },
+  { t0: 21.6, t1: 23.9, y: 330, s: K.W('hace falta ponerles', 21.6, 22.5), b: K.W('algo delante', 22.55, 23.2) },
+  { t0: 23.93, t1: 25.28, y: 330, s: K.W('acercan el', 23.93, 24.35), b: K.W('móvil', 24.4, 24.8) },
+  { t0: 25.31, t1: 27.0, y: 300, s: f25.slice(0, 3), b: f25.slice(3), bs: 112 },
+  { t0: 27.1, t1: 28.3, y: 600, s: K.W('esto es', 27.1, 27.4), b: [] },
+  { t0: 28.35, t1: 28.84, y: 1180, c: 'sub', s: K.W('comenta', 28.38, 28.6), b: [] },
+  { t0: 28.84, t1: TOTAL + 1, y: 1140, c: 'sub', s: K.W('comenta', 28.84, 28.85), b: [['PLACA', 28.85, 'oro']], bs: 130 },
+];
+K.textos2(TX); TX.forEach(B => $('delante').appendChild(B.el));
+// manchas de S2
+[[300, 900, 70], [620, 1030, 90], [440, 1260, 60], [760, 1300, 75], [260, 1180, 50], [700, 780, 55]].forEach(([x, y, r]) => { const m = document.createElement('div'); m.className = 'mancha';
+  Object.assign(m.style, { left: x - r + 'px', top: y - r + 'px', width: 2 * r + 'px', height: 2 * r + 'px' }); m._x = x; $('manchas').appendChild(m); });
+const vueloIn = u => { const k = ease.outCubic(p(u, 2.62, .5)); return [-200 + (465 + 200) * k + Math.sin(k * 9) * 70 * (1 - k), 300 + (1170 - 300) * k + Math.cos(k * 7) * 90 * (1 - k)]; };
+
+window.render = async t => {
+  K.escenas5(ESC, t); K.efectos(t, EV);
+  TX.forEach(B => K.texto(B, t));
+  const cs = CARA.find(([a, b]) => t >= a && t < b + .6);
+  const tapada = ESC.some(([, a, b, o = {}]) => t >= a + (o.d || .4) && t < b);
+  $('caraF').style.display = cs && !tapada ? 'block' : 'none';
+  if (cs) K.caraZoom(t, cs[0], cs[1], cs[2]);
+  if ($('caraF').style.display === 'block') await K.caraRealFrame(t);
+
+  if (t >= 2.55 && t < 5.3) {   // S1
+    K.mueve($('m1'), t, vueloIn, ` rotate(${t < 3.12 ? Math.sin(t * 30) * 12 : Math.sin(t * 3) * 3}deg) scale(${golpe(t, 3.12, .15)})`);
+    traza($('uri1'), t, 3.26, .7); traza($('uri2'), t, 3.6, .5); traza($('uri3'), t, 4.0, .25);
+  }
+  if (t >= 4.9 && t < 9.1) {    // S2: las manchas aparecen; la esponja pasa y limpia
+    const ex = u => -380 + 1500 * ease.inOut(p(u, 7.0, .8));
+    [...$('manchas').children].forEach((m, i) => { const a = 5.1 + i * .14, lim = ex(t) + 165 > m._x ? p(t, 7.0, .8) : 0;
+      m.style.opacity = t < a ? 0 : (ex(t) + 165 > m._x ? 0 : 1); m.style.transform = `scale(${muelle(t, a, 2.6, .5)})`; });
+    K.mueve($('esponja'), t, u => [ex(u), 880 + Math.sin(u * 9) * 60], ` rotate(${-12 + Math.sin(t * 9) * 6}deg)`);
+    $('esponja').style.opacity = t >= 6.95 && t < 7.85 ? 1 : 0;
+  }
+  if (t >= 10.3 && t < 13.5) {  // S3
+    entra($('diana'), t, 10.36, { y: 60, s: .85, tipo: 'muelle', f: 1.8, z: .6 });
+    const pos = u => { const k = ease.inOut(p(u, 11.2, .9)); return [1150 + (465 - 1150) * k + Math.sin(k * 7) * 120 * (1 - k), 420 + (975 - 420) * k]; };
+    $('m2').style.opacity = t >= 11.2 ? 1 : 0; K.mueve($('m2'), t, pos, ` rotate(${t < 12.1 ? -60 + Math.sin(t * 30) * 10 : 0}deg) scale(${golpe(t, 12.1, .25)})`);
+    $('diana').style.transform += ` scale(${golpe(t, 12.1, .06)})`;
+  }
+  if (t >= 13.1 && t < 18.3) {  // S4
+    K.gira($('nudge'), t, 13.72, { ry: -18, rx: 8, desde: 80 });
+    const fuera = ease.inCubic(p(t, 14.5, .25)); $('nudge').style.transform += ` translateY(${-fuera * 500}px)`; $('nudge').style.opacity *= 1 - fuera;
+    entra($('o1'), t, 15.0, { y: 40, s: .95 }); K.tache($('tx'), t, 15.6); $('o1').style.opacity = t < 15 ? 0 : 1 - .55 * p(t, 15.7, .2);
+    entra($('o2'), t, 16.85, { y: 40, s: .95 });
+  }
+  if (t >= 17.9 && t < 19.9) entra($('cafe'), t, 18.0, { y: 80, s: .9, tipo: 'muelle', f: 1.8, z: .6 });   // S5
+  if (t >= 19.5 && t < 21.5) {  // S6
+    entra($('pjCam'), t, 19.52, { x: -200, y: 60, s: 1, tipo: 'muelle', f: 1.6, z: .7 }); $('pjCam').style.transform += ` rotate(${Math.sin(t * 14) * 1.5}deg)`;
+    K.pop($('b1'), t, 19.65, { s: .6, f: 3 }); K.pop($('b2'), t, 20.1, { s: .5, f: 3 }); K.tache($('t1'), t, 20.85); K.tache($('t2'), t, 20.95);
+  }
+  if (t >= 21.5 && t < 27.4) {  // S7: la placa real gira en 3D y se asienta; el móvil llega y toca
+    const k = muelle(t, 22.5, 1.5, .6), baja = ease.inOut(p(t, 24.9, .45)), pl = $('placa');
+    pl.style.opacity = t < 22.45 ? 0 : 1;
+    pl.style.transform = `perspective(1600px) translateY(${(1 - Math.min(k, 1.05)) * -300 + baja * 560}px) translateX(${-baja * 250}px) rotateY(${(1 - k) * -55 + Math.sin(t * .8) * 4}deg) rotateX(${(1 - k) * 25 + 6}deg) scale(${1 - baja * .55})`;
+    const zk = ease.outCubic(p(t, 24.5, .2)) * (1 - ease.inOut(p(t, 24.85, .4))); $('zP').style.transform = `scale(${1 + .1 * zk})`;
+    const mpos = u => { const k1 = ease.inOut(p(u, 23.93, .55)), k2 = ease.inOut(p(u, 24.9, .45)); return [760 + (60 - 760) * k1 + (0 - 60) * k2, 560 + (-10 - 560) * k1 + 10 * k2]; };
+    const k1 = ease.inOut(p(t, 23.93, .55)), k2 = ease.inOut(p(t, 24.9, .45));
+    $('movil').style.opacity = t >= 23.93 ? 1 : 0;
+    K.mueve($('movil'), t, mpos, ` perspective(1600px) rotateY(${(1 - k2) * -18}deg) scale(${(.6 + .4 * k2) * golpe(t, 24.6, .05)}) rotate(${-10 * k1 * (1 - k2) + 14 * (1 - k1)}deg)`);
+    K.anillo($('anillo'), t, 24.6, 470, 1030); K.pantalla($('pant'), t, 25.35, 1.1); K.pop($('pillRes'), t, 26.35);
+  }
+  if (t >= 27.0 && t < 28.6) K.gira($('marca5'), t, 27.1, { ry: -22, rx: 10, desde: 70 });   // S8
+  const cm = $('coment');   // CTA
+  if (t >= 28.9) { K.pop(cm, t, 28.9, { y: 60, s: .85 });
+    const tx = teclea('PLACA', t, 29.3, 11); $('cTxt').innerHTML = tx ? tx + (t < 29.95 && (t * 3 | 0) % 2 ? '' : '<span class="cur"></span>') : '<i>Añade un comentario…</i>';
+    $('cEnv').style.transform = `scale(${golpe(t, 30.0, .25)})`; $('cEnv').style.background = t >= 30.0 ? '#E9BC46' : '#d6d6d6';
+  } else cm.style.opacity = 0;
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

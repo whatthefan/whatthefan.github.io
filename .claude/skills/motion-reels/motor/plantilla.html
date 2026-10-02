@@ -1,0 +1,135 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><script src="escena.js"></script><style>
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:FT;src:url(fuentes/figtree-latin-800-normal.woff2);font-weight:800}
+:root{--oro:#E9BC46;--fondo:#06080E;--glow1:#1C5A40;--glow2:#8a6a14;--glow3:#123d2d} /* MARCA: cambia estos 5 colores (PLEA5E = oro/noche/verde) */
+*{margin:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--fondo);font-family:FT;color:#fff}
+.abs{position:absolute}
+#mundo{position:absolute;inset:0;transform-origin:50% 50%}
+#fondo{position:absolute;inset:0;background:var(--fondo);overflow:hidden}
+.glow{position:absolute;border-radius:50%;filter:blur(120px);opacity:.55}
+/* texto */
+.t{position:absolute;left:80px;right:80px;white-space:nowrap}
+.t .l{display:inline-block;will-change:transform}.t .wd{display:inline-block;white-space:nowrap}
+.h{font-weight:700;font-size:128px;letter-spacing:-.04em;line-height:.98;white-space:normal;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+.p{font-weight:600;font-size:58px;letter-spacing:-.02em;color:rgba(255,255,255,.78);line-height:1.3;white-space:normal}
+.k{color:var(--oro)}
+.gig{font-weight:800;font-size:300px;letter-spacing:-.06em;line-height:.85;text-align:center;left:0;right:0}
+.sub{position:absolute;left:40px;right:40px;text-align:center;font-weight:700;font-size:66px;letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+/* forma que se transforma */
+#M{position:absolute;overflow:hidden;background:#fff;will-change:transform}
+#M img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.chip{position:absolute;height:104px;padding:0 46px;border-radius:52px;display:flex;align-items:center;gap:16px;font-weight:600;font-size:46px;letter-spacing:-.01em;
+  background:rgba(12,14,20,.72);border:1.5px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;backdrop-filter:blur(14px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.chip.on{background:var(--oro);color:#111;border-color:transparent}
+.card{position:absolute;border-radius:40px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);backdrop-filter:blur(20px)}
+.fila{position:absolute;left:28px;right:28px;height:128px;border-radius:26px;display:flex;align-items:center;gap:24px;padding:0 26px;background:rgba(255,255,255,.05)}
+.fila .av{width:74px;height:74px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:34px;color:#111}
+.fila b{display:block;font-weight:600;font-size:34px}.fila small{display:block;font-weight:500;font-size:26px;color:rgba(255,255,255,.55)}
+.fila .est{margin-left:auto;font-size:30px;letter-spacing:2px;color:var(--oro)}
+.linea{position:absolute;left:0;top:0;overflow:visible}
+.linea *{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+/* cara */
+#cara{position:absolute;inset:0;overflow:hidden}
+#caraZ{position:absolute;inset:0;transform-origin:50% 62%}
+#caraBlur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(38px) brightness(.5) saturate(1.05);transform:scale(1.15)}
+#caraFondo,#caraPersona{position:absolute;left:0;top:705px;width:1080px;height:1215px;object-fit:cover}
+#caraFondo{-webkit-mask-image:linear-gradient(transparent 0,#000 200px);mask-image:linear-gradient(transparent 0,#000 200px)}
+#detras{position:absolute;inset:0}
+#grano{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.demo{position:absolute;padding:8px 18px;border-radius:12px;background:rgba(17,17,17,.8);color:#fff;font:600 26px FT}
+.tache{position:absolute;height:6px;border-radius:3px;background:#E0463B;transform-origin:0 50%}
+</style></head><body>
+<div id="todo" style="position:absolute;inset:0;transform-origin:50% 50%">
+<div id="mundo">
+  <div id="fondo"><i class="glow" id="g1" style="width:900px;height:900px;background:var(--glow1)"></i><i class="glow" id="g2" style="width:700px;height:700px;background:var(--glow2)"></i><i class="glow" id="g3" style="width:600px;height:600px;background:var(--glow3)"></i></div>
+  <div id="ui"></div>
+  <div id="M"><img id="Mimg"></div>
+  <img id="p3d" class="abs" style="left:90px;top:580px;width:900px;height:1100px;display:none;filter:drop-shadow(0 50px 60px rgba(0,0,0,.55))">
+  <div id="ui2"></div>
+</div>
+<div id="cara"><div id="caraZ"><img id="caraBlur"><img id="caraFondo"><div id="detras"></div><img id="caraPersona"></div></div>
+<div id="subs"></div>
+</div>
+<div id="grano"></div>
+<script src="fx.js"></script><script>
+const $ = id => document.getElementById(id);
+const { p, ease, muelle } = E;
+const FX = /*FX*/[]/*FX*/; // se rellena abajo con fx(...)
+const TOTAL = 12; window.TOTAL = TOTAL; // duración de la voz en segundos
+const pad = i => String(i).padStart(4, '0');
+const exp = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x), ioX = x => x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2; // easeInOutExpo
+const lerp = (a, b, k) => a + (b - a) * k;
+/* ===== textos con letras que entran (blur + subida + escala), como el ref ===== */
+const T = [];
+function texto(html, cls, y, t0, t1, o = {}) { const el = document.createElement('div'); el.className = 't ' + cls; el.style.top = y + 'px'; if (o.center) { el.style.textAlign = 'center'; }
+  if (o.size) el.style.fontSize = o.size + 'px';
+  // html con *palabra* en oro
+  const parts = html.split(/(\*[^*]+\*)/); let s = '', n = 0;
+  parts.forEach(q => { const k = q.startsWith('*'); const txt = k ? q.slice(1, -1) : q; s += (k ? '<span class="k">' : '') + txt.split(' ').map(w => w ? '<span class="wd">' + [...w].map(c => `<span class="l" data-i="${n++}">${c}</span>`).join('') + '</span>' : '').join(' ') + (k ? '</span>' : ''); });
+  el.innerHTML = s; $(o.capa || 'ui2').appendChild(el); const ob = { el, t0, t1, st: o.st || .022, cls, maq: o.maq }; if (o.maq) { ob.cur = document.createElement('span'); ob.cur.textContent = '|'; ob.cur.style.cssText = 'display:inline-block;color:#E9BC46;margin-left:4px;font-weight:500'; } T.push(ob); return el; }
+function pintaTextos(t) { T.forEach(o => { const vis = t >= o.t0 - .01 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return;
+  const sal = p(t, o.t1 - .22, .22), se = ease.inCubic(sal);
+  if (o.maq) { const ls = o.el.querySelectorAll('.l'); let last = null; ls.forEach(l => { const on = t >= o.t0 + (+l.dataset.i) * o.st; l.style.display = on ? 'inline-block' : 'none'; l.style.opacity = 1 - ease.inCubic(sal); l.style.transform = `translateX(${-ease.inCubic(sal) * 90}px)`; if (on) last = l; });
+    o.cur.style.opacity = (Math.floor(t * 4) % 2 || t < o.t0 + ls.length * o.st + .1) ? 1 - sal : 0; if (last) last.after(o.cur); return; }
+  o.el.querySelectorAll('.l').forEach(l => { const i = +l.dataset.i, a = o.t0 + i * o.st, k = exp(p(t, a, .55)), m = muelle(t, a, 2.2, .72);
+    const ks = p(t, o.t1 - .22 + i * .006, .18), s2 = ease.inCubic(ks);
+    l.style.opacity = Math.min(k * 1.3, 1) * (1 - s2); l.style.filter = `blur(${(1 - k) * 10 + s2 * 10}px)`;
+    l.style.transform = `translate(${(1 - Math.min(m, 1.04)) * 90 - s2 * 90}px,${(1 - Math.min(m, 1.04)) * 10}px) scale(${.9 + .1 * Math.min(k, 1)})`; }); }); }
+/* ===== subtítulos (cara) palabra a palabra ===== */
+const S = [];
+function sub(txt, t0, t1, tt, y = 1590) { const el = document.createElement('div'); el.className = 'sub'; el.style.top = y + 'px'; const ws = txt.split(' '), L = ws.reduce((a, w) => a + w.length + 1, 0); let c = 0;
+  el.innerHTML = ws.map(w => { const t = t0 + (tt - t0) * c / L; c += w.length + 1; return `<span class="l" data-t="${t.toFixed(3)}" style="display:inline-block">${w.replace(/\*(.+)\*/, '<span class="k">$1</span>')}</span>`; }).join(' ');
+  $('subs').appendChild(el); S.push({ el, t0, t1 }); }
+function pintaSubs(t) { S.forEach(o => { const vis = t >= o.t0 && t < o.t1; o.el.style.display = vis ? 'block' : 'none'; if (!vis) return; const s = ease.inCubic(p(t, o.t1 - .12, .12));
+  o.el.querySelectorAll('.l').forEach(l => { const a = +l.dataset.t, k = exp(p(t, a, .3)), m = muelle(t, a, 3, .6); l.style.opacity = k * (1 - s); l.style.transform = `translateY(${(1 - Math.min(m, 1.05)) * 20}px) scale(${.9 + .1 * Math.min(m, 1.05)})`; l.style.filter = `blur(${(1 - k) * 6 + s * 8}px)`; }); }); }
+/* ===== la forma M: keyframes [t, x, y, w, h, radio, color, imagen] con easeInOutExpo ===== */
+const MK = [];
+function M(t) { let a = MK[0], b = MK[0]; for (let i = 0; i < MK.length - 1; i++) if (t >= MK[i][0]) { a = MK[i]; b = MK[i + 1]; }
+  const d = b[0] - a[0], k = d > 0 ? ioX(Math.min(1, Math.max(0, (t - a[0]) / (d)))) : 1; const r = []; for (let j = 1; j <= 5; j++) r.push(lerp(a[j], b[j], k)); return { v: r, a, b, k }; }
+/* ===== cara ===== */
+async function cara(t) { const i = Math.max(1, Math.min(CARA_N, Math.round(t * 30) + 1)), F = $('caraFondo');
+  if (F._i !== i) { F.src = $('caraBlur').src = `${CARA_FONDO}/${pad(i)}.jpg`; $('caraPersona').src = `${CARA_PERSONA}/${pad(i)}.webp`; await Promise.all([F.decode().catch(() => {}), $('caraPersona').decode().catch(() => {})]); F._i = i; } }
+// cara: fondo real (jpg) + persona recortada (webp con alfa) del MISMO fotograma, preescalados a 1080×1215 (lanczos + nitidez)
+const CARA_FONDO = 'cara/fondo', CARA_PERSONA = 'cara/persona', CARA_N = 360;
+const CARA = []; // tramos [t0, t1] en los que sale la cara (gancho y CTA; nunca todo el vídeo)
+const GIG = []; function gigante(txt, t0, t1, y = 560, size = 300) { const el = texto(txt, 'gig', y, t0, t1, { capa: 'detras', st: .03 }); el.style.fontSize = size + 'px'; return el; }
+/* ===== construcción: EJEMPLO que usa cada pieza (borra y escribe tu guion) ===== */
+const fx = (t, v, s, db = -7, o = {}) => FX.push(Object.assign({ t, v }, s ? { s, db } : {}, o));
+const P = 'packs/', Q = 'packs2/';
+// 0,0 flash de arranque con obturador (el vídeo SIEMPRE empieza con sonido)
+fx(0, 'flash', P + 'camera-shutter.mp3', -6);
+texto('esto es un *ejemplo*', 'h', 300, .15, 2.4);
+texto('que se escribe a máquina', 'p', 580, .6, 2.4, { maq: true, st: .04 }); fx(.6, null, Q + 'teclas.mp3', -10, { dur: 24 * .04 + .15 });
+// 2,5 cambio de escena: whip (barrido lateral con desenfoque) + whoosh; la forma M se abre con metraje
+fx(2.5, 'whip', Q + 'whoosh-b.mp3', -4);
+MK.push([2.4, 540, 1100, 0, 0, 0], [2.55, 540, 1100, 120, 120, 60], [2.9, 540, 1100, 900, 1100, 56], [5.3, 540, 1100, 900, 1100, 56], [5.5, 540, 1100, 0, 0, 0], [99, 540, 1100, 0, 0, 0]);
+const IMG = [[2.55, 5.5, 'br/clip/', 90, 'jpg']]; // [t0, t1, carpeta, nº fotogramas, ext] — secuencia 1920×1080 a 30 fps
+texto('un *clip* real', 'h', 300, 2.7, 5.3);
+fx(4.2, null, P + 'wrong.mp3', -7); // algo que se tacha → wrong (zumbido); lo bueno → right (campanita)
+// 5,6 palabra gigante: riser corto + impacto con whoosh-dramatico
+fx(6.2, 'riser', null, 0, { d: .8 }); fx(6.2, 'impacto', Q + 'whoosh-dramatico.mp3', -3, { a: 20 });
+texto('*GIGANTE*', 'gig', 700, 6.2, 8, { size: 190 }); 
+// 8 revelación del producto: riser-metal que acaba justo en el woah-drop (máx. 3 woah por vídeo)
+fx(9.4, 'riser', Q + 'riser-metal.mp3', -7, { d: 1.4 }); fx(9.42, 'impacto', P + 'woah-drop.mp3', -2, { a: 34 });
+texto('*revelación*', 'h', 300, 9.42, 11.6);
+MK.forEach((c, i) => { if (c[3] > 0) return; const pv = MK[i - 1], nx = MK[i + 1]; if (pv && pv[3] > 0) c[1] = -320; else if (nx && nx[3] > 0) c[1] = 1400; }); // entra por la derecha, sale por la izquierda
+window.render = async t => {
+  [['g1', 200, 1300, .3], ['g2', 820, 520, .23], ['g3', 540, 1700, .17]].forEach(([id, x, y, v], j) => { const g = $(id); g.style.left = (x - 450 + Math.sin(t * v + j) * 200) + 'px'; g.style.top = (y - 450 + Math.cos(t * v * 1.3 + j * 2) * 160) + 'px'; });
+  $('mundo').style.transform = `scale(${1 + .025 * Math.sin(t * .35)}) rotate(${Math.sin(t * .23) * .6}deg)`; // deriva lenta: nunca congelado
+  pintaTextos(t); pintaSubs(t); fxRender(t);
+  const m = M(t), [x, y, w, h, r] = m.v, el = $('M'); el.style.display = w > 1 ? 'block' : 'none';
+  Object.assign(el.style, { left: x - w / 2 + 'px', top: y - h / 2 + 'px', width: w + 'px', height: h + 'px', borderRadius: r + 'px' });
+  const im = IMG.find(q => t >= q[0] && t < q[1]), mi = $('Mimg'); el.style.background = im ? '#000' : 'var(--oro)';
+  if (im && w > 200) { mi.style.display = 'block'; const i = Math.min(im[3], 1 + Math.floor((t - im[0]) * 30)), src = im[2] + pad(i) + '.' + im[4];
+    mi.style.transform = `scale(${1.04 + .05 * p(t, im[0], im[1] - im[0])})`; if (mi._s !== src) { mi.src = src; await mi.decode().catch(() => {}); mi._s = src; } } else mi.style.display = 'none';
+  const c = CARA.find(([a, b]) => t >= a && t < b), cf = $('cara');
+  if (c) { cf.style.display = 'block'; const [a, b] = c, ei = a > 0 ? ioX(p(t, a, .35)) : 1, eo = b < TOTAL ? ioX(p(t, b - .3, .3)) : 0, ins = Math.max(1 - ei, eo);
+    cf.style.clipPath = ins > 0 ? `inset(${ins * 42}% ${ins * 30}% ${ins * 42}% ${ins * 30}% round ${60 + ins * 200}px)` : 'none';
+    $('caraZ').style.transform = `scale(${1 + .04 * p(t, a, b - a)})`; await cara(t); } else cf.style.display = 'none';
+};
+window.render(0); window.LISTO = true;
+</script></body></html>

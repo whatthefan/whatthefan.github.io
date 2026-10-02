@@ -21,3 +21,22 @@ Para rehacer el generador despues de tocar gen/plantilla.html:
 
     npm install
     python3 gen/construye.py
+
+anton-latin.woff2 es Anton (subconjunto latino), la letra del nombre en
+las pruebas de avatar de Instagram (marketing/instagram/avatar/ronda2).
+Tambien SIL Open Font License 1.1; su licencia va en ofl-anton.txt.
+
+caveat-latin.woff2 es Caveat (negrita, subconjunto latino), la letra de
+rotulador del carrusel "Desliza para agregar" (marketing/instagram/
+carrusel-placa). SIL Open Font License 1.1; su licencia va en ofl-caveat.txt.
+
+fredoka-latin-700.woff2 (Fredoka Bold, letra redonda y gorda) es para el
+carrusel "OYEEEE" de Instagram (marketing/instagram/oyeeee/). Viene del
+paquete @fontsource/fredoka. SIL Open Font License 1.1: ofl-fredoka.txt.
+
+titan-one-latin.woff2 (Titan One) es la letra en 3D del carrusel "OYEEEE"
+(marketing/instagram/oyeeee/). Viene de @fontsource/titan-one. SIL Open Font
+License 1.1: ofl-titan-one.txt.
+
+inter-latin.woff2 — Inter (variable, 100-900), de @fontsource-variable/inter. Licencia OFL (ofl-inter.txt).
+Es la letra del estilo "edicion-pro" (motion design premium).

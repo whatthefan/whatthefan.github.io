@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script></head><body><script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+const q = new URLSearchParams(location.search), IMG = q.get('img') || 'w-placa.png', W = 900, H = 1100;
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setSize(W, H); r.setPixelRatio(1);
+r.toneMapping = THREE.NeutralToneMapping; r.toneMappingExposure = 1.0; r.outputColorSpace = THREE.SRGBColorSpace; document.body.appendChild(r.domElement);
+const scene = new THREE.Scene(); const pm = new THREE.PMREMGenerator(r); scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture; scene.environmentIntensity = .38;
+const cam = new THREE.PerspectiveCamera(30, W / H, .1, 100); cam.position.set(0, 0, 9.2);
+const tex = await new THREE.TextureLoader().loadAsync(IMG); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 16;
+const g = new THREE.Group(); scene.add(g);
+// placa: cuerpo con cantos redondeados + cara impresa + trasera blanca mate
+const S = 3.0, D = .09;
+const cuerpo = new THREE.Mesh(new RoundedBoxGeometry(S, S, D, 6, .05), new THREE.MeshPhysicalMaterial({ color: '#f3f1ec', roughness: .35, clearcoat: .6, clearcoatRoughness: .2 })); g.add(cuerpo);
+const cara = new THREE.Mesh(new THREE.PlaneGeometry(S - .02, S - .02), new THREE.MeshPhysicalMaterial({ map: tex, roughness: .45, clearcoat: .35, clearcoatRoughness: .3, transparent: true }));
+cara.position.z = D / 2 + .002; g.add(cara);
+const tras = new THREE.Mesh(new THREE.PlaneGeometry(S - .1, S - .1), new THREE.MeshStandardMaterial({ color: '#e9e6df', roughness: .8 })); tras.position.z = -D / 2 - .002; tras.rotation.y = Math.PI; g.add(tras);
+// luces: principal cálida + contra fría + relleno
+const l1 = new THREE.DirectionalLight('#fff2dc', 1.5); l1.position.set(3, 4, 6); scene.add(l1);
+const l2 = new THREE.DirectionalLight('#9fd8ff', 1.6); l2.position.set(-5, 2, -4); scene.add(l2);
+scene.add(new THREE.AmbientLight('#ffffff', .25));
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, cl = (x) => Math.min(1, Math.max(0, x));
+window.render = t => { // t: segundos desde que entra
+  const k = ease(cl(t / 1.4)); const giro = (1 - k) * Math.PI * 2 * 1.0;
+  g.rotation.y = giro + Math.sin(t * 1.1) * .22 * k - .25 * k; g.rotation.x = -.12 + Math.sin(t * .9) * .06 + (1 - k) * .4; g.rotation.z = (1 - k) * -.25;
+  g.position.y = Math.sin(t * 1.6) * .06 + (1 - cl(t / .6)) * -1.6; const s = .55 + .45 * ease(cl(t / .8)); g.scale.setScalar(s);
+  r.render(scene, cam); };
+window.render(0); window.LISTO = true;
+</script></body></html>
