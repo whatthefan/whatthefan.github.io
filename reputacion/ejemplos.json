@@ -1,0 +1,60 @@
+{
+  "negocio": {
+    "nombre": "Bar Manolo",
+    "sector": "bar de tapas",
+    "ciudad": "Valencia",
+    "palabras_clave": ["tapas caseras", "terraza en Valencia", "menú del día"],
+    "contacto": "hola@barmanolo.es o el 600 000 000"
+  },
+  "resenas": [
+    {
+      "id": "insulto-escondido",
+      "espera": "impugnable",
+      "estrellas": 2,
+      "texto": "La comida estaba bien y el sitio es bonito, pero tardaron 40 minutos en traer las bravas y el camarero, un imbécil, ni se disculpó."
+    },
+    {
+      "id": "fisico",
+      "espera": "impugnable",
+      "estrellas": 1,
+      "texto": "Servicio lentísimo. La gorda de la barra no paraba de mirar el móvil mientras esperábamos."
+    },
+    {
+      "id": "fuera-de-tema",
+      "espera": "impugnable",
+      "estrellas": 1,
+      "texto": "Imposible aparcar en toda la calle, el ayuntamiento lleva meses con obras. Un desastre."
+    },
+    {
+      "id": "amenaza",
+      "espera": "impugnable",
+      "estrellas": 1,
+      "texto": "Me cobraron dos cañas de más. Ya os veréis, voy a contar esto a todo el barrio hasta que cerréis."
+    },
+    {
+      "id": "exempleado",
+      "espera": "impugnable",
+      "estrellas": 1,
+      "texto": "Trabajé aquí dos años y la cocina es un asco, no comáis aquí.",
+      "contexto": "No es cliente: firmó con su nombre y es un exempleado al que despedimos en marzo."
+    },
+    {
+      "id": "nombre-neutro",
+      "espera": "no-impugnable",
+      "estrellas": 2,
+      "texto": "Nos atendió Laura y tardó bastante en tomarnos nota. Las croquetas, frías."
+    },
+    {
+      "id": "critica-dura",
+      "espera": "no-impugnable",
+      "estrellas": 1,
+      "texto": "La peor paella que he comido en mi vida. Carísima para lo que es. No vuelvo."
+    },
+    {
+      "id": "no-fue",
+      "espera": "impugnable",
+      "estrellas": 1,
+      "texto": "No he ido nunca pero un amigo me ha dicho que es carísimo y que tratan fatal."
+    }
+  ]
+}
