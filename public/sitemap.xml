@@ -4,9 +4,10 @@
   El mapa del sitio. Es la lista de direcciones que le damos a Google
   para que sepa que existen sin tener que descubrirlas por su cuenta.
 
-  SOLO HAY UNA DIRECCION, Y ESTA BIEN ASI. La web es una pagina unica:
-  todo (productos, demo, pedido, seguimiento, ayuda) vive dentro de
-  https://plea5e.es/ y se llega con un ancla (#pedido, #ayuda...). Las
+  HAY DOS DIRECCIONES. La web es una pagina unica: todo (productos,
+  demo, pedido, seguimiento, ayuda) vive dentro de https://plea5e.es/ y
+  se llega con un ancla (#pedido, #ayuda...). La otra es el analizador
+  de reseñas, /analiza/, que es una pagina de verdad. Las
   anclas NO son direcciones distintas y no se ponen aqui. Lo demas que
   hay en public/ no va en el mapa a proposito:
     /taller/  es el panel, esta fuera del robots.txt y va con noindex
@@ -19,7 +20,7 @@
   solo mientras le parece de fiar: si ve que siempre pone "hoy" pero al
   entrar la pagina es la misma de hace meses, deja de hacerle caso para
   todo el dominio. Para no tener que pensarlo: `npm run sitemap` la pone
-  sola a partir de la fecha del ultimo commit que toco public/index.html.
+  sola a partir de la fecha del ultimo commit que toco cada pagina.
 
   NO HAY changefreq NI priority. Google y Bing los ignoran los dos (Gary
   Illyes, de Google, los llamo "una bolsa de ruido"). Estaban puestos y
@@ -40,5 +41,9 @@
     <image:image><image:loc>https://plea5e.es/og.jpg</image:loc></image:image>
     <image:image><image:loc>https://plea5e.es/producto/placa-cuadrada.png</image:loc></image:image>
     <image:image><image:loc>https://plea5e.es/producto/placa-recortada.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://plea5e.es/analiza/</loc>
+    <lastmod>2026-10-07</lastmod>
   </url>
 </urlset>
