@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analiza tu reseña negativa de Google gratis | PLEA5E</title>
+<meta name="description" content="Pega una reseña negativa de Google y te decimos al momento si incumple las normas y se puede denunciar. Con la respuesta pública lista para copiar. Gratis.">
+<meta name="theme-color" content="#06080E">
+<link rel="canonical" href="https://plea5e.es/analiza/">
+<link rel="icon" href="/icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icono-192.png">
+<link rel="manifest" href="/analiza/manifest.webmanifest">
+<meta property="og:title" content="¿Esa reseña de 1 estrella se puede quitar? Compruébalo gratis">
+<meta property="og:description" content="Te decimos al momento si incumple las normas de Google, y te damos la respuesta lista para copiar.">
+<meta property="og:image" content="https://plea5e.es/og.jpg">
+<!--
+  El analizador gratis. Lo que hace de verdad está en el servidor
+  (/api/analiza → reputacion/): aquí solo se pinta el formulario y lo
+  que vuelve. Así el criterio no viaja al navegador de nadie.
+-->
+<style>
+  :root{
+    --noche:#06080E; --panel:#0F1522; --panel-2:#141B2B;
+    --borde:#1C2536; --borde-claro:#2A3448;
+    --txt:#EAEDF4; --txt-2:#9AA3B8; --txt-3:#68718A;
+    --oro:#E9BC46; --oro-cl:#F8E1A6;
+    --verde:#3BB273; --ambar:#E39B2D; --rojo:#D9534F;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--noche); color:var(--txt);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--oro)}
+  .caja{max-width:720px; margin:0 auto; padding:0 16px}
+  .oculto{display:none !important}
+
+  header.top{display:flex; align-items:center; gap:12px; padding:18px 0}
+  header.top a.marca{color:var(--txt); text-decoration:none; font-weight:800; letter-spacing:.16em}
+  header.top a.marca b{color:var(--oro)}
+  .crece{flex:1}
+
+  .hero{padding:28px 0 8px}
+  .hero h1{font-size:clamp(28px,6vw,42px); line-height:1.12; margin:0 0 14px; letter-spacing:-.01em}
+  .hero h1 em{font-style:normal; color:var(--oro)}
+  .hero p{color:var(--txt-2); font-size:18px; margin:0}
+
+  .tarjeta{background:var(--panel); border:1px solid var(--borde); border-radius:16px; padding:20px; margin:22px 0}
+  label{display:block; font-weight:600; font-size:14px; margin:0 0 6px}
+  label small{font-weight:400; color:var(--txt-3)}
+  input,textarea,select{font:inherit; width:100%; padding:12px 14px; border-radius:10px;
+    border:1px solid var(--borde-claro); background:var(--noche); color:var(--txt)}
+  textarea{min-height:130px; resize:vertical}
+  input:focus,textarea:focus{outline:2px solid var(--oro); outline-offset:1px}
+  .campo{margin-bottom:16px}
+  .dos{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:520px){.dos{grid-template-columns:1fr}}
+
+  .estrellas{display:flex; gap:6px}
+  .estrellas button{flex:1; padding:10px 0; font-size:20px; border-radius:10px; cursor:pointer;
+    border:1px solid var(--borde-claro); background:var(--noche); color:var(--txt-3)}
+  .estrellas button.on{color:var(--oro); border-color:var(--oro)}
+
+  details{margin:4px 0 16px}
+  summary{cursor:pointer; color:var(--txt-2); font-size:15px}
+  details[open] summary{margin-bottom:14px}
+
+  .btn{font:inherit; font-weight:700; cursor:pointer; border-radius:999px; border:1px solid var(--borde-claro);
+    background:var(--panel-2); color:var(--txt); padding:12px 20px; text-decoration:none;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px}
+  .btn-oro{background:var(--oro); color:#100B00; border-color:var(--oro)}
+  .btn-oro:hover{background:var(--oro-cl)}
+  .btn-ancho{width:100%; font-size:17px; padding:15px}
+  .btn-chico{padding:7px 14px; font-size:14px; font-weight:600}
+  .btn[disabled]{opacity:.6; cursor:wait}
+
+  .veredicto{display:flex; gap:14px; align-items:flex-start}
+  .sello{flex:0 0 auto; width:48px; height:48px; border-radius:50%; display:grid; place-items:center; font-size:24px; font-weight:800}
+  .v-impugnable .sello{background:rgba(59,178,115,.15); color:var(--verde)}
+  .v-revisar .sello{background:rgba(227,155,45,.15); color:var(--ambar)}
+  .v-no .sello{background:rgba(154,163,184,.12); color:var(--txt-2)}
+  .v-positiva .sello{background:rgba(233,188,70,.15); color:var(--oro)}
+  .veredicto h2{margin:0 0 4px; font-size:22px; line-height:1.25}
+  .veredicto p{margin:0; color:var(--txt-2)}
+
+  ul.infr{list-style:none; padding:0; margin:18px 0 0}
+  ul.infr li{border-left:3px solid var(--verde); padding:4px 0 4px 12px; margin-bottom:10px}
+  ul.infr li.media,ul.infr li.baja{border-color:var(--ambar)}
+  ul.infr b{display:block; font-size:14px}
+  ul.infr q{color:var(--txt-2)}
+
+  h3{font-size:17px; margin:0 0 10px; display:flex; align-items:center; gap:10px}
+  .texto{white-space:pre-wrap; background:var(--noche); border:1px solid var(--borde); border-radius:10px; padding:14px; margin:0 0 10px}
+  .bloqueado{position:relative}
+  .bloqueado .texto{filter:blur(5px); user-select:none; color:var(--txt-3)}
+  .aviso{font-size:14px; color:var(--txt-2); background:var(--panel-2); border-radius:10px; padding:12px 14px}
+  .aviso.error{color:#fff; background:rgba(217,83,79,.25)}
+  .legal{font-size:13px; color:var(--txt-3); display:flex; gap:8px; align-items:flex-start; margin:0 0 14px; font-weight:400}
+  .legal input{width:auto; margin-top:3px}
+  .trampa{position:absolute; left:-9999px}
+
+  ol.pasos{padding-left:20px; margin:0; color:var(--txt-2)}
+  ol.pasos li{margin-bottom:6px}
+
+  .cta{text-align:center; padding:8px 0}
+  .cta h2{font-size:24px; margin:0 0 8px}
+  .cta p{color:var(--txt-2); margin:0 0 18px}
+  .cta .fila{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+
+  footer{color:var(--txt-3); font-size:13px; padding:30px 0 60px; text-align:center}
+</style>
+</head>
+<body>
+<div class="caja">
+  <header class="top">
+    <a class="marca" href="/"><b>PLEA5E</b></a>
+    <span class="crece"></span>
+    <button class="btn btn-chico oculto" id="instalar" type="button">Instalar en el móvil</button>
+  </header>
+
+  <section class="hero">
+    <h1>¿Esa reseña de 1 estrella <em>se puede quitar?</em></h1>
+    <p>Pégala aquí y te decimos al momento si incumple las normas de Google. Si las incumple, te preparamos la denuncia. Si no, te damos la respuesta perfecta para que no te haga daño. Gratis.</p>
+  </section>
+
+  <form class="tarjeta" id="fAnaliza" novalidate>
+    <div class="campo">
+      <label for="texto">La reseña</label>
+      <textarea id="texto" maxlength="4000" required placeholder="Copia aquí el texto de la reseña tal cual está en Google"></textarea>
+    </div>
+    <div class="campo">
+      <label>Estrellas</label>
+      <div class="estrellas" id="estrellas">
+        <button type="button" data-e="1" class="on">★</button><button type="button" data-e="2">★</button><button type="button" data-e="3">★</button><button type="button" data-e="4">★</button><button type="button" data-e="5">★</button>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="negocio">Tu negocio <small>(para personalizar la respuesta)</small></label>
+      <input id="negocio" maxlength="80" placeholder="Bar Manolo">
+    </div>
+    <details>
+      <summary>Afinar la respuesta (opcional)</summary>
+      <div class="dos">
+        <div class="campo"><label for="claves">Lo que os hace buenos <small>(2 cosas, con comas)</small></label>
+          <input id="claves" maxlength="140" placeholder="tapas caseras, terraza"></div>
+        <div class="campo"><label for="contactoNeg">Contacto para la respuesta</label>
+          <input id="contactoNeg" maxlength="120" placeholder="hola@tunegocio.es"></div>
+      </div>
+      <div class="campo"><label for="contexto">¿Sabes algo del autor? <small>(por ejemplo: «es un exempleado»)</small></label>
+        <input id="contexto" maxlength="600"></div>
+    </details>
+    <input class="trampa" id="web" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn btn-oro btn-ancho" id="bAnaliza" type="submit">Analizar la reseña</button>
+    <div id="errAnaliza" class="aviso error oculto" style="margin-top:14px"></div>
+  </form>
+
+  <!-- ═══ el resultado ═══ -->
+  <section id="resultado" class="oculto">
+    <div class="tarjeta" id="tVeredicto">
+      <div class="veredicto"><div class="sello" id="sello"></div>
+        <div><h2 id="vTitulo"></h2><p id="vResumen"></p></div></div>
+      <ul class="infr" id="vInfr"></ul>
+    </div>
+
+    <div class="tarjeta" id="tApelacion">
+      <h3>La denuncia para Google</h3>
+      <div id="apeBloq">
+        <div class="bloqueado"><div class="texto">En representación del negocio, solicitamos la revisión y retirada de la reseña indicada por incumplir la Política de contenido prohibido y restringido de Google Maps. La reseña incluye el fragmento señalado, que constituye un caso claro de incumplimiento.</div></div>
+        <p style="margin:0 0 14px">Te la mandamos ya redactada, con la norma exacta y el fragmento que la incumple. Dinos a dónde:</p>
+        <form id="fLead" novalidate>
+          <div class="dos">
+            <div class="campo"><label for="leadNombre">Tu nombre</label><input id="leadNombre" maxlength="80" autocomplete="name"></div>
+            <div class="campo"><label for="leadContacto">WhatsApp o correo</label><input id="leadContacto" maxlength="120" autocomplete="tel" required></div>
+          </div>
+          <label class="legal"><input type="checkbox" id="leadAcepta"> <span>Acepto que PLEA5E use estos datos para mandarme la denuncia y contactarme sobre ella. Ni se venden ni se ceden, y puedes pedir que los borremos cuando quieras.</span></label>
+          <button class="btn btn-oro btn-ancho" id="bLead" type="submit">Ver la denuncia</button>
+          <div id="errLead" class="aviso error oculto" style="margin-top:14px"></div>
+        </form>
+      </div>
+      <div id="apeAbierta" class="oculto">
+        <div class="texto" id="apeTexto"></div>
+        <button class="btn btn-chico" type="button" data-copia="apeTexto">Copiar</button>
+        <h3 style="margin-top:22px">Cómo enviarla</h3>
+        <ol class="pasos">
+          <li>Abre tu ficha en Google Maps o en Google Business Profile y busca la reseña.</li>
+          <li>Pulsa los tres puntos de la reseña → <b>Denunciar reseña</b> y elige el motivo que te hemos indicado arriba.</li>
+          <li>Si Google no la retira, pide la revisión desde la <b>herramienta de gestión de reseñas</b> de Google y pega este texto.</li>
+        </ol>
+        <p class="aviso" style="margin-top:14px">Quien decide es Google, no nosotros ni nadie: suele contestar en unos días, a veces en semanas, y no todas las denuncias prosperan. Mientras tanto, publica la respuesta de abajo para que quien la lea vea a un negocio que da la cara.</p>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <h3>La respuesta pública <button class="btn btn-chico" type="button" data-copia="resTexto">Copiar</button></h3>
+      <div class="texto" id="resTexto"></div>
+      <p style="margin:0; color:var(--txt-2); font-size:14px" id="resNota">Publícala ya, como respuesta del propietario. Contestar bien convence más que cualquier reseña mala.</p>
+    </div>
+
+    <div class="tarjeta cta">
+      <h2>La mejor defensa: muchas reseñas buenas</h2>
+      <p>Una reseña mala entre cien buenas no se nota. Con nuestras placas NFC tus clientes contentos te dejan reseña en 10 segundos, acercando el móvil.</p>
+      <div class="fila">
+        <a class="btn btn-oro" href="/">Ver las placas</a>
+        <a class="btn" id="ctaWa" href="https://wa.me/34661403219?text=Hola%20PLEA5E%2C%20he%20usado%20el%20analizador%20de%20rese%C3%B1as%20y%20quiero%20que%20me%20ayud%C3%A9is." target="_blank" rel="noopener">Que me lo gestionéis</a>
+      </div>
+    </div>
+
+    <button class="btn btn-ancho" type="button" id="otra" style="margin-bottom:10px">Analizar otra reseña</button>
+  </section>
+
+  <footer>PLEA5E · Placas y tarjetas NFC para reseñas de Google · <a href="/">plea5e.es</a><br>
+    Este análisis es orientativo. La decisión de retirar una reseña es siempre de Google.</footer>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var ver = function (el, si) { el.classList.toggle('oculto', !si); };
+  var estrellas = 1, ultimo = null;
+
+  /* ---- las estrellas ---- */
+  var botones = $('estrellas').querySelectorAll('button');
+  botones.forEach(function (b) {
+    b.addEventListener('click', function () {
+      estrellas = Number(b.dataset.e);
+      botones.forEach(function (o) { o.classList.toggle('on', Number(o.dataset.e) <= estrellas); });
+    });
+  });
+
+  /* Lo que se escribe del negocio se recuerda en este navegador: el
+     dueño que vuelve con otra reseña no tiene que repetirlo. */
+  var RECUERDA = ['negocio', 'claves', 'contactoNeg', 'leadNombre', 'leadContacto'];
+  RECUERDA.forEach(function (id) {
+    try { var v = localStorage.getItem('plea5e_an_' + id); if (v) $(id).value = v; } catch (e) {}
+    $(id).addEventListener('change', function () {
+      try { localStorage.setItem('plea5e_an_' + id, $(id).value); } catch (e) {}
+    });
+  });
+
+  function datos(conLead) {
+    var d = {
+      texto: $('texto').value, estrellas: estrellas, contexto: $('contexto').value, web: $('web').value,
+      negocio: { nombre: $('negocio').value, palabras_clave: $('claves').value, contacto: $('contactoNeg').value }
+    };
+    if (conLead) d.lead = { nombre: $('leadNombre').value, contacto: $('leadContacto').value, acepta: $('leadAcepta').checked };
+    return d;
+  }
+
+  function envia(d) {
+    return fetch('/api/analiza', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error(j.error || 'No ha ido bien. Prueba otra vez en un momento.');
+        return j;
+      });
+    });
+  }
+
+  var TITULOS = {
+    impugnable: ['✓', 'v-impugnable', 'Se puede denunciar'],
+    revisar: ['?', 'v-revisar', 'Puede que se pueda denunciar'],
+    'no-impugnable': ['–', 'v-no', 'Esta no incumple las normas'],
+    positiva: ['★', 'v-positiva', '¡Es una reseña buena!']
+  };
+
+  function pinta(v) {
+    ultimo = v;
+    var t = TITULOS[v.tipo === 'positiva' ? 'positiva' : v.veredicto];
+    $('sello').textContent = t[0];
+    $('tVeredicto').className = 'tarjeta ' + t[1];
+    $('vTitulo').textContent = t[2];
+    $('vResumen').textContent = v.veredicto === 'no-impugnable' && v.tipo !== 'positiva'
+      ? 'Es una crítica legítima y Google no la va a quitar. Lo que sí puedes hacer es contestarla bien: la respuesta de abajo está pensada para eso.'
+      : v.resumen;
+    var ul = $('vInfr'); ul.innerHTML = '';
+    (v.infracciones || []).forEach(function (i) {
+      var li = document.createElement('li'); li.className = i.fuerza;
+      var b = document.createElement('b'); b.textContent = i.norma; li.appendChild(b);
+      var q = document.createElement('q'); q.textContent = i.cita; li.appendChild(q);
+      ul.appendChild(li);
+    });
+    ver($('tApelacion'), v.hay_apelacion);
+    ver($('apeBloq'), !v.apelacion); ver($('apeAbierta'), Boolean(v.apelacion));
+    $('apeTexto').textContent = v.apelacion || '';
+    $('resTexto').textContent = v.respuesta;
+    $('resNota').textContent = v.tipo === 'positiva'
+      ? 'Contestar también a las buenas le gusta a Google y a quien lee las reseñas.'
+      : 'Publícala ya, como respuesta del propietario. Contestar bien convence más que cualquier reseña mala.';
+    ver($('fAnaliza'), false); ver($('resultado'), true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  $('fAnaliza').addEventListener('submit', function (e) {
+    e.preventDefault();
+    ver($('errAnaliza'), false);
+    if ($('texto').value.trim().length < 3) {
+      $('errAnaliza').textContent = 'Pega el texto de la reseña.'; ver($('errAnaliza'), true); return;
+    }
+    $('bAnaliza').disabled = true; $('bAnaliza').textContent = 'Analizando…';
+    envia(datos(false)).then(pinta).catch(function (err) {
+      $('errAnaliza').textContent = err.message; ver($('errAnaliza'), true);
+    }).then(function () { $('bAnaliza').disabled = false; $('bAnaliza').textContent = 'Analizar la reseña'; });
+  });
+
+  $('fLead').addEventListener('submit', function (e) {
+    e.preventDefault();
+    ver($('errLead'), false);
+    var falta = $('leadContacto').value.trim().length < 6 ? 'Pon un WhatsApp o un correo.'
+      : !$('leadAcepta').checked ? 'Marca la casilla para que podamos mandártela.' : '';
+    if (falta) { $('errLead').textContent = falta; ver($('errLead'), true); return; }
+    try { localStorage.setItem('plea5e_an_leadContacto', $('leadContacto').value); localStorage.setItem('plea5e_an_leadNombre', $('leadNombre').value); } catch (e2) {}
+    $('bLead').disabled = true; $('bLead').textContent = 'Un momento…';
+    envia(datos(true)).then(pinta).catch(function (err) {
+      $('errLead').textContent = err.message; ver($('errLead'), true);
+    }).then(function () { $('bLead').disabled = false; $('bLead').textContent = 'Ver la denuncia'; });
+  });
+
+  $('otra').addEventListener('click', function () {
+    $('texto').value = ''; $('contexto').value = '';
+    ver($('resultado'), false); ver($('fAnaliza'), true); $('texto').focus();
+  });
+
+  document.querySelectorAll('[data-copia]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var txt = $(b.dataset.copia).textContent;
+      var hecho = function () { var o = b.textContent; b.textContent = '¡Copiado!'; setTimeout(function () { b.textContent = o; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(hecho, function () {});
+      else { var t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); hecho(); }
+    });
+  });
+
+  /* ---- instalarla como app ----
+     Android y ordenador: el navegador avisa de que se puede instalar y
+     sale el botón. iPhone no avisa nunca: ahí el botón explica cómo
+     hacerlo a mano desde Compartir. */
+  var pendiente = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); pendiente = e; ver($('instalar'), true);
+  });
+  var esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var yaInstalada = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (esIOS && !yaInstalada) ver($('instalar'), true);
+  $('instalar').addEventListener('click', function () {
+    if (pendiente) { pendiente.prompt(); pendiente = null; ver($('instalar'), false); }
+    else alert('En el iPhone: pulsa el botón de Compartir (el cuadrado con la flecha) y luego «Añadir a pantalla de inicio».');
+  });
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/analiza/sw.js', { scope: '/analiza/' }).catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Reseñas · PLEA5E</title>
+<link rel="icon" href="/icono.svg" type="image/svg+xml">
+<!--
+  El panel de reseñas. Como el de pedidos: la contraseña no se comprueba
+  aquí sino en el servidor (/api/analisis), que sin ella no devuelve
+  nada. Es la misma contraseña y se recuerda en el mismo sitio, así que
+  si ya entraste en Pedidos, aquí entras directo.
+
+  Dos cosas:
+    · Los contactos que deja la gente en plea5e.es/analiza/, con su
+      reseña ya analizada, para llamarles.
+    · Un analizador para ti, que puede usar la IA, para trabajar las
+      reseñas de tus clientes.
+-->
+<style>
+  :root{
+    --noche:#06080E; --panel:#0F1522; --panel-2:#141B2B;
+    --borde:#1C2536; --borde-claro:#2A3448;
+    --txt:#EAEDF4; --txt-2:#8B95AB; --txt-3:#5D6679;
+    --oro:#E9BC46; --oro-cl:#F8E1A6;
+    --verde:#3BB273; --ambar:#E39B2D; --rojo:#D9534F;
+    --r:8px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--noche); color:var(--txt);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-text-size-adjust:100%}
+  .caja{max-width:860px; margin:0 auto; padding:20px 16px 80px}
+  .oculto{display:none !important}
+  header.top{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:16px 0 20px; border-bottom:1px solid var(--borde); margin-bottom:20px}
+  header.top h1{margin:0; font-size:19px; letter-spacing:.14em; text-transform:uppercase}
+  header.top h1 b{color:var(--oro); font-weight:800}
+  .crece{flex:1 1 auto}
+  button,.btn{font:inherit; font-weight:600; cursor:pointer; border-radius:999px;
+    border:1px solid var(--borde-claro); background:var(--panel-2); color:var(--txt);
+    padding:9px 16px; text-decoration:none; display:inline-flex; align-items:center; gap:7px}
+  button:hover,.btn:hover{border-color:var(--txt-3)}
+  button[disabled]{opacity:.6; cursor:wait}
+  .btn-oro{background:var(--oro); color:#100B00; border-color:var(--oro)}
+  .btn-oro:hover{background:var(--oro-cl); border-color:var(--oro-cl)}
+  .chico{padding:6px 12px; font-size:14px}
+  input,textarea{font:inherit; width:100%; padding:11px 13px; border-radius:var(--r);
+    border:1px solid var(--borde-claro); background:var(--panel); color:var(--txt)}
+  textarea{min-height:110px; resize:vertical}
+  input:focus,textarea:focus{outline:2px solid var(--oro); outline-offset:1px}
+  label{display:block; font-size:13px; color:var(--txt-2); margin:0 0 5px}
+  .campo{margin-bottom:12px}
+  .dos{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .tres{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px}
+  @media (max-width:600px){.dos,.tres{grid-template-columns:1fr}}
+  .marca{display:flex; gap:8px; align-items:center; font-size:14px; color:var(--txt-2); margin:0}
+  .marca input{width:auto}
+  .aviso{background:rgba(217,83,79,.18); border:1px solid rgba(217,83,79,.4); border-radius:var(--r); padding:12px 14px; margin-bottom:16px}
+  .nota{font-size:13px; color:var(--txt-3)}
+
+  .puerta{max-width:380px; margin:14vh auto 0; text-align:center}
+  .puerta h2{font-size:20px; margin:0 0 6px}
+  .puerta p{color:var(--txt-2); font-size:14px; margin:0 0 20px}
+  .puerta .fila{display:flex; gap:8px; margin-bottom:12px}
+
+  .cifras{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px}
+  @media (max-width:600px){.cifras{grid-template-columns:repeat(2,1fr)}}
+  .cifra{background:var(--panel); border:1px solid var(--borde); border-radius:12px; padding:12px 14px}
+  .cifra b{display:block; font-size:26px; line-height:1.1}
+  .cifra span{font-size:13px; color:var(--txt-2)}
+
+  .bloque{background:var(--panel); border:1px solid var(--borde); border-radius:12px; padding:16px; margin-bottom:20px}
+  .bloque > summary{cursor:pointer; font-weight:700; font-size:17px}
+  .bloque[open] > summary{margin-bottom:14px}
+
+  .filtros{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:16px}
+  .filtros button.on{background:var(--oro); color:#100B00; border-color:var(--oro)}
+
+  .ficha{background:var(--panel); border:1px solid var(--borde); border-radius:12px; padding:16px; margin-bottom:14px}
+  .ficha.descartado{opacity:.45}
+  .ficha .cab{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap}
+  .ficha h3{margin:0; font-size:18px}
+  .ficha .cuando{color:var(--txt-3); font-size:13px}
+  .ficha .quien{margin:4px 0 10px; color:var(--txt-2); font-size:15px}
+  .chapa{font-size:12px; font-weight:700; border-radius:999px; padding:2px 10px; text-transform:uppercase; letter-spacing:.04em}
+  .chapa.impugnable{background:rgba(59,178,115,.18); color:var(--verde)}
+  .chapa.revisar{background:rgba(227,155,45,.18); color:var(--ambar)}
+  .chapa.no-impugnable{background:rgba(139,149,171,.15); color:var(--txt-2)}
+  .chapa.positiva{background:rgba(233,188,70,.18); color:var(--oro)}
+  .chapa.ia{background:rgba(120,140,255,.18); color:#AAB6FF}
+  blockquote{margin:0 0 10px; padding:10px 12px; background:var(--noche); border-left:3px solid var(--borde-claro); border-radius:0 8px 8px 0; white-space:pre-wrap}
+  ul.infr{margin:0 0 10px; padding-left:18px; font-size:14px; color:var(--txt-2)}
+  ul.infr b{color:var(--txt)}
+  details.txt{margin:0 0 8px}
+  details.txt summary{cursor:pointer; font-size:14px; color:var(--oro)}
+  details.txt pre{white-space:pre-wrap; font:inherit; font-size:14px; background:var(--noche); border-radius:8px; padding:12px; margin:8px 0}
+  .acciones{display:flex; gap:7px; flex-wrap:wrap; margin-top:10px}
+  .acciones button.on{border-color:var(--oro); color:var(--oro)}
+  .vacio{color:var(--txt-3); text-align:center; padding:40px 0}
+</style>
+</head>
+<body>
+<div class="caja">
+
+  <section class="puerta" id="puerta">
+    <h2>Panel de reseñas</h2>
+    <p>La misma contraseña que el de pedidos.</p>
+    <form id="fClave">
+      <div class="fila"><input type="password" id="clave" autocomplete="current-password" placeholder="Contraseña"><button class="btn-oro" type="submit">Entrar</button></div>
+      <label class="marca"><input type="checkbox" id="recuerda" checked> Recordar en este dispositivo</label>
+    </form>
+    <div id="errClave" class="aviso oculto" style="margin-top:16px"></div>
+  </section>
+
+  <div id="panel" class="oculto">
+    <header class="top">
+      <h1><b>PLEA5E</b> · Reseñas</h1>
+      <span class="crece"></span>
+      <a class="btn chico" href="/analiza/" target="_blank">Ver el analizador</a>
+      <a class="btn chico" href="pedidos.html">Pedidos</a>
+      <button class="chico" id="refrescar">Actualizar</button>
+      <button class="chico" id="salir">Salir</button>
+    </header>
+
+    <div id="errPanel" class="aviso oculto"></div>
+
+    <div class="cifras">
+      <div class="cifra"><b id="cTotal">0</b><span>análisis guardados</span></div>
+      <div class="cifra"><b id="cNuevos">0</b><span>contactos sin llamar</span></div>
+      <div class="cifra"><b id="cDenun">0</b><span>denunciables</span></div>
+      <div class="cifra"><b id="cClientes">0</b><span>clientes</span></div>
+    </div>
+
+    <!-- ═══ analizar una reseña ═══ -->
+    <details class="bloque" id="bloqueAnaliza">
+      <summary>Analizar una reseña de un cliente</summary>
+      <form id="fAnaliza">
+        <div class="campo"><label for="aTexto">Reseña</label><textarea id="aTexto" maxlength="4000"></textarea></div>
+        <div class="tres">
+          <div class="campo"><label for="aEstrellas">Estrellas (1-5)</label><input id="aEstrellas" type="number" min="1" max="5" value="1"></div>
+          <div class="campo"><label for="aNegocio">Negocio</label><input id="aNegocio" maxlength="80"></div>
+          <div class="campo"><label for="aCiudad">Ciudad</label><input id="aCiudad" maxlength="60"></div>
+        </div>
+        <div class="dos">
+          <div class="campo"><label for="aClaves">Palabras clave (con comas)</label><input id="aClaves" maxlength="200"></div>
+          <div class="campo"><label for="aContacto">Contacto para la respuesta</label><input id="aContacto" maxlength="120"></div>
+        </div>
+        <div class="campo"><label for="aContexto">Lo que sabe el dueño del autor</label><input id="aContexto" maxlength="600"></div>
+        <div class="acciones" style="align-items:center">
+          <label class="marca"><input type="checkbox" id="aIA"> <span id="aIATxt">Usar la IA donde las reglas no basten (~1 céntimo)</span></label>
+          <label class="marca"><input type="checkbox" id="aGuardar" checked> Guardarla en la lista</label>
+          <span class="crece"></span>
+          <button class="btn-oro" type="submit" id="bAnaliza">Analizar</button>
+        </div>
+      </form>
+      <div id="aResultado" style="margin-top:16px"></div>
+    </details>
+
+    <div class="filtros" id="filtros">
+      <button data-f="nuevo" class="chico on">Sin llamar <span data-n="nuevo"></span></button>
+      <button data-f="contactado" class="chico">Contactados <span data-n="contactado"></span></button>
+      <button data-f="cliente" class="chico">Clientes <span data-n="cliente"></span></button>
+      <button data-f="descartado" class="chico">Descartados <span data-n="descartado"></span></button>
+      <button data-f="todo" class="chico">Todos <span data-n="todo"></span></button>
+    </div>
+    <div id="lista"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var API = '/api/analisis';
+  var GUARD = 'plea5e_panel_clave';   /* la misma que los otros paneles */
+  var clave = '', fichas = [], filtro = 'nuevo', hayIA = false;
+  var $ = function (id) { return document.getElementById(id); };
+  var ver = function (el, si) { el.classList.toggle('oculto', !si); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ---------- entrar ---------- */
+  function guardada() { try { return localStorage.getItem(GUARD) || ''; } catch (e) { return ''; } }
+  $('fClave').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = $('clave').value.trim();
+    if (v) probar(v, $('recuerda').checked);
+  });
+  function probar(v, recordar) {
+    ver($('errClave'), false);
+    pide(v).then(function (d) {
+      clave = v;
+      if (recordar) { try { localStorage.setItem(GUARD, v); } catch (e) {} }
+      ver($('puerta'), false); ver($('panel'), true);
+      recibe(d);
+    }).catch(function (err) {
+      $('errClave').textContent = err.message; ver($('errClave'), true);
+      $('clave').value = ''; $('clave').focus();
+    });
+  }
+  $('salir').addEventListener('click', function () {
+    try { localStorage.removeItem(GUARD); } catch (e) {}
+    location.reload();
+  });
+
+  /* ---------- hablar con el servidor ---------- */
+  function trata(r) {
+    if (r.status === 401) throw new Error('Esa contraseña no es.');
+    return r.json().catch(function () { return {}; }).then(function (d) {
+      if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
+      return d;
+    });
+  }
+  function pide(v) {
+    return fetch(API, { headers: { 'x-panel-clave': v || clave }, cache: 'no-store' }).then(trata);
+  }
+  function manda(cuerpo) {
+    return fetch(API, {
+      method: 'POST', body: JSON.stringify(cuerpo),
+      headers: { 'x-panel-clave': clave, 'Content-Type': 'application/json' }
+    }).then(trata);
+  }
+  function recarga() {
+    ver($('errPanel'), false);
+    return pide().then(recibe).catch(function (err) {
+      $('errPanel').textContent = err.message; ver($('errPanel'), true);
+    });
+  }
+  $('refrescar').addEventListener('click', recarga);
+
+  function recibe(d) {
+    fichas = d.lista || [];
+    hayIA = Boolean(d.ia);
+    $('aIA').disabled = !hayIA;
+    if (!hayIA) $('aIATxt').textContent = 'IA apagada: falta ANTHROPIC_API_KEY en Cloudflare (se analiza gratis con reglas)';
+    pinta();
+  }
+
+  /* ---------- la lista ---------- */
+  var ETIQUETA = { impugnable: 'Denunciable', revisar: 'Revisar', 'no-impugnable': 'No denunciable' };
+  var ESTADOS = [['nuevo', 'Sin llamar'], ['contactado', 'Contactado'], ['cliente', 'Cliente'], ['descartado', 'Descartar']];
+
+  function fecha(ms) {
+    var d = new Date(ms);
+    return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ' ' +
+      d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  /* El WhatsApp sale ya escrito: lo que más cuesta de hacer seguimiento
+     es ponerse a escribir el primer mensaje. */
+  function enlaceWa(f) {
+    var tel = String((f.lead && f.lead.contacto) || '').replace(/[^\d+]/g, '');
+    if (tel.replace('+', '').length < 9) return '';
+    if (tel.length === 9) tel = '34' + tel;
+    tel = tel.replace('+', '');
+    var nombre = (f.lead && f.lead.nombre) ? ' ' + f.lead.nombre.split(' ')[0] : '';
+    var v = f.analisis || {};
+    var msg = 'Hola' + nombre + ', soy de PLEA5E. Has analizado una reseña de ' +
+      ((f.resena && f.resena.negocio && f.resena.negocio.nombre) || 'tu negocio') + ' en nuestra web. ' +
+      (v.veredicto === 'impugnable' ? 'Incumple las normas de Google y te he preparado la denuncia. ¿Te ayudo a enviarla?'
+        : v.veredicto === 'revisar' ? 'La he mirado con calma y te cuento si merece la pena denunciarla. ¿Tienes un minuto?'
+        : 'Esa no se puede quitar, pero te ayudo a contestarla y a conseguir reseñas buenas que la tapen. ¿Te cuento?');
+    return 'https://wa.me/' + tel + '?text=' + encodeURIComponent(msg);
+  }
+
+  function htmlAnalisis(v) {
+    var tipo = v.tipo === 'positiva' ? 'positiva' : v.veredicto;
+    var h = '<span class="chapa ' + tipo + '">' + (tipo === 'positiva' ? 'Positiva' : ETIQUETA[v.veredicto]) +
+      (v.fuerza ? ' · ' + v.fuerza : '') + '</span>' + (v.origen === 'ia' ? ' <span class="chapa ia">IA</span>' : '');
+    h += '<p style="margin:8px 0;color:var(--txt-2);font-size:14px">' + esc(v.resumen) + '</p>';
+    if (v.infracciones && v.infracciones.length) {
+      h += '<ul class="infr">' + v.infracciones.map(function (i) {
+        return '<li><b>' + esc(i.norma) + '</b>: «' + esc(i.cita) + '»</li>';
+      }).join('') + '</ul>';
+    }
+    if (v.apelacion) h += '<details class="txt"><summary>Apelación para Google</summary><pre>' + esc(v.apelacion) +
+      '</pre><button class="chico" data-copia="1">Copiar</button></details>';
+    h += '<details class="txt"><summary>Respuesta pública</summary><pre>' + esc(v.respuesta) +
+      '</pre><button class="chico" data-copia="1">Copiar</button></details>';
+    return h;
+  }
+
+  function pinta() {
+    var cuenta = { todo: fichas.length, nuevo: 0, contactado: 0, cliente: 0, descartado: 0 };
+    var denun = 0;
+    fichas.forEach(function (f) {
+      cuenta[f.estado] = (cuenta[f.estado] || 0) + 1;
+      if (f.analisis && f.analisis.veredicto === 'impugnable') denun++;
+    });
+    $('cTotal').textContent = fichas.length;
+    $('cNuevos').textContent = cuenta.nuevo;
+    $('cDenun').textContent = denun;
+    $('cClientes').textContent = cuenta.cliente;
+    document.querySelectorAll('[data-n]').forEach(function (s) {
+      s.textContent = cuenta[s.dataset.n] ? '(' + cuenta[s.dataset.n] + ')' : '';
+    });
+
+    var vis = fichas.filter(function (f) { return filtro === 'todo' || f.estado === filtro; });
+    if (!vis.length) {
+      $('lista').innerHTML = '<p class="vacio">' + (fichas.length ? 'Nada en este apartado.'
+        : 'Aún no hay nada. Cuando alguien use plea5e.es/analiza/ y deje su contacto, aparece aquí.') + '</p>';
+      return;
+    }
+    $('lista').innerHTML = vis.map(function (f) {
+      var r = f.resena || {}, n = r.negocio || {}, l = f.lead || {};
+      var wa = enlaceWa(f);
+      var quien = [l.nombre, l.contacto].filter(Boolean).join(' · ');
+      return '<article class="ficha ' + esc(f.estado) + '" data-clave="' + esc(f.clave) + '">' +
+        '<div class="cab"><h3>' + esc(n.nombre || 'Sin nombre de negocio') + '</h3>' +
+        '<span class="cuando">' + fecha(f.cuando) + ' · ' + (f.origen === 'panel' ? 'desde el panel' : 'desde la web') +
+        (r.estrellas ? ' · ' + r.estrellas + '★' : '') + '</span></div>' +
+        (quien ? '<p class="quien">' + esc(quien) + '</p>' : '<p class="quien"></p>') +
+        '<blockquote>' + esc(r.texto) + '</blockquote>' +
+        htmlAnalisis(f.analisis || {}) +
+        '<div class="acciones">' +
+          (wa ? '<a class="btn btn-oro chico" href="' + esc(wa) + '" target="_blank" rel="noopener">WhatsApp</a>' : '') +
+          ESTADOS.map(function (e) {
+            return '<button class="chico' + (f.estado === e[0] ? ' on' : '') + '" data-estado="' + e[0] + '">' + e[1] + '</button>';
+          }).join('') +
+          '<span class="crece"></span><button class="chico" data-borra="1">Borrar</button>' +
+        '</div></article>';
+    }).join('');
+  }
+
+  $('filtros').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    filtro = b.dataset.f;
+    $('filtros').querySelectorAll('button').forEach(function (o) { o.classList.toggle('on', o === b); });
+    pinta();
+  });
+
+  /* copiar, cambiar de estado y borrar: un solo escuchador para todo */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.copia) {
+      var txt = b.previousElementSibling.textContent;
+      navigator.clipboard.writeText(txt).then(function () {
+        var o = b.textContent; b.textContent = '¡Copiado!'; setTimeout(function () { b.textContent = o; }, 1500);
+      });
+      return;
+    }
+    var art = b.closest('.ficha'); if (!art) return;
+    var k = art.dataset.clave;
+    if (b.dataset.estado) {
+      manda({ accion: 'estado', clave: k, estado: b.dataset.estado }).then(function () {
+        fichas.forEach(function (f) { if (f.clave === k) f.estado = b.dataset.estado; });
+        pinta();
+      }).catch(function (err) { alert(err.message); });
+    } else if (b.dataset.borra) {
+      if (!confirm('¿Borrar esta ficha? No se puede deshacer.')) return;
+      manda({ accion: 'borra', clave: k }).then(function () {
+        fichas = fichas.filter(function (f) { return f.clave !== k; });
+        pinta();
+      }).catch(function (err) { alert(err.message); });
+    }
+  });
+
+  /* ---------- analizar desde el panel ---------- */
+  $('fAnaliza').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if ($('aTexto').value.trim().length < 3) { $('aTexto').focus(); return; }
+    $('bAnaliza').disabled = true; $('bAnaliza').textContent = 'Analizando…';
+    $('aResultado').innerHTML = '';
+    manda({
+      accion: 'analiza', ia: $('aIA').checked, guardar: $('aGuardar').checked,
+      texto: $('aTexto').value, estrellas: $('aEstrellas').value, contexto: $('aContexto').value,
+      negocio: { nombre: $('aNegocio').value, ciudad: $('aCiudad').value, palabras_clave: $('aClaves').value, contacto: $('aContacto').value }
+    }).then(function (d) {
+      $('aResultado').innerHTML = htmlAnalisis(d.analisis);
+      if (d.clave) recarga();
+    }).catch(function (err) {
+      $('aResultado').innerHTML = '<div class="aviso">' + esc(err.message) + '</div>';
+    }).then(function () { $('bAnaliza').disabled = false; $('bAnaliza').textContent = 'Analizar'; });
+  });
+
+  /* entrar directo si la contraseña ya está guardada */
+  var g = guardada();
+  if (g) probar(g, true);
+})();
+</script>
+</body>
+</html>
