@@ -34,7 +34,8 @@
                    nada que denunciar, solo se agradece) */
 
 import { POLITICAS, SISTEMA, ESQUEMA } from './politicas.mjs';
-import { detecta, respuestaPlantilla, apelacionPlantilla, agradecimientoPlantilla } from './reglas.mjs';
+import { detecta, apelacionPlantilla } from './reglas.mjs';
+import { redacta, respuestaPlantilla } from './redacta.mjs';
 
 /* Sonnet con esfuerzo bajo: unas cuatro veces más barato que Opus y de
    sobra para leer una reseña con lupa. Si se le escapan matices, se
@@ -207,33 +208,58 @@ async function conIA(resena, pistas, cliente) {
 /* opciones:
      apiKey      la clave de Anthropic (si no, la del entorno)
      cliente     uno de mentira para las pruebas
-     modo        'gratis'  solo reglas, nunca IA
+     modo        cómo se busca lo denunciable:
+                 'gratis'  solo reglas, nunca IA
                  'auto'    (por defecto) IA solo si las reglas no bastan
-                 'ia'      IA siempre, aunque las reglas ya lo tengan claro */
+                 'ia'      IA siempre, aunque las reglas ya lo tengan claro
+     redactar    cómo se escribe la respuesta:
+                 'ia'         la escribe la IA para esa reseña (si hay IA)
+                 'plantilla'  sin IA
+                 Por defecto, 'ia' si hay IA y el modo no es 'gratis'.
+     config      lo de cada negocio para la respuesta: tono, firma,
+                 contacto, palabras_clave, notas (ver redacta.mjs)
+
+   La reseña puede traer autor (para saludarle por su nombre) y puede
+   venir sin texto si solo tiene estrellas, que en Google pasa mucho:
+   entonces no hay nada que denunciar y solo se responde. */
 export async function analiza(resena, opciones = {}) {
-  if (!resena || !String(resena.texto || '').trim()) {
+  const texto = String((resena && resena.texto) || '').trim();
+  if (!resena || (!texto && resena.estrellas == null)) {
     throw new Error('la reseña no tiene texto');
   }
   const modo = opciones.modo || 'auto';
-  if (Number(resena.estrellas) >= 4) {
+  /* En el Worker la clave llega por opciones.apiKey; process.env solo
+     existe en la terminal. */
+  const delEntorno = typeof process !== 'undefined' && process.env ? process.env.ANTHROPIC_API_KEY : '';
+  const hayIA = Boolean(opciones.cliente || opciones.apiKey || delEntorno);
+  const redactar = opciones.redactar || (hayIA && modo !== 'gratis' ? 'ia' : 'plantilla');
+  let cliente = opciones.cliente || null;
+  const dameCliente = async () => (cliente = cliente || await creaCliente(opciones.apiKey));
+  const escribe = async () => (await redacta(resena, opciones.config,
+    { cliente: redactar === 'ia' && hayIA ? await dameCliente() : null }));
+
+  if (Number(resena.estrellas) >= 4 || !texto) {
+    const r = await escribe();
     return {
-      tipo: 'positiva', veredicto: 'no-impugnable', fuerza: null,
+      tipo: Number(resena.estrellas) >= 4 ? 'positiva' : 'negativa',
+      veredicto: 'no-impugnable', fuerza: null,
       infracciones: [], descartadas: [], apelacion: '',
-      respuesta: agradecimientoPlantilla(resena),
-      resumen: 'Reseña positiva: solo hay que agradecerla.',
+      respuesta: r.texto, respuesta_origen: r.origen,
+      resumen: Number(resena.estrellas) >= 4 ? 'Reseña positiva: solo hay que agradecerla.'
+        : 'Solo estrellas, sin texto: no hay nada que denunciar, solo responder.',
       origen: 'reglas'
     };
   }
   const pistas = detecta(resena);
   const evidente = pistas.some((p) => p.fuerza === 'alta');
-  /* En el Worker la clave llega por opciones.apiKey; process.env solo
-     existe en la terminal. */
-  const delEntorno = typeof process !== 'undefined' && process.env ? process.env.ANTHROPIC_API_KEY : '';
-  const hayIA = Boolean(opciones.cliente || opciones.apiKey || delEntorno);
-
   const v = (modo === 'gratis' || !hayIA || (modo === 'auto' && evidente))
     ? sinIA(resena, pistas)
-    : await conIA(resena, pistas, opciones.cliente || await creaCliente(opciones.apiKey));
+    : await conIA(resena, pistas, await dameCliente());
   v.tipo = 'negativa';
+  /* La respuesta sale siempre del redactor, con la configuración del
+     negocio. La que escribe el análisis queda de reserva. */
+  const r = await escribe();
+  if (r.origen === 'ia' || v.origen !== 'ia') { v.respuesta = r.texto; v.respuesta_origen = r.origen; }
+  else v.respuesta_origen = 'ia';
   return v;
 }

@@ -18,6 +18,8 @@
 
 import { analiza } from '../../reputacion/motor.mjs';
 import { limpia } from './analiza.js';
+import { configurado } from './google.js';
+import { vigila } from '../lib/vigia.mjs';
 
 const JSON_CAB = { 'Content-Type': 'application/json; charset=utf-8' };
 const ESTADOS = ['nuevo', 'contactado', 'cliente', 'descartado'];
@@ -55,7 +57,23 @@ export async function onRequest(context) {
         try { lista.push({ ...JSON.parse(crudo), clave: k }); }
         catch (e) { console.error('ficha ilegible: ' + k); }
       }
-      return responde({ lista, ia: Boolean(String(env.ANTHROPIC_API_KEY || '').trim()) });
+      /* Los negocios que han conectado su ficha de Google, en resumen:
+         sin permisos ni nada que no haga falta para verlos. */
+      const conectadas = [];
+      const gc = await env.ENCARGOS.list({ prefix: 'gc-', limit: 1000 });
+      for (const k of gc.keys) {
+        const t = await env.ENCARGOS.get(k.name);
+        if (!t) continue;
+        try {
+          const c = JSON.parse(t);
+          const pend = await env.ENCARGOS.list({ prefix: 'gr-' + c.sub + '-', limit: 1000 });
+          conectadas.push({ email: c.email, nombre: c.nombre, ultima: c.ultima || 0, error: c.error || '',
+            registradas: pend.keys.length,
+            fichas: (c.fichas || []).map((f) => ({ nombre: f.nombre, direccion: f.direccion, activa: Boolean(f.config && f.config.activa),
+              auto_negativas: Boolean(f.config && f.config.auto_negativas), ultima: f.ultima || 0, error: f.error || '' })) });
+        } catch (e) { console.error('cuenta ilegible: ' + k.name); }
+      }
+      return responde({ lista, conectadas, configurado: configurado(env), ia: Boolean(String(env.ANTHROPIC_API_KEY || '').trim()) });
     }
 
     if (request.method !== 'POST') return responde({ error: 'método' }, 405);
@@ -83,12 +101,18 @@ export async function onRequest(context) {
       return responde({ ok: true });
     }
 
+    if (d.accion === 'vigila') {
+      return responde({ ok: true, resultado: await vigila(env) });
+    }
+
     if (d.accion === 'analiza') {
       const { resena, lead } = limpia(d);
       if (resena.texto.length < 3) return responde({ error: 'falta el texto de la reseña' }, 400);
       const apiKey = String(env.ANTHROPIC_API_KEY || '').trim();
       if (d.ia && !apiKey) return responde({ error: 'Para usar la IA falta ANTHROPIC_API_KEY en Cloudflare.' }, 400);
-      const v = await analiza(resena, d.ia ? { apiKey, modo: 'auto' } : { modo: 'gratis' });
+      const v = await analiza(resena, d.ia
+        ? { apiKey, modo: 'auto', config: { tono: d.tono, firma: d.firma, contacto: resena.negocio.contacto } }
+        : { modo: 'gratis', redactar: 'plantilla' });
       let clave = '';
       if (d.guardar) {
         const cuando = Date.now();

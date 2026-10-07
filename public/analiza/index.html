@@ -10,6 +10,9 @@
 <link rel="icon" href="/icono.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icono-192.png">
 <link rel="manifest" href="/analiza/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Reseñas">
+<script src="/analiza/app.js" defer></script>
 <meta property="og:title" content="¿Esa reseña de 1 estrella se puede quitar? Compruébalo gratis">
 <meta property="og:description" content="Te decimos al momento si incumple las normas de Google, y te damos la respuesta lista para copiar.">
 <meta property="og:image" content="https://plea5e.es/og.jpg">
@@ -106,6 +109,10 @@
   .cta p{color:var(--txt-2); margin:0 0 18px}
   .cta .fila{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
 
+  a.conecta{display:block; text-decoration:none; color:var(--txt); border-color:rgba(233,188,70,.45); background:linear-gradient(135deg,rgba(233,188,70,.12),rgba(233,188,70,.02))}
+  a.conecta b{display:block; font-size:17px; margin-bottom:4px}
+  a.conecta span{display:block; color:var(--txt-2); font-size:15px}
+  a.conecta .flecha{color:var(--oro); font-weight:700; margin-top:8px}
   footer{color:var(--txt-3); font-size:13px; padding:30px 0 60px; text-align:center}
 </style>
 </head>
@@ -114,13 +121,19 @@
   <header class="top">
     <a class="marca" href="/"><b>PLEA5E</b></a>
     <span class="crece"></span>
-    <button class="btn btn-chico oculto" id="instalar" type="button">Instalar en el móvil</button>
+    <button class="btn btn-chico oculto" data-instalar type="button">Instalar app</button>
   </header>
 
   <section class="hero">
     <h1>¿Esa reseña de 1 estrella <em>se puede quitar?</em></h1>
     <p>Pégala aquí y te decimos al momento si incumple las normas de Google. Si las incumple, te preparamos la denuncia. Si no, te damos la respuesta perfecta para que no te haga daño. Gratis.</p>
   </section>
+
+  <a class="tarjeta conecta" href="/analiza/ficha/">
+    <b>Nuevo: que se respondan solas</b>
+    <span>Busca tu negocio, conéctalo con Google y cada reseña nueva recibe su respuesta. Las malas, con tu visto bueno.</span>
+    <span class="flecha">Conectar mi ficha →</span>
+  </a>
 
   <form class="tarjeta" id="fAnaliza" novalidate>
     <div class="campo">
@@ -145,8 +158,18 @@
         <div class="campo"><label for="contactoNeg">Contacto para la respuesta</label>
           <input id="contactoNeg" maxlength="120" placeholder="hola@tunegocio.es"></div>
       </div>
-      <div class="campo"><label for="contexto">¿Sabes algo del autor? <small>(por ejemplo: «es un exempleado»)</small></label>
-        <input id="contexto" maxlength="600"></div>
+      <div class="dos">
+        <div class="campo"><label for="autor">Nombre del autor <small>(para saludarle)</small></label>
+          <input id="autor" maxlength="80" placeholder="Laura G."></div>
+        <div class="campo"><label for="tono">Tono</label>
+          <select id="tono"><option value="cercano">Cercano (de tú)</option><option value="formal">Formal (de usted)</option></select></div>
+      </div>
+      <div class="dos">
+        <div class="campo"><label for="firma">Firma <small>(opcional)</small></label>
+          <input id="firma" maxlength="80" placeholder="Manolo y el equipo"></div>
+        <div class="campo"><label for="contexto">¿Sabes algo del autor? <small>(«es un exempleado»)</small></label>
+          <input id="contexto" maxlength="600"></div>
+      </div>
     </details>
     <input class="trampa" id="web" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button class="btn btn-oro btn-ancho" id="bAnaliza" type="submit">Analizar la reseña</button>
@@ -228,7 +251,7 @@
 
   /* Lo que se escribe del negocio se recuerda en este navegador: el
      dueño que vuelve con otra reseña no tiene que repetirlo. */
-  var RECUERDA = ['negocio', 'claves', 'contactoNeg', 'leadNombre', 'leadContacto'];
+  var RECUERDA = ['negocio', 'claves', 'contactoNeg', 'leadNombre', 'leadContacto', 'tono', 'firma'];
   RECUERDA.forEach(function (id) {
     try { var v = localStorage.getItem('plea5e_an_' + id); if (v) $(id).value = v; } catch (e) {}
     $(id).addEventListener('change', function () {
@@ -239,6 +262,7 @@
   function datos(conLead) {
     var d = {
       texto: $('texto').value, estrellas: estrellas, contexto: $('contexto').value, web: $('web').value,
+      autor: $('autor').value, tono: $('tono').value, firma: $('firma').value,
       negocio: { nombre: $('negocio').value, palabras_clave: $('claves').value, contacto: $('contactoNeg').value }
     };
     if (conLead) d.lead = { nombre: $('leadNombre').value, contacto: $('leadContacto').value, acepta: $('leadAcepta').checked };
@@ -316,7 +340,7 @@
   });
 
   $('otra').addEventListener('click', function () {
-    $('texto').value = ''; $('contexto').value = '';
+    $('texto').value = ''; $('contexto').value = ''; $('autor').value = '';
     ver($('resultado'), false); ver($('fAnaliza'), true); $('texto').focus();
   });
 
@@ -329,24 +353,6 @@
     });
   });
 
-  /* ---- instalarla como app ----
-     Android y ordenador: el navegador avisa de que se puede instalar y
-     sale el botón. iPhone no avisa nunca: ahí el botón explica cómo
-     hacerlo a mano desde Compartir. */
-  var pendiente = null;
-  window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault(); pendiente = e; ver($('instalar'), true);
-  });
-  var esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  var yaInstalada = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-  if (esIOS && !yaInstalada) ver($('instalar'), true);
-  $('instalar').addEventListener('click', function () {
-    if (pendiente) { pendiente.prompt(); pendiente = null; ver($('instalar'), false); }
-    else alert('En el iPhone: pulsa el botón de Compartir (el cuadrado con la flecha) y luego «Añadir a pantalla de inicio».');
-  });
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/analiza/sw.js', { scope: '/analiza/' }).catch(function () {});
-  }
 })();
 </script>
 </body>

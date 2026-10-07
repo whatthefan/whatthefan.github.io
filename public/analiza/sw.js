@@ -1,16 +1,15 @@
-/* Lo mínimo para que el móvil deje instalar el analizador como una app.
+/* Lo mínimo para que el móvil deje instalar la app (/analiza/ y
+   /analiza/ficha/).
 
-   Guarda la página para que abra al instante aunque haya poca cobertura,
-   y la vuelve a pedir siempre que hay red: así un cambio en la web se ve
-   a la siguiente apertura, sin quedarse con una versión vieja. El
-   análisis (/api/...) no pasa nunca por aquí: necesita el servidor. */
+   Cada página se guarda para que abra al instante aunque haya poca
+   cobertura, y se vuelve a pedir siempre que hay red: así un cambio en
+   la web se ve a la siguiente apertura, sin quedarse con una versión
+   vieja. Lo de /api/ no pasa nunca por aquí: necesita el servidor, y
+   las sesiones del dueño no se guardan en ningún sitio. */
 
-const CAJA = 'plea5e-analiza-1';
-const PAGINA = '/analiza/';
+const CAJA = 'plea5e-analiza-2';
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CAJA).then((c) => c.add(PAGINA)).then(() => self.skipWaiting()));
-});
+self.addEventListener('install', () => self.skipWaiting());
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys()
@@ -20,13 +19,19 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.mode !== 'navigate') return;
+  /* Sin lo de después del ? : "/analiza/ficha/?conectado=1" es la misma
+     página que "/analiza/ficha/". */
+  const url = new URL(e.request.url);
+  const clave = url.origin + url.pathname;
   e.respondWith(
     fetch(e.request)
       .then((r) => {
-        const copia = r.clone();
-        caches.open(CAJA).then((c) => c.put(PAGINA, copia));
+        if (r.ok && r.type === 'basic') {
+          const copia = r.clone();
+          caches.open(CAJA).then((c) => c.put(clave, copia));
+        }
         return r;
       })
-      .catch(() => caches.match(PAGINA))
+      .catch(() => caches.match(clave).then((r) => r || caches.match(url.origin + '/analiza/')))
   );
 });

@@ -8,6 +8,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { depura, normaliza, montaMensaje, analiza } from './motor.mjs';
 import { detecta, apelacionPlantilla } from './reglas.mjs';
+import { redacta, temas, nombrePila, respuestaPlantilla, agradecimientoPlantilla, mensajeRespuesta } from './redacta.mjs';
 
 const resena = {
   texto: 'Tardaron 40 minutos y el camarero, un imbécil, ni se disculpó.',
@@ -117,7 +118,7 @@ test('en modo gratis nunca se llama a la IA', async () => {
 test('lo dudoso va a la IA con las pistas de las reglas', async () => {
   let mensaje = '';
   const cliente = { beta: { messages: { create: async (p) => {
-    mensaje = p.messages[0].content;
+    mensaje += p.messages[0].content;
     return { stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify({
       infracciones: [], apelacion: '', respuesta: 'Gracias', resumen: 'nada' }) }] };
   } } } };
@@ -188,4 +189,67 @@ test('las de 4 y 5 estrellas se agradecen sin buscar nada ni gastar', async () =
   assert.equal(v.tipo, 'positiva');
   assert.equal(v.apelacion, '');
   assert.match(v.respuesta, /gracias/i);
+});
+
+/* ── El redactor de respuestas ── */
+
+const neg = { texto: 'Tardamos una hora en comer y las croquetas frías.', estrellas: 2, autor: 'Laura García',
+  negocio: { nombre: 'Bar Manolo', palabras_clave: ['tapas caseras'] } };
+
+test('la plantilla nombra lo que cuenta la reseña y saluda por el nombre', () => {
+  const t = respuestaPlantilla(neg, { contacto: 'hola@bar.es', firma: 'Manolo' });
+  assert.match(t, /Laura/);
+  assert.match(t, /espera/);
+  assert.match(t, /hola@bar\.es/);
+  assert.match(t, /\nManolo$/);
+});
+
+test('tono formal: de usted', () => {
+  const t = respuestaPlantilla({ ...neg, autor: '' }, { tono: 'formal' });
+  assert.match(t, /su experiencia/);
+  assert.doesNotMatch(t, /tu experiencia/);
+});
+
+test('el agradecimiento celebra lo que le gustó', () => {
+  const t = agradecimientoPlantilla({ texto: 'La comida espectacular', estrellas: 5, autor: 'Pepe' }, {});
+  assert.match(t, /Pepe/);
+  assert.match(t, /comida/);
+});
+
+test('solo se saluda por el nombre si parece un nombre', () => {
+  assert.equal(nombrePila('Laura G.'), 'Laura');
+  assert.equal(nombrePila('usuario123'), '');
+  assert.equal(nombrePila('XXL'), '');
+});
+
+test('detecta los temas', () => {
+  assert.deepEqual(temas('carísimo y el camarero borde'), ['precio', 'trato']);
+});
+
+test('la IA recibe la configuración del negocio', () => {
+  const m = mensajeRespuesta(neg, { tono: 'formal', firma: 'Manolo', notas: 'no ofrezcas invitaciones' });
+  assert.match(m, /Tono: formal/);
+  assert.match(m, /Firma: Manolo/);
+  assert.match(m, /no ofrezcas invitaciones/);
+  assert.match(m, /Autor: Laura García/);
+});
+
+test('si la IA falla, plantilla: ninguna reseña se queda sin respuesta', async () => {
+  const r = await redacta(neg, {}, { cliente: nunca });
+  assert.equal(r.origen, 'plantilla');
+  assert.ok(r.texto.length > 30);
+});
+
+test('con IA, la respuesta es la suya', async () => {
+  const cliente = { beta: { messages: { create: async () => ({ stop_reason: 'end_turn',
+    content: [{ type: 'text', text: 'Hola Laura, sentimos la espera de las croquetas.' }] }) } } };
+  const v = await analiza(neg, { cliente, modo: 'gratis', redactar: 'ia' });
+  assert.equal(v.respuesta_origen, 'ia');
+  assert.match(v.respuesta, /croquetas/);
+});
+
+test('una reseña de solo estrellas se responde sin buscar nada', async () => {
+  const v = await analiza({ texto: '', estrellas: 1 }, { modo: 'gratis' });
+  assert.equal(v.veredicto, 'no-impugnable');
+  assert.ok(v.respuesta.length > 20);
 });

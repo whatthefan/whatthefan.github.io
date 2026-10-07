@@ -1,16 +1,17 @@
 {
-  "name": "PLEA5E · Analizador de reseñas",
+  "id": "/analiza/ficha/",
+  "name": "PLEA5E Reseñas",
   "short_name": "Reseñas",
-  "description": "Comprueba si una reseña de Google se puede denunciar y responde a todas, buenas y malas.",
+  "description": "Conecta tu ficha de Google y deja que tus reseñas se respondan solas. Y comprueba si una reseña se puede denunciar.",
   "lang": "es",
-  "start_url": "/analiza/?app=1",
+  "start_url": "/analiza/ficha/?app=1",
   "scope": "/analiza/",
   "display": "standalone",
   "background_color": "#06080E",
   "theme_color": "#06080E",
   "icons": [
-    { "src": "/icono-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
