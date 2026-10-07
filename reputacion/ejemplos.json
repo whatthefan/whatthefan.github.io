@@ -55,6 +55,12 @@
       "espera": "impugnable",
       "estrellas": 1,
       "texto": "No he ido nunca pero un amigo me ha dicho que es carísimo y que tratan fatal."
+    },
+    {
+      "id": "falsa-alarma",
+      "espera": "no-impugnable",
+      "estrellas": 2,
+      "texto": "Vinimos después del desfile de moros y cristianos. Estaba a reventar y las tapas tardaron muchísimo."
     }
   ]
 }

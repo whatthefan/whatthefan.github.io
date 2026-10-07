@@ -10,6 +10,23 @@ Motor que analiza reseñas negativas de Google. Para cada una:
 3. Siempre **redacta la respuesta pública** del dueño: empática, con dos
    palabras clave del negocio y llevando la conversación a privado.
 
+## Cómo decide (y cuánto cuesta)
+
+1. **Reglas gratis** (`reglas.mjs`): miran siempre primero. Cazan lo
+   evidente: insultos, "la gorda de la barra", amenazas, teléfonos,
+   "trabajé aquí", "no he ido pero"...
+2. Si encuentran algo claro, ya está: apelación y respuesta salen de
+   plantillas. **0 €.**
+3. Si no, entra la **IA** (Claude Sonnet 5.5) con lo que vieron las
+   reglas como pista. Es la que pilla los matices. **Alrededor de 1
+   céntimo** por reseña.
+4. Sin clave de la IA funciona solo con las reglas. Lo dudoso sale como
+   **"revisar"**: lo mira una persona antes de denunciar.
+
+Con las 9 reseñas de `ejemplos.json`, solo con reglas acierta 8; la
+novena (quejarse del aparcamiento) queda en "revisar", que es lo
+correcto sin IA.
+
 No tiene nada que ver con la web de PLEA5E: no lo usa nadie de `src/`,
 no se sirve desde `public/` y no cambia nada al desplegar.
 
@@ -31,7 +48,8 @@ quita.
 | | |
 |---|---|
 | `politicas.mjs` | Las normas de Google y las instrucciones de la IA. **Aquí se afina el criterio.** |
-| `motor.mjs` | Llama a la IA y comprueba las citas. |
+| `reglas.mjs` | El detector gratis y las plantillas de apelación y respuesta. |
+| `motor.mjs` | Reparte entre reglas e IA y comprueba las citas. |
 | `ejemplos.json` | Reseñas de prueba, cada una con el veredicto que se espera. |
 | `analiza.mjs` | Para probarlo desde la terminal. |
 | `prueba.mjs` | Pruebas sin red ni clave. |
@@ -41,12 +59,12 @@ quita.
 ```
 npm install                                  # una vez
 npm run prueba-reputacion                    # pruebas gratis, sin clave
-ANTHROPIC_API_KEY=... npm run reputacion     # las reseñas de ejemplo
+npm run reputacion                           # ejemplos, solo con reglas (gratis)
+ANTHROPIC_API_KEY=... npm run reputacion     # ejemplos, con IA donde haga falta
 ANTHROPIC_API_KEY=... npm run reputacion -- fisico
 ANTHROPIC_API_KEY=... npm run reputacion -- "texto de una reseña"
 ```
 
-Cada reseña analizada es una llamada a la IA y cuesta unos céntimos.
 
 Desde código:
 
@@ -63,7 +81,8 @@ const v = await analiza({
     contacto: 'hola@barmanolo.es'
   }
 });
-// v.veredicto, v.fuerza, v.infracciones, v.apelacion, v.respuesta
+// v.veredicto, v.fuerza, v.infracciones, v.apelacion, v.respuesta, v.origen
+// { modo: 'gratis' } como segundo argumento: nunca usa la IA
 ```
 
 ## Lo que falta

@@ -5,10 +5,14 @@
      npm run reputacion -- "texto..."   una reseña suelta, con el negocio
                                         de ejemplos.json
 
-   Necesita ANTHROPIC_API_KEY en el entorno, y cada reseña es una
-   llamada que se paga (unos céntimos). Al final dice cuántas han
-   acertado el veredicto que se esperaba: es la forma de saber si un
-   cambio en politicas.mjs mejora o empeora el criterio. */
+   Sin ANTHROPIC_API_KEY funciona igual, solo con las reglas gratis.
+   Con ella, la IA entra en las reseñas que las reglas no resuelven, y
+   cada una de esas cuesta alrededor de un céntimo. Con GRATIS=1 no se
+   usa la IA aunque haya clave.
+
+   Al final dice cuántas han acertado el veredicto que se esperaba: es
+   la forma de saber si un cambio en politicas.mjs o reglas.mjs mejora o
+   empeora el criterio. */
 
 import fs from 'node:fs';
 import { analiza } from './motor.mjs';
@@ -28,8 +32,9 @@ for (const r of lista) {
   console.log('\n══ ' + r.id + ' ' + '═'.repeat(Math.max(0, 60 - r.id.length)));
   console.log(r.texto);
   try {
-    const v = await analiza(resena);
-    console.log('\n→ ' + v.veredicto.toUpperCase() + (v.fuerza ? ' (fuerza ' + v.fuerza + ')' : ''));
+    const v = await analiza(resena, process.env.GRATIS ? { modo: 'gratis' } : {});
+    console.log('\n→ ' + v.veredicto.toUpperCase() + (v.fuerza ? ' (fuerza ' + v.fuerza + ')' : '') +
+      (v.origen === 'ia' ? '  [IA]' : '  [reglas, gratis]'));
     console.log('  ' + v.resumen);
     for (const i of v.infracciones) {
       console.log('  · ' + i.norma + ': «' + i.cita + '» (' + i.fuerza + ')');
@@ -42,6 +47,7 @@ for (const r of lista) {
     if (r.espera) {
       conEspera++;
       if (v.veredicto === r.espera) aciertos++;
+      else if (v.veredicto === 'revisar') console.log('\n?? dudosa sin IA; se esperaba ' + r.espera);
       else console.log('\n!! se esperaba ' + r.espera);
     }
   } catch (err) {
