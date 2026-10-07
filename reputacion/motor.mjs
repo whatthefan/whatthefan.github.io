@@ -29,10 +29,12 @@
      apelacion     el texto para Google, o '' si no es impugnable
      respuesta     la respuesta pública, siempre
      resumen       una línea para el dueño
-     origen        'reglas' si no ha hecho falta la IA, 'ia' si ha entrado */
+     origen        'reglas' si no ha hecho falta la IA, 'ia' si ha entrado
+     tipo          'negativa' o 'positiva' (4 o 5 estrellas: no se busca
+                   nada que denunciar, solo se agradece) */
 
 import { POLITICAS, SISTEMA, ESQUEMA } from './politicas.mjs';
-import { detecta, respuestaPlantilla, apelacionPlantilla } from './reglas.mjs';
+import { detecta, respuestaPlantilla, apelacionPlantilla, agradecimientoPlantilla } from './reglas.mjs';
 
 /* Sonnet con esfuerzo bajo: unas cuatro veces más barato que Opus y de
    sobra para leer una reseña con lupa. Si se le escapan matices, se
@@ -213,13 +215,25 @@ export async function analiza(resena, opciones = {}) {
     throw new Error('la reseña no tiene texto');
   }
   const modo = opciones.modo || 'auto';
+  if (Number(resena.estrellas) >= 4) {
+    return {
+      tipo: 'positiva', veredicto: 'no-impugnable', fuerza: null,
+      infracciones: [], descartadas: [], apelacion: '',
+      respuesta: agradecimientoPlantilla(resena),
+      resumen: 'Reseña positiva: solo hay que agradecerla.',
+      origen: 'reglas'
+    };
+  }
   const pistas = detecta(resena);
   const evidente = pistas.some((p) => p.fuerza === 'alta');
-  const hayIA = Boolean(opciones.cliente || opciones.apiKey || process.env.ANTHROPIC_API_KEY);
+  /* En el Worker la clave llega por opciones.apiKey; process.env solo
+     existe en la terminal. */
+  const delEntorno = typeof process !== 'undefined' && process.env ? process.env.ANTHROPIC_API_KEY : '';
+  const hayIA = Boolean(opciones.cliente || opciones.apiKey || delEntorno);
 
-  if (modo === 'gratis' || !hayIA || (modo === 'auto' && evidente)) {
-    return sinIA(resena, pistas);
-  }
-  const cliente = opciones.cliente || await creaCliente(opciones.apiKey);
-  return conIA(resena, pistas, cliente);
+  const v = (modo === 'gratis' || !hayIA || (modo === 'auto' && evidente))
+    ? sinIA(resena, pistas)
+    : await conIA(resena, pistas, opciones.cliente || await creaCliente(opciones.apiKey));
+  v.tipo = 'negativa';
+  return v;
 }

@@ -84,11 +84,12 @@ export async function onRequest(context) {
          r-...    a dónde salta la placa de un cliente
          rt-...   los toques de esa placa desde siempre
          rc-...   los toques de esa placa un día concreto
+         an-...   los análisis de reseñas (los lee /api/analisis)
 
        Y hay que quitarlas ANTES de cortar por 100: como la lista va
        ordenada al revés y las letras van detrás de los dígitos, si no se
        filtran se ponen las primeras y te tapan los pedidos de verdad. */
-    const NO_SON_PEDIDOS = ['id-', 'r-', 'rt-', 'rc-'];
+    const NO_SON_PEDIDOS = ['id-', 'r-', 'rt-', 'rc-', 'an-'];
     const claves = keys.map((k) => k.name)
       .filter((n) => !NO_SON_PEDIDOS.some((p) => n.startsWith(p)))
       .sort().reverse().slice(0, 100);

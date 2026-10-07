@@ -149,6 +149,25 @@ export function respuestaPlantilla(resena) {
   ], resena && resena.texto);
 }
 
+/* Las de 4 y 5 estrellas también se contestan: Google tiene en cuenta
+   que el negocio responda, y es donde mejor encajan las palabras clave
+   sin que suene a anuncio. */
+export function agradecimientoPlantilla(resena) {
+  const n = (resena && resena.negocio) || {};
+  const nombre = n.nombre || 'nosotros';
+  const kw = (n.palabras_clave || []).filter(Boolean);
+  const k1 = kw[0] || 'lo que hacemos';
+  const k2 = kw[1] || kw[0] || 'nuestro trabajo';
+  return elige([
+    '¡Muchísimas gracias por tu reseña! Nos alegra un montón que disfrutaras de ' + k1 +
+      '. Es lo que nos anima a seguir cuidando cada detalle. ¡Te esperamos pronto en ' + nombre + '!',
+    'Qué alegría leerte, gracias por tomarte el tiempo. Ponemos mucho cariño en ' + k1 + ' y en ' + k2 +
+      ', así que comentarios como el tuyo nos hacen el día. ¡Hasta la próxima!',
+    '¡Gracias de corazón! Nos encanta saber que te gustó ' + k2 + '. Aquí tienes tu casa para cuando ' +
+      'quieras volver a ' + nombre + '.'
+  ], resena && resena.texto);
+}
+
 export function apelacionPlantilla(resena, infracciones) {
   if (!infracciones.length) return '';
   const nombre = (resena.negocio && resena.negocio.nombre) || 'nuestro establecimiento';

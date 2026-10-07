@@ -85,12 +85,29 @@ const v = await analiza({
 // { modo: 'gratis' } como segundo argumento: nunca usa la IA
 ```
 
+## En la web
+
+| | |
+|---|---|
+| `plea5e.es/analiza/` | El analizador gratis, para cualquiera. Solo reglas: no gasta nada. Da el veredicto y la respuesta al momento; la apelación, a cambio de un WhatsApp o correo. Se puede instalar en el móvil como una app. |
+| `plea5e.es/taller/resenas.html` | Tu panel. Misma contraseña que Pedidos. Los contactos que deja la gente, con su reseña analizada y un WhatsApp ya escrito para llamarles; y un analizador para ti que puede usar la IA. |
+| `src/api/analiza.js` | Lo que atiende al analizador público. |
+| `src/api/analisis.js` | Lo que atiende al panel. |
+
+Los contactos se guardan en el mismo almacén que los pedidos
+(`ENCARGOS`), con claves que empiezan por `an-`. El panel de pedidos no
+las enseña. El correo de aviso usa las mismas variables que los pedidos
+(`RESEND_API_KEY`, `CORREO_AVISO`, `CORREO_DE`); la IA del panel, la
+misma `ANTHROPIC_API_KEY` de los colores.
+
 ## Lo que falta
 
 - Conectar con la API de Google Business Profile para leer las reseñas
-  nuevas y publicar las respuestas solas.
-- El panel donde el dueño ve el análisis y pulsa "Denunciar".
+  nuevas de cada cliente y publicar las respuestas solas. Necesita que
+  Google apruebe el acceso a la API y que cada negocio dé permiso.
 - Guardar qué denuncias acepta Google para afinar `politicas.mjs`.
+- Añadir `/analiza/` al sitemap (el script de `gen/sitemap.py` solo
+  sabe de una página).
 
 ## Ojo: este repositorio es público
 

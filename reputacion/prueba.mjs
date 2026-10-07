@@ -181,3 +181,11 @@ test('sin IA, lo dudoso queda para revisar y no se da por denunciable', async ()
 test('las fiestas de moros y cristianos no son odio', () => {
   assert.deepEqual(detecta({ texto: 'Después del desfile de moros y cristianos.' }), []);
 });
+
+test('las de 4 y 5 estrellas se agradecen sin buscar nada ni gastar', async () => {
+  const v = await analiza({ texto: 'Todo genial, el camarero un crack', estrellas: 5,
+    negocio: { nombre: 'Bar Manolo', palabras_clave: ['tapas caseras'] } }, { cliente: nunca });
+  assert.equal(v.tipo, 'positiva');
+  assert.equal(v.apelacion, '');
+  assert.match(v.respuesta, /gracias/i);
+});
