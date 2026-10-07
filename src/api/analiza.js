@@ -2,9 +2,11 @@
 
    La sirve el Worker de src/index.js en  /api/analiza .
 
-   Es PÚBLICO, así que solo usa las reglas (reputacion/reglas.mjs): no
-   gasta nada y nadie puede vaciarte la cuenta de la IA dándole al botón
-   mil veces. La IA se usa desde el panel, que pide contraseña.
+   Es PÚBLICO. Lo denunciable lo buscan solo las reglas
+   (reputacion/reglas.mjs), que no gastan nada. La respuesta sí la escribe
+   la IA, pensada para esa reseña, pero con tope (src/lib/limite.mjs): 5
+   por persona y día y IA_TOPE_DIA para toda la web (200 si no se dice).
+   Pasado el tope, sale de plantilla y el usuario ni lo nota.
 
    El trato con quien la usa: el veredicto y la respuesta, gratis y al
    momento. La apelación para Google, cuando deja su teléfono o correo.
@@ -19,6 +21,7 @@
      CORREO_DE         desde qué dirección sale */
 
 import { analiza } from '../../reputacion/motor.mjs';
+import { permite } from '../lib/limite.mjs';
 
 const JSON_CAB = { 'Content-Type': 'application/json; charset=utf-8' };
 
@@ -39,6 +42,7 @@ export function limpia(d) {
       texto: corta(d.texto, 4000),
       estrellas: est >= 1 && est <= 5 ? Math.round(est) : null,
       contexto: corta(d.contexto, 600),
+      autor: corta(d.autor, 80),
       negocio: {
         nombre: corta(n.nombre, 80),
         sector: corta(n.sector, 60),
@@ -108,7 +112,12 @@ export async function onRequest(context) {
   if (trampa) return responde({ error: 'envío raro' }, 400);
   if (resena.texto.length < 3) return responde({ error: 'Pega el texto de la reseña.' }, 400);
 
-  const v = await analiza(resena, { modo: 'gratis' });
+  const apiKey = String(env.ANTHROPIC_API_KEY || '').trim();
+  const conIA = apiKey && (await permite(env, request, 'ia', 5, Number(env.IA_TOPE_DIA) || 200));
+  const config = { tono: crudo.tono === 'formal' ? 'formal' : 'cercano', firma: corta(crudo.firma, 80), contacto: resena.negocio.contacto };
+  const v = await analiza(resena, conIA
+    ? { modo: 'gratis', redactar: 'ia', apiKey, config }
+    : { modo: 'gratis', redactar: 'plantilla', config });
 
   /* Sin contacto, la apelación no sale: es lo que se da a cambio. Se dice
      que la hay, para que sepa que merece la pena dejarlo. */

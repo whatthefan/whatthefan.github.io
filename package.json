@@ -7,7 +7,7 @@
     "generador": "python3 gen/construye.py",
     "sitemap": "python3 gen/sitemap.py",
     "reputacion": "node reputacion/analiza.mjs",
-    "prueba-reputacion": "node --test reputacion/prueba.mjs"
+    "prueba-reputacion": "node --test reputacion/prueba.mjs src/lib/prueba.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.70.0"

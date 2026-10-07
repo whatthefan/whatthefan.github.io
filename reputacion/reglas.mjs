@@ -117,56 +117,11 @@ function busca(texto, fuente, reglas) {
   return encontradas;
 }
 
-/* ── Plantillas para cuando no hay IA ─────────────────────────────── */
+/* ── Plantillas ───────────────────────────────────────────────────── */
 
-/* Para que dos respuestas seguidas no salgan idénticas: Google y los
-   clientes notan enseguida una respuesta de bote. Sale siempre la misma
-   para la misma reseña, eso sí, para que repetir el análisis no la
-   cambie. */
-function elige(lista, semilla) {
-  let h = 0;
-  for (const c of String(semilla)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return lista[h % lista.length];
-}
-
-export function respuestaPlantilla(resena) {
-  const n = (resena && resena.negocio) || {};
-  const nombre = n.nombre || 'nuestro negocio';
-  const kw = (n.palabras_clave || []).filter(Boolean);
-  const claves = kw.length >= 2 ? kw[0] + ' y ' + kw[1] : (kw[0] || 'el trato a nuestros clientes');
-  const contacto = n.contacto
-    ? 'Escríbenos a ' + n.contacto + ' y lo hablamos con calma.'
-    : 'Escríbenos por privado y lo hablamos con calma.';
-  return elige([
-    'Hola, gracias por contarnos tu experiencia. Sentimos de verdad que tu visita no fuera como esperabas. ' +
-      'En ' + nombre + ' cuidamos cada detalle, desde ' + claves + ', y queremos entender qué pasó para mejorarlo. ' +
-      contacto,
-    'Gracias por tomarte el tiempo de escribirnos, y lamentamos que no te fueras contento. ' +
-      'Nos importa mucho que quien viene a ' + nombre + ' por ' + claves + ' salga con ganas de volver. ' +
-      contacto + ' Nos encantaría poder darte otra oportunidad.',
-    'Hola, sentimos mucho que tu experiencia no estuviera a la altura. Leemos cada opinión con atención ' +
-      'porque es lo que nos ayuda a seguir mejorando en ' + claves + '. ' + contacto
-  ], resena && resena.texto);
-}
-
-/* Las de 4 y 5 estrellas también se contestan: Google tiene en cuenta
-   que el negocio responda, y es donde mejor encajan las palabras clave
-   sin que suene a anuncio. */
-export function agradecimientoPlantilla(resena) {
-  const n = (resena && resena.negocio) || {};
-  const nombre = n.nombre || 'nosotros';
-  const kw = (n.palabras_clave || []).filter(Boolean);
-  const k1 = kw[0] || 'lo que hacemos';
-  const k2 = kw[1] || kw[0] || 'nuestro trabajo';
-  return elige([
-    '¡Muchísimas gracias por tu reseña! Nos alegra un montón que disfrutaras de ' + k1 +
-      '. Es lo que nos anima a seguir cuidando cada detalle. ¡Te esperamos pronto en ' + nombre + '!',
-    'Qué alegría leerte, gracias por tomarte el tiempo. Ponemos mucho cariño en ' + k1 + ' y en ' + k2 +
-      ', así que comentarios como el tuyo nos hacen el día. ¡Hasta la próxima!',
-    '¡Gracias de corazón! Nos encanta saber que te gustó ' + k2 + '. Aquí tienes tu casa para cuando ' +
-      'quieras volver a ' + nombre + '.'
-  ], resena && resena.texto);
-}
+/* Las de respuesta viven ahora en redacta.mjs, junto a la IA que las
+   sustituye. Se reexportan para no romper a quien las pedía aquí. */
+export { respuestaPlantilla, agradecimientoPlantilla } from './redacta.mjs';
 
 export function apelacionPlantilla(resena, infracciones) {
   if (!infracciones.length) return '';

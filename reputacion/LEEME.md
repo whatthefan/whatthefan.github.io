@@ -100,14 +100,84 @@ las enseña. El correo de aviso usa las mismas variables que los pedidos
 (`RESEND_API_KEY`, `CORREO_AVISO`, `CORREO_DE`); la IA del panel, la
 misma `ANTHROPIC_API_KEY` de los colores.
 
+## El conector con Google (`plea5e.es/analiza/ficha/`)
+
+La app del dueño. Se instala en el móvil como una app más.
+
+1. **Busca su negocio** en Google Maps: ve su nota, sus últimas reseñas y
+   escribe la respuesta a cualquiera de un toque.
+2. **Conecta con Google**: entra con su cuenta y da permiso para
+   gestionar las reseñas de su ficha.
+3. Desde ahí, **cada dos horas** el vigilante (`src/lib/vigia.mjs`) mira
+   sus reseñas nuevas: las de 4 y 5 estrellas las responde solo; las de
+   1 a 3 las deja escritas esperando su clic (o las publica solas si lo
+   activa), y las denunciables le esperan siempre con la denuncia
+   preparada. Si hay algo pendiente, le llega un correo.
+
+Cada ficha tiene su configuración: tono (de tú o de usted), firma,
+contacto para las quejas, palabras clave e indicaciones libres ("no
+ofrezcas invitaciones"). La IA escribe cada respuesta para esa reseña.
+
+Archivos: `src/api/google.js` (las direcciones), `src/lib/google.mjs`
+(lo que se le pide a Google), `src/lib/vigia.mjs` (el vigilante),
+`src/lib/cripto.mjs` (cifrado de permisos y sesiones), `src/lib/limite.mjs`
+(topes de uso). Pruebas: `src/lib/prueba.mjs`.
+
+### Cómo se activa (una vez, lo haces tú)
+
+Todo en Cloudflare → el Worker → Settings → **Variables and Secrets**.
+El panel `/taller/resenas.html` → "Fichas de Google conectadas" te dice
+qué falta.
+
+1. **TOKENS_CLAVE**: una frase larga inventada (más de 16 letras), tipo
+   `mi-perro-se-llama-tobi-y-come-croquetas-2026`. Ponla como *Secret*.
+   No la cambies nunca: si cambia, todos tienen que volver a conectar.
+2. **Google Cloud** (console.cloud.google.com), con la cuenta de PLEA5E:
+   - Crea un proyecto "PLEA5E".
+   - **Para el buscador:** APIs y servicios → Biblioteca → activa
+     **Places API (New)**. Credenciales → Crear credencial → Clave de
+     API. Restríngela a "Places API (New)". Ponla en Cloudflare como
+     **GOOGLE_MAPS_KEY**. Google pide una tarjeta (facturación), pero
+     tiene un uso gratis al mes; el Worker no pasa de 300 búsquedas al
+     día (`MAPS_TOPE_DIA` para cambiarlo).
+   - **Para conectar fichas:** Pantalla de consentimiento de OAuth →
+     Externa, nombre "PLEA5E", tu correo, dominio plea5e.es. Credenciales
+     → Crear credencial → ID de cliente de OAuth → Aplicación web. En
+     "URI de redirección autorizados" pon exactamente
+     `https://plea5e.es/api/google/vuelta`. Copia el ID y el secreto a
+     Cloudflare: **GOOGLE_CLIENT_ID** y **GOOGLE_CLIENT_SECRET**.
+   - **Pide el acceso a la API de Business Profile:** formulario
+     "GBP API contact form" → "Application for Basic API Access". Google
+     exige una ficha de Google de PLEA5E verificada y activa desde hace
+     más de 60 días, con la web en la ficha. Cuando lo aprueben, activa en
+     la Biblioteca: **My Business Account Management API**, **My Business
+     Business Information API** y **Google My Business API**.
+   - Mientras la pantalla de consentimiento esté en modo "Prueba", solo
+     pueden conectar las cuentas que añadas como usuarios de prueba (hasta
+     100). Para abrirlo a todo el mundo, "Publicar la aplicación": Google
+     revisa el permiso de Business Profile y puede pedir un vídeo de cómo
+     se usa.
+3. **ANTHROPIC_API_KEY**: la misma de los colores. Sin ella, todo
+   funciona con plantillas.
+4. **RESEND_API_KEY** y **CORREO_DE**: los mismos de los pedidos, para
+   los avisos a los dueños.
+
+Hasta que Google apruebe la API, el botón "Conectar con Google" funciona
+pero al volver el dueño ve "Google todavía no ha activado la conexión".
+El buscador y las respuestas funcionan desde el primer día.
+
+### Topes para que nadie te gaste dinero
+
+| | por persona y día | por día en total | variable |
+|---|---|---|---|
+| Búsquedas en Maps | 40 | 300 | `MAPS_TOPE_DIA` |
+| Respuestas con IA en /analiza/ | 5 | 200 | `IA_TOPE_DIA` |
+| Reseñas por vuelta del vigilante | | 12 cada 2 h | `TOPE_VUELTA` en vigia.mjs |
+
 ## Lo que falta
 
-- Conectar con la API de Google Business Profile para leer las reseñas
-  nuevas de cada cliente y publicar las respuestas solas. Necesita que
-  Google apruebe el acceso a la API y que cada negocio dé permiso.
 - Guardar qué denuncias acepta Google para afinar `politicas.mjs`.
-- Añadir `/analiza/` al sitemap (el script de `gen/sitemap.py` solo
-  sabe de una página).
+- Que Google apruebe el acceso a la API de Business Profile (arriba).
 
 ## Ojo: este repositorio es público
 

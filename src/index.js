@@ -23,6 +23,8 @@ import { onRequest as enlaces }  from './api/enlaces.js';
 import { onRequest as pago }     from './api/pago.js';
 import { onRequest as analiza }  from './api/analiza.js';
 import { onRequest as analisis } from './api/analisis.js';
+import * as conector from './api/google.js';
+import { vigila } from './lib/vigia.mjs';
 
 /* Una tabla, no una cadena de ifs: añadir una función nueva es añadir una
    línea, y no hay forma de que dos rutas se pisen sin que se vea. */
@@ -32,7 +34,11 @@ const RUTAS = {
   '/api/enlaces':  enlaces,
   '/api/pago':     pago,
   '/api/analiza':  analiza,
-  '/api/analisis': analisis
+  '/api/analisis': analisis,
+  '/api/negocios': conector.negocios,
+  '/api/google/entra':  conector.entra,
+  '/api/google/vuelta': conector.vuelve,
+  '/api/ficha':    conector.ficha
 };
 
 export default {
@@ -70,5 +76,15 @@ export default {
     /* Cualquier otra dirección: un archivo de public/. Si no existe,
        Cloudflare devuelve su 404; no hay que hacer nada. */
     return env.ASSETS.fetch(request);
+  },
+
+  /* El despertador (wrangler.jsonc → triggers.crons): cada dos horas el
+     vigilante mira las fichas de Google conectadas y responde lo que
+     toca. Si algo falla, queda en el registro de Cloudflare y la
+     siguiente vuelta lo vuelve a intentar. */
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(vigila(env).then(
+      (r) => console.log('vigilante: ' + JSON.stringify(r)),
+      (err) => console.error('vigilante: ' + (err && err.stack || err))));
   }
 };

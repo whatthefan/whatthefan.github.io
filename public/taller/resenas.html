@@ -133,6 +133,16 @@
       <div class="cifra"><b id="cClientes">0</b><span>clientes</span></div>
     </div>
 
+    <!-- ═══ el conector con Google ═══ -->
+    <details class="bloque" id="bloqueGoogle">
+      <summary>Fichas de Google conectadas <span id="nConectadas"></span></summary>
+      <div id="estadoConfig"></div>
+      <div id="conectadas"></div>
+      <div class="acciones"><a class="btn chico" href="/analiza/ficha/" target="_blank">Abrir la app del cliente</a><span class="crece"></span>
+        <button class="chico" id="bVigila" type="button">Revisar todas ahora</button></div>
+      <p class="nota">El vigilante pasa solo cada dos horas. Cada vuelta mira como mucho 12 reseñas nuevas; lo demás, en la siguiente.</p>
+    </details>
+
     <!-- ═══ analizar una reseña ═══ -->
     <details class="bloque" id="bloqueAnaliza">
       <summary>Analizar una reseña de un cliente</summary>
@@ -235,8 +245,40 @@
     hayIA = Boolean(d.ia);
     $('aIA').disabled = !hayIA;
     if (!hayIA) $('aIATxt').textContent = 'IA apagada: falta ANTHROPIC_API_KEY en Cloudflare (se analiza gratis con reglas)';
+    pintaGoogle(d.configurado || {}, d.conectadas || []);
     pinta();
   }
+
+  var PIEZAS = [
+    ['ia', 'IA para escribir respuestas', 'ANTHROPIC_API_KEY'],
+    ['maps', 'Buscar negocios en Google Maps', 'GOOGLE_MAPS_KEY'],
+    ['google', 'Conectar fichas de Google', 'GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET y TOKENS_CLAVE'],
+    ['correo', 'Correos de aviso', 'RESEND_API_KEY y CORREO_DE']
+  ];
+  function pintaGoogle(cfg, conectadas) {
+    $('estadoConfig').innerHTML = '<ul class="infr" style="margin-bottom:14px">' + PIEZAS.map(function (p) {
+      return '<li>' + (cfg[p[0]] ? '✅ ' : '⬜ ') + '<b>' + p[1] + '</b>' + (cfg[p[0]] ? '' : ' · falta ' + p[2] + ' en Cloudflare') + '</li>';
+    }).join('') + '</ul>';
+    $('nConectadas').textContent = conectadas.length ? '(' + conectadas.length + ')' : '';
+    $('conectadas').innerHTML = conectadas.length ? conectadas.map(function (c) {
+      return '<div class="ficha"><div class="cab"><h3>' + esc(c.email) + '</h3><span class="cuando">' +
+        (c.ultima ? 'revisada ' + fecha(c.ultima) : 'sin revisar aún') + ' · ' + c.registradas + ' reseñas gestionadas</span></div>' +
+        (c.error ? '<div class="aviso" style="margin-top:8px">' + esc(c.error) + '</div>' : '') +
+        '<ul class="infr" style="margin-top:8px">' + c.fichas.map(function (f) {
+          return '<li><b>' + esc(f.nombre) + '</b> · ' + (f.activa ? (f.auto_negativas ? 'responde todo solo' : 'responde solas las buenas') : 'apagada') +
+            (f.error ? ' · <span style="color:var(--rojo)">' + esc(f.error) + '</span>' : '') + '</li>';
+        }).join('') + '</ul></div>';
+    }).join('') : '<p class="nota">Todavía no ha conectado nadie su ficha.</p>';
+  }
+
+  $('bVigila').addEventListener('click', function () {
+    var b = $('bVigila'); b.disabled = true; b.textContent = 'Revisando…';
+    manda({ accion: 'vigila' }).then(function (d) {
+      var r = d.resultado || {};
+      alert(r.saltado ? 'No se puede: ' + r.saltado : 'Revisadas ' + r.cuentas + ' cuentas: ' + r.publicadas + ' respuestas publicadas, ' + r.pendientes + ' pendientes.' + (r.errores && r.errores.length ? '\n\n' + r.errores.join('\n') : ''));
+      return recarga();
+    }).catch(function (err) { alert(err.message); }).then(function () { b.disabled = false; b.textContent = 'Revisar todas ahora'; });
+  });
 
   /* ---------- la lista ---------- */
   var ETIQUETA = { impugnable: 'Denunciable', revisar: 'Revisar', 'no-impugnable': 'No denunciable' };
@@ -328,8 +370,40 @@
     var b = e.target.closest('button'); if (!b) return;
     filtro = b.dataset.f;
     $('filtros').querySelectorAll('button').forEach(function (o) { o.classList.toggle('on', o === b); });
+    pintaGoogle(d.configurado || {}, d.conectadas || []);
     pinta();
-  });
+  }
+
+  var PIEZAS = [
+    ['ia', 'IA para escribir respuestas', 'ANTHROPIC_API_KEY'],
+    ['maps', 'Buscar negocios en Google Maps', 'GOOGLE_MAPS_KEY'],
+    ['google', 'Conectar fichas de Google', 'GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET y TOKENS_CLAVE'],
+    ['correo', 'Correos de aviso', 'RESEND_API_KEY y CORREO_DE']
+  ];
+  function pintaGoogle(cfg, conectadas) {
+    $('estadoConfig').innerHTML = '<ul class="infr" style="margin-bottom:14px">' + PIEZAS.map(function (p) {
+      return '<li>' + (cfg[p[0]] ? '✅ ' : '⬜ ') + '<b>' + p[1] + '</b>' + (cfg[p[0]] ? '' : ' · falta ' + p[2] + ' en Cloudflare') + '</li>';
+    }).join('') + '</ul>';
+    $('nConectadas').textContent = conectadas.length ? '(' + conectadas.length + ')' : '';
+    $('conectadas').innerHTML = conectadas.length ? conectadas.map(function (c) {
+      return '<div class="ficha"><div class="cab"><h3>' + esc(c.email) + '</h3><span class="cuando">' +
+        (c.ultima ? 'revisada ' + fecha(c.ultima) : 'sin revisar aún') + ' · ' + c.registradas + ' reseñas gestionadas</span></div>' +
+        (c.error ? '<div class="aviso" style="margin-top:8px">' + esc(c.error) + '</div>' : '') +
+        '<ul class="infr" style="margin-top:8px">' + c.fichas.map(function (f) {
+          return '<li><b>' + esc(f.nombre) + '</b> · ' + (f.activa ? (f.auto_negativas ? 'responde todo solo' : 'responde solas las buenas') : 'apagada') +
+            (f.error ? ' · <span style="color:var(--rojo)">' + esc(f.error) + '</span>' : '') + '</li>';
+        }).join('') + '</ul></div>';
+    }).join('') : '<p class="nota">Todavía no ha conectado nadie su ficha.</p>';
+  }
+
+  $('bVigila').addEventListener('click', function () {
+    var b = $('bVigila'); b.disabled = true; b.textContent = 'Revisando…';
+    manda({ accion: 'vigila' }).then(function (d) {
+      var r = d.resultado || {};
+      alert(r.saltado ? 'No se puede: ' + r.saltado : 'Revisadas ' + r.cuentas + ' cuentas: ' + r.publicadas + ' respuestas publicadas, ' + r.pendientes + ' pendientes.' + (r.errores && r.errores.length ? '\n\n' + r.errores.join('\n') : ''));
+      return recarga();
+    }).catch(function (err) { alert(err.message); }).then(function () { b.disabled = false; b.textContent = 'Revisar todas ahora'; });
+  }););
 
   /* copiar, cambiar de estado y borrar: un solo escuchador para todo */
   document.addEventListener('click', function (e) {

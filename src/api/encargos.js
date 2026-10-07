@@ -85,13 +85,17 @@ export async function onRequest(context) {
          rt-...   los toques de esa placa desde siempre
          rc-...   los toques de esa placa un día concreto
          an-...   los análisis de reseñas (los lee /api/analisis)
+         gc-, gr-, lim-   las fichas de Google conectadas y los topes
 
        Y hay que quitarlas ANTES de cortar por 100: como la lista va
        ordenada al revés y las letras van detrás de los dígitos, si no se
        filtran se ponen las primeras y te tapan los pedidos de verdad. */
-    const NO_SON_PEDIDOS = ['id-', 'r-', 'rt-', 'rc-', 'an-'];
+    /* Y los que vinieron después (an- análisis, gc- y gr- las fichas de
+       Google, lim- los topes de uso). En vez de seguir añadiendo prefijos
+       a una lista negra, se coge lo que SÍ es un pedido: su clave empieza
+       por la fecha en milisegundos, o sea, por un dígito. */
     const claves = keys.map((k) => k.name)
-      .filter((n) => !NO_SON_PEDIDOS.some((p) => n.startsWith(p)))
+      .filter((n) => /^\d/.test(n))
       .sort().reverse().slice(0, 100);
     const lista = [];
     for (const k of claves) {

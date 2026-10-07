@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu ficha de Google, respondida sola | PLEA5E</title>
+<meta name="description" content="Busca tu negocio, conéctalo con Google y deja que tus reseñas se respondan solas, con respuestas escritas para cada cliente. Las malas, con tu aprobación.">
+<meta name="theme-color" content="#06080E">
+<link rel="canonical" href="https://plea5e.es/analiza/ficha/">
+<link rel="icon" href="/icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icono-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Reseñas">
+<link rel="manifest" href="/analiza/manifest.webmanifest">
+<script src="/analiza/app.js" defer></script>
+<!--
+  La app del dueño. Sin conectar: busca su negocio en Google Maps, ve sus
+  últimas reseñas y prueba las respuestas. Conectado con Google: sus
+  fichas, si se responden solas, cómo (tono, firma...), y lo que espera
+  su clic. Todo lo que hace de verdad está en /api/ficha y /api/negocios
+  (src/api/google.js); aquí solo se pinta.
+-->
+<style>
+  :root{
+    --noche:#06080E; --panel:#0F1522; --panel-2:#141B2B;
+    --borde:#1C2536; --borde-claro:#2A3448;
+    --txt:#EAEDF4; --txt-2:#9AA3B8; --txt-3:#68718A;
+    --oro:#E9BC46; --oro-cl:#F8E1A6;
+    --verde:#3BB273; --ambar:#E39B2D; --rojo:#D9534F; --azul:#6F8BFF;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--noche); color:var(--txt);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding-bottom:env(safe-area-inset-bottom)}
+  a{color:var(--oro)}
+  .caja{max-width:760px; margin:0 auto; padding:0 16px 60px}
+  .oculto{display:none !important}
+
+  header.top{display:flex; align-items:center; gap:10px; padding:16px 0}
+  header.top a.marca{color:var(--txt); text-decoration:none; font-weight:800; letter-spacing:.16em}
+  header.top a.marca b{color:var(--oro)}
+  .crece{flex:1}
+  .quien{font-size:13px; color:var(--txt-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:40vw}
+
+  .btn{font:inherit; font-weight:700; cursor:pointer; border-radius:999px; border:1px solid var(--borde-claro);
+    background:var(--panel-2); color:var(--txt); padding:11px 18px; text-decoration:none;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px}
+  .btn:hover{border-color:var(--txt-3)}
+  .btn-oro{background:var(--oro); color:#100B00; border-color:var(--oro)}
+  .btn-oro:hover{background:var(--oro-cl)}
+  .btn-ancho{width:100%; font-size:17px; padding:15px}
+  .btn-chico{padding:7px 13px; font-size:14px; font-weight:600}
+  .btn[disabled]{opacity:.55; cursor:not-allowed}
+  .btn-google{background:#fff; color:#1f1f1f; border-color:#fff}
+  .btn-google:hover{background:#f2f2f2}
+
+  h1{font-size:clamp(28px,6.4vw,40px); line-height:1.12; margin:18px 0 12px; letter-spacing:-.01em}
+  h1 em{font-style:normal; color:var(--oro)}
+  .entra{color:var(--txt-2); font-size:18px; margin:0 0 8px}
+  h2{font-size:20px; margin:0 0 12px}
+  h3{font-size:17px; margin:0 0 8px}
+
+  .tarjeta{background:var(--panel); border:1px solid var(--borde); border-radius:16px; padding:18px; margin:18px 0}
+  .paso{display:flex; gap:12px; align-items:center; margin-bottom:12px}
+  .num{flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:var(--oro); color:#100B00; font-weight:800; display:grid; place-items:center}
+  label{display:block; font-weight:600; font-size:14px; margin:0 0 6px}
+  label small, .suave{font-weight:400; color:var(--txt-2)}
+  input,textarea,select{font:inherit; width:100%; padding:12px 14px; border-radius:10px;
+    border:1px solid var(--borde-claro); background:var(--noche); color:var(--txt)}
+  textarea{min-height:110px; resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--oro); outline-offset:1px}
+  .campo{margin-bottom:14px}
+  .dos{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:560px){.dos{grid-template-columns:1fr}}
+  .fila{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .busca{display:flex; gap:8px}
+  .busca input{flex:1}
+
+  .aviso{font-size:15px; background:var(--panel-2); border:1px solid var(--borde-claro); border-radius:12px; padding:12px 14px; margin:14px 0}
+  .aviso.mal{background:rgba(217,83,79,.15); border-color:rgba(217,83,79,.45)}
+  .aviso.bien{background:rgba(59,178,115,.13); border-color:rgba(59,178,115,.45)}
+
+  .resultado{display:block; width:100%; text-align:left; font:inherit; color:inherit; cursor:pointer;
+    background:var(--noche); border:1px solid var(--borde); border-radius:12px; padding:12px 14px; margin-bottom:8px}
+  .resultado:hover{border-color:var(--oro)}
+  .resultado b{display:block}
+  .resultado span{font-size:14px; color:var(--txt-2)}
+  .nota{color:var(--oro); font-weight:700}
+
+  .resena{border-top:1px solid var(--borde); padding:14px 0}
+  .resena:first-child{border-top:0}
+  .resena .cab{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; font-size:14px; color:var(--txt-2)}
+  .resena .cab b{color:var(--txt); font-size:15px}
+  .est{color:var(--oro); letter-spacing:1px}
+  .resena p.txt{margin:6px 0 10px; white-space:pre-wrap}
+  .respuesta{background:var(--noche); border:1px solid var(--borde); border-left:3px solid var(--oro); border-radius:10px; padding:12px; white-space:pre-wrap; margin:8px 0}
+  textarea.respuesta{min-height:170px; color:var(--txt); font:inherit; line-height:1.55}
+  .chapa{display:inline-block; font-size:12px; font-weight:700; border-radius:999px; padding:2px 10px; text-transform:uppercase; letter-spacing:.04em}
+  .chapa.impugnable{background:rgba(59,178,115,.18); color:var(--verde)}
+  .chapa.revisar{background:rgba(227,155,45,.18); color:var(--ambar)}
+  .chapa.publicada{background:rgba(111,139,255,.18); color:#AAB6FF}
+  .chapa.pendiente{background:rgba(233,188,70,.18); color:var(--oro)}
+  .chapa.ignorada{background:rgba(154,163,184,.12); color:var(--txt-2)}
+  details summary{cursor:pointer; color:var(--oro); font-size:14px}
+  details pre{white-space:pre-wrap; font:inherit; font-size:14px; background:var(--noche); border-radius:8px; padding:12px; margin:8px 0}
+  ul.infr{margin:8px 0; padding-left:18px; font-size:14px; color:var(--txt-2)}
+
+  /* el interruptor */
+  .inter{display:flex; align-items:center; gap:12px; cursor:pointer; font-weight:700; margin:0}
+  .inter input{position:absolute; opacity:0; width:1px; height:1px}
+  .inter .pista{flex:0 0 auto; width:52px; height:30px; border-radius:999px; background:var(--borde-claro); position:relative; transition:background .2s}
+  .inter .pista::after{content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; transition:left .2s}
+  .inter input:checked + .pista{background:var(--verde)}
+  .inter input:checked + .pista::after{left:25px}
+  .inter input:focus-visible + .pista{outline:2px solid var(--oro); outline-offset:2px}
+  .marca{display:flex; gap:10px; align-items:flex-start; font-weight:400; font-size:15px; margin-bottom:10px}
+  .marca input{width:auto; margin-top:4px}
+
+  .pestanas{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 10px}
+  .pestanas button.on{background:var(--oro); color:#100B00; border-color:var(--oro)}
+  .vacio{color:var(--txt-3); text-align:center; padding:28px 0}
+  .letra{font-size:13px; color:var(--txt-3)}
+  .toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--panel-2); border:1px solid var(--borde-claro); padding:12px 18px; border-radius:999px; z-index:40; max-width:90vw}
+</style>
+</head>
+<body>
+<div class="caja">
+  <header class="top">
+    <a class="marca" href="/"><b>PLEA5E</b></a>
+    <span class="crece"></span>
+    <span class="quien oculto" id="quien"></span>
+    <button class="btn btn-chico oculto" data-instalar type="button">Instalar app</button>
+  </header>
+
+  <div id="cargando" class="vacio">Cargando…</div>
+  <div id="avisoUrl" class="aviso oculto"></div>
+
+  <!-- ═══════════ SIN CONECTAR ═══════════ -->
+  <section id="vFuera" class="oculto">
+    <h1>Tu ficha de Google, <em>respondida sola.</em></h1>
+    <p class="entra">Conecta tu negocio una vez. Cada reseña nueva recibe una respuesta escrita para ese cliente, con tu tono y tu firma. Las buenas se publican solas; las malas te esperan para que les des el visto bueno. Y si una incumple las normas de Google, te avisamos con la denuncia preparada.</p>
+
+    <div class="tarjeta">
+      <div class="paso"><span class="num">1</span><h2 style="margin:0">Busca tu negocio</h2></div>
+      <form class="busca" id="fBusca">
+        <input id="q" placeholder="Nombre y ciudad. Ej: Bar Manolo Valencia" autocomplete="organization" enterkeyhint="search">
+        <button class="btn btn-oro" type="submit" id="bBusca">Buscar</button>
+      </form>
+      <div id="errBusca" class="aviso mal oculto"></div>
+      <div id="resultados" style="margin-top:12px"></div>
+      <div id="elegido" class="oculto"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="paso"><span class="num">2</span><h2 style="margin:0">Conéctalo con Google</h2></div>
+      <p class="suave" style="margin-top:0">Entras con la cuenta de Google con la que gestionas tu ficha y nos das permiso para responder reseñas en tu nombre. Puedes quitarlo cuando quieras, desde aquí o desde tu cuenta de Google.</p>
+      <a class="btn btn-google btn-ancho" id="bConecta" href="/api/google/entra">
+        <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+        Conectar con Google
+      </a>
+      <div id="noDisponible" class="aviso oculto">
+        <b>Ya casi está.</b> Google está terminando de aprobar la conexión automática para PLEA5E. Mientras tanto, puedes usar el buscador de arriba para responder tus reseñas con un clic, y te avisamos el día que se active.
+        <div class="fila" style="margin-top:10px"><a class="btn btn-chico btn-oro" href="https://wa.me/34661403219?text=Hola%20PLEA5E%2C%20av%C3%ADsadme%20cuando%20pueda%20conectar%20mi%20ficha%20de%20Google." target="_blank" rel="noopener">Avisadme por WhatsApp</a></div>
+      </div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="paso"><span class="num">3</span><h2 style="margin:0">Y ya</h2></div>
+      <p class="suave" style="margin:0">Revisamos tu ficha cada dos horas. Te escribimos por correo cuando haya una reseña que necesite tu clic. Instala la app y lo tienes todo en el móvil, como una app más.</p>
+      <div class="fila" style="margin-top:12px"><button class="btn btn-chico oculto" data-instalar type="button">Instalar en el móvil</button>
+        <a class="btn btn-chico" href="/analiza/">Analizar una reseña suelta</a></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CONECTADO ═══════════ -->
+  <section id="vDentro" class="oculto">
+    <h1 style="margin-bottom:6px">Tus reseñas</h1>
+    <p class="suave" id="resumen" style="margin:0 0 6px"></p>
+    <div id="errCuenta" class="aviso mal oculto"></div>
+    <div id="sinIA" class="aviso oculto">Las respuestas se están escribiendo con plantillas. En cuanto se active la IA, se escribirán una a una para cada cliente.</div>
+
+    <div id="fichas"></div>
+
+    <div class="tarjeta">
+      <h2>Reseñas</h2>
+      <div class="pestanas" id="pestanas">
+        <button class="btn btn-chico on" data-f="pendiente">Esperan tu clic <span data-n="pendiente"></span></button>
+        <button class="btn btn-chico" data-f="publicada">Publicadas <span data-n="publicada"></span></button>
+        <button class="btn btn-chico" data-f="ignorada">Ignoradas <span data-n="ignorada"></span></button>
+      </div>
+      <div id="lista"></div>
+    </div>
+
+    <div class="fila" style="justify-content:space-between; margin-top:10px">
+      <button class="btn btn-chico" id="bRecarga" type="button">Volver a buscar mis fichas</button>
+      <span class="fila"><button class="btn btn-chico" id="bSalir" type="button">Salir</button>
+      <button class="btn btn-chico" id="bDesconecta" type="button">Desconectar de Google</button></span>
+    </div>
+  </section>
+
+  <p class="letra" style="text-align:center; margin-top:30px">PLEA5E · <a href="/">plea5e.es</a> · Las respuestas se publican en Google como respuesta del propietario. Retirar una reseña es siempre decisión de Google.</p>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var ver = function (el, si) { el.classList.toggle('oculto', !si); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  var estado = { cuenta: null, resenas: [], filtro: 'pendiente', cfg: {} };
+  var estrellas = function (n) { n = Math.round(n || 0); return '★★★★★'.slice(0, n) + '<span style="opacity:.25">' + '★★★★★'.slice(0, 5 - n) + '</span>'; };
+
+  function toast(t) {
+    var d = document.createElement('div'); d.className = 'toast'; d.textContent = t;
+    document.body.appendChild(d); setTimeout(function () { d.remove(); }, 3200);
+  }
+  function api(url, cuerpo) {
+    return fetch(url, cuerpo ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo), credentials: 'same-origin' }
+      : { credentials: 'same-origin', cache: 'no-store' })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) {
+          if (!r.ok) { var e = new Error(d.error || 'No ha ido bien. Prueba otra vez.'); e.status = r.status; throw e; }
+          return d;
+        });
+      });
+  }
+  function copia(txt, b) {
+    var hecho = function () { var o = b.textContent; b.textContent = '¡Copiado!'; setTimeout(function () { b.textContent = o; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(hecho, function () {});
+  }
+
+  /* Lo que viene en la dirección al volver de Google. */
+  var MENSAJES = {
+    'no-disponible': 'La conexión con Google aún no está activada. Te avisamos en cuanto lo esté.',
+    cancelado: 'Has cancelado la conexión con Google. Puedes volver a intentarlo cuando quieras.',
+    caducado: 'Ha tardado demasiado o se ha abierto en otro navegador. Vuelve a pulsar «Conectar con Google».',
+    google: 'Google no ha dejado terminar la conexión. Prueba otra vez en un momento.',
+    'sin-permiso': 'Para responder reseñas hace falta marcar el permiso de «gestionar tu ficha». Vuelve a conectar y déjalo marcado.'
+  };
+  var q = new URLSearchParams(location.search);
+  if (q.get('error')) { $('avisoUrl').textContent = MENSAJES[q.get('error')] || 'Algo no ha ido bien.'; $('avisoUrl').className = 'aviso mal'; }
+  if (q.get('conectado')) { $('avisoUrl').textContent = '¡Conectado! Activa la ficha que quieras y empezamos.'; $('avisoUrl').className = 'aviso bien'; }
+  if (q.get('error') || q.get('conectado')) history.replaceState(null, '', location.pathname);
+
+  /* ═════ arranque ═════ */
+  function carga() {
+    return api('/api/ficha').then(function (d) {
+      ver($('cargando'), false);
+      estado.cfg = d.configurado || {};
+      if (!d.conectado) return pintaFuera();
+      estado.cuenta = d.cuenta; estado.resenas = d.resenas || [];
+      pintaDentro();
+    }).catch(function (err) {
+      $('cargando').textContent = err.message;
+    });
+  }
+
+  /* ═════ sin conectar ═════ */
+  var lugar = '';
+  function pintaFuera() {
+    ver($('vFuera'), true); ver($('vDentro'), false);
+    ver($('bConecta'), estado.cfg.google); ver($('noDisponible'), !estado.cfg.google);
+    if (!estado.cfg.maps) {
+      $('fBusca').innerHTML = '<p class="suave" style="margin:0">La búsqueda se está activando. Mientras, puedes <a href="/analiza/">pegar una reseña aquí</a> y te damos la respuesta.</p>';
+    }
+  }
+
+  $('fBusca').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var t = $('q').value.trim(); if (t.length < 2) return;
+    ver($('errBusca'), false); ver($('elegido'), false);
+    $('bBusca').disabled = true; $('bBusca').textContent = 'Buscando…';
+    api('/api/negocios?q=' + encodeURIComponent(t)).then(function (d) {
+      var l = d.negocios || [];
+      $('resultados').innerHTML = l.length ? l.map(function (n) {
+        return '<button type="button" class="resultado" data-id="' + esc(n.id) + '"><b>' + esc(n.nombre) + '</b><span>' +
+          esc(n.direccion) + '</span>' + (n.nota ? '<span> · <span class="nota">' + n.nota.toFixed(1) + ' ★</span> (' + n.total + ' reseñas)</span>' : '') + '</button>';
+      }).join('') : '<p class="suave">No sale nada. Prueba con el nombre como aparece en Google y la ciudad.</p>';
+    }).catch(function (err) { $('errBusca').textContent = err.message; ver($('errBusca'), true); })
+      .then(function () { $('bBusca').disabled = false; $('bBusca').textContent = 'Buscar'; });
+  });
+
+  $('resultados').addEventListener('click', function (e) {
+    var b = e.target.closest('.resultado'); if (!b) return;
+    $('resultados').innerHTML = '<p class="suave">Abriendo tu ficha…</p>';
+    api('/api/negocios?id=' + encodeURIComponent(b.dataset.id)).then(function (d) { pintaElegido(d.negocio); })
+      .catch(function (err) { $('resultados').innerHTML = ''; $('errBusca').textContent = err.message; ver($('errBusca'), true); });
+  });
+
+  function pintaElegido(n) {
+    lugar = n.id;
+    $('bConecta').href = '/api/google/entra?lugar=' + encodeURIComponent(n.id);
+    $('resultados').innerHTML = '';
+    var h = '<h3 style="margin-top:6px">' + esc(n.nombre) + '</h3><p class="suave" style="margin:0 0 8px">' + esc(n.direccion) +
+      (n.nota ? ' · <span class="nota">' + n.nota.toFixed(1) + ' ★</span> · ' + n.total + ' reseñas' : '') + '</p>' +
+      '<div class="fila" style="margin-bottom:12px">' +
+        (n.maps ? '<a class="btn btn-chico" href="' + esc(n.maps) + '" target="_blank" rel="noopener">Ver en Google Maps</a>' : '') +
+        (n.escribir ? '<button class="btn btn-chico" type="button" data-copia-valor="' + esc(n.escribir) + '">Copiar enlace para pedir reseñas</button>' : '') +
+        '<button class="btn btn-chico" type="button" id="bOtro">No es este</button></div>';
+    var rs = n.resenas || [];
+    if (rs.length) {
+      h += '<p class="suave" style="margin:0 0 4px">Las reseñas que Google enseña primero. Pulsa en una y te escribimos la respuesta:</p>';
+      h += rs.map(function (r, i) {
+        return '<div class="resena" data-i="' + i + '"><div class="cab"><b>' + esc(r.autor || 'Anónimo') + '</b> <span class="est">' + estrellas(r.estrellas) +
+          '</span> <span>' + esc(r.cuando) + '</span></div>' + (r.texto ? '<p class="txt">' + esc(r.texto) + '</p>' : '<p class="txt suave">(solo estrellas)</p>') +
+          '<div class="fila"><button class="btn btn-chico btn-oro" type="button" data-responde="' + i + '">Escribir respuesta</button></div><div data-sale="' + i + '"></div></div>';
+      }).join('');
+      h += '<p class="letra">Reseñas de Google Maps.</p>';
+    } else {
+      h += '<p class="suave">Esta ficha todavía no tiene reseñas con texto.</p>';
+    }
+    h += '<div class="aviso" style="margin-bottom:0">¿Es tu negocio? En el paso 2 lo conectas y todas tus reseñas se responden solas, no solo estas.</div>';
+    $('elegido').innerHTML = h; ver($('elegido'), true);
+    estado.elegido = n;
+  }
+
+  $('elegido').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'bOtro') { ver($('elegido'), false); $('bConecta').href = '/api/google/entra'; $('q').focus(); return; }
+    if (b.dataset.copiaValor) return copia(b.dataset.copiaValor, b);
+    if (b.dataset.copia) return copia(b.parentNode.previousElementSibling.textContent, b);
+    if (b.dataset.responde != null) {
+      var n = estado.elegido, r = n.resenas[Number(b.dataset.responde)];
+      var sale = $('elegido').querySelector('[data-sale="' + b.dataset.responde + '"]');
+      b.disabled = true; b.textContent = 'Escribiendo…';
+      api('/api/analiza', { texto: r.texto || '(solo estrellas)', estrellas: r.estrellas, autor: r.autor, negocio: { nombre: n.nombre, sector: n.tipo } })
+        .then(function (v) {
+          var h = '';
+          if (v.veredicto === 'impugnable' || v.veredicto === 'revisar') {
+            h += '<p style="margin:8px 0 0"><span class="chapa ' + v.veredicto + '">' + (v.veredicto === 'impugnable' ? 'Se puede denunciar' : 'Puede que se pueda denunciar') + '</span> ' + esc(v.resumen) + '</p>';
+            if (r.denunciar) h += '<p style="margin:6px 0 0"><a href="' + esc(r.denunciar) + '" target="_blank" rel="noopener">Denunciarla en Google</a> · <a href="/analiza/">ver la denuncia redactada</a></p>';
+          }
+          h += '<div class="respuesta">' + esc(v.respuesta) + '</div><div class="fila"><button class="btn btn-chico" type="button" data-copia="1">Copiar respuesta</button>' +
+            (n.maps ? '<a class="btn btn-chico" href="' + esc(n.maps) + '" target="_blank" rel="noopener">Ir a responder en Google</a>' : '') + '</div>';
+          sale.innerHTML = h; b.remove();
+        }).catch(function (err) { sale.innerHTML = '<div class="aviso mal">' + esc(err.message) + '</div>'; b.disabled = false; b.textContent = 'Escribir respuesta'; });
+    }
+  });
+
+  /* ═════ conectado ═════ */
+  function haceCuanto(ms) {
+    if (!ms) return 'aún no';
+    var m = Math.round((Date.now() - ms) / 60000);
+    if (m < 1) return 'ahora mismo'; if (m < 60) return 'hace ' + m + ' min';
+    var h = Math.round(m / 60); if (h < 48) return 'hace ' + h + ' h';
+    return 'hace ' + Math.round(h / 24) + ' días';
+  }
+
+  function pintaDentro() {
+    var c = estado.cuenta;
+    ver($('vFuera'), false); ver($('vDentro'), true);
+    $('quien').textContent = c.email; ver($('quien'), true);
+    $('errCuenta').textContent = c.error; ver($('errCuenta'), Boolean(c.error));
+    ver($('sinIA'), !estado.cfg.ia);
+    var activas = c.fichas.filter(function (f) { return f.config && f.config.activa; }).length;
+    var pend = estado.resenas.filter(function (r) { return r.estado === 'pendiente'; }).length;
+    $('resumen').textContent = c.fichas.length
+      ? (activas ? activas + (activas === 1 ? ' ficha respondiéndose sola' : ' fichas respondiéndose solas') : 'Ninguna ficha activada todavía') +
+        ' · ' + pend + (pend === 1 ? ' reseña espera' : ' reseñas esperan') + ' tu clic'
+      : '';
+    pintaFichas(); pintaLista();
+  }
+
+  function pintaFichas() {
+    var c = estado.cuenta;
+    if (!c.fichas.length) {
+      $('fichas').innerHTML = c.error ? '' : '<div class="tarjeta"><p style="margin:0">No vemos ninguna ficha de Google en esta cuenta. Si tu ficha está en otra cuenta de Google, pulsa <b>Salir</b> y conecta con esa. Si la gestiona otra persona, pídele que te añada como <b>propietario</b> o <b>administrador</b> en tu ficha (Perfil de Empresa → Personas y acceso).</p></div>';
+      return;
+    }
+    $('fichas').innerHTML = c.fichas.map(function (f, i) {
+      var k = f.config || {};
+      return '<form class="tarjeta" data-ficha="' + i + '">' +
+        '<div class="fila" style="justify-content:space-between; align-items:flex-start">' +
+          '<div style="min-width:0"><h2 style="margin:0">' + esc(f.nombre) + '</h2><p class="suave" style="margin:2px 0 0;font-size:14px">' + esc(f.direccion) + '</p></div>' +
+          '<label class="inter"><input type="checkbox" name="activa"' + (k.activa ? ' checked' : '') + '><span class="pista"></span><span>' + (k.activa ? 'Activa' : 'Apagada') + '</span></label>' +
+        '</div>' +
+        '<p class="letra" style="margin:10px 0 0">Última revisión: ' + haceCuanto(f.ultima) + (f.error ? ' · <span style="color:var(--rojo)">' + esc(f.error) + '</span>' : '') + '</p>' +
+        '<details style="margin-top:12px"><summary>Cómo respondemos por ti</summary><div style="margin-top:14px">' +
+          '<label class="marca"><input type="checkbox" name="auto_positivas"' + (k.auto_positivas ? ' checked' : '') + '> <span><b>Publicar solas las de 4 y 5 estrellas</b><br><span class="suave">Un agradecimiento escrito para cada cliente.</span></span></label>' +
+          '<label class="marca"><input type="checkbox" name="auto_negativas"' + (k.auto_negativas ? ' checked' : '') + '> <span><b>Publicar solas también las de 1 a 3</b><br><span class="suave">Si no lo marcas, te esperan para que les des el visto bueno. Las que se pueden denunciar te esperan siempre.</span></span></label>' +
+          '<div class="dos">' +
+            '<div class="campo"><label>Tono</label><select name="tono"><option value="cercano"' + (k.tono !== 'formal' ? ' selected' : '') + '>Cercano (de tú)</option><option value="formal"' + (k.tono === 'formal' ? ' selected' : '') + '>Formal (de usted)</option></select></div>' +
+            '<div class="campo"><label>Firma <small>(opcional)</small></label><input name="firma" maxlength="80" placeholder="Manolo y el equipo" value="' + esc(k.firma) + '"></div>' +
+          '</div><div class="dos">' +
+            '<div class="campo"><label>Contacto para las quejas</label><input name="contacto" maxlength="120" placeholder="hola@tunegocio.es o 600 000 000" value="' + esc(k.contacto) + '"></div>' +
+            '<div class="campo"><label>Lo que os hace buenos <small>(con comas)</small></label><input name="palabras_clave" maxlength="200" placeholder="tapas caseras, terraza" value="' + esc((k.palabras_clave || []).join(', ')) + '"></div>' +
+          '</div>' +
+          '<div class="campo"><label>Algo que debamos saber <small>(opcional)</small></label><input name="notas" maxlength="500" placeholder="Ej: no ofrezcas invitaciones; los domingos cerramos" value="' + esc(k.notas) + '"></div>' +
+          '<div class="fila"><button class="btn btn-oro btn-chico" type="submit">Guardar</button></div>' +
+        '</div></details>' +
+        '<div class="fila" style="margin-top:14px">' +
+          '<button class="btn btn-chico" type="button" data-revisa="1">Revisar ahora</button>' +
+          (f.escribir ? '<button class="btn btn-chico" type="button" data-copia-valor="' + esc(f.escribir) + '">Copiar enlace para pedir reseñas</button>' : '') +
+          (f.maps ? '<a class="btn btn-chico" href="' + esc(f.maps) + '" target="_blank" rel="noopener">Ver en Maps</a>' : '') +
+        '</div></form>';
+    }).join('');
+  }
+
+  function configDe(form) {
+    var g = function (n) { return form.elements[n]; };
+    return { activa: g('activa').checked, auto_positivas: g('auto_positivas').checked, auto_negativas: g('auto_negativas').checked,
+      tono: g('tono').value, firma: g('firma').value, contacto: g('contacto').value, palabras_clave: g('palabras_clave').value, notas: g('notas').value };
+  }
+  function guarda(form, msg) {
+    var f = estado.cuenta.fichas[Number(form.dataset.ficha)];
+    return api('/api/ficha', { accion: 'config', ficha: f.id, config: configDe(form) }).then(function (d) {
+      estado.cuenta = d.cuenta;
+      var r = d.revision;
+      toast(r ? 'Revisada: ' + r.publicadas + ' publicadas, ' + r.pendientes + ' esperan tu clic' : msg);
+      return r ? recargaLista() : pintaDentro();
+    }).catch(function (err) { toast(err.message); pintaFichas(); });
+  }
+  $('fichas').addEventListener('change', function (e) {
+    if (e.target.name !== 'activa') return;
+    var form = e.target.closest('form');
+    e.target.parentNode.querySelector('span:last-child').textContent = e.target.checked ? 'Activando…' : 'Apagando…';
+    guarda(form, e.target.checked ? 'Activada' : 'Apagada: ya no respondemos en esta ficha');
+  });
+  $('fichas').addEventListener('submit', function (e) { e.preventDefault(); guarda(e.target, 'Guardado'); });
+  $('fichas').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.copiaValor) return copia(b.dataset.copiaValor, b);
+    if (b.dataset.revisa) {
+      var f = estado.cuenta.fichas[Number(b.closest('form').dataset.ficha)];
+      b.disabled = true; b.textContent = 'Revisando…';
+      api('/api/ficha', { accion: 'revisa', ficha: f.id }).then(function (d) {
+        var r = d.revision; estado.resenas = d.resenas || estado.resenas;
+        toast(r.errores.length ? r.errores[0] : r.publicadas + ' publicadas, ' + r.pendientes + ' esperan tu clic');
+        return recarga();
+      }).catch(function (err) { toast(err.message); b.disabled = false; b.textContent = 'Revisar ahora'; });
+    }
+  });
+
+  function recarga() { return api('/api/ficha').then(function (d) { if (d.conectado) { estado.cuenta = d.cuenta; estado.resenas = d.resenas || []; pintaDentro(); } }); }
+  var recargaLista = recarga;
+
+  function pintaLista() {
+    var cuenta = { pendiente: 0, publicada: 0, ignorada: 0 };
+    estado.resenas.forEach(function (r) { cuenta[r.estado] = (cuenta[r.estado] || 0) + 1; });
+    document.querySelectorAll('[data-n]').forEach(function (s) { s.textContent = cuenta[s.dataset.n] ? '(' + cuenta[s.dataset.n] + ')' : ''; });
+    var l = estado.resenas.filter(function (r) { return r.estado === estado.filtro; });
+    if (!l.length) {
+      $('lista').innerHTML = '<p class="vacio">' + (estado.filtro === 'pendiente' ? 'Nada pendiente. Todo al día ✓' : 'Nada por aquí todavía.') + '</p>';
+      return;
+    }
+    $('lista').innerHTML = l.map(function (r) {
+      var a = r.analisis || {};
+      var fecha = r.cuando ? new Date(r.cuando).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+      var h = '<div class="resena" data-clave="' + esc(r.clave) + '"><div class="cab"><b>' + esc(r.autor || 'Anónimo') + '</b> <span class="est">' + estrellas(r.estrellas) +
+        '</span> <span>' + esc(fecha) + ' · ' + esc(r.fichaNombre) + '</span>' +
+        (a.veredicto === 'impugnable' || a.veredicto === 'revisar' ? ' <span class="chapa ' + a.veredicto + '">' + (a.veredicto === 'impugnable' ? 'Se puede denunciar' : 'Revisar') + '</span>' : '') +
+        '</div>' + (r.texto ? '<p class="txt">' + esc(r.texto) + '</p>' : '<p class="txt suave">(solo estrellas)</p>');
+      if (a.infracciones && a.infracciones.length) {
+        h += '<ul class="infr">' + a.infracciones.map(function (i) { return '<li><b>' + esc(i.norma) + '</b>: «' + esc(i.cita) + '»</li>'; }).join('') + '</ul>';
+      }
+      if (a.apelacion) h += '<details><summary>La denuncia para Google, preparada</summary><pre>' + esc(a.apelacion) + '</pre>' +
+        '<p class="letra" style="margin:0 0 8px">En Google Maps: tu reseña → ⋮ → Denunciar reseña. Si no la retiran, pega este texto en la herramienta de gestión de reseñas de Google.</p></details>';
+      if (r.estado === 'pendiente') {
+        h += '<textarea class="respuesta" aria-label="Respuesta">' + esc(r.respuesta) + '</textarea>' +
+          (r.error ? '<p class="letra" style="color:var(--rojo)">' + esc(r.error) + '</p>' : '') +
+          '<div class="fila"><button class="btn btn-oro btn-chico" type="button" data-publica="1">Publicar en Google</button>' +
+          '<button class="btn btn-chico" type="button" data-ignora="1">No responder</button></div>';
+      } else {
+        h += '<div class="respuesta">' + esc(r.respuesta) + '</div>' + (r.estado === 'publicada' ? '<span class="chapa publicada">Publicada ' + haceCuanto(r.publicada) + '</span>' : '');
+      }
+      return h + '</div>';
+    }).join('');
+  }
+
+  $('pestanas').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    estado.filtro = b.dataset.f;
+    $('pestanas').querySelectorAll('button').forEach(function (o) { o.classList.toggle('on', o === b); });
+    pintaLista();
+  });
+
+  $('lista').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var caja = b.closest('.resena'), clave = caja.dataset.clave;
+    var r = estado.resenas.find(function (x) { return x.clave === clave; });
+    if (b.dataset.publica) {
+      var texto = caja.querySelector('textarea').value;
+      b.disabled = true; b.textContent = 'Publicando…';
+      api('/api/ficha', { accion: 'publica', clave: clave, texto: texto }).then(function (d) {
+        Object.assign(r, d.resena); toast('Publicada en Google ✓'); pintaDentro();
+      }).catch(function (err) { toast(err.message); b.disabled = false; b.textContent = 'Publicar en Google'; });
+    } else if (b.dataset.ignora) {
+      api('/api/ficha', { accion: 'ignora', clave: clave }).then(function () { r.estado = 'ignorada'; pintaDentro(); })
+        .catch(function (err) { toast(err.message); });
+    }
+  });
+
+  $('bRecarga').addEventListener('click', function () {
+    api('/api/ficha', { accion: 'recarga' }).then(function (d) { estado.cuenta = d.cuenta; pintaDentro(); toast('Fichas actualizadas'); })
+      .catch(function (err) { toast(err.message); });
+  });
+  $('bSalir').addEventListener('click', function () { api('/api/ficha', { accion: 'salir' }).then(function () { location.reload(); }); });
+  $('bDesconecta').addEventListener('click', function () {
+    if (!confirm('Dejaremos de responder en tus fichas y borraremos todo lo que tenemos de tu cuenta. ¿Seguro?')) return;
+    api('/api/ficha', { accion: 'desconecta' }).then(function () { location.reload(); }).catch(function (err) { toast(err.message); });
+  });
+
+  carga();
+})();
+</script>
+</body>
+</html>

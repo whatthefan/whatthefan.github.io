@@ -47,5 +47,11 @@
     { "binding": "ENCARGOS", "id": "22d3750e7f964c08ac98843119f1201c" }
   ],
 
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+
+  // El despertador del vigilante de reseñas (src/lib/vigia.mjs): cada dos
+  // horas, en el minuto 23 para no caer en la hora en punto, que es
+  // cuando se despierta medio mundo. Mira las fichas de Google conectadas
+  // y responde lo que toca.
+  "triggers": { "crons": ["23 */2 * * *"] }
 }
